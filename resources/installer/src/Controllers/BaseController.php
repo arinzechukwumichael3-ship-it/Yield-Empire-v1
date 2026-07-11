@@ -20,7 +20,7 @@ class BaseController extends Controller {
     public function __construct()
     {
         if(!request()->routeIs('project.install.finish') && request()->routeIs('project.install.*')) {
-            if(env("PRODUCT_KEY",'') != "") {
+            if(env("PRODUCT_KEY",'') != "" || env("APP_INSTALLED") === "true" || env("APP_INSTALLED") === true) {
                 return abort(404);
             }
         }else if(request()->routeIs('project.install.finish')) {
