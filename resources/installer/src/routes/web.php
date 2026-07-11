@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Middleware\Admin\Localization;
+use App\Http\Middleware\SkipInstaller;
 use App\Http\Middleware\StartingPoint;
 use Illuminate\Support\Facades\Route;
 use Project\Installer\Controllers\BaseController;
 use Project\Installer\Helpers\DBHelper;
 
-Route::prefix('project/install')->name('project.install.')->withoutMiddleware([StartingPoint::class,Localization::class])->group(function(){
+Route::prefix('project/install')->name('project.install.')->middleware(SkipInstaller::class)->withoutMiddleware([StartingPoint::class,Localization::class])->group(function(){
     Route::controller(BaseController::class)->group(function(){
         Route::get('welcome','welcomeView')->name('welcome');
         Route::get('cancel','installationProcessCancel')->name('cancel');
@@ -41,4 +42,4 @@ Route::get('project/install/reset',function(DBHelper $db) {
     ]);
     sleep(1);
     return redirect()->route('project.install.welcome');
-});
+})->middleware(SkipInstaller::class);
