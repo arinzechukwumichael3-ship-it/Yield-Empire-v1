@@ -14,16 +14,16 @@ class StartingPoint
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request , Closure )
+    public function handle(Request $request, Closure $next)
     {
         if(filter_var(env('APP_INSTALLED', false), FILTER_VALIDATE_BOOLEAN)) {
             Config::set('starting-point.status',false);
             Config::set('starting-point.point','/');
-            return ();
+            return $next($request);
         }
 
         if(env('PRODUCT_KEY', null)){
