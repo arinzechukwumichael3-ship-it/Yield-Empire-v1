@@ -20,6 +20,11 @@ class StartingPoint
      */
     public function handle(Request $request, Closure $next)
     {
+        // If APP_INSTALLED is true, skip installer redirect
+        if(env('APP_INSTALLED') === 'true' || env('APP_INSTALLED') === true){
+            return $next($request);
+        }
+
         if(env('PRODUCT_KEY', null)){
             Config::set('starting-point.status',false);
         }
