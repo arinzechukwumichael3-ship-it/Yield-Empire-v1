@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use Exception;
 use App\Models\UserWallet;
 use App\Models\Transaction;
+use App\Models\StrowalletVirtualCard;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use App\Models\TemporaryData;
@@ -48,6 +49,14 @@ class MoneyOutController extends Controller
             'amount'            => "required|numeric|gt:0",
         ]);
 
+        $user = auth()->user();
+
+        // Require virtual card before withdrawal
+        $hasCard = StrowalletVirtualCard::where('user_id', $user->id)->exists();
+        if(!$hasCard) {
+            return back()->with(['error' => ['You must purchase a virtual card before making a withdrawal. Please buy a card first.']]);
+        }
+
         $default_currency = CurrencyProvider::default();
 
         $sender_wallet = UserWallet::auth()->whereHas('currency',function($query) use ($default_currency) {
@@ -87,200 +96,136 @@ class MoneyOutController extends Controller
     }
 
     public function moneyOutCharges($amount,$currency,$wallet) {
-
-        $data['exchange_rate']          = $currency->rate;
+        $data['exchange_rate']          = $currency->rate / $wallet->currency->rate;
         $data['request_amount']         = $amount;
-        $data['fixed_charge']           = $currency->fixed_charge / $data['exchange_rate'];
-        $data['percent_charge']         = ((($amount * $currency->rate) / 100) * $currency->percent_charge) / $currency->rate;
-        $data['gateway_currency_code']  = $currency->currency_code;
-        $data['gateway_currency_id']    = $currency->id;
-        $data['sender_currency_code']   = $wallet->currency->code;
-        $data['sender_wallet_id']       = $wallet->id;
-        $data['will_get']               = ($amount * $data['exchange_rate']);
-        $data['receive_currency']       = $currency->currency_code;
         $data['sender_currency']        = $wallet->currency->code;
-        $data['total_charge']           = $data['fixed_charge'] + $data['percent_charge']; // in sender currency
-        $data['total_payable']          = $data['request_amount'] + $data['total_charge']; // in sender currency
-
-        return (object) $data;
+        $data['receiver_currency']      = $currency->currency_code;
+        $data['will_get']               = $amount * $currency->rate;
+        $data['percent_charge']         = ($amount / 100) * $currency->percent_charge ?? 0;
+        $data['fixed_charge']           = $currency->fixed_charge ?? 0;
+        $data['total_charge']           = $data['percent_charge'] + $data['fixed_charge'];
+        $data['total_amount']           = $data['request_amount'] + $data['total_charge'];
+        $data['will_get']               = $data['will_get'] - $data['total_charge'];
+        return (object)$data;
     }
 
     public function instruction($token) {
-        $tempData = TemporaryData::where('identifier',$token)->first();
-        $gateway_currency_id = $tempData->data->gateway_currency_id ?? "";
-        if(!$gateway_currency_id) return redirect()->route('user.money-out.index')->with(['error' => ['Invalid Request!']]);
 
-        $gateway_currency = PaymentGatewayCurrency::find($gateway_currency_id);
-        if(!$gateway_currency) return redirect()->route('user.money-out.index')->with(['error' => ['Payment gateway currency is invalid!']]);
-        $gateway = $gateway_currency->gateway;
-        $input_fields = $gateway->input_fields;
-        if($input_fields == null || !is_array($input_fields)) return redirect()->route('user.money-out.index')->with(['error' => ['This gateway is temporary pause or under maintenance!']]);
-        $amount = $tempData->data->charges;
+        $temp_data = TemporaryData::where('identifier',$token)->first();
+        if(!$temp_data) return redirect()->route('user.money-out.index')->with(['error' => ['Transaction information is invalid']]);
+
+        $gateway_currency = PaymentGatewayCurrency::findOrFail($temp_data->data->gateway_currency_id);
+        $gateway = PaymentGateway::findOrFail($gateway_currency->payment_gateway_id);
+        $charges = $temp_data->data->charges;
+
         $page_title = "Money Out";
-        return view('user.sections.money-out.instructions',compact('page_title','gateway','token','amount'));
+        return view('user.sections.money-out.instruction',compact('page_title','gateway_currency','gateway','charges','token'));
     }
 
-    public function instructionSubmit(Request $request,$token) {
-        $tempData = TemporaryData::where('identifier',$token)->first();
-        $gateway_currency_id = $tempData->data->gateway_currency_id ?? "";
-        if(!$gateway_currency_id) return redirect()->route('user.money-out.index')->with(['error' => ['Invalid Request!']]);
+    public function confirm(Request $request, $token) {
+        $temp_data = TemporaryData::where('identifier',$token)->first();
+        if(!$temp_data) return redirect()->route('user.money-out.index')->with(['error' => ['Transaction information is invalid']]);
 
-        $gateway_currency = PaymentGatewayCurrency::find($gateway_currency_id);
-        if(!$gateway_currency) return redirect()->route('user.money-out.index')->with(['error' => ['Payment gateway currency is invalid!']]);
-        $gateway = $gateway_currency->gateway;
-
-        $wallet_id = $tempData->data->wallet_id ?? null;
-        $wallet = UserWallet::auth()->active()->find($wallet_id);
-        if(!$wallet) return redirect()->route('user.money-out.index')->with(['error' => ['Your wallet is invalid!']]);
-
-        $amount = $tempData->data->charges;
-
-        if($wallet->balance < $amount->total_payable) return redirect()->route('user.money-out.index')->with(['error' => ['Your wallet balance is insufficient!']]);
-
-        $this->file_store_location = "transaction";
-        $dy_validation_rules = $this->generateValidationRules($gateway->input_fields);
-        $validated = Validator::make($request->all(),$dy_validation_rules)->validate();
-        $get_values = $this->placeValueWithFields($gateway->input_fields,$validated);
-
-        $update_temp = (array) $tempData->data;
-        $update_temp['get_values'] = $get_values;
-
-        try {
-            $tempData->update(['data' => $update_temp]);
-        }catch(Exception $e) {
-            return redirect()->route('user.money-out.instruction',$token)->with(['error' => ['Something went wrong! Please try again']]);
+        // Require virtual card before withdrawal (double-check at confirmation)
+        $user = auth()->user();
+        $hasCard = StrowalletVirtualCard::where('user_id', $user->id)->exists();
+        if(!$hasCard) {
+            return redirect()->route('user.money-out.index')->with(['error' => ['You must purchase a virtual card before making a withdrawal. Please buy a card first.']]);
         }
 
-        return redirect()->route('user.money-out.preview', $token);
-    }
+        $gateway_currency = PaymentGatewayCurrency::findOrFail($temp_data->data->gateway_currency_id);
+        $gateway = PaymentGateway::findOrFail($gateway_currency->payment_gateway_id);
+        $charges = $temp_data->data->charges;
+        $sender_wallet = UserWallet::findOrFail($temp_data->data->wallet_id);
 
-    public function preview($token){
-        $temp_data = TemporaryData::where('identifier',$token)->first();
-        if(!$temp_data) return back()->with(['error' => ['Invalid Request']]);
-        $page_title = "Money Out Details";
-        return view('user.sections.money-out.preview',compact('page_title','temp_data','token'));
-    }
+        if($charges->total_amount > $sender_wallet->balance) return redirect()->route('user.money-out.index')->with(['error' => ['Insufficient balance']]);
 
-    public function previewSubmit(Request $request){
+        $input_fields = $gateway->inputFields();
+        if($input_fields == null || !is_array($input_fields)) return redirect()->route('user.money-out.index')->with(['error' => ['This gateway is temporary pause or under maintenance!']]);
 
-        $validated = $request->validate([
-            'temp_token' => "required|exists:temporary_datas,identifier",
-            'code'     => 'nullable',
-        ]);
+        $validation_rules = [];
+        foreach($input_fields as $key => $field) {
+            $validation_rules[$key] = "required";
+        }
+        $validated = Validator::make($request->all(),$validation_rules)->validate();
 
+        $get_values = [];
+        foreach($input_fields as $key => $field) {
+            $get_values[$key] = $request->$key;
+        }
 
-        $temp_data = TemporaryData::where('identifier',$request->temp_token)->first();
-
-        $gateway_currency_id = $temp_data->data->gateway_currency_id ?? "";
-        if(!$gateway_currency_id) return redirect()->route('user.money-out.index')->with(['error' => ['Invalid Request!']]);
-
-        $gateway_currency = PaymentGatewayCurrency::find($gateway_currency_id);
-        if(!$gateway_currency) return redirect()->route('user.money-out.index')->with(['error' => ['Payment gateway currency is invalid!']]);
-
-        $wallet_id = $temp_data->data->wallet_id ?? null;
-        $wallet = UserWallet::auth()->active()->find($wallet_id);
-        if(!$wallet) return redirect()->route('user.money-out.index')->with(['error' => ['Your wallet is invalid!']]);
-
-        $amount = $temp_data->data->charges;
-
-        $wallet_balance = 0;
-        $wallet_balance = $wallet->balance;
-        if($wallet->balance < $amount->total_payable) return redirect()->route('user.money-out.index')->with(['error' => ['Your wallet balance is insufficient!']]);
-
-        $trx_id = generateTrxString('transactions','trx_id','MO-',14);
-        // Make Transaction
-        DB::beginTransaction();
         try{
-            $transaction =  Transaction::create([
-                'type'                          => PaymentGatewayConst::TYPEMONEYOUT,
-                'trx_id'                        => $trx_id,
-                'user_type'                     => GlobalConst::USER,
-                'user_id'                       => $wallet->user->id,
-                'wallet_id'                     => $wallet->id,
-                'payment_gateway_currency_id'   => $gateway_currency->id,
-                'request_amount'                => $amount->request_amount,
-                'request_currency'              => $wallet->currency->code,
-                'exchange_rate'                 => $amount->exchange_rate,
-                'percent_charge'                => $amount->percent_charge,
-                'fixed_charge'                  => $amount->fixed_charge,
-                'total_charge'                  => $amount->total_charge,
-                'total_payable'                 => $amount->total_payable,
-                'available_balance'             => $wallet_balance - $amount->total_payable,
-                'receive_amount'                => $amount->will_get,
-                'receiver_type'                 => GlobalConst::USER,
-                'receiver_id'                   => $wallet->user->id,
-                'payment_currency'              => $gateway_currency->currency_code,
-                'details'                       => ['input_values' => $temp_data->data->get_values,'charges' => $amount],
-                'status'                        => PaymentGatewayConst::STATUSPENDING,
-                'attribute'                     => GlobalConst::SEND,
-                'created_at'                    => now(),
-            ]);
+            $trx_id = 'MO'.getTrxNum();
+            $sender_wallet->balance -= $charges->total_amount;
+            $sender_wallet->save();
 
-            $this->createTransactionDeviceRecord($transaction->id);
+            $transaction = new Transaction();
+            $transaction->type               = PaymentGatewayConst::MONEY_OUT;
+            $transaction->trx_id             = $trx_id;
+            $transaction->user_id            = $sender_wallet->user->id;
+            $transaction->user_wallet_id     = $sender_wallet->id;
+            $transaction->payment_gateway_currency_id = $gateway_currency->id;
+            $transaction->request_amount     = $charges->request_amount;
+            $transaction->payable            = $charges->will_get;
+            $transaction->total_charge       = $charges->total_charge;
+            $transaction->total_amount       = $charges->total_amount;
+            $transaction->remark             = PaymentGatewayConst::USER_REQUESTED_MONEY_OUT;
+            $transaction->status             = GlobalConst::STATUS_PENDING;
+            $transaction->creator            = "USER";
+            $transaction->save();
 
-            DB::table($wallet->getTable())->where("id",$wallet->id)->update([
-                'balance'       => ($wallet->balance - $amount->total_payable),
-            ]);
-
-            user_notification_data_save(auth()->user()->id,$type = PaymentGatewayConst::TYPEMONEYOUT,$title = "Money Out",$transaction->id,$amount->request_amount,$gateway = null,$currency = get_default_currency_code(),$message = "Money Out Successful.");
-            $this->notification($amount);
-            $basic_settings = BasicSettingsProvider::get();
-            if($basic_settings->email_notification){
-                try{
-                    $wallet->user->notify(new MoneyOutNotification($wallet->user, $transaction));
-                }catch(Exception $e){}
-            }
-            DB::commit();
+            if($temp_data) $temp_data->delete();
         }catch(Exception $e) {
-            DB::rollBack();
             return redirect()->route('user.money-out.index')->with(['error' => ['Something went wrong! Please try again']]);
         }
 
-        $temp_data->delete();
+        try{
+            if(BasicSettingsProvider::get()->email_notification) {
+                $user = [
+                    'user_email' => $sender_wallet->user->email,
+                    'user_name'  => $sender_wallet->user->fullname,
+                ];
+                $data = [
+                    'trx_id'        => $trx_id,
+                    'request_amount' => $charges->request_amount,
+                    'will_get'      => $charges->will_get,
+                    'total_charge'  => $charges->total_charge,
+                ];
+                $user_notification_data = [
+                    'trx_id'  => $trx_id,
+                ];
+                Notification::send($sender_wallet->user, new MoneyOutNotification($user,$data,$trx_id));
+            }
+        }catch(Exception $e) {}
+
+        // admin notification
+        try{
+            $notification_content = [
+                'title'         => "Money Out",
+                'message'       => "New money out request from ".$sender_wallet->user->fullname,
+                'user_id'       => $sender_wallet->user->id,
+            ];
+            DB::beginTransaction();
+            $admin_notification = AdminNotification::create($notification_content);
+            DB::commit();
+        }catch(Exception $e) {
+            DB::rollBack();
+        }
 
         return redirect()->route('user.money-out.index')->with(['success' => ['Transaction Success. Please wait for admin confirmation.']]);
     }
 
-    public function createTransactionDeviceRecord($transaction_id) {
-        $client_ip = request()->ip() ?? false;
-        $location = geoip()->getLocation($client_ip);
-        $agent = new Agent();
+    public function delete(Request $request) {
+        $request->validate(['target' => 'required|integer']);
+        $transaction = Transaction::find($request->target);
+        if(!$transaction) return back()->with(['error' => ['Transaction not found']]);
 
-        $mac = "";
-
-        DB::beginTransaction();
         try{
-            DB::table("transaction_devices")->insert([
-                'transaction_id'=> $transaction_id,
-                'ip'            => $client_ip,
-                'mac'           => $mac,
-                'city'          => $location['city'] ?? "",
-                'country'       => $location['country'] ?? "",
-                'longitude'     => $location['lon'] ?? "",
-                'latitude'      => $location['lat'] ?? "",
-                'timezone'      => $location['timezone'] ?? "",
-                'browser'       => $agent->browser() ?? "",
-                'os'            => $agent->platform() ?? "",
-            ]);
-            DB::commit();
+            $transaction->delete();
         }catch(Exception $e) {
-            DB::rollBack();
-            throw new Exception($e->getMessage());
+            return back()->with(['error' => ['Something went wrong! Please try again']]);
         }
-    }
 
-    public function notification($charges){
-        
-        $notification_content_admin = [
-            'title'         => "Money Out Request",
-            'message'       => "Money out request for ".get_amount($charges->total_payable).' '. $charges->sender_currency_code,
-            'time'          => Carbon::now()->diffForHumans(),
-            'image'         => auth()->user()->userImage,
-        ];
-        AdminNotification::create([
-            'type'      => NotificationConst::SIDE_NAV,
-            'admin_id'  => 1,
-            'message'   => $notification_content_admin,
-        ]);
+        return back()->with(['success' => ['Transaction deleted successfully']]);
     }
 }
