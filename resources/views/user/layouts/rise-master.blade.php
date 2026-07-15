@@ -202,7 +202,7 @@
             ->latest()
             ->take(5)
             ->get()
-            ->map(function($t) {
+            ->map(function($t) use ($typeLabels) {
                 $det = is_string($t->details) ? json_decode($t->details) : $t->details;
                 $isCredit = in_array($t->type, ["ADD-MONEY","BONUS","COMMISSION","CAPITAL-RETURN","Salary Disbursement"])
                     && (!in_array($t->type, ["TRANSFER-MONEY","OWN-BANK-TRANSFER","OTHER-BANK-TRANSFER"]) || ($t->receiver_id ?? null) == auth()->id());
@@ -222,7 +222,7 @@
     <script>
     // ── Notification System ──
     (function(){
-        var recentNotifs = @json();
+        var recentNotifs = @json($recentNotifs);
         var notifKey = "enzobank_notif_seen";
         var stored = localStorage.getItem(notifKey);
         var seenIds = stored ? JSON.parse(stored) : [];
