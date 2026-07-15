@@ -20,7 +20,7 @@ class StartingPoint
      */
     public function handle(Request $request, Closure $next)
     {
-        if(filter_var(env('APP_INSTALLED', false), FILTER_VALIDATE_BOOLEAN)) {
+        if(filter_var(config('app.installed', false), FILTER_VALIDATE_BOOLEAN)) {
             Config::set('starting-point.status',false);
             Config::set('starting-point.point','/');
             return $next($request);

@@ -38,7 +38,7 @@ class TransactionSetting extends Model
     }
 
     public function scopeActive($query){
-        return $query->where('status',PaymentGatewayConst::ACTIVE);
+        return $query->where('status', \DB::raw('true'));
     }
 
     public function scopeWhereSlug($query, $slug){

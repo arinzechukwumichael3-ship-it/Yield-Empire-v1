@@ -134,6 +134,7 @@
                             <li class="bg--warning four">{{ __("Status") }}: <span>{{ $user->stringStatus->value }}</span></li>
                             <li class="bg--danger five">{{ __("Last Login") }}: <span>{{ $user->lastLogin }}</span></li>
                             <li class="bg--base five">{{ __("Account Number") }}: <span>{{ $user->account_no }}</span></li>
+                            <li class="bg--dark five">{{ __("Deposit Gate") }}: <span>{!! $user->depositGateStatus->value !!}</span></li>
                         </ul>
                     </div>
                 </div>

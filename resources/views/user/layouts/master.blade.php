@@ -7,12 +7,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('frontend/css/baking-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset("frontend/css/baking-theme.css") }}">
+    <link rel="stylesheet" href="{{ asset("frontend/css/enzo-theme.css") }}">
     <script>document.documentElement.classList.add('no-transitions');</script>
     <!-- Theme Toggle Script (Blocking to prevent flicker) -->
     <script>
         (function() {
-            const savedTheme = localStorage.getItem('bakery-theme');
+            const savedTheme = localStorage.getItem("theme");
             const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             const theme = savedTheme || systemTheme;
             document.documentElement.setAttribute('data-theme', theme);
@@ -36,7 +37,7 @@
     @include('user.partials.side-nav')
     <div class="main-wrapper">
         <div class="main-body-wrapper">
-            @include('user.partials.top-nav')
+            @include('partials.global-nav')
             <div class="body-wrapper">
                 @yield('content')
             </div>
@@ -49,7 +50,7 @@
 
 
 <!-- WhatsApp Floating Widget -->
-<div class="whatsapp-widget" data-aos="zoom-in" data-aos-delay="500">
+<div class="whatsapp-widget" data-aos="zoom-in" data-aos-delay="500" style="bottom: 90px">
     <a href="https://wa.me/message/ZW7EJRXHGL3GG1" target="_blank" class="whatsapp-btn" rel="noopener noreferrer" aria-label="Contact Support on WhatsApp">
         <div class="whatsapp-icon">
             <i class="lab la-whatsapp"></i>
@@ -63,23 +64,23 @@
 
 <!-- Mobile Bottom Navigation -->
 <nav class="mobile-bottom-nav d-flex d-lg-none">
-    <a href="{{ setRoute('user.dashboard') }}" class="mobile-nav-item {{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
+    <a href="{{ setRoute('user.rise.home') }}" class="mobile-nav-item {{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
         <i class="las la-home"></i>
         <span>{{ __('Home') }}</span>
     </a>
-    <a href="{{ setRoute('user.investments.offers') }}" class="mobile-nav-item {{ request()->routeIs('user.investments.*') ? 'active' : '' }}">
+    <a href="{{ setRoute('user.rise.invest') }}" class="mobile-nav-item {{ request()->routeIs('user.investments.*') ? 'active' : '' }}">
         <i class="las la-chart-line"></i>
         <span>{{ __('Invest') }}</span>
     </a>
-    <a href="{{ setRoute('user.add.money.index') }}" class="mobile-nav-item {{ request()->routeIs('user.add.money.*') ? 'active' : '' }}">
+    <a href="{{ setRoute('user.rise.wallet') }}" class="mobile-nav-item {{ request()->routeIs('user.add.money.*') ? 'active' : '' }}">
         <i class="las la-wallet"></i>
         <span>{{ __('Wallet') }}</span>
     </a>
-    <a href="{{ setRoute('user.transactions.index') }}" class="mobile-nav-item {{ request()->routeIs('user.transactions.*') ? 'active' : '' }}">
+    <a href="{{ setRoute('user.rise.feed') }}" class="mobile-nav-item {{ request()->routeIs('user.transactions.*') ? 'active' : '' }}">
         <i class="las la-rss"></i>
         <span>{{ __('Feed') }}</span>
     </a>
-    <a href="{{ setRoute('user.profile.index') }}" class="mobile-nav-item {{ request()->routeIs('user.profile.*') ? 'active' : '' }}">
+    <a href="{{ setRoute('user.rise.account') }}" class="mobile-nav-item {{ request()->routeIs('user.profile.*') ? 'active' : '' }}">
         <i class="las la-user"></i>
         <span>{{ __('Account') }}</span>
     </a>
@@ -133,7 +134,7 @@
         document.addEventListener('DOMContentLoaded', function(){ document.documentElement.classList.remove('no-transitions'); }, { once: true });
         const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
         const themeAttr = 'data-theme';
-        const storageKey = 'bakery-theme';
+        const storageKey = "theme";
 
         // Immediately set the theme on page load
         const savedTheme = localStorage.getItem(storageKey);

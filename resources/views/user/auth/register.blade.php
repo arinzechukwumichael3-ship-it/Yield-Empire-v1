@@ -61,7 +61,7 @@
                                             @php
                                                 $data = App\Models\Admin\UsefulLink::where('type',global_const()::USEFUL_LINK_PRIVACY_POLICY)->first();
                                             @endphp
-                                            <label for="level-1">{{ __('I have agreed with') }} <a href="{{ setRoute('frontend.useful.links',$data->slug) }}">{{ __('Terms Of Use & Privacy Policy') }}</a></label>
+                                            <label for="level-1">{{ __('I have agreed with') }} <a href="{{ setRoute('frontend.useful.links',$data->slug ?? '#') }}">{{ __('Terms Of Use & Privacy Policy') }}</a></label>
                                         </div>
                                     </div>
                                     @endif
@@ -111,7 +111,7 @@
                                             @php
                                                 $data = App\Models\Admin\UsefulLink::where('type',global_const()::USEFUL_LINK_PRIVACY_POLICY)->first();
                                             @endphp
-                                            <label for="level-2">{{ __('I have agreed with') }} <a href="{{ setRoute('frontend.useful.links',$data->slug) }}">{{ __('Terms Of Use & Privacy Policy') }}</a></label>
+                                            <label for="level-2">{{ __('I have agreed with') }} <a href="{{ setRoute('frontend.useful.links',$data->slug ?? '#') }}">{{ __('Terms Of Use & Privacy Policy') }}</a></label>
                                         </div>
                                     </div>
                                     @endif

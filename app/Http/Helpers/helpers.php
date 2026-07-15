@@ -1769,5 +1769,6 @@ function mailVerificationTemplateApi($user) {
 
 }
 
-
-
+function activeTemplate() {
+    return '';
+}

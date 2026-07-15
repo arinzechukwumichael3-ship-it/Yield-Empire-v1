@@ -1,34 +1,104 @@
-@extends('frontend.layouts.master')
+@extends("frontend.layouts.master")
 
 @push("css")
-
+<style>
+body { background: var(--bg-primary, #0A0E1A); font-family: "Inter", system-ui, sans-serif; }
+.body-overlay { display: none !important; }
+</style>
 @endpush
 
-@section('content')
+@section("content")
 
-    @include('frontend.sections.banner')
-
-    @include('frontend.sections.feature')
-
-    @include('frontend.sections.overview')
-
-    @include('frontend.sections.testimonial')
-
-    <!-- CTA Section -->
-    <section class="enzo-cta">
-        <div class="container">
-            <div class="enzo-cta-content" data-aos="fade-up">
-                <h2 class="enzo-cta-title">{{ __('Ready to Get Started?') }}</h2>
-                <p class="enzo-cta-sub">{{ __('Join millions of customers who trust EnzoBank for their financial needs.') }}</p>
-                <a href="{{ setRoute('user.register') }}" class="enzo-btn-white enzo-btn-lg">
-                    {{ __('Open an Account Now') }} →
-                </a>
-            </div>
-        </div>
-    </section>
-
+    @include("frontend.sections.hero")
+    @include("frontend.sections.payment-rails")
+    @include("frontend.sections.features-new")
+    @include("frontend.sections.stats-section")
+    @include("frontend.sections.how-it-works")
+    @include("frontend.sections.building-block")
+    @include("frontend.sections.card-showcase")
+    @include("frontend.sections.testimonials")
+    @include("frontend.sections.security-new")
+    @include("frontend.sections.cta-section")
 @endsection
 
 @push("script")
+<script>
+(function() {
+    // Scroll animations with IntersectionObserver
+    var animObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                animObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
 
+    document.querySelectorAll(".animate-on-scroll").forEach(function(el) {
+        animObserver.observe(el);
+    });
+
+    // Also observe legacy .scroll-fade elements
+    var fadeObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                fadeObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+    document.querySelectorAll(".scroll-fade").forEach(function(el) {
+        fadeObserver.observe(el);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll("a[href^=\"#\"]").forEach(function(anchor) {
+        anchor.addEventListener("click", function(e) {
+            var target = document.querySelector(this.getAttribute("href"));
+            if (target) {
+                e.preventDefault();
+                window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 80, behavior: "smooth" });
+            }
+        });
+    });
+
+    // Count-up animation for stats
+    function countUp(el, target, duration) {
+        duration = duration || 2000;
+        var suffix = el.getAttribute("data-suffix") || "";
+        var prefix = el.getAttribute("data-prefix") || "";
+        var start = 0;
+        var increment = target / (duration / 16);
+        var timer = setInterval(function() {
+            start += increment;
+            if (start >= target) {
+                el.textContent = prefix + target.toLocaleString() + suffix;
+                clearInterval(timer);
+            } else {
+                el.textContent = prefix + Math.floor(start).toLocaleString() + suffix;
+            }
+        }, 16);
+    }
+
+    var counted = false;
+    var statsSection = document.getElementById("stats");
+    if (statsSection) {
+        var countObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting && !counted) {
+                    counted = true;
+                    var nums = statsSection.querySelectorAll("[data-target]");
+                    nums.forEach(function(el) {
+                        var target = parseFloat(el.getAttribute("data-target"));
+                        countUp(el, target, 2000);
+                    });
+                    countObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        countObserver.observe(statsSection);
+    }
+})();
+</script>
 @endpush

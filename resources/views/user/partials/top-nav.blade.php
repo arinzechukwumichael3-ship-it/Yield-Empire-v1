@@ -41,6 +41,49 @@
                         </label>
                     </div>
 
+                    <!-- More Actions Dropdown -->
+                    <div class="control-item more-item">
+                        <button class="nav-icon-v2" id="moreToggle" aria-label="More Actions" aria-haspopup="true" aria-expanded="false">
+                            <i class="las la-ellipsis-v"></i>
+                        </button>
+                        <div class="enzo-dropdown enzo-dropdown-more" id="moreDropdown" style="display: none;">
+                            <div class="dropdown-header">
+                                <h6>{{ __('Quick Links') }}</h6>
+                                <button class="dropdown-close" id="moreDropdownClose" aria-label="Close">
+                                    <i class="las la-times"></i>
+                                </button>
+                            </div>
+                            <div class="dropdown-body">
+                                <a href="{{ setRoute('user.profile.index') }}" class="enzo-dropdown-item">
+                                    <i class="las la-cog"></i>
+                                    <span>{{ __('Settings') }}</span>
+                                </a>
+                                <a href="{{ setRoute('frontend.contact') }}" class="enzo-dropdown-item">
+                                    <i class="las la-headset"></i>
+                                    <span>{{ __('Help & Support') }}</span>
+                                </a>
+                                <a href="#" class="enzo-dropdown-item">
+                                    <i class="las la-share-alt"></i>
+                                    <span>{{ __('Refer a Friend') }}</span>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ setRoute('frontend.index') }}" class="enzo-dropdown-item">
+                                    <i class="las la-file-alt"></i>
+                                    <span>{{ __('Privacy Policy') }}</span>
+                                </a>
+                                <a href="#" class="enzo-dropdown-item">
+                                    <i class="las la-file-contract"></i>
+                                    <span>{{ __('Terms of Service') }}</span>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ route('user.logout') }}" class="enzo-dropdown-item enzo-dropdown-item-danger">
+                                    <i class="las la-sign-out-alt"></i>
+                                    <span>{{ __('Log Out') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="control-item notification-item">
                         @php
                             $user_notifications = get_user_notifications();
@@ -52,12 +95,14 @@
                                 <span class="notification-badge">{{ $unread_count > 99 ? '99+' : $unread_count }}</span>
                             @endif
                         </button>
-                        <div class="notification-dropdown-v2" id="notificationDropdown">
+                        <div class="notification-dropdown-v2" id="notificationDropdown" style="display: none;">
                             <div class="dropdown-header">
                                 <h6>{{ __('Notifications') }}</h6>
-                                @if($unread_count > 0)
-                                    <span class="badge bg-primary">{{ $unread_count }} {{ __('New') }}</span>
-                                @endif
+                                <div class="dropdown-header-actions">
+                                    @if($unread_count > 0)
+                                        <button class="mark-all-read" id="markAllRead">{{ __('Mark all read') }}</button>
+                                    @endif
+                                </div>
                             </div>
                             <div class="dropdown-body">
                                 <ul class="notification-list-v2">
@@ -74,8 +119,11 @@
                                             </div>
                                         </li>
                                     @empty
-                                        <li class="empty-state">
-                                            <p>{{ __('No notifications found') }}</p>
+                                        <li>
+                                            <div class="notif-empty">
+                                                <i class="las la-bell-slash"></i>
+                                                <p>{{ __('No notifications yet') }}</p>
+                                            </div>
                                         </li>
                                     @endforelse
                                 </ul>
@@ -181,7 +229,7 @@
 
         // --- Theme Toggle Logic (Desktop) ---
         const themeToggle = document.getElementById('checkbox');
-        const themeStorageKey = 'bakery-theme';
+        const themeStorageKey = 'theme';
 
         if (themeToggle) {
             const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -208,14 +256,20 @@
                 const newTheme = this.checked ? 'dark' : 'light';
                 document.documentElement.classList.add('no-transitions');
                 document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('bakery-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
                 setTimeout(() => {
                     document.documentElement.classList.remove('no-transitions');
                 }, 300);
             });
         }
 
-        // --- Notification Dropdown Logic ---
+        // --- Dropdown Logic ---
+        function closeAllDropdowns() {
+            document.querySelectorAll('.enzo-dropdown.show, .notification-dropdown-v2.show').forEach(el => el.classList.remove('show'));
+            document.querySelectorAll('[aria-expanded="true"]').forEach(el => el.setAttribute('aria-expanded', 'false'));
+        }
+
+        // Notification Dropdown
         const notifyToggle = document.getElementById('notificationToggle');
         const notifyDropdown = document.getElementById('notificationDropdown');
 
@@ -223,31 +277,56 @@
             notifyToggle.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const isOpen = notifyDropdown.classList.contains('show');
-                document.querySelectorAll('.notification-dropdown-v2.show').forEach(el => el.classList.remove('show'));
+                closeAllDropdowns();
                 if (!isOpen) {
                     notifyDropdown.classList.add('show');
                     this.setAttribute('aria-expanded', 'true');
-                } else {
-                    notifyDropdown.classList.remove('show');
-                    this.setAttribute('aria-expanded', 'false');
-                }
-            });
-
-            document.addEventListener('click', function(e) {
-                if (!notifyDropdown.contains(e.target) && !notifyToggle.contains(e.target)) {
-                    notifyDropdown.classList.remove('show');
-                    notifyToggle.setAttribute('aria-expanded', 'false');
-                }
-            });
-
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && notifyDropdown.classList.contains('show')) {
-                    notifyDropdown.classList.remove('show');
-                    notifyToggle.setAttribute('aria-expanded', 'false');
-                    notifyToggle.focus();
                 }
             });
         }
+
+        // More Dropdown
+        const moreToggle = document.getElementById('moreToggle');
+        const moreDropdown = document.getElementById('moreDropdown');
+        const moreClose = document.getElementById('moreDropdownClose');
+
+        if (moreToggle && moreDropdown) {
+            moreToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isOpen = moreDropdown.classList.contains('show');
+                closeAllDropdowns();
+                if (!isOpen) {
+                    moreDropdown.classList.add('show');
+                    this.setAttribute('aria-expanded', 'true');
+                }
+            });
+
+            if (moreClose) {
+                moreClose.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    moreDropdown.classList.remove('show');
+                    moreToggle.setAttribute('aria-expanded', 'false');
+                    moreToggle.focus();
+                });
+            }
+        }
+
+        // Shared outside click handler
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.enzo-dropdown, .notification-dropdown-v2') && !e.target.closest('.nav-icon-v2')) {
+                closeAllDropdowns();
+            }
+        });
+
+        // Shared escape key handler
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const open = document.querySelector('.enzo-dropdown.show, .notification-dropdown-v2.show');
+                if (open) {
+                    closeAllDropdowns();
+                }
+            }
+        });
 
         // --- EnzoBank Click-to-Copy Logic ---
         window.copyAccountNo = async function(customValue = null, element = null) {

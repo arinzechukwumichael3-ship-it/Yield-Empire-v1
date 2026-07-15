@@ -1,137 +1,87 @@
-@extends('user.layouts.master')
+@extends('user.layouts.rise-master')
 
 @push('css')
+<style>
 
+</style>
 @endpush
 
 @section('content')
-
-<div class="transfer-money-area pt-3">
-    <div class="row mb-40-none">
-        <div class="col-lg-6 mb-40">
-           <div class="transfer-money-title pb-10">
-               <h3 class="title">{{ __($page_title) }}</h3>
-           </div>
-           <form class="card-form" method="POST" action="{{ setRoute('user.money-out.submit') }}">
-            @csrf
-               <div class="amount-form-header">
-                   <h4 class="title">{{ __('Exchange Rate') }}</h4>
-                   <h3 class="exchange-rate rate">--</h3>
-               </div>
-               <div class="row">
-                   <div class="col-lg-6 form-group">
-                       <label>{{ __('Enter Amount') }}<span>*</span></label>
-                       <div class="input-group currency-type">
-                           <input type="number" class="form--control" name="amount" placeholder="{{ __('Enter Amount') }}">
-                           <div class="currency">
-                               <p>{{ get_default_currency_code() }}</p>
-                           </div>
-                       </div>
-                   </div>
-                   <div class="col-lg-6 form-group">
-                       <label>{{ __("Payment Gateway") }}<span>*</span></label>
-                           <select class="select2-basic w-100" name="payment_gateway">
-                            @php
-                                $old_payment_gateway = old('payment_gateway');
-                            @endphp
-                            <option selected disabled>{{ __('Select Gateway') }}</option>
-                                @foreach ($payment_gateways as $item)
-                                    <option value="{{ $item->alias }}" data-item="{{ json_encode($item->currencies()->select(['name','rate','currency_code','percent_charge','fixed_charge','min_limit','max_limit'])->first()) }}" @if ($old_payment_gateway == $item->alias) @selected(true) @endif>{{ $item->name }}</option>
-                                @endforeach
-                           </select>
-                   </div>
-                   <div class="col-xl-12 col-lg-12 form-group">
-                       <div class="note-area">
-                           <code class="text--base limit-show">--</code>
-                           <code class="text--base fees-show">--</code>
-                       </div>
-                   </div>
-               </div>
-               <div class="col-xl-12 col-lg-12">
-                    <button type="submit" class="btn--base w-100 btn-loading">{{__('Money Out')}} <i class="las la-chevron-right"></i></button>
-               </div>
-           </form>
+<div class="am-header">
+    <h1 class="am-header-title">{{ __($page_title) }}</h1>
+</div>
+<div class="am-body">
+    <!-- Exchange Rate Banner -->
+    <div class="am-rate-banner">
+        <div>
+            <div class="am-rate-label">{{ __('Exchange Rate') }}</div>
+            <div class="am-rate-value exchange-rate rate">--</div>
         </div>
-         <div class="col-lg-6 mb-40">
-             <div class="transfer-preview-area">
-                <div class="preview-area-title pb-10">
-                    <h3 class="title">{{ __('Money Out Preview') }}</h3>
-                </div>
-               <div class="preview-list-wrapper">
-                   <div class="preview-list-item">
-                       <div class="preview-list-left">
-                           <div class="preview-list-user-wrapper">
-                               <div class="preview-list-user-icon">
-                                   <i class="las la-receipt"></i>
-                               </div>
-                               <div class="preview-list-user-content">
-                                   <span>{{ __('Money Out Amount') }}</span>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="preview-list-right">
-                           <span class="text--success withdraw-amount">--</span>
-                       </div>
-                   </div>
-                   <div class="preview-list-item">
-                       <div class="preview-list-left">
-                           <div class="preview-list-user-wrapper">
-                               <div class="preview-list-user-icon">
-                                   <i class="las la-battery-half"></i>
-                               </div>
-                               <div class="preview-list-user-content">
-                                   <span>{{ __('Total Fees & Charges') }}</span>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="preview-list-right">
-                           <span class="text--warning total-charges">--</span>
-                       </div>
-                   </div>
-                   <div class="preview-list-item">
-                       <div class="preview-list-left">
-                           <div class="preview-list-user-wrapper">
-                               <div class="preview-list-user-icon">
-                                   <i class="lab la-get-pocket"></i>
-                               </div>
-                               <div class="preview-list-user-content">
-                                   <span>{{ __('Will Get') }}</span>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="preview-list-right">
-                           <span class="text--danger will-get">--</span>
-                       </div>
-                   </div>
-                   <div class="preview-list-item">
-                       <div class="preview-list-left">
-                           <div class="preview-list-user-wrapper">
-                               <div class="preview-list-user-icon">
-                                   <i class="las la-money-check-alt"></i>
-                               </div>
-                               <div class="preview-list-user-content">
-                                   <span class="last">{{ __('Total Payable Amount') }}</span>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="preview-list-right">
-                           <span class="text--info last payable">--</span>
-                       </div>
-                   </div>
-               </div>
-             </div>
-         </div>
     </div>
-    <div class="transfer-money-log pt-80">
-        <div class="title d-flex justify-content-between">
-           <h3 class="title">{{ __('Money Out Log') }}</h3>
-           <a href="{{ setRoute('user.transactions.index', 'money-out') }}" class="btn--base">{{ __('View More') }} <i class="las la-chevron-right"></i></a>
-        </div>
-        <div class="transfer-log pt-3">
-            <div class="dashboard-list-wrapper">
-                @include('user.components.transaction.log', compact('transactions'))
+
+    <!-- Form Card -->
+    <div class="am-card">
+        <form method="POST" action="{{ setRoute('user.money-out.submit') }}">
+            @csrf
+            <div class="am-field-group">
+                <label class="am-label">{{ __('Enter Amount') }}<span>*</span></label>
+                <div class="am-input-wrap">
+                    <input type="number" name="amount" placeholder="{{ __('Enter Amount') }}" step="any">
+                    <span class="am-input-pill">{{ get_default_currency_code() }}</span>
+                </div>
             </div>
+            <div class="am-field-group">
+                <label class="am-label">{{ __('Payment Gateway') }}<span>*</span></label>
+                <div class="am-input-wrap">
+                    <select name="payment_gateway">
+                        @php $old_payment_gateway = old('payment_gateway'); @endphp
+                        <option selected disabled>{{ __('Select Gateway') }}</option>
+                        @foreach ($payment_gateways as $item)
+                            <option value="{{ $item->alias }}" data-item="{{ json_encode($item->currencies()->select(['name','rate','currency_code','percent_charge','fixed_charge','min_limit','max_limit'])->first()) }}" @if ($old_payment_gateway == $item->alias) @selected(true) @endif>{{ $item->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="am-field-group">
+                <span class="am-hint limit-show">--</span>
+                <span class="am-hint fees-show">--</span>
+            </div>
+            <button type="submit" class="am-btn">{{ __('Money Out') }} <i class="las la-chevron-right"></i></button>
+        </form>
+    </div>
+
+    <!-- Preview Card -->
+    <div class="am-card">
+        <div class="am-card-title">{{ __('Money Out Preview') }}</div>
+        <div class="am-preview-row">
+            <div class="am-preview-icon"><i class="las la-receipt"></i></div>
+            <div class="am-preview-label">{{ __('Money Out Amount') }}</div>
+            <div class="am-preview-value withdraw-amount">--</div>
         </div>
+        <div class="am-preview-row">
+            <div class="am-preview-icon"><i class="las la-battery-half"></i></div>
+            <div class="am-preview-label">{{ __('Total Fees & Charges') }}</div>
+            <div class="am-preview-value total-charges">--</div>
+        </div>
+        <div class="am-preview-row">
+            <div class="am-preview-icon"><i class="lab la-get-pocket"></i></div>
+            <div class="am-preview-label">{{ __('Will Get') }}</div>
+            <div class="am-preview-value will-get">--</div>
+        </div>
+        <div class="am-preview-row">
+            <div class="am-preview-icon"><i class="las la-money-check-alt"></i></div>
+            <div class="am-preview-label">{{ __('Total Payable Amount') }}</div>
+            <div class="am-preview-value payable">--</div>
+        </div>
+    </div>
+
+    <!-- Transaction Log -->
+    <div class="am-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <div class="am-card-title" style="margin-bottom:0;">{{ __('Money Out Log') }}</div>
+            <a href="{{ setRoute('user.transactions.index', 'money-out') }}" class="am-log-link">{{ __('View More') }} <i class="las la-chevron-right"></i></a>
+        </div>
+        @include('user.components.transaction.log', compact('transactions'))
     </div>
 </div>
 @endsection

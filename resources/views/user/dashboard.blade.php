@@ -85,6 +85,26 @@
         </div>
     </div>
 
+    <!-- Lock Status Widget (only if not unlocked) -->
+    @if(!$user->has_qualifying_deposit)
+    <div class="mobile-lock-card" style="background:#111827;border:1px solid #1E293B;border-left:3px solid #3B82F6;border-radius:12px;padding:16px;margin:16px 0;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+            <span style="font-size:20px;">🔐</span>
+            <span style="font-size:15px;font-weight:600;color:#fff;">Unlock Full Access</span>
+        </div>
+        <p style="font-size:13px;color:#94A3B8;line-height:1.6;margin-bottom:12px;">
+            Make your first crypto deposit to:
+        </p>
+        <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px;font-size:13px;color:#94A3B8;">
+            <span>○ Activate your virtual card</span>
+            <span>○ Enable withdrawals</span>
+            <span>○ Access all features</span>
+        </div>
+        <p style="font-size:12px;color:#64748B;margin-bottom:12px;">Minimum deposit: $10 in crypto</p>
+        <a href="{{ route("user.crypto.deposit.index") }}" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;font-size:14px;font-weight:600;border-radius:999px;text-decoration:none;">Deposit Now &rarr;</a>
+    </div>
+    @endif
+
     <!-- Get Started Section -->
     <div class="mobile-get-started-section">
         <div class="mobile-section-title">{{ __('Get Started') }}</div>
@@ -185,6 +205,22 @@
             <a href="{{ setRoute('user.transactions.index') }}" class="btn--base btn-sm">{{ __('View More') }}</a>
         </div>
     </div>
+
+    <!-- Lock Status Widget (desktop, only if not unlocked) -->
+    @if(!$user->has_qualifying_deposit)
+    <div class="premium-dashboard-container" style="grid-column:1/-1;">
+        <div style="background:#111827;border:1px solid #1E293B;border-left:4px solid #3B82F6;border-radius:16px;padding:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span style="font-size:32px;">🔐</span>
+                <div>
+                    <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;">Unlock Full Access</div>
+                    <div style="font-size:13px;color:#94A3B8;">Make a crypto deposit of $10+ to activate virtual cards and enable withdrawals</div>
+                </div>
+            </div>
+            <a href="{{ route("user.crypto.deposit.index") }}" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;font-size:14px;font-weight:600;border-radius:999px;text-decoration:none;white-space:nowrap;">Deposit Now &rarr;</a>
+        </div>
+    </div>
+    @endif
 
     <!-- Row 2: Summary and Other Widgets -->
     <div class="premium-dashboard-container section-summary">

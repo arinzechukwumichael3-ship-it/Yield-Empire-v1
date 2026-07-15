@@ -36,7 +36,7 @@ class TransactionMethod extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('status', GlobalConst::ACTIVE);
+        return $query->where('status', \DB::raw('true'));
     }
 
     public function isOwnBankTransfer() {

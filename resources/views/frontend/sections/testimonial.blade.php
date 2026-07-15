@@ -43,25 +43,12 @@
                     <div class="enzo-testimonial-stars">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
-                    <p class="enzo-testimonial-text">"EnzoBank has completely transformed the way I manage my money. The app is intuitive and transfers are instant!"</p>
-                    <div class="enzo-testimonial-author">
-                        <div class="enzo-testimonial-avatar-placeholder"><i class="las la-user"></i></div>
-                        <div>
-                            <div class="enzo-testimonial-name">{{ __('Sarah Johnson') }}</div>
-                            <div class="enzo-testimonial-role">{{ __('Business Owner') }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="enzo-testimonial-card">
-                    <div class="enzo-testimonial-stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p class="enzo-testimonial-text">"The investment features are outstanding. I've grown my portfolio by 23% this year using their managed funds."</p>
+                    <p class="enzo-testimonial-text">"EnzoBank makes managing my business finances effortless. The instant transfers and virtual cards have transformed how I pay suppliers and manage cash flow."</p>
                     <div class="enzo-testimonial-author">
                         <div class="enzo-testimonial-avatar-placeholder"><i class="las la-user"></i></div>
                         <div>
                             <div class="enzo-testimonial-name">{{ __('Michael Chen') }}</div>
-                            <div class="enzo-testimonial-role">{{ __('Software Engineer') }}</div>
+                            <div class="enzo-testimonial-role">{{ __('Small Business Owner, San Francisco, CA') }}</div>
                         </div>
                     </div>
                 </div>
@@ -69,12 +56,25 @@
                     <div class="enzo-testimonial-stars">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
-                    <p class="enzo-testimonial-text">"24/7 support is real. They resolved my issue in minutes. Best banking experience I've ever had."</p>
+                    <p class="enzo-testimonial-text">"I save 10% of every freelance payment into my EnzoBank goal savings. The interest rates are better than anything I got from traditional banks, and I can withdraw anytime without penalties."</p>
                     <div class="enzo-testimonial-author">
                         <div class="enzo-testimonial-avatar-placeholder"><i class="las la-user"></i></div>
                         <div>
-                            <div class="enzo-testimonial-name">{{ __('Aisha Patel') }}</div>
-                            <div class="enzo-testimonial-role">{{ __('Freelancer') }}</div>
+                            <div class="enzo-testimonial-name">{{ __('Jessica Williams') }}</div>
+                            <div class="enzo-testimonial-role">{{ __('Freelance Designer, Austin, TX') }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="enzo-testimonial-card">
+                    <div class="enzo-testimonial-stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="enzo-testimonial-text">"I was initially skeptical about digital-only banks, but EnzoBank exceeded all my expectations. Their support team resolved an issue within minutes, and the debit card arrived in 2 days."</p>
+                    <div class="enzo-testimonial-author">
+                        <div class="enzo-testimonial-avatar-placeholder"><i class="las la-user"></i></div>
+                        <div>
+                            <div class="enzo-testimonial-name">{{ __('Dr. Robert Kim') }}</div>
+                            <div class="enzo-testimonial-role">{{ __('Professor, University of Washington, Seattle') }}</div>
                         </div>
                     </div>
                 </div>

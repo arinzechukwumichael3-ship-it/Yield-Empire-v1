@@ -145,6 +145,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Installed
+    |--------------------------------------------------------------------------
+    |
+    | This flag indicates whether the application has completed the installer.
+    | Must be referenced here so it survives config:cache.
+    |
+    */
+
+    'installed' => env('APP_INSTALLED', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |

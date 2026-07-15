@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\UsefulLinkController;
 use App\Http\Controllers\Admin\AppSettingsController;
 use App\Http\Controllers\Admin\CryptoAssetController;
 use App\Http\Controllers\Admin\TrxSettingsController;
+use App\Http\Controllers\Admin\CryptoDepositController;
 use App\Http\Controllers\Admin\VirtualCardController;
 use App\Http\Controllers\Admin\WebSettingsController;
 use App\Http\Controllers\Admin\BroadcastingController;
@@ -463,6 +464,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('wallet/status/update','walletStatusUpdate')->name('wallet.status.update');
         Route::get('wallet/transactions/{crypto_asset_id}/{wallet_id}','walletTransactions')->name('wallet.transactions');
         Route::post('wallet/transactions/search/{crypto_asset_id}/{wallet_id}','walletTransactionSearch')->name('wallet.transaction.search');
+    });
+
+    Route::controller(CryptoDepositController::class)->prefix("crypto-deposits")->name("crypto.deposits.")->group(function() {
+        Route::get("/","index")->name("index");
+        Route::get("{id}","show")->name("show");
+        Route::post("{id}/approve","approve")->name("approve");
+        Route::post("{id}/reject","reject")->name("reject");
     });
 });
 

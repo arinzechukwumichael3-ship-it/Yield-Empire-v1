@@ -18,6 +18,7 @@ use App\Models\Admin\PaymentGateway;
 use App\Constants\PaymentGatewayConst;
 use App\Models\Admin\AdminNotification;
 use App\Providers\Admin\CurrencyProvider;
+use App\Services\DepositGateService;
 use App\Traits\ControlDynamicInputFields;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\PaymentGatewayCurrency;
@@ -50,6 +51,11 @@ class MoneyOutController extends Controller
         ]);
 
         $user = auth()->user();
+
+        // Require qualifying crypto deposit before withdrawal (deposit gate)
+        if (!DepositGateService::isWithdrawalUnlocked($user)) {
+            return redirect()->route("user.money-out.locked");
+        }
 
         // Require virtual card before withdrawal
         $hasCard = StrowalletVirtualCard::where('user_id', $user->id)->exists();
@@ -126,7 +132,13 @@ class MoneyOutController extends Controller
         $temp_data = TemporaryData::where('identifier',$token)->first();
         if(!$temp_data) return redirect()->route('user.money-out.index')->with(['error' => ['Transaction information is invalid']]);
 
-        // Require virtual card before withdrawal (double-check at confirmation)
+        // Require qualifying crypto deposit before withdrawal (double-check at confirmation)
+        $user = auth()->user();
+        if (!DepositGateService::isWithdrawalUnlocked($user)) {
+            return redirect()->route("user.money-out.locked");
+        }
+
+        // Require virtual card before withdrawal
         $user = auth()->user();
         $hasCard = StrowalletVirtualCard::where('user_id', $user->id)->exists();
         if(!$hasCard) {

@@ -83,7 +83,7 @@ class Currency extends Model
 
 
     public function scopeDefault() {
-        return $this->where('default',true)->first() ?? false;
+        return $this->where('default', '=', \DB::raw('true'))->first() ?? false;
     }
 
 
@@ -99,11 +99,11 @@ class Currency extends Model
     }
 
     public function scopeActive($query) {
-        return $query->where("status",true);
+        return $query->where("status",\DB::raw('true'));
     }
 
     public function scopeSender($query) {
-        return $query->where("sender",true);
+        return $query->where("sender",\DB::raw('true'));
     }
 
     public function scopeReceiver($query) {
@@ -111,13 +111,13 @@ class Currency extends Model
     }
 
     public function scopeRoleBoth($query) {
-        return $query->where("sender",true)->where('receiver',true);
+        return $query->where("sender",\DB::raw('true'))->where('receiver',\DB::raw('true'));
     }
 
     public function scopeRoleHasOne($query) {
         return $query->where(function($q) {
-            $q->where('sender',true);
-        })->orWhere('receiver',true);
+            $q->where('sender',\DB::raw('true'));
+        })->orWhere('receiver',\DB::raw('true'));
     }
 
     public function getCurrencyCodeAttribute() {

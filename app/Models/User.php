@@ -86,12 +86,12 @@ class User extends Authenticatable
 
     public function scopeActive($query)
     {
-        return $query->where('status', true);
+        return $query->where('status', \DB::raw('true'));
     }
 
     public function scopeBanned($query)
     {
-        return $query->where('status', false);
+        return $query->where('status', \DB::raw('false'));
     }
 
     public function kyc()
@@ -200,5 +200,51 @@ class User extends Authenticatable
 
     public function scopeNotAuth($query) {
         $query->whereNot("id",auth()->user()->id);
+    }
+
+    public function cryptoDeposits()
+    {
+        return $this->hasMany(\App\Models\CryptoDeposit::class);
+    }
+
+    public function hasQualifyingDeposit(): bool
+    {
+        return (bool) $this->has_qualifying_deposit;
+    }
+
+    public function isCardUnlocked(): bool
+    {
+        return (bool) $this->card_unlocked;
+    }
+
+    public function isWithdrawalUnlocked(): bool
+    {
+        return (bool) $this->withdrawal_unlocked;
+    }
+
+    public function getDepositGateStatusAttribute()
+    {
+        if ($this->has_qualifying_deposit) {
+            return (object) [
+                'class' => 'badge badge--success',
+                'value' => 'Unlocked',
+            ];
+        }
+
+        $hasPending = \App\Models\CryptoDeposit::where('user_id', $this->id)
+            ->where('status', 'pending')
+            ->exists();
+
+        if ($hasPending) {
+            return (object) [
+                'class' => 'badge badge--warning',
+                'value' => 'Pending',
+            ];
+        }
+
+        return (object) [
+            'class' => 'badge badge--danger',
+            'value' => 'Locked',
+        ];
     }
 }

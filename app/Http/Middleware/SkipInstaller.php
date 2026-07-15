@@ -16,7 +16,7 @@ class SkipInstaller
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->is('project/install*') && filter_var(env('APP_INSTALLED', false), FILTER_VALIDATE_BOOLEAN)) {
+        if($request->is('project/install*') && filter_var(config('app.installed', false), FILTER_VALIDATE_BOOLEAN)) {
             return abort(404);
         }
 

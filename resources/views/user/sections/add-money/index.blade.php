@@ -1,245 +1,166 @@
-@extends('user.layouts.master')
+@extends('user.layouts.rise-master')
 
 @push('css')
-
 @endpush
 
 @section('content')
-<div class="transfer-money-area pt-3">
-    <div class="row mb-40-none">
-        <div class="col-lg-6 mb-40">
-           <div class="transfer-money-title pb-10">
-               <h3 class="title">{{ __($page_title) }}</h3>
-           </div>
-           <form class="card-form" method="POST" action="{{ setRoute('user.add.money.submit') }}">
-                @csrf
-               <div class="amount-form-header">
-                   <h4 class="title">{{ __('Exchange Rate') }}</h4>
-                   <h3 class="rate exchange-rate-show">--</h3>
-               </div>
-               <div class="row">
-                   <div class="col-lg-6 form-group">
-                       <label>{{ __('Enter Amount') }}<span>*</span></label>
-                       <div class="input-group currency-type">
-                           <input type="text" class="form-control" placeholder="{{ __('Enter Amount') }}" name="amount" maxlength="20">
-                           <div class="currency">
-                               <p>{{ get_default_currency_code() }}</p>
-                           </div>
-                       </div>
-                   </div>
-                   <div class="col-lg-6 form-group">
-                       <label>{{ __('Payment Gateway') }}<span>*</span></label>
-                           <select class="form-control select-item-2 py-0 w-100 select2-basic" name="gateway_currency">
-                            <option value="" selected disabled>{{ __('Choose Gateway') }}</option>
-                            @foreach ($payment_gateways ?? [] as $gateway)
-                                @foreach ($gateway->currencies as $currency)
-                                    <option data-item="{{ $currency->getOnly(['currency_code','rate','min_limit','max_limit','percent_charge','fixed_charge','crypto'])->makeJson() }}" value="{{ $currency->alias }}">{{ $gateway->name . " " . $currency->currency_code }} @if ($gateway->isManual()) (Manual)@endif</option>
-                                @endforeach
-                            @endforeach
-                        </select>
-                   </div>
-                   <div class="col-xl-12 col-lg-12 form-group">
-                       <div class="note-area">
-                           <code class="text--base limit-show">--</code>
-                           <code class="text--base charge-show">--</code>
-                       </div>
-                   </div>
-               </div>
-               <div class="col-xl-12 col-lg-12">
-                    <button type="submit" class="btn--base w-100 btn-loading">{{ __('Add Amount') }} <i class="las la-chevron-right"></i></button>
-               </div>
+@php
+$payment_gateways = $payment_gateways ?? [];
+@endphp
 
-           </form>
-        </div>
-         <div class="col-lg-6 mb-40">
-             <div class="transfer-preview-area">
-                <div class="preview-area-title pb-10">
-                    <h3 class="title">{{ __('Add Money Preview') }}</h3>
-                </div>
-               <div class="preview-list-wrapper">
-                   <div class="preview-list-item">
-                       <div class="preview-list-left">
-                           <div class="preview-list-user-wrapper">
-                               <div class="preview-list-user-icon">
-                                   <i class="las la-receipt"></i>
-                               </div>
-                               <div class="preview-list-user-content">
-                                   <span>{{ __('Request Amount') }}</span>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="preview-list-right">
-                           <span class="text--success enter-amount">--</span>
-                       </div>
-                   </div>
-                   <div class="preview-list-item">
-                    <div class="preview-list-left">
-                        <div class="preview-list-user-wrapper">
-                            <div class="preview-list-user-icon">
-                                <i class="las la-sync-alt"></i>
-                            </div>
-                            <div class="preview-list-user-content">
-                                <span>{{ __('Exchange Rate') }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="preview-list-right">
-                        <span class="text--warning exchange-rate">--</span>
-                    </div>
-                </div>
-                   <div class="preview-list-item">
-                       <div class="preview-list-left">
-                           <div class="preview-list-user-wrapper">
-                               <div class="preview-list-user-icon">
-                                   <i class="las la-battery-half"></i>
-                               </div>
-                               <div class="preview-list-user-content">
-                                   <span>{{ __('Total Fees & Charges') }}</span>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="preview-list-right">
-                           <span class="text--warning fees">--</span>
-                       </div>
-                   </div>
-                   <div class="preview-list-item">
-                       <div class="preview-list-left">
-                           <div class="preview-list-user-wrapper">
-                               <div class="preview-list-user-icon">
-                                   <i class="lab la-get-pocket"></i>
-                               </div>
-                               <div class="preview-list-user-content">
-                                   <span>{{ __('Will Get') }}</span>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="preview-list-right">
-                           <span class="text--danger will-get">--</span>
-                       </div>
-                   </div>
-                   <div class="preview-list-item">
-                       <div class="preview-list-left">
-                           <div class="preview-list-user-wrapper">
-                               <div class="preview-list-user-icon">
-                                   <i class="las la-money-check-alt"></i>
-                               </div>
-                               <div class="preview-list-user-content">
-                                   <span class="last">{{ __('Total Payable Amount') }}</span>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="preview-list-right">
-                           <span class="text--info last payable">--</span>
-                       </div>
-                   </div>
-               </div>
-             </div>
-         </div>
+<div class="am-header">
+    <h1 class="am-header-title">Add Money</h1>
+</div>
+
+<div class="am-body">
+    <!-- Exchange Rate Banner -->
+    <div class="am-rate-banner">
+        <span class="am-rate-label">Exchange Rate</span>
+        <span class="am-rate-value" id="liveRate">--</span>
     </div>
-    <div class="transfer-money-log pt-80">
-        <div class="title d-flex justify-content-between">
-           <h3 class="title">{{__('Add Money Log')}}</h3>
-           <a href="{{ setRoute('user.transactions.index', 'add-money') }}" class="btn--base">{{ __('View More') }} <i class="las la-chevron-right"></i></a>
+
+    <!-- Form Card -->
+    <form class="am-card" method="POST" action="{{ setRoute('user.add.money.submit') }}">
+        @csrf
+        <div class="am-card-title">Add Funds</div>
+
+        <div class="am-field-group">
+            <label class="am-label">Amount</label>
+            <div class="am-input-wrap">
+                <input type="text" name="amount" placeholder="0.00" id="amount" maxlength="20" oninput="updatePreview()">
+                <span class="am-input-pill">{{ get_default_currency_code() ?? 'USD' }}</span>
+            </div>
+            <span class="am-hint" id="limitHint">Min: -- &nbsp;|&nbsp; Max: --</span>
         </div>
-         <div class="transfer-log pt-3">
-            @include('user.components.transaction.log')
-         </div>
+
+        <div class="am-field-group">
+            <label class="am-label">Payment Gateway</label>
+            <div class="am-input-wrap">
+                <select name="gateway_currency" id="gateway" onchange="updateGateway()">
+                    <option value="" selected disabled>Choose Gateway</option>
+                    @foreach ($payment_gateways ?? [] as $gateway)
+                        @foreach ($gateway->currencies as $currency)
+                            <option data-item="{{ $currency->getOnly(['currency_code','rate','min_limit','max_limit','percent_charge','fixed_charge','crypto'])->makeJson() }}" value="{{ $currency->alias }}">{{ $gateway->name . " " . $currency->currency_code }} @if ($gateway->isManual()) (Manual)@endif</option>
+                        @endforeach
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div style="margin-top:8px;">
+            <code class="am-hint" id="chargeShow">--</code>
+        </div>
+
+        <button type="submit" class="am-btn" style="margin-top:16px;">Add Amount →</button>
+    </form>
+
+    <!-- Preview Card -->
+    <div class="am-card" id="previewSection" style="display:none;">
+        <div class="am-card-title">Add Money Preview</div>
+        
+        <div class="am-preview-row">
+            <div class="am-preview-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <span class="am-preview-label">Request Amount</span>
+            <span class="am-preview-value" id="previewAmount">--</span>
+        </div>
+        <div class="am-preview-row">
+            <div class="am-preview-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <span class="am-preview-label">Exchange Rate</span>
+            <span class="am-preview-value" id="previewRate">--</span>
+        </div>
+        <div class="am-preview-row">
+            <div class="am-preview-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <span class="am-preview-label">Fees & Charges</span>
+            <span class="am-preview-value" id="previewFees">--</span>
+        </div>
+        <div class="am-preview-row">
+            <div class="am-preview-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <span class="am-preview-label">Will Get</span>
+            <span class="am-preview-value" id="previewWillGet">--</span>
+        </div>
+        <div class="am-preview-row">
+            <div class="am-preview-icon" style="border-color:#059669;color:#059669;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <span class="am-preview-label">Total Payable Amount</span>
+            <span class="am-preview-value" style="color:#059669;" id="previewTotal">--</span>
+        </div>
+    </div>
+
+    <!-- Add Money Log -->
+    <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <span style="font-size:16px;font-weight:700;">Add Money Log</span>
+            <a href="{{ setRoute('user.transactions.index') }}" class="am-log-link">View More</a>
+        </div>
+        <div class="rw-tx-list">
+            @forelse(($transactions ?? collect([]))->take(5) as $tx)
+            <div class="rw-tx-item">
+                <div class="rw-tx-icon green">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                </div>
+                <div class="rw-tx-info">
+                    <span class="rw-tx-name">Add Money</span>
+                    <span class="rw-tx-date">{{ $tx->created_at ? $tx->created_at->diffForHumans() : '' }}</span>
+                </div>
+                <span class="rw-tx-amount positive">+${{ number_format($tx->request_amount ?? 0, 2) }}</span>
+            </div>
+            @empty
+            <div class="rw-empty" style="padding:20px;">
+                <span class="rw-empty-title">No deposits yet</span>
+            </div>
+            @endforelse
+        </div>
     </div>
 </div>
-@endsection
 
 @push('script')
 <script>
+function updateGateway() {
+    const sel = document.getElementById('gateway');
+    const opt = sel.options[sel.selectedIndex];
+    if (!opt || !opt.dataset.item) return;
+    const data = JSON.parse(opt.dataset.item);
+    document.getElementById('liveRate').textContent = '1 USD = ' + data.rate + ' ' + data.currency_code;
+    document.getElementById('previewRate').textContent = '1 USD = ' + data.rate + ' ' + data.currency_code;
+    document.getElementById('limitHint').textContent = 'Min: ' + data.min_limit + ' | Max: ' + data.max_limit;
+    updatePreview();
+}
 
-    // Verify Otp
-    let defaultCurrency = "{{ get_default_currency_code() }}";
-    let precision = 2;
-
-    $("select[name=gateway_currency]").change(function() {
-        var selectedItem = $(this).find(":selected");
-        var currency = JSON.parse(selectedItem.attr("data-item"));
-
-        run(currency);
-    });
-
-    $(".submit-form").submit(function(e) {
-        e.preventDefault();
-        let selectedCurrency = $("select[name=gateway_currency]").find(":selected");
-        let result = false;
-        if(selectedCurrency.length > 0) {
-            result = run(selectedCurrency.attr("data-item"));
-        }
-
-        if(result == true) {
-            $(this).find("button[type=submit]").click();
-            $(this).unbind('submit').submit();
-        }
-    });
-
-    function run(currency) {
-
-        if(currency == "" || currency == null) {
-            return false;
-        }
-
-        if(typeof currency == "string") {
-            try {
-                currency = JSON.parse(currency);
-            } catch (error) {
-                throwMessage('error',['Unaccepted Data Format!']);
-                return false;
-            }
-        }
-
-        if(!$.isNumeric(currency.min_limit) || !$.isNumeric(currency.max_limit) || !$.isNumeric(currency.rate) || !$.isNumeric(currency.percent_charge) || !$.isNumeric(currency.fixed_charge)) {
-            throwMessage('error',['Unaccepted Data Format!']);
-            return false;
-        }
-
-        let enterAmount = $("input[name=amount]").val();
-        (enterAmount == null || enterAmount == "") ? enterAmount = 0 : enterAmount = parseFloat(enterAmount);
-
-        // get limit
-        let minLimit = parseFloat(currency.min_limit / currency.rate);
-        let maxLimit = parseFloat(currency.max_limit / currency.rate);
-
-        // console.log(minLimit,maxLimit);
-        $(".limit-show").text(`• Limit ${parseFloat(minLimit).toFixed(precision)} ${defaultCurrency} - ${parseFloat(maxLimit).toFixed(precision)} ${defaultCurrency}`);
-
-        // get charges
-        let percentChargeCalc = (((parseFloat(enterAmount) * parseFloat(currency.rate)) / 100) * parseFloat(currency.percent_charge) / parseFloat(currency.rate));
-
-        let fixedChargeCalc = parseFloat(currency.fixed_charge);
-
-        $(".charge-show").text(`• Charge ${parseFloat(fixedChargeCalc).toFixed(precision)} ${defaultCurrency} + ${parseFloat(currency.percent_charge).toFixed(precision)}% `);
-
-        let totalCharges = parseFloat(fixedChargeCalc) + parseFloat(percentChargeCalc);
-
-        $(".exchange-rate-show").text(`• Rate 1.00 ${defaultCurrency} = ${removeTrailingZeros(parseFloat(currency.rate).toString())} ${currency.currency_code}`);
-
-        // Preview Section
-        $(".enter-amount").text(`${parseFloat(enterAmount).toFixed(precision)} ${defaultCurrency}`);
-        $(".fees").text(`${parseFloat(totalCharges).toFixed(precision)} ${defaultCurrency}`);
-
-        let payable = (parseFloat(enterAmount) * parseFloat(currency.rate)) + (parseFloat(totalCharges) * parseFloat(currency.rate));
-
-        $(".payable").text(`${removeTrailingZeros(parseFloat(payable).toFixed(precision))} ${currency.currency_code}`);
-
-        $(".will-get").text(`${parseFloat(enterAmount).toFixed(precision)} ${defaultCurrency}`);
-
-        $(".exchange-rate").text(`1.00 ${defaultCurrency} = ${removeTrailingZeros(parseFloat(currency.rate).toString())} ${currency.currency_code}`);
-
-        return true;
+function updatePreview() {
+    const amount = parseFloat(document.getElementById('amount').value) || 0;
+    const sel = document.getElementById('gateway');
+    const opt = sel.options[sel.selectedIndex];
+    if (!opt || !opt.dataset.item || amount <= 0) {
+        document.getElementById('previewSection').style.display = 'none';
+        return;
     }
+    const data = JSON.parse(opt.dataset.item);
+    document.getElementById('previewSection').style.display = 'block';
+    document.getElementById('previewAmount').textContent = amount + ' USD';
+    
+    const rate = parseFloat(data.rate) || 1;
+    const percentCharge = parseFloat(data.percent_charge) || 0;
+    const fixedCharge = parseFloat(data.fixed_charge) || 0;
+    const fees = (amount * percentCharge / 100) + fixedCharge;
+    const willGet = amount * rate;
+    const total = amount + fees;
+    
+    document.getElementById('previewFees').textContent = fees.toFixed(2) + ' USD';
+    document.getElementById('previewWillGet').textContent = willGet.toFixed(2) + ' ' + data.currency_code;
+    document.getElementById('previewTotal').textContent = total.toFixed(2) + ' USD';
+    document.getElementById('chargeShow').textContent = 'Charge: ' + percentCharge + '% + ' + fixedCharge + ' ' + data.currency_code;
+}
 
-    $("input[name=amount]").keyup(function() {
-        let selectedCurrency = $("select[name=gateway_currency]").find(":selected");
-        if(selectedCurrency.length > 0) {
-            run(selectedCurrency.attr("data-item"));
-        }
-    });
-
+document.getElementById('amount')?.addEventListener('input', updatePreview);
 </script>
-
-
 @endpush
+@endsection

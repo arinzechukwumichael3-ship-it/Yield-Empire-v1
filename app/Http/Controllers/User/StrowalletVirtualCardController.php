@@ -37,7 +37,7 @@ class StrowalletVirtualCardController extends Controller
     public function __construct(){
         $card_api               = VirtualCardApi::first();
         $this->api              = $card_api;
-        $this->card_limit       = $card_api->card_limit;
+        $this->card_limit       = $card_api->card_limit ?? 0;
         $this->basic_settings   = BasicSettings::first();
     }
     /**

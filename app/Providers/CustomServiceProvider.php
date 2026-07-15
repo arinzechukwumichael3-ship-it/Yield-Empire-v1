@@ -17,6 +17,7 @@ use App\Models\Admin\BasicSettings;
 use Illuminate\Support\Facades\Config;
 use App\Models\Admin\SystemMaintenance;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\DB;
 use App\Providers\Admin\CurrencyProvider;
 use App\Providers\Admin\BasicSettingsProvider;
 
@@ -27,9 +28,16 @@ class CustomServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+        public function register()
     {
         $this->startingPoint();
+
+        // Register custom PostgreSQL connection for proper boolean handling
+        DB::extend('pgsql', function ($config, $name) {
+            $connector = new \Illuminate\Database\Connectors\PostgresConnector();
+            $pdo = $connector->connect($config);
+            return new \App\Database\PostgresConnection($pdo, $config['database'] ?? '', $config['prefix'] ?? '', $config);
+        });
     }
 
     /**
@@ -45,17 +53,17 @@ class CustomServiceProvider extends ServiceProvider
             $view_share['default_currency']             = Currency::default();
             $view_share['__languages']                  = Language::get();
             $view_share['all_user_count']               = User::count();
-            $view_share['email_verified_user_count']    = User::where('email_verified', 1)->count();
-            $view_share['kyc_verified_user_count']      = User::where('kyc_verified', 1)->count();
+            $view_share['email_verified_user_count']    = User::where('email_verified', '=', \DB::raw('true'))->count();
+            $view_share['kyc_verified_user_count']      = User::where('kyc_verified', '=', \DB::raw('true'))->count();
             $view_share['__extensions']                 = Extension::get();
             $view_share['pending_ticket_count']         = UserSupportTicket::pending()->get()->count();
             $view_share['__website_sections']           = SiteSections::get();
             $view_share['__app_settings']               = AppSettings::first();
-            $view_share['__website_useful_link']        = UsefulLink::where("status",GlobalConst::ACTIVE)->get();
-            $view_share['__website_privacy_policy']     = UsefulLink::where("status",GlobalConst::ACTIVE)->where('type',GlobalConst::USEFUL_LINK_PRIVACY_POLICY)->first();
-            $view_share['__setup_pages']                = SetupPage::where('status',GlobalConst::ACTIVE)->get();
+            $view_share['__website_useful_link']        = UsefulLink::where("status",\DB::raw('true'))->get();
+            $view_share['__website_privacy_policy']     = UsefulLink::where("status",\DB::raw('true'))->where('type',GlobalConst::USEFUL_LINK_PRIVACY_POLICY)->first();
+            $view_share['__setup_pages']                = SetupPage::where('status',\DB::raw('true'))->get();
             $view_share['system_maintenance']           = SystemMaintenance::first();
-            view()->share($view_share);
+            $this->app["view"]->share($view_share);
 
             $this->app->bind(BasicSettingsProvider::class, function () use ($view_share) {
                 return new BasicSettingsProvider($view_share['basic_settings']);

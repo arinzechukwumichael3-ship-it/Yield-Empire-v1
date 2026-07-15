@@ -1,99 +1,71 @@
 @php
-    $menues      = DB::table('setup_pages')->where('status', 1)->get();
-    $current_url = URL::current();
+    $setup_pages = DB::table("setup_pages")->where("status", true)->get();
 @endphp
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Start Header
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<header class="enzo-header" id="enzoHeader">
-    <nav class="enzo-navbar">
-        <div class="enzo-nav-container">
-            <!-- Logo -->
-            <a href="{{ setRoute('frontend.index') }}" class="enzo-logo">
-                Enzo<span class="enzo-logo-accent">Bank</span>
-            </a>
 
-            <!-- Desktop Nav Links -->
-            <ul class="enzo-nav-links d-none d-lg-flex">
-                @foreach ($menues ?? [] as $item)
-                    @php $title = $item->title ?? ''; @endphp
-                    <li><a href="{{ url($item->url) }}" class="enzo-nav-link {{ $current_url == url($item->url) ? 'active' : '' }}">{{ __($title) }}</a></li>
-                @endforeach
-                <li><a href="{{ setRoute('frontend.contact') }}" class="enzo-nav-link">{{ __('Contact') }}</a></li>
-            </ul>
+<!-- ====== NEW ENZOBANK NAVBAR ====== -->
+<header class="enzonav" id="enzonav">
+    <div class="enzonav-inner">
+        <!-- Logo -->
+        <a href="{{ setRoute("frontend.index") }}" class="enzonav-logo">
+            <span class="enzonav-logo-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 2L18 10L10 18L2 10Z" fill="#3B82F6"/>
+                    <rect x="7" y="7" width="6" height="6" rx="1" fill="#0A0E1A" opacity="0.9"/>
+                </svg>
+            </span>
+            <span class="enzonav-logo-text">Enzo</span><span class="enzonav-logo-accent" style="margin-left:0">Bank</span>
+        </a>
 
-            <!-- Desktop CTA -->
-            <div class="enzo-nav-actions d-none d-lg-flex">
-                @auth
-                    <a href="{{ setRoute('user.dashboard') }}" class="enzo-btn-primary">{{ __('Dashboard') }}</a>
-                @else
-                    <a href="{{ setRoute('user.login') }}" class="enzo-btn-ghost">{{ __('Login') }}</a>
-                    <a href="{{ setRoute('user.register') }}" class="enzo-btn-primary">{{ __('Get Started') }} →</a>
-                @endauth
-            </div>
+        <!-- Desktop Nav Links -->
+        <nav class="enzonav-links" id="enzonavLinks">
+            <a href="{{ setRoute("frontend.index") }}" class="enzonav-link active">Home</a>
+            <a href="{{ setRoute("frontend.index") }}#features" class="enzonav-link">Features</a>
+            <a href="{{ setRoute("frontend.index") }}#how-it-works" class="enzonav-link">How It Works</a>
+            <a href="{{ setRoute("frontend.index") }}#security" class="enzonav-link">Security</a>
+            <a href="{{ setRoute("frontend.index") }}#testimonials" class="enzonav-link">Reviews</a>
+            <a href="{{ setRoute("frontend.contact") }}" class="enzonav-link">Contact</a>
+        </nav>
 
-            <!-- Mobile Hamburger -->
-            <button class="enzo-hamburger d-lg-none" id="enzoMenuToggle" aria-label="Toggle navigation" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
+        <!-- Desktop Actions -->
+        <div class="enzonav-actions">
+            <!-- Theme Toggle -->
+            <button class="theme-toggle" id="themeToggleDesktop" aria-label="Toggle theme">
+                <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            @auth
+                <a href="{{ setRoute("user.rise.home") }}" class="enzonav-btn enzonav-btn-primary">Dashboard</a>
+            @else
+                <a href="{{ setRoute("user.login") }}" class="enzonav-btn enzonav-btn-ghost">Sign In</a>
+                <a href="{{ setRoute("user.register") }}" class="enzonav-btn enzonav-btn-primary">Get Started</a>
+            @endauth
+            <button class="enzonav-hamburger" id="enzonavHamburger" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
             </button>
         </div>
+    </div>
 
-        <!-- Mobile Menu -->
-        <div class="enzo-mobile-menu" id="enzoMobileMenu">
-            <ul class="enzo-mobile-nav-links">
-                @foreach ($menues ?? [] as $item)
-                    @php $title = $item->title ?? ''; @endphp
-                    <li><a href="{{ url($item->url) }}">{{ __($title) }}</a></li>
-                @endforeach
-                <li><a href="{{ setRoute('frontend.contact') }}">{{ __('Contact') }}</a></li>
-            </ul>
-            <div class="enzo-mobile-actions">
-                @auth
-                    <a href="{{ setRoute('user.dashboard') }}" class="enzo-btn-primary w-100 text-center">{{ __('Dashboard') }}</a>
-                @else
-                    <a href="{{ setRoute('user.login') }}" class="enzo-btn-ghost w-100 text-center mb-2">{{ __('Login') }}</a>
-                    <a href="{{ setRoute('user.register') }}" class="enzo-btn-primary w-100 text-center">{{ __('Get Started') }} →</a>
-                @endauth
-            </div>
+    <!-- Mobile Menu -->
+    <div class="enzonav-mobile" id="enzonavMobile">
+        <div class="enzonav-mobile-theme">
+            <button class="theme-toggle" id="themeToggleMobile" aria-label="Toggle theme">
+                <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <span style="margin-left:8px;font-size:14px;">{{ __("Theme") }}</span>
+            </button>
         </div>
-    </nav>
+        <a href="{{ setRoute("frontend.index") }}" class="enzonav-mobile-link">Home</a>
+        <a href="{{ setRoute("frontend.index") }}#features" class="enzonav-mobile-link">Features</a>
+        <a href="{{ setRoute("frontend.index") }}#how-it-works" class="enzonav-mobile-link">How It Works</a>
+        <a href="{{ setRoute("frontend.index") }}#security" class="enzonav-mobile-link">Security</a>
+        <a href="{{ setRoute("frontend.index") }}#testimonials" class="enzonav-mobile-link">Reviews</a>
+        <a href="{{ setRoute("frontend.contact") }}" class="enzonav-mobile-link">Contact</a>
+        <div class="enzonav-mobile-divider"></div>
+        @auth
+            <a href="{{ setRoute("user.rise.home") }}" class="enzonav-mobile-btn">Dashboard</a>
+        @else
+            <a href="{{ setRoute("user.login") }}" class="enzonav-mobile-btn enzonav-mobile-btn-ghost">Sign In</a>
+            <a href="{{ setRoute("user.register") }}" class="enzonav-mobile-btn enzonav-mobile-btn-primary">Get Started</a>
+        @endauth
+    </div>
 </header>
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    End Header
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
-@push('script')
-<script>
-(function() {
-    const toggle = document.getElementById('enzoMenuToggle');
-    const menu = document.getElementById('enzoMobileMenu');
-    const header = document.getElementById('enzoHeader');
-
-    if (toggle && menu) {
-        toggle.addEventListener('click', function() {
-            const open = menu.classList.toggle('open');
-            toggle.classList.toggle('open', open);
-            toggle.setAttribute('aria-expanded', String(open));
-        });
-        document.addEventListener('click', function(e) {
-            if (!header.contains(e.target)) {
-                menu.classList.remove('open');
-                toggle.classList.remove('open');
-                toggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-    }
-
-    // Scroll effect
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    }, { passive: true });
-})();
-</script>
-@endpush

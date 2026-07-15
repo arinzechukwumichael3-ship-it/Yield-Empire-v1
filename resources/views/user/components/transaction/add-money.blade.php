@@ -11,7 +11,13 @@
                         <i class="las la-arrow-down"></i>
                     </div>
                     <div class="dashboard-list-user-content">
-                        <h4 class="title">{{ __("Add Money via") }} {{ $transaction->gateway_currency->gateway->name }} @if (@$transaction->gateway_currency->gateway->isManual())
+                        <h4 class="title">
+                            @if(isset($transaction->details->source_type) && $transaction->details->source_type === "internal_transfer")
+                                {{ __("Received from transfer") }}
+                            @else
+                                {{ __("Add Money via") }} {{ $transaction->gateway_currency->gateway->name }}
+                            @endif
+                            @if (@$transaction->gateway_currency->gateway->isManual())
                             ({{ __("Manual") }})
                         @endif</h4>
                         <span class="{{ $transaction->stringStatus->class }}">{{ __($transaction->stringStatus->value) }} &nbsp; <span class="text-secondary">#{{ $transaction->trx_id }}</span></span>

@@ -80,6 +80,7 @@ class Kernel extends HttpKernel
         'user.google.two.factor'        => \App\Http\Middleware\User\GoogleTwoFactor::class,
         'kyc.verification.guard'        => \App\Http\Middleware\KycVerificationGuard::class,
         'pin.setup.guard'               => \App\Http\Middleware\User\PinSetupGuard::class,
+        'deposit.gate'                  => \App\Http\Middleware\DepositGateMiddleware::class,
 
         // Api middleware
         'api.user.auth.guard'           => \App\Http\Middleware\Api\V1\User\AuthGuard::class,

@@ -21,7 +21,7 @@ class Language extends Model
     ];
 
     public function scopeDefault($query) {
-        return $query->where("status",true);
+        return $query->where("status",\DB::raw('true'));
     }
 
     public function getEditDataAttribute() {

@@ -20,10 +20,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name ="description", content="{{ @$seo_settings->desc }}">
-    <meta name ="keywords", content="{{ @$seo_settings->tags ? implode(", ", @$seo_settings->tags) : '' }}">
-    <meta name="author" content="{{ config('app.name') }}"/>
-    <meta name="application-name" content="{{ $basic_settings->sitename($page_title??'') }}">
+    <meta name="description" content="{{ $basic_settings->site_name ?? 'EnzoBank' }} - {{ $basic_settings->site_title ?? 'Secure USA Digital Banking Platform' }}">
+    <meta name="keywords" content="EnzoBank, USA Digital Bank, Online Banking, Virtual Cards, FDIC Insured, US Financial Services">
+    <meta name="author" content="EnzoBank"/>
+    <meta name="application-name" content="EnzoBank">
+    <meta name="geo.region" content="US-NY">
+    <meta name="geo.placename" content="New York">
+    <meta name="theme-color" content="#0A0E1A">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ URL::current() }}">
     @php
         $current_url = URL::current();
     @endphp
@@ -32,25 +37,107 @@
     @else
         <title>{{$basic_settings->site_name ?? ''}} - {{ $page_title ?? '' }}</title>
     @endif
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-    @include('partials.header-asset')
-    <link rel="stylesheet" href="{{ asset('frontend/css/baking-theme.css') }}">
-    <!-- Theme Toggle Script (Blocking to prevent flicker) -->
     <script>
         (function() {
-            const savedTheme = localStorage.getItem('bakery-theme');
-            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            const theme = savedTheme || systemTheme;
-            document.documentElement.setAttribute('data-theme', theme);
+            var saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
         })();
     </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    @include('partials.header-asset')
+    <link rel="stylesheet" href="{{ asset('frontend/css/enzo-theme.css') }}">
 
     @stack('css')
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "EnzoBank",
+        "alternateName": "EnzoBank Financial Services",
+        "url": "{{ config('app.url') }}",
+        "logo": "{{ asset('frontend/images/logo.png') }}",
+        "description": "EnzoBank is a US-based financial technology company providing secure digital banking services.",
+        "foundingDate": "2022",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "123 Financial Plaza, Suite 400",
+            "addressLocality": "New York",
+            "addressRegion": "NY",
+            "postalCode": "10001",
+            "addressCountry": "US"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+1-800-123-4567",
+            "contactType": "customer service",
+            "areaServed": "US",
+            "availableLanguage": ["English"]
+        },
+        "sameAs": [
+            "https://x.com/enzobank",
+            "https://www.linkedin.com/company/enzobank",
+            "https://www.facebook.com/enzobank"
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "EnzoBank",
+        "url": "{{ config('app.url') }}",
+        "description": "Secure USA digital banking platform offering virtual cards, global payments, and smart investments.",
+        "about": {
+            "@type": "FinancialService",
+            "feesAndCommissionsSpecification": "https://enzobank.org/fees",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United States"
+            }
+        }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FinancialService",
+        "name": "EnzoBank",
+        "image": "{{ asset('frontend/images/logo.png') }}",
+        "@id": "{{ config('app.url') }}",
+        "url": "{{ config('app.url') }}",
+        "telephone": "+1-800-123-4567",
+        "priceRange": "$$",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "123 Financial Plaza, Suite 400",
+            "addressLocality": "New York",
+            "addressRegion": "NY",
+            "postalCode": "10001",
+            "addressCountry": "US"
+        },
+        "openingHoursSpecification": [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+                "opens": "09:00",
+                "closes": "18:00"
+            }
+        ],
+        "areaServed": [
+            {
+                "@type": "Country",
+                "name": "United States"
+            }
+        ]
+    }
+    </script>
 </head>
 <body>
     @include('frontend.partials.body-overlay')
     @include('frontend.partials.scroll-to-top')
-    @include('frontend.partials.header')
+    @include('partials.global-nav')
 
     @yield("content")
 
@@ -76,50 +163,20 @@
     @include('partials.footer-asset')
     @include('frontend.partials.extensions.tawk-to')
 
+    <!-- WhatsApp Floating Widget -->
+    <div class="whatsapp-widget" data-aos="zoom-in" data-aos-delay="500" style="bottom: 30px">
+        <a href="https://wa.me/message/ZW7EJRXHGL3GG1" target="_blank" class="whatsapp-btn" rel="noopener noreferrer" aria-label="Contact Support on WhatsApp">
+            <div class="whatsapp-icon">
+                <i class="lab la-whatsapp"></i>
+                <span class="online-dot"></span>
+            </div>
+            <div class="whatsapp-text d-none d-lg-flex">
+                <span>{{ __('Chat with us') }}</span>
+            </div>
+        </a>
+    </div>
+
     @stack('script')
-    <script>
-        (function () {
-            const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-            const themeAttr = 'data-theme';
-            const storageKey = 'bakery-theme';
-
-            // Immediately set the theme on page load
-            const savedTheme = localStorage.getItem(storageKey);
-            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            const initialTheme = savedTheme || systemTheme;
-            document.documentElement.setAttribute(themeAttr, initialTheme);
-            if (toggleSwitch) {
-                toggleSwitch.checked = (initialTheme === 'dark');
-            }
-
-            function switchTheme(e) {
-                const theme = e.target.checked ? 'dark' : 'light';
-                document.documentElement.setAttribute(themeAttr, theme);
-                localStorage.setItem(storageKey, theme);
-
-                // Optional: Add a subtle transition
-                if (typeof gsap !== 'undefined') {
-                    gsap.to('body', { opacity: 1, duration: 0.5 });
-                }
-            }
-
-            if (toggleSwitch) {
-                toggleSwitch.addEventListener('change', switchTheme, false);
-            }
-
-            // Listen for system preference changes
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                // Only switch if the user hasn't made a manual selection
-                if (!localStorage.getItem(storageKey)) {
-                    const newTheme = e.matches ? 'dark' : 'light';
-                    document.documentElement.setAttribute(themeAttr, newTheme);
-                    if (toggleSwitch) {
-                        toggleSwitch.checked = (newTheme === 'dark');
-                    }
-                }
-            });
-        })();
-    </script>
     <script>
     var status = "{{  @$cookie->status }}";
      //cookies results

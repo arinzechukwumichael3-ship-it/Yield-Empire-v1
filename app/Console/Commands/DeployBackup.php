@@ -37,14 +37,28 @@ class DeployBackup extends Command
         return $this->backup();
     }
 
+    /**
+     * Get the active database connection config.
+     */
+    protected function getDbConfig(): array
+    {
+        $connection = config('database.default');
+        $config = config("database.connections.{$connection}");
+
+        if (!$config) {
+            $this->error("Database connection '{$connection}' not found in config.");
+            exit(1);
+        }
+
+        return $config;
+    }
+
     protected function backup()
     {
         $this->info("Starting Database Backup for Deployment...");
         
-        $database = config('database.connections.mysql.database');
-        $username = config('database.connections.mysql.username');
-        $password = config('database.connections.mysql.password');
-        $host     = config('database.connections.mysql.host');
+        $config = $this->getDbConfig();
+        $driver = $config['driver'] ?? 'mysql';
         
         $filename = "backup_" . date('Y-m-d_H-i-s') . ".sql";
         $path = storage_path('app/backups/' . $filename);
@@ -53,20 +67,31 @@ class DeployBackup extends Command
             File::makeDirectory(storage_path('app/backups'), 0755, true);
         }
 
-        // Using mysqldump if available, otherwise fallback to Laravel's DB export logic
-        $command = sprintf(
-            'mysqldump --user=%s --password=%s --host=%s %s > %s',
-            escapeshellarg($username),
-            escapeshellarg($password),
-            escapeshellarg($host),
-            escapeshellarg($database),
-            escapeshellarg($path)
-        );
+        if ($driver === 'pgsql') {
+            $cmd = sprintf(
+                'PGPASSWORD=%s pg_dump --host=%s --port=%s --username=%s --dbname=%s --no-password > %s',
+                escapeshellarg($config['password'] ?? ''),
+                escapeshellarg($config['host'] ?? '127.0.0.1'),
+                escapeshellarg($config['port'] ?? '5432'),
+                escapeshellarg($config['username'] ?? ''),
+                escapeshellarg($config['database'] ?? ''),
+                escapeshellarg($path)
+            );
+        } else {
+            $cmd = sprintf(
+                'mysqldump --user=%s --password=%s --host=%s %s > %s',
+                escapeshellarg($config['username'] ?? ''),
+                escapeshellarg($config['password'] ?? ''),
+                escapeshellarg($config['host'] ?? '127.0.0.1'),
+                escapeshellarg($config['database'] ?? ''),
+                escapeshellarg($path)
+            );
+        }
 
-        exec($command, $output, $returnVar);
+        exec($cmd, $output, $returnVar);
 
         if ($returnVar !== 0) {
-            $this->error("Backup failed using mysqldump. Ensure it is installed and in your PATH.");
+            $this->error("Backup failed using " . ($driver === 'pgsql' ? 'pg_dump' : 'mysqldump') . ". Ensure it is installed and in your PATH.");
             return 1;
         }
 
@@ -92,24 +117,34 @@ class DeployBackup extends Command
         $latestBackup = $backups[0];
         $this->info("Rolling back to: " . $latestBackup->getFilename());
 
-        $database = config('database.connections.mysql.database');
-        $username = config('database.connections.mysql.username');
-        $password = config('database.connections.mysql.password');
-        $host     = config('database.connections.mysql.host');
+        $config = $this->getDbConfig();
+        $driver = $config['driver'] ?? 'mysql';
 
-        $command = sprintf(
-            'mysql --user=%s --password=%s --host=%s %s < %s',
-            escapeshellarg($username),
-            escapeshellarg($password),
-            escapeshellarg($host),
-            escapeshellarg($database),
-            escapeshellarg($latestBackup->getPathname())
-        );
+        if ($driver === 'pgsql') {
+            $cmd = sprintf(
+                'PGPASSWORD=%s psql --host=%s --port=%s --username=%s --dbname=%s --no-password < %s',
+                escapeshellarg($config['password'] ?? ''),
+                escapeshellarg($config['host'] ?? '127.0.0.1'),
+                escapeshellarg($config['port'] ?? '5432'),
+                escapeshellarg($config['username'] ?? ''),
+                escapeshellarg($config['database'] ?? ''),
+                escapeshellarg($latestBackup->getPathname())
+            );
+        } else {
+            $cmd = sprintf(
+                'mysql --user=%s --password=%s --host=%s %s < %s',
+                escapeshellarg($config['username'] ?? ''),
+                escapeshellarg($config['password'] ?? ''),
+                escapeshellarg($config['host'] ?? '127.0.0.1'),
+                escapeshellarg($config['database'] ?? ''),
+                escapeshellarg($latestBackup->getPathname())
+            );
+        }
 
-        exec($command, $output, $returnVar);
+        exec($cmd, $output, $returnVar);
 
         if ($returnVar !== 0) {
-            $this->error("Rollback failed. Check database credentials and mysql binary.");
+            $this->error("Rollback failed. Check database credentials and " . ($driver === 'pgsql' ? 'psql' : 'mysql') . " binary.");
             return 1;
         }
 

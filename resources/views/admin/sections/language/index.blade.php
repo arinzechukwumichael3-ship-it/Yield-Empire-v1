@@ -20,7 +20,7 @@
 @section('content')
     <div class="table-area">
         <div class="table-wrapper">
-            @includeUnless($languages->where("status",1)->count(),'admin.components.alerts.warning',['message' => "There is no default language in your system. System will automatically select English as a default language."])
+            @includeUnless($languages->where("status", true)->count(),'admin.components.alerts.warning',['message' => "There is no default language in your system. System will automatically select English as a default language."])
             <div class="table-header">
                 <h5 class="title">{{ __($page_title) }}</h5>
                 <div class="table-btn-area">

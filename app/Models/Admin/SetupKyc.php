@@ -20,6 +20,6 @@ class SetupKyc extends Model
     }
 
     public function scopeActive($query) {
-        $query->where("status",true);
+        $query->where("status",\DB::raw('true'));
     }
 }

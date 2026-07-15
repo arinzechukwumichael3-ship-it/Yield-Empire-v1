@@ -34,12 +34,12 @@ class MobileBank extends Model
     }
     public function scopeActive($query)
     {
-        return $query->where('status', true);
+        return $query->where('status', \DB::raw('true'));
     }
 
     public function scopeBanned($query)
     {
-        return $query->where('status', false);
+        return $query->where('status', \DB::raw('false'));
     }
 
     public function scopeSearch($query,$text) {

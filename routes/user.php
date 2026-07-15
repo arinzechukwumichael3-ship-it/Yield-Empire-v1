@@ -24,6 +24,7 @@ use App\Http\Controllers\User\SupportTicketController;
 use App\Http\Controllers\User\LoanController;
 use App\Http\Controllers\User\PortfolioController;
 use App\Http\Controllers\User\InvestmentOfferController;
+use App\Http\Controllers\User\InvestController;
 use App\Http\Controllers\User\LoanPaymentController;
 
 
@@ -61,8 +62,8 @@ Route::prefix("user")->name("user.")->group(function(){
         Route::post("callback/response/{gateway}",'callback')->name('payment.callback')->withoutMiddleware(['web','auth','verification.guard','user.google.two.factor']);
 
         // POST Route For Unauthenticated Request
-        Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success')->withoutMiddleware(['auth','verification.guard','user.google.two.factor','kyc.verification.guard','pin.setup.guard']);
-        Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel')->withoutMiddleware(['auth','verification.guard','user.google.two.factor']);
+        Route::post('success/response/{gateway}', 'postSuccess')->name('payment.success.post')->withoutMiddleware(['auth','verification.guard','user.google.two.factor','kyc.verification.guard','pin.setup.guard']);
+        Route::post('cancel/response/{gateway}', 'postCancel')->name('payment.cancel.post')->withoutMiddleware(['auth','verification.guard','user.google.two.factor']);
 
         // redirect with HTML form route
         Route::get('redirect/form/{gateway}', 'redirectUsingHTMLForm')->name('payment.redirect.form')->withoutMiddleware(['auth','verification.guard','user.google.two.factor']);
@@ -83,6 +84,16 @@ Route::prefix("user")->name("user.")->group(function(){
             Route::post('crypto/confirm/{trx_id}','cryptoPaymentConfirm')->name('crypto.confirm');
         });
     });
+
+// Crypto Deposit Routes
+Route::controller(\App\Http\Controllers\User\CryptoDepositController::class)->prefix("crypto-deposit")->name("crypto.deposit.")->group(function() {
+    Route::get("/","index")->name("index");
+    Route::post("/","store")->name("store");
+    Route::get("address","address")->name("address");
+    Route::get("confirm","confirm")->name("confirm");
+    Route::post("submit","submit")->name("submit");
+    Route::get("success/{id}","success")->name("success");
+});
 
     Route::controller(BeneficiaryController::class)->middleware(['kyc.verification.guard','pin.setup.guard'])->prefix("beneficiary")->name("beneficiary.")->group(function(){
         Route::get('list','index')->name('index');
@@ -109,7 +120,12 @@ Route::prefix("user")->name("user.")->group(function(){
     });
 
     // strowallet virtual card
-    Route::controller(StrowalletVirtualCardController::class)->middleware(['kyc.verification.guard','pin.setup.guard'])->prefix('strowallet-virtual-card')->name('strowallet.virtual.card.')->group(function(){
+    // Deposit-locked card page
+Route::get('cards/locked', function () {
+    return view('user.sections.virtual-card-strowallet.locked');
+})->name('strowallet.virtual.card.locked');
+
+Route::controller(StrowalletVirtualCardController::class)->middleware(['kyc.verification.guard','pin.setup.guard','deposit.gate:card'])->prefix('strowallet-virtual-card')->name('strowallet.virtual.card.')->group(function(){
         Route::get('/', 'index')->name('index');
         Route::get('create','createPage')->name('create')->middleware('kyc.verification.guard');
         Route::post('create/customer','createCustomer')->name('create.customer')->middleware('kyc.verification.guard');
@@ -157,6 +173,16 @@ Route::prefix("user")->name("user.")->group(function(){
         Route::get('offers', 'index')->name('offers');
     });
 
+    // Crypto Investment Plans
+    Route::controller(InvestController::class)->middleware(['kyc.verification.guard','pin.setup.guard'])->prefix('invest')->name('invest.')->group(function() {
+        Route::get('new', 'newPlan')->name('new');
+        Route::post('deposit', 'deposit')->name('deposit');
+        Route::post('submit-proof', 'submitProof')->name('submit.proof');
+        Route::get('confirmation/{id}', 'confirmation')->name('confirmation');
+        Route::get('portfolio', 'portfolio')->name('portfolio');
+        Route::get('earnings', 'earnings')->name('earnings');
+    });
+
     // Transaction
     Route::controller(TransactionController::class)->prefix('transactions')->name('transactions.')->group(function(){
         Route::get('/{slug?}', 'index')->name('index')->whereIn('slug',['add-money','money-out','transfer-money','money-exchange']);
@@ -186,7 +212,12 @@ Route::prefix("user")->name("user.")->group(function(){
         Route::post('submit','store')->name('submit');
     });
 
-    Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guard','pin.setup.guard'])->prefix('money-out')->name('money-out.')->group(function() {
+    // Deposit-locked withdrawal page
+Route::get('withdrawal/locked', function () {
+    return view('user.sections.money-out.locked');
+})->name('money-out.locked');
+
+Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guard','pin.setup.guard','deposit.gate:withdrawal'])->prefix('money-out')->name('money-out.')->group(function() {
         Route::get('/','index')->name('index');
         Route::post('submit','submit')->name('submit');
         Route::get('instruction/{token}','instruction')->name('instruction');
@@ -202,6 +233,16 @@ Route::prefix("user")->name("user.")->group(function(){
     });
 
     Route::post("info/account",[GlobalController::class,'userInfoAccount'])->name('info.account');
+
+    // Rise Dashboard Routes
+    Route::controller(\App\Http\Controllers\User\RiseController::class)->prefix("rise")->name("rise.")->group(function(){
+        Route::get("home","home")->name("home");
+        Route::get("invest","invest")->name("invest");
+        Route::get("wallet","wallet")->name("wallet");
+        Route::get("feed","feed")->name("feed");
+        Route::get("feed/{slug}","articleDetail")->name("feed.detail");
+        Route::get("account","account")->name("account");
+    });
 
 });
 
@@ -247,3 +288,4 @@ Route::get('user/pusher/beams-auth', function (Request $request) {
 
     return response()->json($beamsToken);
 })->name('user.pusher.beams.auth');
+

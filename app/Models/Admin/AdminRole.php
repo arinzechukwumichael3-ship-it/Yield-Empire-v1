@@ -26,7 +26,7 @@ class AdminRole extends Model
     }
 
     public function scopeActive($query) {
-        return $query->where("status",true);
+        return $query->where("status",\DB::raw('true'));
     }
 
     public function scopeNotSuperAdmin($query) {

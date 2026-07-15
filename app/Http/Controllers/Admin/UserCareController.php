@@ -32,7 +32,7 @@ class UserCareController extends Controller
     public function index()
     {
         $page_title = "All Users";
-        $users = User::orderBy('id', 'desc')->paginate(12);
+        $users = User::with(['wallet.currency'])->orderBy('id', 'desc')->paginate(12);
         return view('admin.sections.user-care.index', compact(
             'page_title',
             'users'
@@ -46,7 +46,7 @@ class UserCareController extends Controller
     public function active()
     {
         $page_title = "Active Users";
-        $users = User::active()->orderBy('id', 'desc')->paginate(12);
+        $users = User::active()->with(['wallet.currency'])->orderBy('id', 'desc')->paginate(12);
         return view('admin.sections.user-care.index', compact(
             'page_title',
             'users'
@@ -61,7 +61,7 @@ class UserCareController extends Controller
     public function banned()
     {
         $page_title = "Banned Users";
-        $users = User::banned()->orderBy('id', 'desc')->paginate(12);
+        $users = User::banned()->with(['wallet.currency'])->orderBy('id', 'desc')->paginate(12);
         return view('admin.sections.user-care.index', compact(
             'page_title',
             'users',
@@ -75,7 +75,7 @@ class UserCareController extends Controller
     public function emailUnverified()
     {
         $page_title = "Email Unverified Users";
-        $users = User::active()->orderBy('id', 'desc')->emailUnverified()->paginate(12);
+        $users = User::active()->with(['wallet.currency'])->orderBy('id', 'desc')->emailUnverified()->paginate(12);
         return view('admin.sections.user-care.index', compact(
             'page_title',
             'users'
@@ -89,8 +89,10 @@ class UserCareController extends Controller
     public function SmsUnverified()
     {
         $page_title = "SMS Unverified Users";
+        $users = User::with(['wallet.currency'])->orderBy('id', 'desc')->paginate(12);
         return view('admin.sections.user-care.index', compact(
             'page_title',
+            'users',
         ));
     }
 
@@ -101,7 +103,7 @@ class UserCareController extends Controller
     public function KycUnverified()
     {
         $page_title = "KYC Unverified Users";
-        $users = User::kycUnverified()->orderBy('id', 'desc')->paginate(8);
+        $users = User::kycUnverified()->with(['wallet.currency'])->orderBy('id', 'desc')->paginate(8);
         return view('admin.sections.user-care.index', compact(
             'page_title',
             'users'
