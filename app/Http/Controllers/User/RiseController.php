@@ -125,6 +125,30 @@ class RiseController extends Controller
         return view('user.rise.account', compact('page_title', 'user'));
     }
 
+    public function refer()
+    {
+        $page_title = "Refer & Earn";
+        $user = $this->user;
+        $wallet = UserWallet::auth()->first();
+        $usd_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
+
+        $usd_balance = $usd_wallet ? $usd_wallet->balance : 0;
+
+        // Count referrals (users who registered with this user's ID)
+        $referral_count = \App\Models\User::where('referral_id', $user->id)->count();
+
+        // Total referral earnings from transactions
+        $referral_earnings = Transaction::where('user_id', $user->id)
+            ->where('type', PaymentGatewayConst::TYPETOPUP)
+            ->where('remark', 'referral')
+            ->sum('request_amount');
+
+        return view('user.rise.refer', compact(
+            'page_title', 'user', 'wallet', 'usd_wallet', 'usd_balance',
+            'referral_count', 'referral_earnings'
+        ));
+    }
+
     private function normalizeArticleForFeed($article)
     {
         $data = $article->data;

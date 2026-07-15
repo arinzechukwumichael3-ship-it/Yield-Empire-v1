@@ -48,10 +48,11 @@ $user = auth()->user();
         </div>
         <p style="font-size:13px;color:#94A3B8;margin:0 0 12px;">{{ __('Share your referral link and earn $50 for each friend who joins and deposits.') }}</p>
         @php $referralLink = url('/register/' . auth()->user()->username); @endphp
-        <div style="display:flex;gap:8px;">
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
             <input type="text" id="referralLinkInput" value="{{ $referralLink }}" readonly style="flex:1;padding:12px 14px;border:1px solid #334155;border-radius:10px;font-size:13px;background:#1E293B;color:#fff;outline:none;">
             <button onclick="copyReferralLink()" style="padding:12px 18px;background:#3B82F6;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">{{ __('Copy') }}</button>
         </div>
+        <a href="{{ route('user.rise.refer') }}" style="font-size:13px;color:#3B82F6;text-decoration:none;font-weight:500;">{{ __('View full referral details →') }}</a>
         <script>
         function copyReferralLink() {
             var input = document.getElementById('referralLinkInput');

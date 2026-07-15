@@ -242,6 +242,7 @@ Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guar
         Route::get("feed","feed")->name("feed");
         Route::get("feed/{slug}","articleDetail")->name("feed.detail");
         Route::get("account","account")->name("account");
+        Route::get("refer","refer")->name("refer");
     });
 
 });
