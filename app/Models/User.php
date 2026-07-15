@@ -47,7 +47,7 @@ class User extends Authenticatable
         'pin_status'          => 'integer',
         'pin_code'            => 'string',
         'password'            => 'string',
-        'refferal_id'         => 'integer',
+        'referral_id'         => 'integer',
         'image'               => 'string',
         'status'              => 'integer',
         'email_verified_at'   => 'datetime',

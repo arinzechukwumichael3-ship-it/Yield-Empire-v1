@@ -118,7 +118,10 @@
                         <a href="{{ route('frontend.index') }}" class="global-dropdown-item"><i class="las la-file-alt"></i> {{ __('Privacy Policy') }}</a>
                         <a href="#" class="global-dropdown-item"><i class="las la-file-contract"></i> {{ __('Terms of Service') }}</a>
                         <div class="global-dropdown-divider"></div>
-                        <a href="{{ route('user.logout') }}" class="global-dropdown-item global-dropdown-danger"><i class="las la-sign-out-alt"></i> {{ __('Log Out') }}</a>
+                        <form method="POST" action="{{ route('user.logout') }}" style="display:contents;">
+                            @csrf
+                            <button type="submit" class="global-dropdown-item global-dropdown-danger" style="border:none;background:none;width:100%;cursor:pointer;"><i class="las la-sign-out-alt"></i> {{ __('Log Out') }}</button>
+                        </form>
                     </div>
                 </div>
                 <!-- User Avatar -->

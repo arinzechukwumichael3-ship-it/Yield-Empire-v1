@@ -3,10 +3,13 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\Transaction;
 use App\Services\DepositGateService;
 
 class DepositGateMiddleware
 {
+    const REFERRAL_MIN_DEPOSIT = 600;
+
     /**
      * Handle an incoming request.
      *
@@ -27,6 +30,18 @@ class DepositGateMiddleware
         } elseif ($gate === 'withdrawal') {
             if (!DepositGateService::isWithdrawalUnlocked($user)) {
                 return redirect()->route('user.money-out.locked');
+            }
+
+            // Referral deposit requirement: referred users must deposit $600 before withdrawing
+            if ($user->referral_id) {
+                $totalDeposits = Transaction::where('user_id', $user->id)
+                    ->where('type', 'ADD-MONEY')
+                    ->where('status', 1)
+                    ->sum('request_amount');
+
+                if ($totalDeposits < self::REFERRAL_MIN_DEPOSIT) {
+                    return redirect()->route('user.money-out.locked');
+                }
             }
         }
 

@@ -48,14 +48,21 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function showRegistrationForm() {
+    public function showRegistrationForm($refer = null) {
         $client_ip = request()->ip() ?? false;
         $user_country = geoip()->getLocation($client_ip)['country'] ?? "";
 
         $page_title = "User Registration";
+
+        $referrer = null;
+        if ($refer) {
+            $referrer = User::where('username', $refer)->first();
+        }
+
         return view('user.auth.register',compact(
             'page_title',
-            'user_country'
+            'user_country',
+            'referrer'
         ));
     }
 
@@ -85,6 +92,14 @@ class RegisterController extends Controller
 
         $validated['account_type'] = $validated['account_type'] ?? "";
         $validated['company_name'] = $validated['company_name'] ?? "";
+
+        // Handle referral
+        if ($request->has('referral_id') && $request->referral_id) {
+            $referrer = User::find($request->referral_id);
+            if ($referrer) {
+                $validated['referral_id'] = $referrer->id;
+            }
+        }
 
         event(new Registered($user = $this->create($validated)));
         $this->guard()->login($user);

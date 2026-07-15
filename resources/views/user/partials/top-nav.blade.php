@@ -76,10 +76,13 @@
                                     <span>{{ __('Terms of Service') }}</span>
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a href="{{ route('user.logout') }}" class="enzo-dropdown-item enzo-dropdown-item-danger">
-                                    <i class="las la-sign-out-alt"></i>
-                                    <span>{{ __('Log Out') }}</span>
-                                </a>
+                                <form method="POST" action="{{ route('user.logout') }}" style="display:contents;">
+                                    @csrf
+                                    <button type="submit" class="enzo-dropdown-item enzo-dropdown-item-danger" style="border:none;background:none;width:100%;cursor:pointer;">
+                                        <i class="las la-sign-out-alt"></i>
+                                        <span>{{ __('Log Out') }}</span>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

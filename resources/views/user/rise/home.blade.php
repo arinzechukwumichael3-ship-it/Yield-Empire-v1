@@ -80,7 +80,7 @@ $accountNo = $user->account_no ?? '0000000000';
                 <span class="dash-referral-banner-title">Refer & Earn</span>
                 <span class="dash-referral-banner-sub">Get $50 for each friend you invite</span>
             </div>
-            <a href="{{ route('user.profile.index') }}" class="dash-referral-banner-btn">Invite</a>
+            <a href="{{ route('user.rise.account') }}" class="dash-referral-banner-btn">Invite</a>
         </div>
     </div>
 

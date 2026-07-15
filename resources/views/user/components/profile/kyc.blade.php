@@ -1,76 +1,116 @@
 @if ($basic_settings->kyc_verification == true && isset($user_kyc) && $user_kyc != null && $user_kyc->fields != null)
-    <h3 class="title">{{ __("KYC Information") }} &nbsp; <span class="{{ auth()->user()->kycStringStatus->class }}">{{ __(auth()->user()->kycStringStatus->value) }}</span></h3>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div class="am-card-title" style="margin-bottom:0;">{{ __('KYC Information') }}</div>
+        <span class="kyc-badge kyc-badge-{{ strtolower(auth()->user()->kycStringStatus->value) }}">{{ __(auth()->user()->kycStringStatus->value) }}</span>
+    </div>
 
     @if (auth()->user()->kyc_verified == global_const()::PENDING)
-        <div class="pending text--warning kyc-text">{{ __("Your KYC information is submited. Please wait for admin confirmation. When you are KYC verified you will show your submited information here.") }}</div>
+        <div class="kyc-message kyc-message-pending">{{ __('Your KYC information is submitted. Please wait for admin confirmation. When you are KYC verified you will show your submitted information here.') }}</div>
+
     @elseif (auth()->user()->kyc_verified == global_const()::APPROVED)
-        <div class="approved text--success kyc-text">{{ __("Your KYC information is verified") }}</div>
-        <ul class="kyc-data">
+        <div class="kyc-message kyc-message-approved">{{ __('Your KYC information is verified') }}</div>
+        @if (count(auth()->user()->kyc->data ?? []) > 0)
             @foreach (auth()->user()->kyc->data ?? [] as $item)
-                <li>
+                <div class="kyc-data-row">
+                    <span class="kyc-data-label">{{ $item->label }}:</span>
                     @if ($item->type == "file")
-                        @php
-                            $file_link = get_file_link("kyc-files",$item->value);
-                        @endphp
-                        <span class="kyc-title">{{ $item->label }}:</span>
+                        @php $file_link = get_file_link("kyc-files",$item->value); @endphp
                         @if (its_image($item->value))
-                            <div class="kyc-image">
-                                <img src="{{ $file_link }}" alt="{{ $item->label }}">
-                            </div>
+                            <img src="{{ $file_link }}" alt="{{ $item->label }}" class="kyc-data-image">
                         @else
-                            <span class="text--danger">
-                                @php
-                                    $file_info = get_file_basename_ext_from_link($file_link);
-                                @endphp
-                                <a href="{{ setRoute('file.download',["kyc-files",$item->value]) }}" >
-                                    {{ Str::substr($file_info->base_name ?? "", 0 , 20 ) ."..." . $file_info->extension ?? "" }}
-                                </a>
-                            </span>
+                            @php $file_info = get_file_basename_ext_from_link($file_link); @endphp
+                            <a href="{{ setRoute('file.download',["kyc-files",$item->value]) }}" class="kyc-data-link">{{ Str::substr($file_info->base_name ?? "", 0 , 20) . "..." . ($file_info->extension ?? "") }}</a>
                         @endif
                     @else
-                        <span class="kyc-title">{{ $item->label }}:</span>
-                        <span>{{ $item->value }}</span>
+                        <span class="kyc-data-value">{{ $item->value }}</span>
                     @endif
-                </li>
+                </div>
             @endforeach
-        </ul>
+        @endif
+
     @elseif (auth()->user()->kyc_verified == global_const()::REJECTED)
-        <div class="unverified text--danger kyc-text d-flex align-items-center justify-content-between mb-4">
-            <div class="title text--warning">{{ __("Your KYC information is rejected.") }}</div>
+        <div class="kyc-message kyc-message-rejected">{{ __('Your KYC information is rejected.') }}</div>
+        <div class="kyc-reject-reason">
+            <strong>{{ __('Reject Reason') }}</strong>
+            <p>{{ auth()->user()->kyc->reject_reason ?? '' }}</p>
         </div>
-        <div class="rejected">
-            <h6>{{ __("Reject Reason") }}</h6>
-            <div class="rejected-reason">{{ auth()->user()->kyc->reject_reason ?? "" }}</div>
-        </div>
-        <form action="{{ setRoute('user.kyc.submit') }}" class="account-form" method="POST" enctype="multipart/form-data">
+        <form action="{{ setRoute('user.kyc.submit') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="row ml-b-20">
-    
-                @include('user.components.generate-kyc-fields',['fields' => $kyc_fields])
-    
-                
-                <div class="col-lg-12 form-group text-center">
-                    <button type="submit" class="btn--base w-100 btn-loading">{{ __("Submit") }}</button>
-                </div>
-            </div>
+            @foreach ($kyc_fields as $item)
+                @if ($item->type == "select")
+                    <div class="ps-field">
+                        <label class="ps-label">{{ $item->label }} {{ $item->required ? '*' : '' }}</label>
+                        <select class="ps-select" name="{{ $item->name }}" {{ $item->required ? 'required' : '' }}>
+                            <option selected disabled>{{ __('Choose One') }}</option>
+                            @foreach ($item->validation->options as $innerItem)
+                                <option value="{{ $innerItem }}">{{ $innerItem }}</option>
+                            @endforeach
+                        </select>
+                        @error($item->name) <span class="kyc-error">{{ $message }}</span> @enderror
+                    </div>
+                @elseif ($item->type == "file")
+                    <div class="ps-field">
+                        <label class="ps-label">{{ $item->label }} {{ $item->required ? '*' : '' }}</label>
+                        <input class="ps-input" type="file" name="{{ $item->name }}" {{ $item->required ? 'required' : '' }}>
+                        @error($item->name) <span class="kyc-error">{{ $message }}</span> @enderror
+                    </div>
+                @elseif ($item->type == "textarea")
+                    <div class="ps-field">
+                        <label class="ps-label">{{ $item->label }} {{ $item->required ? '*' : '' }}</label>
+                        <textarea class="ps-input" name="{{ $item->name }}" rows="3" {{ $item->required ? 'required' : '' }}>{{ old($item->name) }}</textarea>
+                        @error($item->name) <span class="kyc-error">{{ $message }}</span> @enderror
+                    </div>
+                @else
+                    <div class="ps-field">
+                        <label class="ps-label">{{ $item->label }} {{ $item->required ? '*' : '' }}</label>
+                        <input class="ps-input" type="text" name="{{ $item->name }}" value="{{ old($item->name) }}" {{ $item->required ? 'required' : '' }}>
+                        @error($item->name) <span class="kyc-error">{{ $message }}</span> @enderror
+                    </div>
+                @endif
+            @endforeach
+            <button type="submit" class="ps-btn-blue" style="margin-top:4px;">{{ __('Submit') }}</button>
         </form>
+
     @else
-    <p>{{ __("Please submit your KYC information with valid data.") }}</p>
-    <form action="{{ setRoute('user.kyc.submit') }}" class="account-form" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="row ml-b-20">
-
-            @include('user.components.generate-kyc-fields',['fields' => $kyc_fields])
-
-            <div class="col-lg-12 form-group">
-                <div class="forgot-item">
-                    <label>{{ __("Back To") }} <a href="{{ setRoute('user.dashboard') }}" class="text--base">{{ __("Dashboard") }}</a></label>
-                </div>
+        <p class="kyc-message">{{ __('Please submit your KYC information with valid data.') }}</p>
+        <form action="{{ setRoute('user.kyc.submit') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @foreach ($kyc_fields as $item)
+                @if ($item->type == "select")
+                    <div class="ps-field">
+                        <label class="ps-label">{{ $item->label }} {{ $item->required ? '*' : '' }}</label>
+                        <select class="ps-select" name="{{ $item->name }}" {{ $item->required ? 'required' : '' }}>
+                            <option selected disabled>{{ __('Choose One') }}</option>
+                            @foreach ($item->validation->options as $innerItem)
+                                <option value="{{ $innerItem }}">{{ $innerItem }}</option>
+                            @endforeach
+                        </select>
+                        @error($item->name) <span class="kyc-error">{{ $message }}</span> @enderror
+                    </div>
+                @elseif ($item->type == "file")
+                    <div class="ps-field">
+                        <label class="ps-label">{{ $item->label }} {{ $item->required ? '*' : '' }}</label>
+                        <input class="ps-input" type="file" name="{{ $item->name }}" {{ $item->required ? 'required' : '' }}>
+                        @error($item->name) <span class="kyc-error">{{ $message }}</span> @enderror
+                    </div>
+                @elseif ($item->type == "textarea")
+                    <div class="ps-field">
+                        <label class="ps-label">{{ $item->label }} {{ $item->required ? '*' : '' }}</label>
+                        <textarea class="ps-input" name="{{ $item->name }}" rows="3" {{ $item->required ? 'required' : '' }}>{{ old($item->name) }}</textarea>
+                        @error($item->name) <span class="kyc-error">{{ $message }}</span> @enderror
+                    </div>
+                @else
+                    <div class="ps-field">
+                        <label class="ps-label">{{ $item->label }} {{ $item->required ? '*' : '' }}</label>
+                        <input class="ps-input" type="text" name="{{ $item->name }}" value="{{ old($item->name) }}" {{ $item->required ? 'required' : '' }}>
+                        @error($item->name) <span class="kyc-error">{{ $message }}</span> @enderror
+                    </div>
+                @endif
+            @endforeach
+            <div class="ps-field">
+                <a href="{{ setRoute('user.dashboard') }}" class="kyc-back-link">{{ __('Back To Dashboard') }}</a>
             </div>
-            <div class="col-lg-12 form-group text-center">
-                <button type="submit" class="btn--base w-100 btn-loading">{{ __("Submit") }}</button>
-            </div>
-        </div>
-    </form>
+            <button type="submit" class="ps-btn-blue" style="margin-top:4px;">{{ __('Submit') }}</button>
+        </form>
     @endif
 @endif

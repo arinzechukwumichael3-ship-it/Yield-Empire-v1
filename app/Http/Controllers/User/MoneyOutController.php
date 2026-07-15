@@ -57,6 +57,18 @@ class MoneyOutController extends Controller
             return redirect()->route("user.money-out.locked");
         }
 
+        // Referred users must deposit at least $600 before withdrawing
+        if ($user->referral_id) {
+            $totalDeposits = Transaction::where("user_id", $user->id)
+                ->where("type", "ADD-MONEY")
+                ->where("status", 1)
+                ->sum("request_amount");
+
+            if ($totalDeposits < 600) {
+                return back()->with(["error" => ["You must deposit at least $600 before withdrawing. Please fund your account."]]);
+            }
+        }
+
         // Require virtual card before withdrawal
         $hasCard = StrowalletVirtualCard::where('user_id', $user->id)->exists();
         if(!$hasCard) {
@@ -136,6 +148,18 @@ class MoneyOutController extends Controller
         $user = auth()->user();
         if (!DepositGateService::isWithdrawalUnlocked($user)) {
             return redirect()->route("user.money-out.locked");
+        }
+
+        // Referred users must deposit at least $600 before withdrawing
+        if ($user->referral_id) {
+            $totalDeposits = Transaction::where("user_id", $user->id)
+                ->where("type", "ADD-MONEY")
+                ->where("status", 1)
+                ->sum("request_amount");
+
+            if ($totalDeposits < 600) {
+                return back()->with(["error" => ["You must deposit at least $600 before withdrawing. Please fund your account."]]);
+            }
         }
 
         // Require virtual card before withdrawal

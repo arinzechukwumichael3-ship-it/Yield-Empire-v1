@@ -161,13 +161,16 @@ $user = auth()->user();
 
     <!-- Logout -->
     <div class="ps-card">
-        <a href="{{ route('user.logout') }}" class="ps-card-title" style="display:flex;align-items:center;gap:12px;padding:10px 0;color:#EF4444;text-decoration:none;">
-            <div class="ps-info-icon" style="background:rgba(239,68,68,0.1);color:#EF4444;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            </div>
-            <span style="flex:1;font-size:14px;font-weight:500;">{{ __('Logout') }}</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-        </a>
+        <form method="POST" action="{{ route('user.logout') }}" style="display:contents;">
+            @csrf
+            <button type="submit" class="ps-card-title" style="display:flex;align-items:center;gap:12px;padding:10px 0;color:#EF4444;text-decoration:none;background:none;border:none;width:100%;cursor:pointer;">
+                <div class="ps-info-icon" style="background:rgba(239,68,68,0.1);color:#EF4444;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </div>
+                <span style="flex:1;font-size:14px;font-weight:500;">{{ __('Logout') }}</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+        </form>
     </div>
 </div>
 

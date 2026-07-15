@@ -31,6 +31,9 @@
                         <div class="personal-account ptb-30 select-account" data-select-target="{{ global_const()::PERSONAL_ACCOUNT }}" style="display: none;">
                             <form action="{{ setRoute('user.register.submit') }}" class="account-form" method="POST">
                                 @csrf
+                                @if(isset($referrer) && $referrer)
+                                    <input type="hidden" name="referral_id" value="{{ $referrer->id }}">
+                                @endif
                                 <input type="hidden" name="account_type" value="{{ global_const()::PERSONAL_ACCOUNT }}">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 form-group">
@@ -79,6 +82,9 @@
                         <div class="business-account ptb-30 select-account" data-select-target="{{ global_const()::BUSINESS_ACCOUNT }}" style="display: none;">
                             <form action="{{ setRoute('user.register.submit') }}" class="account-form" method="POST">
                                 @csrf
+                                @if(isset($referrer) && $referrer)
+                                    <input type="hidden" name="referral_id" value="{{ $referrer->id }}">
+                                @endif
                                 <input type="hidden" name="account_type" value="{{ global_const()::BUSINESS_ACCOUNT }}">
                                 <div class="row">
                                     <div class="col-lg-6 form-group">
