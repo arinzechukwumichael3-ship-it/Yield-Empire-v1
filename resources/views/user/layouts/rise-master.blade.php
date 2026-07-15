@@ -57,5 +57,23 @@
         document.addEventListener('DOMContentLoaded', function(){ document.documentElement.classList.remove('no-transitions'); }, { once: true });
     })();
     </script>
+    <script>
+    // --- Site-wide currency preference ---
+    (function(){
+        var currencySymbols = { usd: '$', eur: '€', gbp: '£' };
+        var saved = localStorage.getItem('dash_currency');
+        window.__preferredCurrency = saved || 'usd';
+
+        // Update any element with data-currency-amount attribute
+        var els = document.querySelectorAll('[data-currency-amount]');
+        if (els.length) {
+            var sym = currencySymbols[window.__preferredCurrency] || '$';
+            els.forEach(function(el) {
+                var val = el.getAttribute('data-currency-amount');
+                if (val) el.textContent = sym + val;
+            });
+        }
+    })();
+    </script>
 </body>
 </html>

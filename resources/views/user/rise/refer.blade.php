@@ -33,11 +33,11 @@ $referralLink = url('/register/' . $user->username);
             <div style="font-size:12px;color:#94A3B8;margin-top:2px;">{{ __('Referrals') }}</div>
         </div>
         <div style="background:#111827;border:1px solid #1E293B;border-radius:14px;padding:16px 12px;text-align:center;">
-            <div style="font-size:24px;font-weight:800;color:#fff;">${{ number_format($usd_balance ?? 0, 2) }}</div>
+            <div style="font-size:24px;font-weight:800;color:#fff;" data-currency-amount="{{ number_format($usd_balance ?? 0, 2) }}">${{ number_format($usd_balance ?? 0, 2) }}</div>
             <div style="font-size:12px;color:#94A3B8;margin-top:2px;">{{ __('Wallet') }}</div>
         </div>
         <div style="background:#111827;border:1px solid #1E293B;border-radius:14px;padding:16px 12px;text-align:center;">
-            <div style="font-size:24px;font-weight:800;color:#22C55E;">${{ number_format($referral_earnings ?? 0, 2) }}</div>
+            <div style="font-size:24px;font-weight:800;color:#22C55E;" data-currency-amount="{{ number_format($referral_earnings ?? 0, 2) }}">${{ number_format($referral_earnings ?? 0, 2) }}</div>
             <div style="font-size:12px;color:#94A3B8;margin-top:2px;">{{ __('Earned') }}</div>
         </div>
     </div>
@@ -119,7 +119,7 @@ $referralLink = url('/register/' . $user->username);
                 <span style="font-size:13px;color:#94A3B8;line-height:1.4;">{{ __('Confirm the withdrawal. Funds are sent to your selected account or payment method.') }}</span>
             </div>
         </div>
-        <a href="{{ route('user.money.out.index') }}" class="ps-btn-blue" style="display:block;text-align:center;margin-top:16px;">{{ __('Withdraw Now') }}</a>
+        <a href="{{ route('user.money-out.index') }}" class="ps-btn-blue" style="display:block;text-align:center;margin-top:16px;">{{ __('Withdraw Now') }}</a>
     </div>
 
     {{-- Referral List (if any) --}}

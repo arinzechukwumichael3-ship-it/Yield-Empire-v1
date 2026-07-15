@@ -7,12 +7,6 @@
     <div class="global-nav-inner">
         <!-- Left Section -->
         <div class="global-nav-left">
-            @auth
-                <!-- Sidebar Toggle (App) -->
-                <button class="global-sidebar-toggle" id="globalSidebarToggle" aria-label="Toggle sidebar" aria-expanded="false">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                </button>
-            @endauth
             <!-- Logo -->
             <a href="{{ auth()->check() ? route('user.rise.home') : route('frontend.index') }}" class="global-logo">
                 <span class="global-logo-icon">
@@ -80,7 +74,7 @@
                         @endif
                     </button>
                     <!-- Notification Dropdown -->
-                    <div class="global-notif-dropdown" id="globalNotifDropdown" style="display:none">
+                    <div class="global-notif-dropdown" id="globalNotifDropdown">
                         <div class="global-notif-header">
                             <h6>{{ __('Notifications') }}</h6>
                             @if($unread_count > 0)
@@ -110,7 +104,7 @@
                     <button class="global-more-btn" id="globalMoreToggle" aria-label="More">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                     </button>
-                    <div class="global-more-dropdown" id="globalMoreDropdown" style="display:none">
+                    <div class="global-more-dropdown" id="globalMoreDropdown">
                         <a href="{{ route('user.rise.account') }}" class="global-dropdown-item"><i class="las la-cog"></i> {{ __('Settings') }}</a>
                         <a href="{{ route('frontend.contact') }}" class="global-dropdown-item"><i class="las la-headset"></i> {{ __('Help & Support') }}</a>
                         <a href="#" class="global-dropdown-item"><i class="las la-share-alt"></i> {{ __('Refer a Friend') }}</a>

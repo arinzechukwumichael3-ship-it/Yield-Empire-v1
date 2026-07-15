@@ -1,5 +1,59 @@
 @extends('user.layouts.rise-master')
 
+@push('css')
+<style>
+.dash-welcome {
+    padding: 0 0 2px;
+    animation: fadeSlideDown 0.6s ease-out;
+}
+.dash-page.dash-home {
+    padding-top: 4px;
+}
+.dash-welcome-greeting {
+    font-size: 14px;
+    color: #64748B;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+.dash-welcome-name {
+    font-size: 26px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #F1F5F9 0%, #3B82F6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    animation: shimmer 3s ease-in-out infinite;
+    background-size: 200% 100%;
+}
+.dash-welcome-tagline {
+    font-size: 13px;
+    color: #64748B;
+    margin-top: 2px;
+    font-weight: 400;
+}
+@keyframes fadeSlideDown {
+    0% { opacity: 0; transform: translateY(-12px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+@media (prefers-color-scheme: light) {
+    .dash-welcome-greeting { color: #64748B; }
+    .dash-welcome-name {
+        background: linear-gradient(135deg, #0F172A 0%, #3B82F6 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+    .dash-welcome-tagline { color: #64748B; }
+}
+</style>
+@endpush
+
 @section('content')
 @php
 $user = auth()->user();
@@ -15,7 +69,14 @@ $transactions = $transactions ?? collect([]);
 $accountNo = $user->account_no ?? '0000000000';
 @endphp
 
-<div class="dash-page">
+<div class="dash-page dash-home">
+
+    <!--===== WELCOME MESSAGE =====-->
+    <div class="dash-welcome">
+        <div class="dash-welcome-greeting">{{ __('Welcome back') }}</div>
+        <div class="dash-welcome-name">{{ $user->fullname ?? $user->username }}</div>
+        <div class="dash-welcome-tagline">{{ __('Your financial hub, at a glance') }}</div>
+    </div>
 
     <!--===== BALANCE CARD =====-->
     <div class="dash-balance-card">
@@ -227,40 +288,65 @@ $accountNo = $user->account_no ?? '0000000000';
 @push("script")
 <script>
 (function(){
-    // Balance visibility toggle
-    const toggleBtn = document.getElementById('dashBalanceToggle');
-    const balanceEl = document.getElementById('dashBalanceAmount');
+    // --- Persisted state keys ---
+    var STORAGE_KEY_CURRENCY = 'dash_currency';
+    var STORAGE_KEY_HIDDEN = 'dash_hidden';
+
+    var currencySymbols = { usd: '$', eur: '€', gbp: '£' };
+    var toggleBtn = document.getElementById('dashBalanceToggle');
+    var balanceEl = document.getElementById('dashBalanceAmount');
+    var openEye = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    var closedEye = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
+    // --- Balance visibility toggle (persisted) ---
     if (toggleBtn && balanceEl) {
-        let hidden = false;
+        var savedHidden = localStorage.getItem(STORAGE_KEY_HIDDEN);
+        if (savedHidden === 'true') {
+            balanceEl.classList.add('dash-balance-hidden');
+            toggleBtn.querySelector('svg')?.outerHTML !== undefined && (toggleBtn.innerHTML = closedEye);
+        }
         toggleBtn.addEventListener('click', function() {
-            hidden = !hidden;
-            balanceEl.classList.toggle('dash-balance-hidden', hidden);
-            this.querySelector('svg').outerHTML = hidden
-                ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
-                : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+            var isHidden = balanceEl.classList.toggle('dash-balance-hidden');
+            localStorage.setItem(STORAGE_KEY_HIDDEN, isHidden ? 'true' : 'false');
+            this.innerHTML = isHidden ? closedEye : openEye;
         });
     }
 
-    // Currency tab switching with animation
-    var currencySymbols = { usd: '$', eur: '€', gbp: '£' };
-    var balanceAmount = document.getElementById('dashBalanceAmount');
-    document.querySelectorAll('.dash-currency-tab').forEach(function(tab) {
-        tab.addEventListener('click', function() {
-            var currency = this.getAttribute('data-currency');
-            if (!currency) return;
-            document.querySelectorAll('.dash-currency-tab').forEach(function(t) { t.classList.remove('active'); });
-            this.classList.add('active');
-            var symbol = currencySymbols[currency] || '$';
-            var stored = balanceAmount.getAttribute('data-' + currency);
-            if (stored) {
-                balanceAmount.classList.add('currency-switching');
-                setTimeout(function() {
-                    balanceAmount.textContent = symbol + stored;
-                    balanceAmount.classList.remove('currency-switching');
-                }, 120);
+    // --- Currency tab switching (persisted) ---
+    var tabs = document.querySelectorAll('.dash-currency-tab');
+    if (tabs.length && balanceEl) {
+        // Restore saved currency on load
+        var savedCurrency = localStorage.getItem(STORAGE_KEY_CURRENCY);
+        if (savedCurrency) {
+            var savedTab = document.querySelector('.dash-currency-tab[data-currency="' + savedCurrency + '"]');
+            if (savedTab) {
+                tabs.forEach(function(t) { t.classList.remove('active'); });
+                savedTab.classList.add('active');
+                var symbol = currencySymbols[savedCurrency] || '$';
+                var stored = balanceEl.getAttribute('data-' + savedCurrency);
+                if (stored) balanceEl.textContent = symbol + stored;
             }
+        }
+
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                var currency = this.getAttribute('data-currency');
+                if (!currency) return;
+                tabs.forEach(function(t) { t.classList.remove('active'); });
+                this.classList.add('active');
+                localStorage.setItem(STORAGE_KEY_CURRENCY, currency);
+                var symbol = currencySymbols[currency] || '$';
+                var stored = balanceEl.getAttribute('data-' + currency);
+                if (stored) {
+                    balanceEl.classList.add('currency-switching');
+                    setTimeout(function() {
+                        balanceEl.textContent = symbol + stored;
+                        balanceEl.classList.remove('currency-switching');
+                    }, 120);
+                }
+            });
         });
-    });
+    }
 
     // Copy account number helper
     window.copyAccountNo = function(accountNo, btn) {
