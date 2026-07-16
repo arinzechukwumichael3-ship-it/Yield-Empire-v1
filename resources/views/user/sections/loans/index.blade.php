@@ -5,20 +5,20 @@
 /* ── Analytics Dashboard ── */
 .la-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px; }
 .la-stat-card {
-    background: #111827; border: 1px solid #1E293B; border-radius: 14px; padding: 16px;
+    background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px;
     display: flex; flex-direction: column; gap: 6px;
 }
 .la-stat-icon {
     width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center;
     justify-content: center; font-size: 16px;
 }
-.la-stat-label { font-size: 12px; color: #64748B; font-weight: 500; }
-.la-stat-value { font-size: 20px; font-weight: 700; color: #F1F5F9; letter-spacing: -0.3px; }
-.la-stat-sub { font-size: 11px; color: #475569; }
+.la-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.la-stat-value { font-size: 20px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.3px; }
+.la-stat-sub { font-size: 11px; color: var(--text-muted); }
 
 /* Health Score Card */
 .la-health-card {
-    margin: 0 16px 16px; background: linear-gradient(135deg, #1E3A5F, #2563EB);
+    margin: 0 16px 16px; background: var(--gradient);
     border-radius: 18px; padding: 24px; position: relative; overflow: hidden;
 }
 .la-health-card::before {
@@ -39,23 +39,23 @@
 /* Repayment Metrics */
 .la-metrics { margin: 0 16px 16px; }
 .la-metric-card {
-    background: #111827; border: 1px solid #1E293B; border-radius: 14px; padding: 18px; margin-bottom: 10px;
+    background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 18px; margin-bottom: 10px;
 }
 .la-metric-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.la-metric-label { font-size: 13px; font-weight: 600; color: #E2E8F0; }
-.la-metric-pct { font-size: 15px; font-weight: 700; color: #3B82F6; }
-.la-bar { height: 6px; background: #1E293B; border-radius: 100px; overflow: hidden; }
+.la-metric-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+.la-metric-pct { font-size: 15px; font-weight: 700; color: var(--accent); }
+.la-bar { height: 6px; background: var(--border-color); border-radius: 100px; overflow: hidden; }
 .la-bar-fill {
-    height: 100%; border-radius: 100px; background: linear-gradient(90deg, #3B82F6, #60A5FA);
+    height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--accent), #60A5FA);
     width: 0; transition: width 1.4s ease-out;
 }
-.la-bar-fill.green { background: linear-gradient(90deg, #22C55E, #4ADE80); }
-.la-bar-fill.yellow { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
+.la-bar-fill.green { background: linear-gradient(90deg, var(--success), #4ADE80); }
+.la-bar-fill.yellow { background: linear-gradient(90deg, var(--warning), #FBBF24); }
 .la-bar-fill.orange { background: linear-gradient(90deg, #F97316, #FB923C); }
 
 /* Payoff Progress */
 .la-payoff {
-    margin: 0 16px 16px; background: #111827; border: 1px solid #1E293B; border-radius: 14px;
+    margin: 0 16px 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px;
     padding: 20px; display: flex; align-items: center; gap: 20px;
 }
 .la-payoff-ring { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
@@ -63,20 +63,20 @@
 .la-payoff-ring circle {
     fill: none; stroke-width: 8; cx: 50; cy: 50; r: 42;
 }
-.la-payoff-ring .bg { stroke: #1E293B; }
+.la-payoff-ring .bg { stroke: var(--border-color); }
 .la-payoff-ring .progress {
-    stroke: #3B82F6; stroke-linecap: round;
+    stroke: var(--accent); stroke-linecap: round;
     stroke-dasharray: 263.89; stroke-dashoffset: 263.89;
     transition: stroke-dashoffset 1.6s ease-out;
 }
 .la-payoff-pct {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 800; color: #F1F5F9;
+    font-size: 18px; font-weight: 800; color: var(--text-primary);
 }
 .la-payoff-info { flex: 1; }
-.la-payoff-title { font-size: 14px; font-weight: 600; color: #E2E8F0; }
-.la-payoff-detail { font-size: 12px; color: #64748B; margin-top: 4px; line-height: 1.5; }
-.la-payoff-amount { font-size: 20px; font-weight: 700; color: #22C55E; margin-top: 4px; }
+.la-payoff-title { font-size: 14px; font-weight: 600; color: var(--text-secondary); }
+.la-payoff-detail { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+.la-payoff-amount { font-size: 20px; font-weight: 700; color: var(--success); margin-top: 4px; }
 
 /* Table section uses layout from existing master */
 .la-table-section { padding: 0 16px 120px; }
@@ -85,47 +85,47 @@
     position: relative;
 }
 .la-search-bar input {
-    flex: 1; height: 42px; padding: 0 14px 0 38px; border: 1.5px solid #1E293B;
-    border-radius: 12px; background: #111827; color: #F1F5F9; font-size: 14px;
+    flex: 1; height: 42px; padding: 0 14px 0 38px; border: 1.5px solid var(--border-color);
+    border-radius: 12px; background: var(--bg-card); color: var(--text-primary); font-size: 14px;
     outline: none; transition: border-color 0.2s;
 }
-.la-search-bar input:focus { border-color: #3B82F6; }
-.la-search-bar input::placeholder { color: #475569; }
-.la-search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #475569; }
+.la-search-bar input:focus { border-color: var(--accent); }
+.la-search-bar input::placeholder { color: var(--text-muted); }
+.la-search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
 .la-table {
     width: 100%; border-collapse: separate; border-spacing: 0 6px;
 }
-.la-table th { font-size: 11px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.8px; padding: 8px 12px; text-align: left; }
-.la-table td { padding: 12px; background: #111827; font-size: 13px; color: #E2E8F0; }
+.la-table th { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; padding: 8px 12px; text-align: left; }
+.la-table td { padding: 12px; background: var(--bg-card); font-size: 13px; color: var(--text-secondary); }
 .la-table tr td:first-child { border-radius: 10px 0 0 10px; }
 .la-table tr td:last-child { border-radius: 0 10px 10px 0; }
 .la-badge {
     display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600;
 }
-.la-badge.active { background: rgba(34,197,94,0.12); color: #22C55E; }
-.la-badge.pending { background: rgba(245,158,11,0.12); color: #F59E0B; }
-.la-badge.closed { background: rgba(148,163,184,0.12); color: #94A3B8; }
-.la-badge.defaulted { background: rgba(239,68,68,0.12); color: #EF4444; }
+.la-badge.active { background: rgba(34,197,94,0.12); color: var(--success); }
+.la-badge.pending { background: rgba(245,158,11,0.12); color: var(--warning); }
+.la-badge.closed { background: rgba(148,163,184,0.12); color: var(--text-secondary); }
+.la-badge.defaulted { background: rgba(239,68,68,0.12); color: var(--danger); }
 .la-btn-sm {
     display: inline-flex; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
     transition: all 0.15s; text-decoration: none;
 }
-.la-btn-sm.primary { background: #3B82F6; color: #fff; }
+.la-btn-sm.primary { background: var(--accent); color: #fff; }
 .la-btn-sm.primary:hover { opacity: 0.85; }
-.la-btn-sm.success { background: #22C55E; color: #fff; }
-.la-btn-sm.info { background: rgba(59,130,246,0.1); color: #3B82F6; }
-.la-empty { text-align: center; padding: 40px; color: #64748B; }
+.la-btn-sm.success { background: var(--success); color: #fff; }
+.la-btn-sm.info { background: rgba(59,130,246,0.1); color: var(--accent); }
+.la-empty { text-align: center; padding: 40px; color: var(--text-muted); }
 
 /* Light mode */
-[data-theme="light"] .la-stat-card { background: #fff; border-color: #E2E8F0; }
-[data-theme="light"] .la-stat-value { color: #1F2937; }
-[data-theme="light"] .la-metric-card { background: #fff; border-color: #E2E8F0; }
-[data-theme="light"] .la-metric-label { color: #1F2937; }
-[data-theme="light"] .la-bar { background: #F1F5F9; }
-[data-theme="light"] .la-payoff { background: #fff; border-color: #E2E8F0; }
-[data-theme="light"] .la-payoff-title { color: #1F2937; }
-[data-theme="light"] .la-table td { background: #fff; }
-[data-theme="light"] .la-search-bar input { background: #fff; border-color: #E2E8F0; color: #1F2937; }
+[data-theme="light"] .la-stat-card { background: var(--bg-primary); border-color: var(--text-secondary); }
+[data-theme="light"] .la-stat-value { color: var(--text-primary); }
+[data-theme="light"] .la-metric-card { background: var(--bg-primary); border-color: var(--text-secondary); }
+[data-theme="light"] .la-metric-label { color: var(--text-primary); }
+[data-theme="light"] .la-bar { background: var(--text-primary); }
+[data-theme="light"] .la-payoff { background: var(--bg-primary); border-color: var(--text-secondary); }
+[data-theme="light"] .la-payoff-title { color: var(--text-primary); }
+[data-theme="light"] .la-table td { background: var(--bg-primary); }
+[data-theme="light"] .la-search-bar input { background: var(--bg-primary); border-color: var(--text-secondary); color: var(--text-primary); }
 </style>
 @endpush
 
@@ -140,7 +140,7 @@
     {{-- ===== Stats Grid ===== --}}
     <div class="la-grid">
         <div class="la-stat-card">
-            <div class="la-stat-icon" style="background:rgba(59,130,246,0.12);color:#3B82F6;">
+            <div class="la-stat-icon" style="background:rgba(59,130,246,0.12);color:var(--accent);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </div>
             <span class="la-stat-label">{{ __('Principal') }}</span>
@@ -148,7 +148,7 @@
             <span class="la-stat-sub">{{ $activeCount }} {{ __('active') }}</span>
         </div>
         <div class="la-stat-card">
-            <div class="la-stat-icon" style="background:rgba(34,197,94,0.12);color:#22C55E;">
+            <div class="la-stat-icon" style="background:rgba(34,197,94,0.12);color:var(--success);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
             </div>
             <span class="la-stat-label">{{ __('Remaining') }}</span>
@@ -156,7 +156,7 @@
             <span class="la-stat-sub">{{ round(($totalBalance/max($totalPrincipal,1))*100,1) }}% {{ __('of principal') }}</span>
         </div>
         <div class="la-stat-card">
-            <div class="la-stat-icon" style="background:rgba(245,158,11,0.12);color:#F59E0B;">
+            <div class="la-stat-icon" style="background:rgba(245,158,11,0.12);color:var(--warning);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             </div>
             <span class="la-stat-label">{{ __('Next Payment') }}</span>
@@ -266,7 +266,7 @@
         </div>
         <div class="la-payoff-info">
             <div class="la-payoff-title">{{ __('Payoff Progress') }}</div>
-            <div class="la-payoff-amount">${{ number_format($totalPaid, 2) }} <span style="font-size:13px;color:#64748B;font-weight:400;">/ ${{ number_format($totalPrincipal, 2) }}</span></div>
+            <div class="la-payoff-amount">${{ number_format($totalPaid, 2) }} <span style="font-size:13px;color:var(--text-muted);font-weight:400;">/ ${{ number_format($totalPrincipal, 2) }}</span></div>
             <div class="la-payoff-detail">
                 @if($payoffMonthsEarly > 0)
                     {{ __('On track to pay off') }} {{ $payoffMonthsEarly }} {{ __('months early') }}
@@ -355,4 +355,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
-@endsection
