@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('frontend/css/baking-theme.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/rise-theme.css') }}?v=4">
-    <link rel="stylesheet" href="{{ asset('frontend/css/enzo-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/baking-theme.css') }}?v={{ filemtime(public_path('frontend/css/baking-theme.css')) }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/rise-theme.css') }}?v={{ filemtime(public_path('frontend/css/rise-theme.css')) }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/enzo-theme.css') }}?v={{ filemtime(public_path('frontend/css/enzo-theme.css')) }}">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     @include("partials.header-asset")
     <script>

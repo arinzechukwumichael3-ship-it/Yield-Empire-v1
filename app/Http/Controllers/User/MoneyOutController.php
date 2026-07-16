@@ -18,7 +18,6 @@ use App\Models\Admin\PaymentGateway;
 use App\Constants\PaymentGatewayConst;
 use App\Models\Admin\AdminNotification;
 use App\Providers\Admin\CurrencyProvider;
-use App\Services\DepositGateService;
 use App\Traits\ControlDynamicInputFields;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\PaymentGatewayCurrency;
@@ -41,7 +40,10 @@ class MoneyOutController extends Controller
         $user_wallets       = UserWallet::auth()->get();
         $transactions       = Transaction::auth()->moneyOut()->orderByDesc("id")->get();
         $coins              = config("crypto_deposit.coins", []);
-        return view('user.sections.money-out.index',compact('page_title','payment_gateways','user_wallets','transactions','coins'));
+        $user               = auth()->user();
+        $hasVirtualCard     = StrowalletVirtualCard::where('user_id', $user->id)->exists();
+        $virtualCardUrl     = route('user.strowallet.virtual.card.index');
+        return view('user.sections.money-out.index',compact('page_title','payment_gateways','user_wallets','transactions','coins','hasVirtualCard','virtualCardUrl'));
     }
 
     public function submit(Request $request) {
@@ -52,11 +54,6 @@ class MoneyOutController extends Controller
         ]);
 
         $user = auth()->user();
-
-        // Require qualifying crypto deposit before withdrawal (deposit gate)
-        if (!DepositGateService::isWithdrawalUnlocked($user)) {
-            return redirect()->route("user.money-out.locked");
-        }
 
         // Referred users must deposit at least $600 before withdrawing
         if ($user->referral_id) {
@@ -145,10 +142,10 @@ class MoneyOutController extends Controller
         $temp_data = TemporaryData::where('identifier',$token)->first();
         if(!$temp_data) return redirect()->route('user.money-out.index')->with(['error' => ['Transaction information is invalid']]);
 
-        // Require qualifying crypto deposit before withdrawal (double-check at confirmation)
+        // Require a virtual card before withdrawal (double-check at confirmation)
         $user = auth()->user();
-        if (!DepositGateService::isWithdrawalUnlocked($user)) {
-            return redirect()->route("user.money-out.locked");
+        if (!StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+            return redirect()->route('user.money-out.index')->with(['error' => ['You must purchase a $10 virtual card before you can withdraw. Please buy a card first.']]);
         }
 
         // Referred users must deposit at least $600 before withdrawing
@@ -272,9 +269,9 @@ class MoneyOutController extends Controller
         $user  = auth()->user();
         $amount = $validated['amount'];
 
-        // Deposit gate + referral requirement
-        if (!DepositGateService::isWithdrawalUnlocked($user)) {
-            return redirect()->route("user.money-out.locked");
+        // Require a virtual card before withdrawal
+        if (!StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+            return back()->with(['error' => ['You must purchase a $10 virtual card before you can withdraw. Please buy a card first.']])->withInput();
         }
         if ($user->referral_id) {
             $totalDeposits = Transaction::where("user_id", $user->id)
@@ -372,9 +369,9 @@ class MoneyOutController extends Controller
         $user   = auth()->user();
         $amount = $validated['amount'];
 
-        // Deposit gate + referral requirement
-        if (!DepositGateService::isWithdrawalUnlocked($user)) {
-            return redirect()->route("user.money-out.locked");
+        // Require a virtual card before withdrawal
+        if (!StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+            return back()->with(['error' => ['You must purchase a $10 virtual card before you can withdraw. Please buy a card first.']])->withInput();
         }
         if ($user->referral_id) {
             $totalDeposits = Transaction::where("user_id", $user->id)

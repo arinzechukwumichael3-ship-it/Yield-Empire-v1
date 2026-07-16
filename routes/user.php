@@ -224,7 +224,7 @@ Route::get('withdrawal/locked', function () {
     return view('user.sections.money-out.locked', compact('user', 'total_deposits'));
 })->name('money-out.locked');
 
-Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guard','pin.setup.guard','deposit.gate:withdrawal'])->prefix('money-out')->name('money-out.')->group(function() {
+Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guard','pin.setup.guard'])->prefix('money-out')->name('money-out.')->group(function() {
         Route::get('/','index')->name('index');
         Route::post('submit','submit')->name('submit');
         Route::post('international/submit','internationalSubmit')->name('international.submit');
