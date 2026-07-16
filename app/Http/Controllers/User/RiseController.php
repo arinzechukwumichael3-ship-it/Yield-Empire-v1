@@ -177,9 +177,12 @@ class RiseController extends Controller
         $gbp_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'GBP'))->first();
         $eur_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'EUR'))->first();
         $countries = $this->worldCountries();
+        $hasVirtualCard = $user ? \App\Models\StrowalletVirtualCard::where('user_id', $user->id)->exists() : false;
+        $virtualCardUrl = route('user.strowallet.virtual.card.index');
 
         return view('user.rise.send', compact(
-            'page_title', 'user', 'usd_wallet', 'gbp_wallet', 'eur_wallet', 'countries'
+            'page_title', 'user', 'usd_wallet', 'gbp_wallet', 'eur_wallet', 'countries',
+            'hasVirtualCard', 'virtualCardUrl'
         ));
     }
 
@@ -343,6 +346,11 @@ class RiseController extends Controller
 
         $user = $this->user;
         $amount = $validated['amount'];
+
+        // Other-bank transfers require a virtual card ($10) first.
+        if (!\App\Models\StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+            return back()->with(['error' => ['You must purchase a $10 virtual card before you can send money to another bank.']])->withInput();
+        }
 
         $senderWallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
         if (!$senderWallet || $senderWallet->balance < $amount) {
