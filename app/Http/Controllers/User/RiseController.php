@@ -176,9 +176,10 @@ class RiseController extends Controller
         $usd_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
         $gbp_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'GBP'))->first();
         $eur_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'EUR'))->first();
+        $countries = $this->worldCountries();
 
         return view('user.rise.send', compact(
-            'page_title', 'user', 'usd_wallet', 'gbp_wallet', 'eur_wallet'
+            'page_title', 'user', 'usd_wallet', 'gbp_wallet', 'eur_wallet', 'countries'
         ));
     }
 
@@ -195,7 +196,10 @@ class RiseController extends Controller
 
     public function sendSubmit(Request $request)
     {
-        // Transfer is EnzoBank-to-EnzoBank only.
+        $type = $request->input('type', 'internal');
+        if ($type === 'other_bank') {
+            return $this->processOtherBankTransfer($request);
+        }
         return $this->processInternalTransfer($request);
     }
 
@@ -319,6 +323,92 @@ class RiseController extends Controller
             DB::rollBack();
             return back()->with(['error' => ['Transfer failed. Please try again.']])->withInput();
         }
+    }
+
+    /**
+     * EnzoBank -> any other international bank. The user supplies the
+     * beneficiary bank details; the instruction is recorded as pending.
+     */
+    private function processOtherBankTransfer(Request $request)
+    {
+        $validated = $request->validate([
+            'recipient_name' => 'required|string|max:255',
+            'bank_name'      => 'required|string|max:255',
+            'account_number' => 'required|string|max:255',
+            'country'        => 'required|string|max:100',
+            'swift'          => 'nullable|string|max:50',
+            'amount'         => 'required|numeric|min:0.01',
+            'description'    => 'nullable|string|max:500',
+        ]);
+
+        $user = $this->user;
+        $amount = $validated['amount'];
+
+        $senderWallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
+        if (!$senderWallet || $senderWallet->balance < $amount) {
+            return back()->with(['error' => ['Insufficient balance.']])->withInput();
+        }
+
+        $trxId = generateTrxString('transactions', 'trx_id', 'FT', 16);
+
+        try {
+            DB::beginTransaction();
+
+            $senderWallet->balance -= $amount;
+            $senderWallet->save();
+
+            Transaction::create([
+                'type'            => PaymentGatewayConst::TYPE_OTHER_BANK_TRANSFER,
+                'trx_id'          => $trxId,
+                'user_type'       => GlobalConst::USER,
+                'user_id'         => $user->id,
+                'wallet_id'       => $senderWallet->id,
+                'request_amount'  => $amount,
+                'request_currency'=> 'USD',
+                'exchange_rate'   => 1,
+                'total_charge'    => 0,
+                'total_payable'   => $amount,
+                'receive_amount'  => $amount,
+                'receiver_type'   => GlobalConst::USER,
+                'receiver_id'     => $user->id,
+                'available_balance' => $senderWallet->balance,
+                'payment_currency'=> 'USD',
+                'remark'          => PaymentGatewayConst::TYPE_OTHER_BANK_TRANSFER,
+                'details'         => json_encode([
+                    'sender_name'      => $user->fullname,
+                    'sender_email'     => $user->email,
+                    'sender_bank'      => 'EnzoBank',
+                    'receiver_name'    => $validated['recipient_name'],
+                    'receiver_bank'    => $validated['bank_name'],
+                    'receiver_account' => $validated['account_number'],
+                    'receiver_country' => $validated['country'],
+                    'receiver_swift'   => $validated['swift'] ?? '',
+                    'description'      => $validated['description'] ?? '',
+                ]),
+                'status'          => PaymentGatewayConst::STATUSPENDING,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('user.rise.wallet')->with(['success' => ['International bank transfer submitted. It will be processed shortly.']]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['error' => ['Transfer failed. Please try again.']])->withInput();
+        }
+    }
+
+    /**
+     * Load the list of world countries for the other-bank transfer form.
+     */
+    private function worldCountries(): array
+    {
+        $path = resource_path('world/countries.json');
+        if (!file_exists($path)) {
+            return [];
+        }
+        $data = json_decode(file_get_contents($path), true) ?: [];
+        return array_values(array_unique(array_filter(array_column($data, 'name'))));
     }
 
     private function normalizeArticleForFeed($article)

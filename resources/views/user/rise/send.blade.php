@@ -164,6 +164,7 @@
     {{-- Tab Toggle --}}
     <div class="send-tabs" role="tablist">
         <button class="send-tab active" data-tab="internal" role="tab">🏦 EnzoBank Account</button>
+        <button class="send-tab" data-tab="other" role="tab">🌍 Other Bank</button>
     </div>
 
     {{-- ====== TAB 1: Internal EnzoBank Transfer ====== --}}
@@ -230,6 +231,75 @@
             </form>
         </div>
     </div>
+
+    {{-- ====== TAB 2: Other International Bank ====== --}}
+    <div class="send-tab-content" id="tab-other">
+        <div class="am-card">
+            <form method="POST" action="{{ route('user.rise.send.submit') }}">
+                @csrf
+                <input type="hidden" name="type" value="other_bank">
+                <div class="send-field-group">
+                    <label class="send-label">{{ __('Recipient Full Name') }}</label>
+                    <div class="send-input-wrap">
+                        <input type="text" class="send-input" name="recipient_name" id="obName" placeholder="Jane Doe" autocomplete="off">
+                    </div>
+                </div>
+                <div class="send-field-group">
+                    <label class="send-label">{{ __('Bank Name') }}</label>
+                    <div class="send-input-wrap">
+                        <input type="text" class="send-input" name="bank_name" id="obBank" placeholder="e.g. Barclays UK" autocomplete="off">
+                    </div>
+                </div>
+                <div class="send-field-group">
+                    <label class="send-label">{{ __('Account Number / IBAN') }}</label>
+                    <div class="send-input-wrap">
+                        <input type="text" class="send-input" name="account_number" id="obAccount" placeholder="GB29 NWBK 6016 1331 9268 19" autocomplete="off">
+                    </div>
+                </div>
+                <div class="send-field-group">
+                    <label class="send-label">{{ __('Country') }}</label>
+                    <div class="send-input-wrap">
+                        <select class="send-input" name="country" id="obCountry">
+                            <option value="">{{ __('Select country') }}</option>
+                            @foreach($countries as $c)
+                                <option value="{{ $c }}">{{ $c }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="send-field-group">
+                    <label class="send-label">{{ __('SWIFT / BIC (optional)') }}</label>
+                    <div class="send-input-wrap">
+                        <input type="text" class="send-input" name="swift" id="obSwift" placeholder="NWBKGB2L" autocomplete="off">
+                    </div>
+                </div>
+                <div class="send-field-group">
+                    <label class="send-label">{{ __('Amount (USD)') }}</label>
+                    <div class="send-input-wrap">
+                        <input type="number" step="0.01" min="0.01" class="send-input" name="amount" id="obAmount" placeholder="0.00">
+                        <span class="send-input-pill">USD</span>
+                    </div>
+                </div>
+                <div class="send-field-group">
+                    <label class="send-label">{{ __('Description (optional)') }}</label>
+                    <div class="send-input-wrap">
+                        <input type="text" class="send-input" name="description" placeholder="What's this for?">
+                    </div>
+                </div>
+                <div class="send-fee-card">
+                    <div class="send-fee-row">
+                        <span class="send-fee-label">{{ __('You send') }}</span>
+                        <span class="send-fee-value" id="obTotal">$0.00</span>
+                    </div>
+                    <div class="send-fee-row">
+                        <span class="send-fee-label">{{ __('Arrives') }}</span>
+                        <span class="send-fee-value" style="color:var(--success,#22C55E)">{{ __('1-2 business days') }}</span>
+                    </div>
+                </div>
+                <button type="submit" class="send-btn" id="sendOtherBtn" disabled>{{ __('Send to Bank') }}</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 @push('script')
@@ -288,6 +358,42 @@ if (internalAmount) {
         var amt = parseFloat(this.value) || 0;
         document.getElementById('internalTotal').textContent = '$' + amt.toFixed(2);
         document.getElementById('internalRecipientGets').textContent = '$' + amt.toFixed(2);
+    });
+}
+
+// ── Tab switching ──
+document.querySelectorAll('.send-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+        var target = this.getAttribute('data-tab');
+        document.querySelectorAll('.send-tab').forEach(function(t) { t.classList.remove('active'); });
+        this.classList.add('active');
+        document.querySelectorAll('.send-tab-content').forEach(function(c) { c.classList.remove('active'); });
+        var content = document.getElementById('tab-' + target);
+        if (content) content.classList.add('active');
+    });
+});
+
+// ── Other bank validation + amount ──
+var obBtn = document.getElementById('sendOtherBtn');
+function validateOtherBank() {
+    if (!obBtn) return;
+    var name = document.getElementById('obName').value.trim();
+    var bank = document.getElementById('obBank').value.trim();
+    var acc = document.getElementById('obAccount').value.trim();
+    var country = document.getElementById('obCountry').value.trim();
+    var amt = parseFloat(document.getElementById('obAmount').value) || 0;
+    obBtn.disabled = !(name && bank && acc && country && amt > 0);
+}
+['obName','obBank','obAccount','obCountry','obAmount','obSwift'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.addEventListener('input', validateOtherBank); el.addEventListener('change', validateOtherBank); }
+});
+var obAmount = document.getElementById('obAmount');
+if (obAmount) {
+    obAmount.addEventListener('input', function() {
+        var amt = parseFloat(this.value) || 0;
+        var total = document.getElementById('obTotal');
+        if (total) total.textContent = '$' + amt.toFixed(2);
     });
 }
 </script>

@@ -94,7 +94,9 @@ class LoanController extends Controller
     {
         $page_title = __('Apply Loan');
         $products = LoanProduct::where('status', true)->orderBy('name')->get();
-        return view('user.sections.loans.create', compact('page_title', 'products'));
+        $countries = $this->worldCountries();
+        $currencies = $this->worldCurrencies();
+        return view('user.sections.loans.create', compact('page_title', 'products', 'countries', 'currencies'));
     }
 
     public function store(Request $request)
@@ -113,11 +115,15 @@ class LoanController extends Controller
             'late_fee_type'   => ['nullable', 'in:percent,flat'],
             'late_fee_value'  => ['nullable', 'numeric', 'min:0'],
             'early_settlement_fee_percent' => ['nullable', 'numeric', 'min:0'],
+            'country'         => ['nullable', 'string', 'max:100'],
+            'currency'        => ['nullable', 'string', 'max:10'],
         ]);
 
         $loan = Loan::create([
             'user_id'         => Auth::id(),
             'loan_product_id' => $request->loan_product_id,
+            'country'         => $request->country,
+            'currency'        => $request->currency ?: 'USD',
             'principal'       => $request->principal,
             'interest_rate'   => $request->interest_rate,
             'term_months'     => $request->term_months,
@@ -144,7 +150,9 @@ class LoanController extends Controller
         $loan = Loan::where('user_id', Auth::id())->findOrFail($id);
         $page_title = __('Edit Loan');
         $products = LoanProduct::where('status', true)->orderBy('name')->get();
-        return view('user.sections.loans.edit', compact('page_title', 'loan', 'products'));
+        $countries = $this->worldCountries();
+        $currencies = $this->worldCurrencies();
+        return view('user.sections.loans.edit', compact('page_title', 'loan', 'products', 'countries', 'currencies'));
     }
 
     public function update(Request $request, $id)
@@ -164,10 +172,14 @@ class LoanController extends Controller
             'late_fee_type'   => ['nullable', 'in:percent,flat'],
             'late_fee_value'  => ['nullable', 'numeric', 'min:0'],
             'early_settlement_fee_percent' => ['nullable', 'numeric', 'min:0'],
+            'country'       => ['nullable', 'string', 'max:100'],
+            'currency'      => ['nullable', 'string', 'max:10'],
         ]);
 
         $loan->update([
             'interest_rate' => $request->interest_rate,
+            'country'       => $request->country,
+            'currency'      => $request->currency ?: 'USD',
             'term_months'   => $request->term_months,
             'start_date'    => $request->start_date,
             'status'        => $request->status,
@@ -229,5 +241,31 @@ class LoanController extends Controller
             'closed'          => $closedCount,
             'upcoming'        => $upcoming,
         ]);
+    }
+
+    /**
+     * World countries for the international loan application.
+     */
+    private function worldCountries(): array
+    {
+        $path = resource_path('world/countries.json');
+        if (!file_exists($path)) {
+            return [];
+        }
+        $data = json_decode(file_get_contents($path), true) ?: [];
+        return array_values(array_unique(array_filter(array_column($data, 'name'))));
+    }
+
+    /**
+     * Distinct currencies available across world countries.
+     */
+    private function worldCurrencies(): array
+    {
+        $path = resource_path('world/countries.json');
+        if (!file_exists($path)) {
+            return ['USD'];
+        }
+        $data = json_decode(file_get_contents($path), true) ?: [];
+        return array_values(array_unique(array_filter(array_column($data, 'currency'))));
     }
 }

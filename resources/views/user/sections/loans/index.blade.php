@@ -303,8 +303,8 @@
             <tbody>
                 @forelse($loans as $loan)
                 <tr>
-                    <td>{{ $loan->product->name ?? __('Custom') }}</td>
-                    <td>${{ number_format($loan->principal, 2) }}</td>
+                    <td>{{ $loan->product->name ?? __('Custom') }}@if($loan->country)<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">{{ $loan->country }}</div>@endif</td>
+                    <td>${{ number_format($loan->principal, 2) }} <span style="font-size:11px;color:var(--text-muted);">{{ $loan->currency ?? 'USD' }}</span></td>
                     <td>{{ number_format($loan->interest_rate, 1) }}%</td>
                     <td>${{ number_format($loan->balance_principal, 2) }}</td>
                     <td><span class="la-badge {{ $loan->status }}">{{ ucfirst($loan->status) }}</span></td>

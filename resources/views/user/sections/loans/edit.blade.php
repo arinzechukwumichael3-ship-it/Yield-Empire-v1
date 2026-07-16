@@ -8,6 +8,20 @@
     gap: 14px;
 }
 .loan-grid .am-field-group { margin-bottom: 0; }
+.loan-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--accent-soft, rgba(59,130,246,0.1));
+    border: 1px solid var(--accent, #3B82F6);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+.loan-note svg { flex-shrink: 0; margin-top: 1px; color: var(--accent, #3B82F6); }
 .loan-actions { margin-top: 20px; }
 @media (max-width: 560px) {
     .loan-grid { grid-template-columns: 1fr; }
@@ -26,7 +40,32 @@
         <form method="POST" action="{{ route('user.loans.update', $loan->id) }}">
             @csrf
             @method('PUT')
+            <div class="loan-note">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <span>{{ __('EnzoBank is an international bank. Applicants from any country can apply — choose your country and preferred currency below.') }}</span>
+            </div>
             <div class="loan-grid">
+                <div class="am-field-group">
+                    <label class="am-label">{{ __('Country') }}</label>
+                    <div class="am-input-wrap">
+                        <select name="country">
+                            <option value="">{{ __('Select country') }}</option>
+                            @foreach($countries as $c)
+                                <option value="{{ $c }}" @selected($loan->country === $c)>{{ $c }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="am-field-group">
+                    <label class="am-label">{{ __('Currency') }}</label>
+                    <div class="am-input-wrap">
+                        <select name="currency">
+                            @foreach($currencies as $cur)
+                                <option value="{{ $cur }}" @selected($loan->currency === $cur)>{{ $cur }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 <div class="am-field-group">
                     <label class="am-label">{{ __('Interest Rate (%)') }}</label>
                     <div class="am-input-wrap">
