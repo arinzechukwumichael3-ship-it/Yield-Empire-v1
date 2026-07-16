@@ -214,7 +214,14 @@ Route::controller(StrowalletVirtualCardController::class)->middleware(['kyc.veri
 
     // Deposit-locked withdrawal page
 Route::get('withdrawal/locked', function () {
-    return view('user.sections.money-out.locked');
+    $user = auth()->user();
+    $total_deposits = $user
+        ? \App\Models\Transaction::where('user_id', $user->id)
+            ->where('type', \App\Constants\PaymentGatewayConst::TYPEADDMONEY)
+            ->where('status', \App\Constants\PaymentGatewayConst::STATUSSUCCESS)
+            ->sum('request_amount')
+        : 0;
+    return view('user.sections.money-out.locked', compact('user', 'total_deposits'));
 })->name('money-out.locked');
 
 Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guard','pin.setup.guard','deposit.gate:withdrawal'])->prefix('money-out')->name('money-out.')->group(function() {

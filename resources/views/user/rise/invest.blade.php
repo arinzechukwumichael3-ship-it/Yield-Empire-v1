@@ -24,15 +24,15 @@
     transform: rotate(-90deg);
     width: 72px; height: 72px;
 }
-.inv-ring-bg { fill: none; stroke: #1E293B; stroke-width: 5; }
+.inv-ring-bg { fill: none; stroke: var(--border-color); stroke-width: 5; }
 .inv-ring-fg {
-    fill: none; stroke: #3B82F6; stroke-width: 5;
+    fill: none; stroke: var(--accent); stroke-width: 5;
     stroke-linecap: round;
     stroke-dasharray: 188.5;
     stroke-dashoffset: 188.5;
     transition: stroke-dashoffset 1s ease-out;
 }
-.inv-ring-fg.green { stroke: #22C55E; }
+.inv-ring-fg.green { stroke: var(--success); }
 .inv-ring-fg.orange { stroke: #F59E0B; }
 .inv-ring-fg.purple { stroke: #8B5CF6; }
 .inv-ring-center {
@@ -47,12 +47,12 @@
     color: #fff;
     line-height: 1.1;
 }
-.inv-ring-label { font-size: 8px; font-weight: 500; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; }
+.inv-ring-label { font-size: 8px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* Horizontal progress bar */
 .inv-progress {
     height: 6px;
-    background: #1E293B;
+    background: var(--border-color);
     border-radius: 3px;
     overflow: hidden;
     position: relative;
@@ -63,11 +63,11 @@
     width: 0;
     transition: width 1s ease-out;
 }
-.inv-progress-fill.blue { background: #3B82F6; }
-.inv-progress-fill.green { background: #22C55E; }
+.inv-progress-fill.blue { background: var(--accent); }
+.inv-progress-fill.green { background: var(--success); }
 .inv-progress-fill.orange { background: #F59E0B; }
 .inv-progress-fill.purple { background: #8B5CF6; }
-.inv-progress-fill.red { background: #EF4444; }
+.inv-progress-fill.red { background: var(--danger); }
 
 /* Status badges */
 .inv-badge {
@@ -80,18 +80,18 @@
     font-weight: 600;
     white-space: nowrap;
 }
-.inv-badge.active { background: rgba(34,197,94,0.12); color: #22C55E; }
-.inv-badge.closed { background: rgba(239,68,68,0.12); color: #EF4444; }
+.inv-badge.active { background: rgba(34,197,94,0.12); color: var(--success); }
+.inv-badge.closed { background: rgba(239,68,68,0.12); color: var(--danger); }
 .inv-badge.pending { background: rgba(245,158,11,0.12); color: #F59E0B; }
-.inv-badge.passed { background: rgba(59,130,246,0.12); color: #3B82F6; }
+.inv-badge.passed { background: rgba(59,130,246,0.12); color: var(--accent); }
 .inv-badge-dot {
     width: 6px; height: 6px;
     border-radius: 50%;
 }
-.inv-badge.active .inv-badge-dot { background: #22C55E; }
-.inv-badge.closed .inv-badge-dot { background: #EF4444; }
+.inv-badge.active .inv-badge-dot { background: var(--success); }
+.inv-badge.closed .inv-badge-dot { background: var(--danger); }
 .inv-badge.pending .inv-badge-dot { background: #F59E0B; }
-.inv-badge.passed .inv-badge-dot { background: #3B82F6; }
+.inv-badge.passed .inv-badge-dot { background: var(--accent); }
 
 /* Stats cards row */
 .inv-stats {
@@ -101,8 +101,8 @@
     margin-bottom: 16px;
 }
 .inv-stat-card {
-    background: #111827;
-    border: 1px solid #1E293B;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 16px 10px;
     display: flex;
@@ -114,7 +114,7 @@
 .inv-stat-label {
     font-size: 10px;
     font-weight: 500;
-    color: #64748B;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -133,11 +133,11 @@
     flex: 1;
     min-width: 0;
     padding: 10px 12px;
-    border: 1px solid #334155;
+    border: 1px solid var(--border-strong);
     border-radius: 10px;
     font-size: 13px;
-    background: #1E293B;
-    color: #F1F5F9;
+    background: var(--border-color);
+    color: var(--text-primary);
     outline: none;
     -webkit-appearance: none;
     appearance: none;
@@ -146,8 +146,8 @@
     background-repeat: no-repeat;
     background-position: right 10px center;
 }
-.inv-filter-select:focus { border-color: #3B82F6; }
-.inv-filter-select option { background: #111827; color: #F1F5F9; }
+.inv-filter-select:focus { border-color: var(--accent); }
+.inv-filter-select option { background: var(--bg-card); color: var(--text-primary); }
 
 /* Plans grid */
 .inv-plans-grid {
@@ -159,8 +159,8 @@
 
 /* Plan card */
 .inv-plan-card {
-    background: #111827;
-    border: 1px solid #1E293B;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 16px 14px;
     display: flex;
@@ -168,20 +168,20 @@
     gap: 6px;
     transition: border-color 0.15s, transform 0.15s;
 }
-.inv-plan-card:active { border-color: #3B82F6; transform: scale(0.98); }
+.inv-plan-card:active { border-color: var(--accent); transform: scale(0.98); }
 .inv-plan-rate {
     font-size: 20px;
     font-weight: 800;
-    color: #3B82F6;
+    color: var(--accent);
     line-height: 1.1;
 }
 .inv-plan-name { font-size: 13px; font-weight: 600; color: #fff; }
-.inv-plan-meta { font-size: 11px; color: #64748B; display: flex; gap: 6px; flex-wrap: wrap; }
+.inv-plan-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 6px; flex-wrap: wrap; }
 .inv-plan-btn {
     margin-top: 6px;
     padding: 9px 12px;
     border-radius: 100px;
-    background: #3B82F6;
+    background: var(--accent);
     color: #fff;
     font-size: 12px;
     font-weight: 600;
@@ -215,11 +215,11 @@
     justify-content: center;
 }
 .inv-donut-value { font-size: 18px; font-weight: 800; color: #fff; }
-.inv-donut-label { font-size: 9px; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; }
+.inv-donut-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* Donut legend */
 .inv-legend { display: flex; flex-direction: column; gap: 8px; flex: 1; }
-.inv-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #94A3B8; }
+.inv-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
 .inv-legend-dot {
     width: 8px; height: 8px;
     border-radius: 50%;
@@ -228,7 +228,7 @@
 .inv-legend-bar {
     flex: 1;
     height: 4px;
-    background: #1E293B;
+    background: var(--border-color);
     border-radius: 2px;
     overflow: hidden;
 }
@@ -264,7 +264,7 @@
     max-width: 448px;
     width: calc(100% - 32px);
     padding: 14px 24px;
-    background: #3B82F6;
+    background: var(--accent);
     color: #fff;
     font-size: 15px;
     font-weight: 600;
@@ -312,7 +312,7 @@
     padding: 40px 20px;
     text-align: center;
     gap: 6px;
-    color: #64748B;
+    color: var(--text-muted);
 }
 .inv-empty-icon { font-size: 36px; }
 .inv-empty-title { font-size: 15px; font-weight: 700; color: #fff; }
@@ -346,7 +346,7 @@
 .inv-modal-handle {
     width: 36px;
     height: 4px;
-    background: #334155;
+    background: var(--border-strong);
     border-radius: 2px;
     margin: 0 auto 18px;
 }
@@ -358,7 +358,7 @@
 }
 .inv-modal-sub {
     font-size: 13px;
-    color: #64748B;
+    color: var(--text-muted);
     margin-bottom: 20px;
 }
 .inv-modal-step {
@@ -370,14 +370,14 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: #1E293B;
-    border: 1px solid #334155;
+    background: var(--border-color);
+    border: 1px solid var(--border-strong);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 13px;
     font-weight: 700;
-    color: #3B82F6;
+    color: var(--accent);
     flex-shrink: 0;
 }
 .inv-modal-step-body h4 {
@@ -388,7 +388,7 @@
 }
 .inv-modal-step-body p {
     font-size: 12px;
-    color: #94A3B8;
+    color: var(--text-secondary);
     margin: 0;
     line-height: 1.5;
 }
@@ -397,7 +397,7 @@
     width: 100%;
     padding: 14px;
     border-radius: 12px;
-    background: #3B82F6;
+    background: var(--accent);
     color: #fff;
     font-size: 15px;
     font-weight: 600;
@@ -411,23 +411,23 @@
 /* Light mode */
 @media (prefers-color-scheme: light) {
     .inv-stat-card { background: #fff; border-color: #E2E8F0; }
-    .inv-stat-label { color: #64748B; }
+    .inv-stat-label { color: var(--text-muted); }
     .inv-filter-select { background: #F8FAFC; border-color: #CBD5E1; color: #0F172A; }
     .inv-filter-select option { background: #fff; color: #0F172A; }
     .inv-plan-card { background: #fff; border-color: #E2E8F0; }
     .inv-plan-name { color: #0F172A; }
-    .inv-plan-meta { color: #64748B; }
+    .inv-plan-meta { color: var(--text-muted); }
     .inv-section-title { color: #0F172A; }
     .inv-ring-bg { stroke: #E2E8F0; }
     .inv-ring-center { color: #0F172A; }
     .inv-progress { background: #E2E8F0; }
     .inv-donut-value { color: #0F172A; }
-    .inv-legend-item { color: #64748B; }
+    .inv-legend-item { color: var(--text-muted); }
     .inv-legend-bar { background: #E2E8F0; }
     .inv-empty-title { color: #0F172A; }
     .inv-modal-sheet { background: #fff; }
     .inv-modal-title { color: #0F172A; }
-    .inv-modal-step-num { background: #F1F5F9; border-color: #CBD5E1; }
+    .inv-modal-step-num { background: var(--text-primary); border-color: #CBD5E1; }
     .inv-modal-step-body h4 { color: #0F172A; }
 }
 </style>
@@ -509,28 +509,28 @@ $totalValue = $holdings->sum('value') ?? 0;
         </div>
         <div style="display:flex;flex-direction:column;gap:12px;">
             <div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:#94A3B8;margin-bottom:4px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-bottom:4px;">
                     <span>Fixed Income</span>
                     <span>85%</span>
                 </div>
                 <div class="inv-progress"><div class="inv-progress-fill blue" data-target="85"></div></div>
             </div>
             <div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:#94A3B8;margin-bottom:4px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-bottom:4px;">
                     <span>Growth Fund</span>
                     <span>62%</span>
                 </div>
                 <div class="inv-progress"><div class="inv-progress-fill green" data-target="62"></div></div>
             </div>
             <div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:#94A3B8;margin-bottom:4px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-bottom:4px;">
                     <span>Premium Plus</span>
                     <span>41%</span>
                 </div>
                 <div class="inv-progress"><div class="inv-progress-fill orange" data-target="41"></div></div>
             </div>
             <div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:#94A3B8;margin-bottom:4px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-bottom:4px;">
                     <span>Sterling Vault</span>
                     <span>28%</span>
                 </div>
@@ -604,8 +604,8 @@ $totalValue = $holdings->sum('value') ?? 0;
         <div style="display:flex;align-items:center;gap:20px;">
             <div class="inv-donut" id="donutChart">
                 <svg viewBox="0 0 100 100">
-                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:#3B82F6;" data-pct="45"/>
-                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:#22C55E;transform:rotate(162deg);transform-origin:50% 50%;" data-pct="30"/>
+                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:var(--accent);" data-pct="45"/>
+                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:var(--success);transform:rotate(162deg);transform-origin:50% 50%;" data-pct="30"/>
                     <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:#F59E0B;transform:rotate(270deg);transform-origin:50% 50%;" data-pct="25"/>
                 </svg>
                 <div class="inv-donut-center">
@@ -616,10 +616,10 @@ $totalValue = $holdings->sum('value') ?? 0;
             <div class="inv-legend">
                 @foreach($holdings->take(4) as $h)
                 <div class="inv-legend-item">
-                    <span class="inv-legend-dot" style="background:{{ $loop->index == 0 ? '#3B82F6' : ($loop->index == 1 ? '#22C55E' : ($loop->index == 2 ? '#F59E0B' : '#8B5CF6')) }};"></span>
+                    <span class="inv-legend-dot" style="background:{{ $loop->index == 0 ? 'var(--accent)' : ($loop->index == 1 ? 'var(--success)' : ($loop->index == 2 ? '#F59E0B' : '#8B5CF6')) }};"></span>
                     <span style="flex:1;">{{ $h->asset->name ?? $h->asset_type ?? 'Asset' }}</span>
                     <span style="font-weight:600;color:var(--text-primary);">{{ $h->allocation_percent ?? 0 }}%</span>
-                    <div class="inv-legend-bar"><div class="inv-legend-fill" style="background:{{ $loop->index == 0 ? '#3B82F6' : ($loop->index == 1 ? '#22C55E' : ($loop->index == 2 ? '#F59E0B' : '#8B5CF6')) }};" data-target="{{ $h->allocation_percent ?? 0 }}"></div></div>
+                    <div class="inv-legend-bar"><div class="inv-legend-fill" style="background:{{ $loop->index == 0 ? 'var(--accent)' : ($loop->index == 1 ? 'var(--success)' : ($loop->index == 2 ? '#F59E0B' : '#8B5CF6')) }};" data-target="{{ $h->allocation_percent ?? 0 }}"></div></div>
                 </div>
                 @endforeach
             </div>
@@ -668,20 +668,20 @@ $totalValue = $holdings->sum('value') ?? 0;
             </div>
         </div>
 
-        <div style="background:#1E293B;border-radius:12px;padding:16px;margin-bottom:8px;">
-            <div style="display:flex;justify-content:space-between;font-size:13px;color:#94A3B8;margin-bottom:6px;">
+        <div style="background:var(--border-color);border-radius:12px;padding:16px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);margin-bottom:6px;">
                 <span>Minimum investment</span>
                 <span style="color:#fff;font-weight:600;">$10</span>
             </div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;color:#94A3B8;margin-bottom:6px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);margin-bottom:6px;">
                 <span>Expected returns</span>
-                <span style="color:#22C55E;font-weight:600;">5% – 23% annually</span>
+                <span style="color:var(--success);font-weight:600;">5% – 23% annually</span>
             </div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;color:#94A3B8;margin-bottom:6px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);margin-bottom:6px;">
                 <span>Payout frequency</span>
                 <span style="color:#fff;font-weight:600;">Daily</span>
             </div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;color:#94A3B8;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);">
                 <span>Risk levels</span>
                 <span style="color:#fff;font-weight:600;">Low / Medium / High</span>
             </div>
