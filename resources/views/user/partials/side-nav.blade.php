@@ -33,8 +33,8 @@
                     </li>
 
                     <li class="sidebar-menu-item-header">{{ __('Payments & Transfers') }}</li>
-                    <li class="sidebar-menu-item {{ menuActive(['user.fund-transfer.index', 'user.fund-transfer.create', 'user.fund-transfer.preview', 'user.fund-transfer.transaction.success']) }}">
-                        <a href="{{ route('user.fund-transfer.index') }}">
+                    <li class="sidebar-menu-item {{ menuActive(['user.rise.send']) }}">
+                        <a href="{{ route('user.rise.send') }}">
                             <i class="menu-icon las la-paper-plane"></i>
                             <span class="menu-title">{{ __('Send Funds') }}</span>
                         </a>

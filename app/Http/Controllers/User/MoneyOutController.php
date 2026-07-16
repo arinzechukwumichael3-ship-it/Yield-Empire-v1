@@ -40,7 +40,8 @@ class MoneyOutController extends Controller
         $payment_gateways   = PaymentGateway::moneyOut()->manual()->active()->get();
         $user_wallets       = UserWallet::auth()->get();
         $transactions       = Transaction::auth()->moneyOut()->orderByDesc("id")->get();
-        return view('user.sections.money-out.index',compact('page_title','payment_gateways','user_wallets','transactions'));
+        $coins              = config("crypto_deposit.coins", []);
+        return view('user.sections.money-out.index',compact('page_title','payment_gateways','user_wallets','transactions','coins'));
     }
 
     public function submit(Request $request) {
@@ -191,23 +192,23 @@ class MoneyOutController extends Controller
         }
 
         try{
-            $trx_id = 'MO'.getTrxNum();
+            $trx_id = generateTrxString('transactions', 'trx_id', 'MO-', 14);
             $sender_wallet->balance -= $charges->total_amount;
             $sender_wallet->save();
 
             $transaction = new Transaction();
-            $transaction->type               = PaymentGatewayConst::MONEY_OUT;
+            $transaction->type               = PaymentGatewayConst::TYPEMONEYOUT;
             $transaction->trx_id             = $trx_id;
             $transaction->user_id            = $sender_wallet->user->id;
-            $transaction->user_wallet_id     = $sender_wallet->id;
+            $transaction->wallet_id          = $sender_wallet->id;
+            $transaction->request_currency   = $sender_wallet->currency->code;
+            $transaction->user_type          = GlobalConst::USER;
             $transaction->payment_gateway_currency_id = $gateway_currency->id;
             $transaction->request_amount     = $charges->request_amount;
-            $transaction->payable            = $charges->will_get;
             $transaction->total_charge       = $charges->total_charge;
-            $transaction->total_amount       = $charges->total_amount;
-            $transaction->remark             = PaymentGatewayConst::USER_REQUESTED_MONEY_OUT;
-            $transaction->status             = GlobalConst::STATUS_PENDING;
-            $transaction->creator            = "USER";
+            $transaction->total_payable      = $charges->total_amount;
+            $transaction->remark             = PaymentGatewayConst::TYPEMONEYOUT;
+            $transaction->status             = PaymentGatewayConst::STATUSPENDING;
             $transaction->save();
 
             if($temp_data) $temp_data->delete();
@@ -249,6 +250,216 @@ class MoneyOutController extends Controller
         }
 
         return redirect()->route('user.money-out.index')->with(['success' => ['Transaction Success. Please wait for admin confirmation.']]);
+    }
+
+    /**
+     * Withdrawal via International Bank Transfer.
+     */
+    public function internationalSubmit(Request $request)
+    {
+        $validated = $request->validate([
+            'recipient_name' => 'required|string|max:255',
+            'bank_name'      => 'required|string|max:255',
+            'account_number' => 'required|string|max:255',
+            'swift_code'     => 'required|string|max:50',
+            'country'        => 'required|string|max:100',
+            'amount'         => 'required|numeric|min:10',
+            'rail'           => 'nullable|string|in:swift,sepa,ach',
+        ], [
+            'amount.min' => 'Minimum withdrawal is $10.00',
+        ]);
+
+        $user  = auth()->user();
+        $amount = $validated['amount'];
+
+        // Deposit gate + referral requirement
+        if (!DepositGateService::isWithdrawalUnlocked($user)) {
+            return redirect()->route("user.money-out.locked");
+        }
+        if ($user->referral_id) {
+            $totalDeposits = Transaction::where("user_id", $user->id)
+                ->where("type", "ADD-MONEY")
+                ->where("status", 1)
+                ->sum("request_amount");
+            if ($totalDeposits < 600) {
+                return back()->with(["error" => ["You must deposit at least $600 before withdrawing."]])->withInput();
+            }
+        }
+
+        $fee            = 15.00;
+        $totalPayable   = $amount + $fee;
+        $sender_wallet  = UserWallet::auth()->whereHas('currency', function ($q) {
+            $q->where('code', CurrencyProvider::default()->code)->active();
+        })->first();
+
+        if (!$sender_wallet) {
+            return back()->with(["error" => ["Your wallet was not found."]])->withInput();
+        }
+        if ($sender_wallet->balance < $totalPayable) {
+            return back()->with(["error" => ["Insufficient balance to cover the amount and $" . number_format($fee, 2) . " transfer fee."]])->withInput();
+        }
+
+        $trx_id = generateTrxString('transactions', 'trx_id', 'MO-', 14);
+        try {
+            DB::beginTransaction();
+            $sender_wallet->balance -= $totalPayable;
+            $sender_wallet->save();
+
+            $transaction = new Transaction();
+            $transaction->type                  = PaymentGatewayConst::TYPEMONEYOUT;
+            $transaction->trx_id                = $trx_id;
+            $transaction->user_id               = $user->id;
+            $transaction->wallet_id              = $sender_wallet->id;
+            $transaction->request_currency       = $sender_wallet->currency->code;
+            $transaction->user_type              = GlobalConst::USER;
+            $transaction->request_amount        = $amount;
+            $transaction->total_payable        = $totalPayable;
+            $transaction->total_charge          = $fee;
+            $transaction->available_balance     = $sender_wallet->balance;
+            $transaction->remark                = PaymentGatewayConst::TYPEMONEYOUT;
+            $transaction->status                = PaymentGatewayConst::STATUSPENDING;
+
+            $transaction->details               = json_encode([
+                'method'         => 'international',
+                'recipient_name' => $validated['recipient_name'],
+                'bank_name'      => $validated['bank_name'],
+                'account_number' => $validated['account_number'],
+                'swift_code'     => $validated['swift_code'],
+                'country'        => $validated['country'],
+                'rail'           => $validated['rail'] ?? 'swift',
+                'fee'            => $fee,
+            ]);
+            $transaction->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with(["error" => ["Something went wrong! Please try again."]])->withInput();
+        }
+
+        return redirect()->route('user.money-out.index')
+            ->with(["success" => ["International withdrawal of $" . number_format($amount, 2) . " submitted. We'll process it via " . strtoupper($validated['rail'] ?? 'swift') . "."]]);
+    }
+
+    /**
+     * Withdrawal to a crypto wallet.
+     */
+    public function cryptoSubmit(Request $request)
+    {
+        $coins      = config("crypto_deposit.coins", []);
+        $validKeys  = implode(",", array_keys($coins));
+
+        $validated = $request->validate([
+            'coin_key'       => "required|string|in:" . $validKeys,
+            'wallet_address' => 'required|string|max:255',
+            'amount'         => 'required|numeric|min:10',
+        ], [
+            'coin_key.in'    => 'Please select a valid cryptocurrency',
+            'amount.min'     => 'Minimum withdrawal is $10.00',
+        ]);
+
+        $coinKey = $validated['coin_key'];
+        $coin    = $coins[$coinKey] ?? null;
+        if (!$coin) {
+            return back()->with(["error" => ["Invalid cryptocurrency selected."]])->withInput();
+        }
+
+        // Validate wallet address format for the selected coin/network
+        if (!self::isValidCryptoAddress($validated['wallet_address'], $coin)) {
+            return back()->with(["error" => ["The wallet address format does not match " . $coin['name'] . ". Please double-check the address and network."]])->withInput();
+        }
+
+        $user   = auth()->user();
+        $amount = $validated['amount'];
+
+        // Deposit gate + referral requirement
+        if (!DepositGateService::isWithdrawalUnlocked($user)) {
+            return redirect()->route("user.money-out.locked");
+        }
+        if ($user->referral_id) {
+            $totalDeposits = Transaction::where("user_id", $user->id)
+                ->where("type", "ADD-MONEY")
+                ->where("status", 1)
+                ->sum("request_amount");
+            if ($totalDeposits < 600) {
+                return back()->with(["error" => ["You must deposit at least $600 before withdrawing."]])->withInput();
+            }
+        }
+
+        $fee           = 0;
+        $sender_wallet = UserWallet::auth()->whereHas('currency', function ($q) {
+            $q->where('code', CurrencyProvider::default()->code)->active();
+        })->first();
+
+        if (!$sender_wallet) {
+            return back()->with(["error" => ["Your wallet was not found."]])->withInput();
+        }
+        if ($sender_wallet->balance < $amount) {
+            return back()->with(["error" => ["Insufficient balance."]])->withInput();
+        }
+
+        $trx_id = generateTrxString('transactions', 'trx_id', 'MO-', 14);
+        try {
+            DB::beginTransaction();
+            $sender_wallet->balance -= $amount;
+            $sender_wallet->save();
+
+            $transaction = new Transaction();
+            $transaction->type                  = PaymentGatewayConst::TYPEMONEYOUT;
+            $transaction->trx_id                = $trx_id;
+            $transaction->user_id               = $user->id;
+            $transaction->wallet_id              = $sender_wallet->id;
+            $transaction->request_currency       = $sender_wallet->currency->code;
+            $transaction->user_type              = GlobalConst::USER;
+            $transaction->request_amount        = $amount;
+            $transaction->total_payable        = $amount;
+            $transaction->total_charge          = $fee;
+            $transaction->available_balance     = $sender_wallet->balance;
+            $transaction->remark                = PaymentGatewayConst::TYPEMONEYOUT;
+            $transaction->status                = PaymentGatewayConst::STATUSPENDING;
+
+            $transaction->details               = json_encode([
+                'method'         => 'crypto',
+                'coin'           => $coin['coin'],
+                'coin_key'       => $coinKey,
+                'network'        => $coin['network'],
+                'wallet_address' => $validated['wallet_address'],
+            ]);
+            $transaction->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with(["error" => ["Something went wrong! Please try again."]])->withInput();
+        }
+
+        return redirect()->route('user.money-out.index')
+            ->with(["success" => ["Crypto withdrawal of $" . number_format($amount, 2) . " (" . $coin['coin'] . ") submitted for processing."]]);
+    }
+
+    /**
+     * Basic crypto address format validation per coin/network.
+     */
+    protected static function isValidCryptoAddress(string $address, array $coin): bool
+    {
+        $address = trim($address);
+        $symbol  = strtoupper($coin['coin'] ?? '');
+        $network = strtolower($coin['network'] ?? '');
+
+        if ($symbol === 'USDT' && str_contains($network, 'trc20')) {
+            return (bool) preg_match('/^T[a-zA-HJ-NP-Z0-9]{25,34}$/', $address);
+        }
+        if ($symbol === 'BTC' || str_contains($network, 'bitcoin')) {
+            return (bool) preg_match('/^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$/', $address);
+        }
+        if ($symbol === 'ETH' || str_contains($network, 'erc20') || str_contains($network, 'bep20')) {
+            return (bool) preg_match('/^0x[a-fA-F0-9]{40}$/', $address);
+        }
+        if ($symbol === 'BCH') {
+            return (bool) preg_match('/^(bitcoincash:|[pqrstuvwxyz23456789]{25,})/', $address);
+        }
+        // Fallback: generic non-empty address
+        return strlen($address) >= 20;
     }
 
     public function delete(Request $request) {

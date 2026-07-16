@@ -43,7 +43,7 @@
     <h1 class="am-header-title">{{ __('Crypto Withdraw') }}</h1>
 </div>
 <div class="am-body">
-    <form method="POST" action="#">
+    <form method="POST" action="{{ route('user.money-out.crypto.submit') }}">
         @csrf
         <div class="cw-body">
             {{-- Wallet Address --}}

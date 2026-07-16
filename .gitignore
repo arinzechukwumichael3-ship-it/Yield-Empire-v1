@@ -21,8 +21,9 @@ yarn-error.log
 /.vscode
 /public/html
 /*.zip
-/storage/debugber
-/storage/debugber/.*
+/storage/debugbar
+/storage/debugbar/.*
+/public/frontend/user/
 /public/fileholder/img/*.jpg
 /public/fileholder/img/*.jpeg
 /public/fileholder/img/*.webp

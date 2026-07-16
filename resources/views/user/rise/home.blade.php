@@ -153,7 +153,7 @@ $accountNo = $user->account_no ?? '0000000000';
             </div>
             <span class="dash-action-label">Add Money</span>
         </a>
-        <a href="{{ setRoute('user.fund-transfer.index') }}" class="dash-action-pill">
+        <a href="{{ route('user.rise.send') }}" class="dash-action-pill">
             <div class="dash-action-icon dash-action-icon-yellow">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/></svg>
             </div>

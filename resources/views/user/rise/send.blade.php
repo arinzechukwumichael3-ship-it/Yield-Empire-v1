@@ -164,7 +164,6 @@
     {{-- Tab Toggle --}}
     <div class="send-tabs" role="tablist">
         <button class="send-tab active" data-tab="internal" role="tab">🏦 EnzoBank Account</button>
-        <button class="send-tab" data-tab="international" role="tab">🌍 International Bank</button>
     </div>
 
     {{-- ====== TAB 1: Internal EnzoBank Transfer ====== --}}
@@ -231,123 +230,54 @@
             </form>
         </div>
     </div>
-
-    {{-- ====== TAB 2: International Bank Transfer ====== --}}
-    <div class="send-tab-content" id="tab-international">
-        <div class="am-card">
-            <form method="POST" action="{{ route('user.rise.send.submit') }}">
-                @csrf
-                <input type="hidden" name="type" value="international">
-
-                <div class="send-field-group">
-                    <label class="send-label">{{ __('Recipient Full Name') }}</label>
-                    <div class="send-input-wrap">
-                        <input type="text" class="send-input" name="recipient_name" placeholder="e.g. Jane Smith">
-                    </div>
-                </div>
-
-                <div class="send-field-group">
-                    <label class="send-label">{{ __('Bank Name') }}</label>
-                    <div class="send-input-wrap">
-                        <input type="text" class="send-input" name="bank_name" placeholder="e.g. Barclays">
-                    </div>
-                </div>
-
-                <div class="send-field-group">
-                    <label class="send-label">{{ __('Account Number / IBAN') }}</label>
-                    <div class="send-input-wrap">
-                        <input type="text" class="send-input" name="account_number" placeholder="e.g. GB29NWBK60161331926819">
-                    </div>
-                </div>
-
-                <div class="send-field-group">
-                    <label class="send-label">{{ __('SWIFT / BIC Code') }}</label>
-                    <div class="send-input-wrap">
-                        <input type="text" class="send-input" name="swift_code" placeholder="e.g. NWBKGB2L">
-                    </div>
-                </div>
-
-                <div class="send-field-group">
-                    <label class="send-label">{{ __('Transfer Amount') }}</label>
-                    <div class="send-input-wrap">
-                        <input type="number" step="0.01" min="0.01" class="send-input" name="amount" placeholder="0.00">
-                        <span class="send-input-pill">USD</span>
-                    </div>
-                </div>
-
-                {{-- Rail selector --}}
-                <div class="send-field-group">
-                    <label class="send-label">{{ __('Transfer Rail') }}</label>
-                    <select class="send-input" name="rail" style="width:100%;padding:14px 16px;border:1.5px solid #334155;border-radius:12px;font-size:16px;background:#1E293B;outline:none;color:#fff;-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2394A3B8%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22%3E%3C/polyline%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;">
-                        <option value="swift">SWIFT — Global (1-5 business days)</option>
-                        <option value="sepa">SEPA — Europe (1-2 business days)</option>
-                        <option value="ach">ACH — US (2-3 business days)</option>
-                    </select>
-                </div>
-
-                {{-- Warning --}}
-                <div style="display:flex;align-items:flex-start;gap:8px;padding:10px 14px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.15);border-radius:10px;font-size:12px;color:#FCA5A5;margin-bottom:16px;line-height:1.5">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    <span>International transfers use SWIFT / SEPA / ACH rails. Processing times and fees vary by destination. Review all details before confirming.</span>
-                </div>
-
-                {{-- Fee preview --}}
-                <div class="send-fee-card">
-                    <div class="send-fee-row">
-                        <span class="send-fee-label">Transfer Fee</span>
-                        <span class="send-fee-value" id="intFee">$15.00</span>
-                    </div>
-                    <div class="send-fee-row">
-                        <span class="send-fee-label">Exchange Rate</span>
-                        <span class="send-fee-value">1 USD = 0.92 EUR</span>
-                    </div>
-                    <div class="send-fee-divider"></div>
-                    <div class="send-fee-row">
-                        <span class="send-fee-label">Recipient gets</span>
-                        <span class="send-fee-value" id="intRecipientGets" style="color:#22C55E">€0.00</span>
-                    </div>
-                    <div class="send-fee-row">
-                        <span class="send-fee-label">Estimated arrival</span>
-                        <span class="send-fee-value" style="color:#F59E0B">1-5 business days</span>
-                    </div>
-                </div>
-
-                <button type="submit" class="send-btn">{{ __('Review & Confirm') }}</button>
-            </form>
-        </div>
-    </div>
 </div>
 
 @push('script')
 <script>
-// ── Tab switching ──
-document.querySelectorAll('.send-tab').forEach(function(tab) {
-    tab.addEventListener('click', function() {
-        document.querySelectorAll('.send-tab').forEach(function(t) { t.classList.remove('active'); });
-        document.querySelectorAll('.send-tab-content').forEach(function(c) { c.classList.remove('active'); });
-        this.classList.add('active');
-        document.getElementById('tab-' + this.dataset.tab).classList.add('active');
-    });
-});
-
-// ── Recipient lookup simulation ──
+// ── Recipient lookup (validates existence, shows real name) ──
 var lookupInput = document.getElementById('recipientLookup');
 var preview = document.getElementById('recipientPreview');
 var sendBtn = document.getElementById('sendInternalBtn');
+var lookupTimer;
 
 if (lookupInput) {
     lookupInput.addEventListener('input', function() {
         var val = this.value.trim();
-        if (val.length >= 3) {
-            preview.classList.add('show');
-            document.getElementById('recipientName').textContent = val.toUpperCase() + ' USER';
-            document.getElementById('recipientDetail').textContent = 'Account: •••• ' + val.slice(-4);
-            document.getElementById('recipientAvatar').textContent = val.charAt(0).toUpperCase();
-            sendBtn.disabled = false;
-        } else {
+        clearTimeout(lookupTimer);
+        sendBtn.disabled = true;
+        if (val.length < 3) {
             preview.classList.remove('show');
-            sendBtn.disabled = true;
+            return;
         }
+        lookupTimer = setTimeout(function() {
+            fetch("{{ route('user.info.account') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ text: val })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.type === 'success' && data.data) {
+                    var u = data.data;
+                    var name = u.fullname || ((u.firstname || '') + ' ' + (u.lastname || '')).trim() || u.username;
+                    preview.classList.add('show');
+                    document.getElementById('recipientName').textContent = name;
+                    document.getElementById('recipientDetail').textContent = 'EnzoBank • ' + (u.account_no || '');
+                    document.getElementById('recipientAvatar').textContent = (u.firstname || u.username || '?').charAt(0).toUpperCase();
+                    sendBtn.disabled = false;
+                } else {
+                    preview.classList.remove('show');
+                    sendBtn.disabled = true;
+                }
+            })
+            .catch(function() {
+                preview.classList.remove('show');
+                sendBtn.disabled = true;
+            });
+        }, 400);
     });
 }
 

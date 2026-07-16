@@ -195,14 +195,8 @@ class RiseController extends Controller
 
     public function sendSubmit(Request $request)
     {
-        $type = $request->type;
-
-        if ($type === 'internal') {
-            return $this->processInternalTransfer($request);
-        }
-
-        // International transfer
-        return $this->processInternationalTransfer($request);
+        // Transfer is EnzoBank-to-EnzoBank only.
+        return $this->processInternalTransfer($request);
     }
 
     private function processInternalTransfer(Request $request)
@@ -216,9 +210,9 @@ class RiseController extends Controller
         $user = $this->user;
         $amount = $validated['amount'];
 
-        // Find recipient by account number or username
-        $recipient = \App\Models\User::where('account_number', $validated['account'])
-            ->orWhere('username', $validated['account'])
+        // Find recipient by account number (account_no) or username
+        $recipient = \App\Models\User::notAuth()
+            ->where(fn($q) => $q->where('account_no', $validated['account'])->orWhere('username', $validated['account']))
             ->first();
 
         if (!$recipient) {
@@ -320,82 +314,6 @@ class RiseController extends Controller
             DB::commit();
 
             return redirect()->route('user.rise.wallet')->with(['success' => ['Transfer completed successfully.']]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with(['error' => ['Transfer failed. Please try again.']])->withInput();
-        }
-    }
-
-    private function processInternationalTransfer(Request $request)
-    {
-        $validated = $request->validate([
-            'recipient_name'  => 'required|string|max:255',
-            'bank_name'       => 'required|string|max:255',
-            'account_number'  => 'required|string|max:255',
-            'swift_code'      => 'required|string|max:50',
-            'amount'          => 'required|numeric|min:0.01',
-            'rail'            => 'nullable|string|in:swift,sepa,ach',
-            'description'     => 'nullable|string|max:500',
-        ]);
-
-        $user = $this->user;
-        $amount = $validated['amount'];
-
-        $senderWallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
-        if (!$senderWallet || $senderWallet->balance < $amount) {
-            return back()->with(['error' => ['Insufficient balance.']])->withInput();
-        }
-
-        $fee = 15.00; // Flat fee for international transfer
-        $totalPayable = $amount + $fee;
-        $rail = $validated['rail'] ?? 'swift';
-
-        if ($senderWallet->balance < $totalPayable) {
-            return back()->with(['error' => ['Insufficient balance including fees.']])->withInput();
-        }
-
-        $trxId = generateTrxString('transactions', 'trx_id', 'INT', 16);
-
-        try {
-            DB::beginTransaction();
-
-            $senderWallet->balance -= $totalPayable;
-            $senderWallet->save();
-
-            Transaction::create([
-                'type'            => PaymentGatewayConst::TYPE_OTHER_BANK_TRANSFER,
-                'trx_id'          => $trxId,
-                'user_type'       => GlobalConst::USER,
-                'user_id'         => $user->id,
-                'wallet_id'       => $senderWallet->id,
-                'request_amount'  => $amount,
-                'request_currency'=> 'USD',
-                'exchange_rate'   => 1,
-                'fixed_charge'    => $fee,
-                'total_charge'    => $fee,
-                'total_payable'   => $totalPayable,
-                'receive_amount'  => $amount,
-                'available_balance' => $senderWallet->balance,
-                'payment_currency'=> 'USD',
-                'remark'          => PaymentGatewayConst::TYPE_OTHER_BANK_TRANSFER,
-                'details'         => json_encode([
-                    'sender_name'    => $user->fullname,
-                    'sender_email'   => $user->email,
-                    'sender_bank'    => 'EnzoBank',
-                    'recipient_name' => $validated['recipient_name'],
-                    'bank_name'      => $validated['bank_name'],
-                    'account_number' => $validated['account_number'],
-                    'swift_code'     => $validated['swift_code'],
-                    'rail'           => $rail,
-                    'description'    => $validated['description'] ?? '',
-                ]),
-                'status'          => PaymentGatewayConst::STATUSSUCCESS,
-            ]);
-
-            DB::commit();
-
-            return redirect()->route('user.rise.wallet')->with(['success' => ['International transfer submitted successfully.']]);
 
         } catch (\Exception $e) {
             DB::rollBack();

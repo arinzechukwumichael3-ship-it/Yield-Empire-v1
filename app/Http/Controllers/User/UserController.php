@@ -199,7 +199,7 @@ class UserController extends Controller
                 Session::put('error');
                 return redirect()->route('user.login')->with(['error' => 'Your email account is already activated! Please login']);
             } else {
-                User::where('email', $email)->update(['status' => 1, 'email_verified' => 1, 'email_verified_at' => Carbon::now()]);
+                User::where('email', $email)->update(['status' => true, 'email_verified' => true, 'email_verified_at' => Carbon::now()]);
                 try {
                     Mail::to($email)->send(new UserConfirmMail($userDetails->first_name, $userDetails->email));
                 } catch (\Exception $ex) {

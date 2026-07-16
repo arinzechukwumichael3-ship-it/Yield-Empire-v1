@@ -38,7 +38,7 @@
                 <i class="las la-plus"></i>
                 <span>{{ __('Fund') }}</span>
             </a>
-            <a href="{{ setRoute('user.fund-transfer.index') }}" class="mobile-action-btn mobile-action-icon-btn">
+            <a href="{{ route('user.rise.send') }}" class="mobile-action-btn mobile-action-icon-btn">
                 <i class="las la-exchange-alt"></i>
             </a>
             <a href="{{ setRoute('user.transactions.index') }}" class="mobile-action-btn mobile-action-icon-btn">
@@ -76,7 +76,7 @@
                 <i class="las la-plus"></i>
                 <span>{{ __('Fund') }}</span>
             </a>
-            <a href="{{ setRoute('user.fund-transfer.index') }}" class="mobile-action-btn mobile-action-icon-btn">
+            <a href="{{ route('user.rise.send') }}" class="mobile-action-btn mobile-action-icon-btn">
                 <i class="las la-exchange-alt"></i>
             </a>
             <a href="{{ setRoute('user.transactions.index') }}" class="mobile-action-btn mobile-action-icon-btn">
@@ -113,7 +113,7 @@
                 <div class="mql-icon"><i class="las la-plus-circle"></i></div>
                 <span>{{ __('Add Money') }}</span>
             </a>
-            <a href="{{ setRoute('user.fund-transfer.index') }}" class="mobile-quick-link">
+            <a href="{{ route('user.rise.send') }}" class="mobile-quick-link">
                 <div class="mql-icon"><i class="las la-paper-plane"></i></div>
                 <span>{{ __('Send') }}</span>
             </a>

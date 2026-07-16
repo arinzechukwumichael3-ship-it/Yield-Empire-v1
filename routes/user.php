@@ -220,6 +220,8 @@ Route::get('withdrawal/locked', function () {
 Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guard','pin.setup.guard','deposit.gate:withdrawal'])->prefix('money-out')->name('money-out.')->group(function() {
         Route::get('/','index')->name('index');
         Route::post('submit','submit')->name('submit');
+        Route::post('international/submit','internationalSubmit')->name('international.submit');
+        Route::post('crypto/submit','cryptoSubmit')->name('crypto.submit');
         Route::get('instruction/{token}','instruction')->name('instruction');
         Route::post('instruction/submit/{token}','instructionSubmit')->name('instruction.submit');
         Route::get('preview/{token}','preview')->name('preview');
@@ -245,7 +247,7 @@ Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guar
         Route::get("refer","refer")->name("refer");
         Route::get("send","send")->name("send");
         Route::post("send/submit","sendSubmit")->name("send.submit");
-        Route::get("withdraw/crypto","cryptoWithdraw")->name("withdraw.crypto");
+        Route::get("withdraw/crypto","cryptoWithdraw")->name("withdraw.crypto")->middleware('deposit.gate:withdrawal');
     });
 
 });
