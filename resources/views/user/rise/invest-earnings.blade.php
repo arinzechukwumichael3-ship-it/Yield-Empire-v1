@@ -13,8 +13,8 @@ $totalEarned = $totalEarned ?? 0;
 <div class="am-body">
     <!-- Total Earned -->
     <div class="am-card" style="text-align:center;">
-        <div style="font-size:13px;color:#6B7280;">Total Earned</div>
-        <div style="font-size:32px;font-weight:800;color:#3B82F6;">${{ number_format($totalEarned, 2) }}</div>
+        <div class="ip-stat-label">Total Earned</div>
+        <div class="ip-stat-value ip-stat-blue">${{ number_format($totalEarned, 2) }}</div>
     </div>
 
     <!-- Filter Tabs -->
@@ -39,14 +39,14 @@ $totalEarned = $totalEarned ?? 0;
             </div>
             <div style="text-align:right;">
                 <span class="tl-item-amount credit">+${{ number_format($earning->amount ?? 0, 2) }}</span>
-                <div><span style="padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;{{ $earning->type === 'credited' ? 'background:rgba(16,185,129,0.1);color:#059669;' : 'background:rgba(245,158,11,0.1);color:#D97706;' }}">{{ ucfirst($earning->type) }}</span></div>
+                <div><span class="ip-pill {{ $earning->type === 'credited' ? 'ip-pill-green' : 'ip-pill-amber' }}">{{ ucfirst($earning->type) }}</span></div>
             </div>
         </div>
         @empty
         <div style="display:flex;flex-direction:column;align-items:center;padding:60px 20px;gap:8px;text-align:center;">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--inv-track, #D1D5DB)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             <span style="font-size:16px;font-weight:700;">No earnings yet</span>
-            <span style="font-size:13px;color:#9CA3AF;">Earnings will appear here once your investments mature</span>
+            <span class="ip-text-secondary" style="font-size:13px;">Earnings will appear here once your investments mature</span>
         </div>
         @endforelse
     </div>

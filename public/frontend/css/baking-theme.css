@@ -884,8 +884,8 @@ input:checked + .slider:before {
 }
 
 .account-pill-v2 {
-    background: #F8FAFC;
-    border: 1px solid #E2E8F0;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 8px 16px;
     display: flex;
@@ -911,7 +911,7 @@ input:checked + .slider:before {
 .pill-value-group .pill-number {
     font-size: 14px;
     font-weight: 700;
-    color: #1E293B;
+    color: var(--text-primary);
     font-family: 'Inter', sans-serif;
 }
 
@@ -3178,7 +3178,7 @@ html, body {
 
 /* --- Services Section --- */
 .enzo-services {
-    background: #f8fafc;
+    background: var(--bg-primary);
     padding: 96px 0;
 }
 
@@ -3189,7 +3189,7 @@ html, body {
 .enzo-section-title {
     font-size: clamp(1.75rem, 3vw, 2.5rem);
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-primary);
     margin-bottom: 12px;
     letter-spacing: -0.5px;
 }
@@ -3236,7 +3236,7 @@ html, body {
 .enzo-service-title {
     font-size: 1.125rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-primary);
     margin-bottom: 10px;
 }
 
@@ -3307,12 +3307,12 @@ html, body {
 
 /* --- Testimonials --- */
 .enzo-testimonials {
-    background: #f8fafc;
+    background: var(--bg-primary);
     padding: 96px 0;
 }
 
 .enzo-testimonials .enzo-section-title {
-    color: #0f172a;
+    color: var(--text-primary);
 }
 
 .enzo-testimonials .enzo-section-sub {
@@ -3350,7 +3350,7 @@ html, body {
 
 .enzo-testimonial-text {
     font-size: 0.9375rem;
-    color: #374151;
+    color: var(--text-secondary);
     line-height: 1.65;
     font-style: italic;
     margin: 0;
@@ -3388,7 +3388,7 @@ html, body {
 
 .enzo-testimonial-name {
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-primary);
     font-size: 0.9rem;
 }
 

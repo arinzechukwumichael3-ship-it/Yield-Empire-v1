@@ -243,6 +243,9 @@ Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guar
         Route::get("feed/{slug}","articleDetail")->name("feed.detail");
         Route::get("account","account")->name("account");
         Route::get("refer","refer")->name("refer");
+        Route::get("send","send")->name("send");
+        Route::post("send/submit","sendSubmit")->name("send.submit");
+        Route::get("withdraw/crypto","cryptoWithdraw")->name("withdraw.crypto");
     });
 
 });

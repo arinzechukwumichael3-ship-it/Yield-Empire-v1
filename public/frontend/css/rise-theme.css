@@ -325,7 +325,7 @@ input, textarea { font-family: inherit; }
 /* Tabs */
 .ri-tabs { display: flex; background: #1E293B; border-radius: 12px; padding: 4px; margin-bottom: 24px; }
 .ri-tab { flex: 1; padding: 10px 8px; border-radius: 10px; font-size: 13px; font-weight: 500; color: #94A3B8; text-align: center; transition: all 0.15s; }
-.ri-tab.active { background: #fff; color: #0A0E1A; font-weight: 600; }
+.ri-tab.active { background: var(--bg-elevated, #fff); color: var(--text-primary, #0A0E1A); border-color: var(--border-strong, #CBD5E1); font-weight: 600; }
 .ri-tab-content { display: none; }
 .ri-tab-content.active { display: block; }
 
@@ -420,7 +420,8 @@ input, textarea { font-family: inherit; }
 .rw-curr-btn.active { background: #3B82F6; color: #fff; font-weight: 600; }
 
 /* Wallet Content */
-.rw-wallet-content { display: flex; flex-direction: column; gap: 16px; }
+.rw-wallet-content { display: none; flex-direction: column; gap: 16px; }
+.rw-wallet-content.active { display: flex; }
 .rw-balance-display { background: #111827; border: 1px solid #1E293B; border-radius: 16px; padding: 20px; }
 .rw-dots { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
 .rw-dot { width: 6px; height: 6px; border-radius: 50%; background: #1E293B; }
@@ -545,7 +546,7 @@ input, textarea { font-family: inherit; }
 .earn-banner-title { font-size: 17px; font-weight: 700; color: #fff; }
 .earn-banner-sub { font-size: 12px; color: rgba(255,255,255,0.7); }
 .earn-banner-text { display: flex; flex-direction: column; }
-.earn-banner-btn { padding: 8px 20px; background: #fff; color: #1E40AF; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.earn-banner-btn { padding: 8px 20px; background: var(--bg-elevated, #fff); color: var(--blue, #1E40AF); border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; }
 
 /* Virtual Card */
 .vc-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 16px; }
@@ -583,7 +584,7 @@ input, textarea { font-family: inherit; }
     background: var(--bg-primary, #0B1121);
     color: var(--text-primary, #F1F5F9); padding: 0 16px 100px; }
 .tl-empty { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; text-align: center; gap: 8px; }
-.tl-empty-icon { color: #1E293B; margin-bottom: 8px; }
+.tl-empty-icon { color: var(--text-muted, #64748B); margin-bottom: 8px; }
 .tl-empty-title { font-size: 16px; font-weight: 700; color: #fff; }
 .tl-empty-sub { font-size: 13px; color: #94A3B8; }
 .tl-empty-btn { margin-top: 12px; padding: 12px 28px; background: #3B82F6; color: #fff; border-radius: 100px; font-weight: 600; font-size: 14px; display: inline-block; }
@@ -596,10 +597,58 @@ input, textarea { font-family: inherit; }
 .ip-select-card.selected .ip-select-btn { background: #3B82F6; color: #fff; }
 
 /* Crypto Method Cards */
-.cp-method-card { background: #111827; border: 1.5px solid #1E293B; border-radius: 14px; padding: 16px 10px; text-align: center; cursor: pointer; transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
+.cp-method-card {
+    position: relative;
+    background: #111827;
+    border: 1.5px solid #1E293B;
+    border-radius: 14px;
+    padding: 16px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+}
 .cp-method-card:hover { border-color: #3B82F6; }
-.cp-method-card.selected { border-color: #3B82F6; background: rgba(59,130,246,0.03); }
-.cp-method-card.selected::after { content: '✓'; position: absolute; top: 6px; right: 8px; width: 18px; height: 18px; border-radius: 50%; background: #3B82F6; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.cp-method-card.selected { border-color: #3B82F6; background: rgba(59,130,246,0.05); }
+.cp-method-card.selected::after {
+    content: '\2713';
+    position: absolute; top: 6px; right: 8px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #3B82F6; color: #fff;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+}
+.cp-icon-wrap {
+    position: relative;
+    width: 52px; height: 52px;
+    margin: 0 auto 8px;
+    border-radius: 14px;
+    background: #1E293B;
+    display: flex; align-items: center; justify-content: center;
+}
+.cp-icon-img { width: 34px; height: 34px; object-fit: contain; display: block; }
+.cp-icon-fallback {
+    position: absolute; inset: 0;
+    display: none; align-items: center; justify-content: center;
+    border-radius: 14px; color: #fff;
+    font-weight: 700; font-size: 12px; letter-spacing: 0.3px;
+}
+.cp-icon-badge {
+    position: absolute; right: -3px; bottom: -3px;
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--bg-elevated, #111827); background: var(--bg-elevated, #fff);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+.cp-method-ticker { font-size: 13px; font-weight: 700; color: #F1F5F9; }
+.cp-method-net { font-size: 10px; color: #94A3B8; margin-top: 2px; }
+
+/* Crypto Method Cards — light mode */
+[data-theme="light"] .cp-method-card { background: #FFFFFF; border-color: #E2E8F0; }
+[data-theme="light"] .cp-method-card.selected { background: rgba(29,78,216,0.04); }
+[data-theme="light"] .cp-icon-wrap { background: #F1F5F9; }
+[data-theme="light"] .cp-icon-badge { border-color: #FFFFFF; }
+[data-theme="light"] .cp-method-ticker { color: #0B1628; }
+[data-theme="light"] .cp-method-net { color: #64748B; }
 .wallet-addr-input { word-break: break-all; font-size: 12px; background: #1E293B; }
 
 /* Media Queries */
@@ -744,7 +793,7 @@ input, textarea { font-family: inherit; }
     border-radius: 12px;
     margin-top: 8px;
 }
-.rf-empty-icon { color: #1E293B; margin-bottom: 4px; }
+.rf-empty-icon { color: var(--text-muted, #64748B); margin-bottom: 4px; }
 .rf-empty-title { font-size: 16px; font-weight: 700; color: #fff; }
 .rf-empty-sub { font-size: 13px; color: #94A3B8; }
 
@@ -1077,3 +1126,188 @@ input, textarea { font-family: inherit; }
         right: 12px !important;
     }
 }
+
+/* ============================================================
+   INVEST MODULE — THEME-AWARE COMPONENTS
+   All colors resolve from CSS variables so the invest flow
+   stays readable in both dark and light mode.
+   ============================================================ */
+
+/* Semantic / status color tokens per theme */
+[data-theme="dark"] {
+    --inv-blue: #3B82F6;
+    --inv-success: #34D399;
+    --inv-success-text: #6EE7B7;
+    --inv-success-bg: rgba(16,185,129,0.16);
+    --inv-danger: #F87171;
+    --inv-danger-bg: rgba(239,68,68,0.16);
+    --inv-warning: #FBBF24;
+    --inv-warning-bg: rgba(245,158,11,0.16);
+    --inv-info: #60A5FA;
+    --inv-info-bg: rgba(59,130,246,0.16);
+    --inv-track: rgba(148,163,184,0.18);
+}
+[data-theme="light"] {
+    --inv-blue: #1D4ED8;
+    --inv-success: #059669;
+    --inv-success-text: #047857;
+    --inv-success-bg: rgba(16,185,129,0.12);
+    --inv-danger: #DC2626;
+    --inv-danger-bg: rgba(239,68,68,0.10);
+    --inv-warning: #B45309;
+    --inv-warning-bg: rgba(245,158,11,0.14);
+    --inv-info: #1D4ED8;
+    --inv-info-bg: rgba(59,130,246,0.10);
+    --inv-track: #E2E8F0;
+}
+
+/* --- Plan / method selection cards (theme-aware) --- */
+.ip-select-card {
+    background: var(--bg-card, #1A2440);
+    border: 1.5px solid var(--border-color, #1E2D4A);
+    border-radius: 14px; padding: 16px; cursor: pointer;
+    transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+}
+.ip-select-card:hover { border-color: var(--inv-blue, #3B82F6); }
+.ip-select-card.selected { border-color: var(--inv-blue, #3B82F6); background: var(--inv-info-bg, rgba(59,130,246,0.06)); }
+.ip-select-btn {
+    padding: 6px 16px; border-radius: 100px;
+    border: 1.5px solid var(--inv-blue, #3B82F6); color: var(--inv-blue, #3B82F6);
+    font-size: 12px; font-weight: 600; transition: all 0.15s;
+}
+.ip-select-card.selected .ip-select-btn { background: var(--inv-blue, #3B82F6); color: #fff; }
+
+
+
+/* --- Text helpers --- */
+.ip-text-primary   { color: var(--text-primary, #F1F5F9); }
+.ip-text-secondary { color: var(--text-secondary, #94A3B8); }
+.ip-text-muted     { color: var(--text-muted, #64748B); }
+.ip-text-blue      { color: var(--inv-blue, #3B82F6); font-weight: 500; }
+.ip-text-green     { color: var(--inv-success-text, #34D399); }
+.ip-text-red       { color: var(--inv-danger, #F87171); }
+.ip-text-amber     { color: var(--inv-warning, #FBBF24); }
+
+/* --- Pills / badges --- */
+.ip-pill {
+    display: inline-flex; align-items: center; padding: 4px 12px;
+    border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+.ip-pill-green { background: var(--inv-success-bg); color: var(--inv-success-text, #6EE7B7); }
+.ip-pill-amber { background: var(--inv-warning-bg); color: var(--inv-warning, #FBBF24); }
+.ip-pill-blue  { background: var(--inv-info-bg);   color: var(--inv-info, #60A5FA); }
+.ip-pill-red   { background: var(--inv-danger-bg); color: var(--inv-danger, #F87171); }
+.ip-pill-gray  { background: rgba(100,116,139,0.14); color: var(--text-secondary, #94A3B8); }
+
+.ip-status {
+    display: inline-flex; align-items: center; padding: 3px 12px;
+    border-radius: 20px; font-size: 11px; font-weight: 600;
+}
+.ip-status-active    { background: var(--inv-success-bg); color: var(--inv-success-text, #6EE7B7); }
+.ip-status-pending   { background: var(--inv-warning-bg); color: var(--inv-warning, #FBBF24); }
+.ip-status-completed { background: var(--inv-info-bg);   color: var(--inv-info, #60A5FA); }
+.ip-status-cancelled { background: var(--inv-danger-bg); color: var(--inv-danger, #F87171); }
+.ip-status-default   { background: rgba(100,116,139,0.14); color: var(--text-secondary, #94A3B8); }
+
+/* --- Cards / surfaces helpers --- */
+.ip-accent-left { border-left: 4px solid var(--inv-blue, #3B82F6) !important; }
+
+/* --- Warning box --- */
+.ip-warning {
+    padding: 12px 16px; border-radius: 12px; font-size: 13px; line-height: 1.5;
+    background: var(--inv-warning-bg); border: 1px solid var(--inv-warning, #FBBF24);
+    color: var(--inv-warning, #FBBF24);
+}
+.ip-warning strong { color: inherit; font-weight: 700; }
+
+/* --- Upload drop zone --- */
+.ip-upload {
+    border: 2px dashed var(--border-color, #1E2D4A); border-radius: 12px;
+    padding: 30px; text-align: center; cursor: pointer;
+    background: var(--bg-secondary, #131C31); transition: border-color 0.15s;
+}
+.ip-upload:hover { border-color: var(--inv-blue, #3B82F6); }
+.ip-upload-icon { font-size: 36px; color: var(--text-muted, #64748B); }
+.ip-upload-hint { font-size: 13px; color: var(--text-muted, #64748B); margin-top: 8px; }
+.ip-upload-name { font-size: 12px; color: var(--inv-blue, #3B82F6); margin-top: 4px; }
+
+/* --- QR placeholder --- */
+.ip-qr {
+    width: 180px; height: 180px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    background: var(--bg-secondary, #131C31);
+    border: 2px dashed var(--border-color, #1E2D4A);
+}
+.ip-qr-text { font-size: 12px; color: var(--text-muted, #64748B); padding: 10px; }
+
+/* --- Progress track --- */
+.ip-track { height: 6px; border-radius: 3px; background: var(--inv-track); overflow: hidden; }
+.ip-track-fill { height: 100%; background: var(--inv-blue, #3B82F6); border-radius: 3px; transition: width 0.5s; }
+
+/* --- Stats --- */
+.ip-stat-label { font-size: 12px; color: var(--text-muted, #64748B); }
+.ip-stat-value { font-size: 18px; font-weight: 700; color: var(--text-primary, #F1F5F9); }
+.ip-stat-blue  { color: var(--inv-blue, #3B82F6); }
+.ip-stat-green { color: var(--inv-success-text, #34D399); }
+
+/* --- Empty state --- */
+.ip-empty-text { color: var(--text-muted, #64748B); }
+.ip-empty-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 32px;
+    background: var(--inv-info-bg); color: var(--inv-blue, #3B82F6);
+}
+
+/* --- Inline validation state for amount input --- */
+.am-input-wrap input.invalid,
+.am-input-wrap select.invalid { border-color: var(--inv-danger, #F87171) !important; }
+
+/* --- Light mode refinements for shared inputs used on invest pages --- */
+[data-theme="light"] .ps-input {
+    background: #F8FAFC; border-color: #E2E8F0; color: #0F172A;
+}
+[data-theme="light"] .ps-input::placeholder { color: #94A3B8; }
+[data-theme="light"] .ps-input:focus { border-color: #1D4ED8; }
+[data-theme="light"] .ip-empty-icon { background: var(--inv-info-bg); }
+[data-theme="light"] .am-preview-value { color: #0F172A; }
+
+/* =============================================================
+   RISE — LIGHT MODE COMPONENT OVERRIDES (fix invisible text)
+   Profile (ps-*), account actions (vc-*), transactions (tl-*)
+   and a few account (am-*) rules were dark-only, so in light
+   mode white text landed on a light surface (or dark-on-dark
+   cards). These flip the surfaces and text to the light palette.
+   ============================================================= */
+
+/* Profile / account (ps-*) */
+[data-theme="light"] .ps-body { background: var(--bg-primary, #F4F6F9); color: var(--text-primary, #0F172A); }
+[data-theme="light"] .ps-username { color: #0B1628; }
+[data-theme="light"] .ps-card { background: #FFFFFF; border-color: #E2E8F0; }
+[data-theme="light"] .ps-card-title { color: #0B1628; }
+[data-theme="light"] .ps-info-row { background: #FFFFFF; border-color: #E2E8F0; }
+[data-theme="light"] .ps-info-text { color: #0B1628; }
+[data-theme="light"] .ps-label { color: #475569; }
+[data-theme="light"] .ps-select { background: #F8FAFC; border-color: #E2E8F0; color: #0B1628; }
+[data-theme="light"] .ps-select:focus { border-color: #1D4ED8; }
+[data-theme="light"] .ps-select option { background: #FFFFFF; color: #0B1628; }
+[data-theme="light"] .ps-eye-btn { color: #64748B; }
+[data-theme="light"] .ps-copy-btn { color: #1D4ED8; }
+
+/* Account actions (vc-*) */
+[data-theme="light"] .vc-action-btn { color: #1D4ED8; border-color: #1D4ED8; }
+[data-theme="light"] .vc-action-btn:active { background: rgba(29,78,216,0.08); }
+
+/* Transactions / timeline (tl-*) */
+[data-theme="light"] .tl-body { background: var(--bg-primary, #F4F6F9); color: var(--text-primary, #0F172A); }
+[data-theme="light"] .tl-title { color: #0B1628; }
+[data-theme="light"] .tl-empty-icon { color: #94A3B8; }
+[data-theme="light"] .tl-empty-title { color: #0B1628; }
+[data-theme="light"] .tl-empty-sub { color: #64748B; }
+[data-theme="light"] .tl-search { background: #F8FAFC; border-color: #E2E8F0; color: #0B1628; }
+[data-theme="light"] .tl-search::placeholder { color: #94A3B8; }
+[data-theme="light"] .tl-filter-pill { background: #F1F5F9; color: #475569; }
+[data-theme="light"] .tl-filter-pill.active { background: #1D4ED8; color: #FFFFFF; }
+
+/* Account (am-*) remaining */
+[data-theme="light"] .am-preview-row { border-bottom-color: #E2E8F0; }
+

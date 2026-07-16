@@ -15,7 +15,9 @@ use App\Models\Frontend\Announcement as FrontendAnnouncement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Constants\PaymentGatewayConst;
+use App\Constants\GlobalConst;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class RiseController extends Controller
 {
@@ -25,8 +27,33 @@ class RiseController extends Controller
     {
         $this->middleware(function ($request, $next) {
             $this->user = auth()->user();
+            $this->ensureWalletsExist();
             return $next($request);
         });
+    }
+
+    /**
+     * Auto-create missing wallets (GBP, EUR) for the authenticated user.
+     */
+    private function ensureWalletsExist()
+    {
+        if (!$this->user) return;
+        $codes = ['GBP', 'EUR'];
+        foreach ($codes as $code) {
+            $currency = \App\Models\Admin\Currency::where('code', $code)->first();
+            if (!$currency) continue;
+            $exists = \App\Models\UserWallet::where('user_id', $this->user->id)
+                ->where('currency_id', $currency->id)
+                ->exists();
+            if (!$exists) {
+                \App\Models\UserWallet::create([
+                    'user_id' => $this->user->id,
+                    'currency_id' => $currency->id,
+                    'balance' => 0,
+                    'status' => true,
+                ]);
+            }
+        }
     }
 
     public function home()
@@ -71,9 +98,10 @@ class RiseController extends Controller
         $user = $this->user;
         $usd_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
         $gbp_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'GBP'))->first();
+        $eur_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'EUR'))->first();
         $transactions = Transaction::auth()->orderByDesc("id")->latest()->take(10)->get();
 
-        return view('user.rise.wallet', compact('page_title', 'user', 'usd_wallet', 'gbp_wallet', 'transactions'));
+        return view('user.rise.wallet', compact('page_title', 'user', 'usd_wallet', 'gbp_wallet', 'eur_wallet', 'transactions'));
     }
 
     public function feed()
@@ -139,6 +167,240 @@ class RiseController extends Controller
             'page_title', 'user', 'wallet', 'usd_wallet', 'usd_balance',
             'referral_count', 'referral_earnings'
         ));
+    }
+
+    public function send()
+    {
+        $page_title = "Send Money";
+        $user = $this->user;
+        $usd_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
+        $gbp_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'GBP'))->first();
+        $eur_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'EUR'))->first();
+
+        return view('user.rise.send', compact(
+            'page_title', 'user', 'usd_wallet', 'gbp_wallet', 'eur_wallet'
+        ));
+    }
+
+    public function cryptoWithdraw()
+    {
+        $page_title = "Crypto Withdraw";
+        $user = $this->user;
+        $coins = config("crypto_deposit.coins", []);
+
+        return view('user.sections.crypto-withdraw.index', compact(
+            'page_title', 'user', 'coins'
+        ));
+    }
+
+    public function sendSubmit(Request $request)
+    {
+        $type = $request->type;
+
+        if ($type === 'internal') {
+            return $this->processInternalTransfer($request);
+        }
+
+        // International transfer
+        return $this->processInternationalTransfer($request);
+    }
+
+    private function processInternalTransfer(Request $request)
+    {
+        $validated = $request->validate([
+            'account'     => 'required|string|max:255',
+            'amount'      => 'required|numeric|min:0.01',
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        $user = $this->user;
+        $amount = $validated['amount'];
+
+        // Find recipient by account number or username
+        $recipient = \App\Models\User::where('account_number', $validated['account'])
+            ->orWhere('username', $validated['account'])
+            ->first();
+
+        if (!$recipient) {
+            return back()->with(['error' => ['Recipient not found. Please check the account number or username.']])->withInput();
+        }
+
+        if ($recipient->id === $user->id) {
+            return back()->with(['error' => ['You cannot send money to yourself.']])->withInput();
+        }
+
+        // Get sender's USD wallet
+        $senderWallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
+        if (!$senderWallet || $senderWallet->balance < $amount) {
+            return back()->with(['error' => ['Insufficient balance.']])->withInput();
+        }
+
+        // Get recipient's USD wallet
+        $recipientWallet = UserWallet::where('user_id', $recipient->id)
+            ->whereHas('currency', fn($q) => $q->where('code', 'USD'))
+            ->first();
+
+        if (!$recipientWallet) {
+            return back()->with(['error' => ['Recipient wallet not found.']])->withInput();
+        }
+
+        $trxId = generateTrxString('transactions', 'trx_id', 'FT', 16);
+
+        try {
+            DB::beginTransaction();
+
+            // Deduct from sender
+            $senderWallet->balance -= $amount;
+            $senderWallet->save();
+
+            // Credit recipient
+            $recipientWallet->balance += $amount;
+            $recipientWallet->save();
+
+            // Sender transaction record
+            Transaction::create([
+                'type'            => PaymentGatewayConst::TYPE_MOBILE_WALLET_TRANSFER,
+                'trx_id'          => $trxId,
+                'user_type'       => GlobalConst::USER,
+                'user_id'         => $user->id,
+                'wallet_id'       => $senderWallet->id,
+                'request_amount'  => $amount,
+                'request_currency'=> 'USD',
+                'exchange_rate'   => 1,
+                'total_charge'    => 0,
+                'total_payable'   => $amount,
+                'receive_amount'  => $amount,
+                'receiver_type'   => GlobalConst::USER,
+                'receiver_id'     => $recipientWallet->id,
+                'available_balance' => $senderWallet->balance,
+                'payment_currency'=> 'USD',
+                'remark'          => PaymentGatewayConst::TYPE_MOBILE_WALLET_TRANSFER,
+                'details'         => json_encode([
+                    'sender_name'   => $user->fullname,
+                    'sender_email'  => $user->email,
+                    'sender_bank'   => 'EnzoBank',
+                    'receiver_name' => $recipient->fullname,
+                    'receiver_email'=> $recipient->email,
+                    'receiver_bank' => 'EnzoBank',
+                    'description'   => $validated['description'] ?? '',
+                ]),
+                'status'          => PaymentGatewayConst::STATUSSUCCESS,
+            ]);
+
+            // Recipient transaction record
+            Transaction::create([
+                'type'            => PaymentGatewayConst::TYPE_MOBILE_WALLET_TRANSFER,
+                'trx_id'          => $trxId,
+                'user_type'       => GlobalConst::USER,
+                'user_id'         => $recipient->id,
+                'wallet_id'       => $recipientWallet->id,
+                'request_amount'  => $amount,
+                'request_currency'=> 'USD',
+                'exchange_rate'   => 1,
+                'total_charge'    => 0,
+                'total_payable'   => 0,
+                'receive_amount'  => $amount,
+                'receiver_type'   => GlobalConst::USER,
+                'receiver_id'     => $senderWallet->id,
+                'available_balance' => $recipientWallet->balance,
+                'payment_currency'=> 'USD',
+                'remark'          => 'received',
+                'details'         => json_encode([
+                    'sender_name'   => $user->fullname,
+                    'sender_email'  => $user->email,
+                    'sender_bank'   => 'EnzoBank',
+                    'receiver_name' => $recipient->fullname,
+                    'receiver_email'=> $recipient->email,
+                    'receiver_bank' => 'EnzoBank',
+                    'description'   => $validated['description'] ?? '',
+                ]),
+                'status'          => PaymentGatewayConst::STATUSSUCCESS,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('user.rise.wallet')->with(['success' => ['Transfer completed successfully.']]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['error' => ['Transfer failed. Please try again.']])->withInput();
+        }
+    }
+
+    private function processInternationalTransfer(Request $request)
+    {
+        $validated = $request->validate([
+            'recipient_name'  => 'required|string|max:255',
+            'bank_name'       => 'required|string|max:255',
+            'account_number'  => 'required|string|max:255',
+            'swift_code'      => 'required|string|max:50',
+            'amount'          => 'required|numeric|min:0.01',
+            'rail'            => 'nullable|string|in:swift,sepa,ach',
+            'description'     => 'nullable|string|max:500',
+        ]);
+
+        $user = $this->user;
+        $amount = $validated['amount'];
+
+        $senderWallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
+        if (!$senderWallet || $senderWallet->balance < $amount) {
+            return back()->with(['error' => ['Insufficient balance.']])->withInput();
+        }
+
+        $fee = 15.00; // Flat fee for international transfer
+        $totalPayable = $amount + $fee;
+        $rail = $validated['rail'] ?? 'swift';
+
+        if ($senderWallet->balance < $totalPayable) {
+            return back()->with(['error' => ['Insufficient balance including fees.']])->withInput();
+        }
+
+        $trxId = generateTrxString('transactions', 'trx_id', 'INT', 16);
+
+        try {
+            DB::beginTransaction();
+
+            $senderWallet->balance -= $totalPayable;
+            $senderWallet->save();
+
+            Transaction::create([
+                'type'            => PaymentGatewayConst::TYPE_OTHER_BANK_TRANSFER,
+                'trx_id'          => $trxId,
+                'user_type'       => GlobalConst::USER,
+                'user_id'         => $user->id,
+                'wallet_id'       => $senderWallet->id,
+                'request_amount'  => $amount,
+                'request_currency'=> 'USD',
+                'exchange_rate'   => 1,
+                'fixed_charge'    => $fee,
+                'total_charge'    => $fee,
+                'total_payable'   => $totalPayable,
+                'receive_amount'  => $amount,
+                'available_balance' => $senderWallet->balance,
+                'payment_currency'=> 'USD',
+                'remark'          => PaymentGatewayConst::TYPE_OTHER_BANK_TRANSFER,
+                'details'         => json_encode([
+                    'sender_name'    => $user->fullname,
+                    'sender_email'   => $user->email,
+                    'sender_bank'    => 'EnzoBank',
+                    'recipient_name' => $validated['recipient_name'],
+                    'bank_name'      => $validated['bank_name'],
+                    'account_number' => $validated['account_number'],
+                    'swift_code'     => $validated['swift_code'],
+                    'rail'           => $rail,
+                    'description'    => $validated['description'] ?? '',
+                ]),
+                'status'          => PaymentGatewayConst::STATUSSUCCESS,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('user.rise.wallet')->with(['success' => ['International transfer submitted successfully.']]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['error' => ['Transfer failed. Please try again.']])->withInput();
+        }
     }
 
     private function normalizeArticleForFeed($article)

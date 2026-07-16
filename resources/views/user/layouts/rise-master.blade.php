@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('frontend/css/baking-theme.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/rise-theme.css') }}?v=2">
+    <link rel="stylesheet" href="{{ asset('frontend/css/rise-theme.css') }}?v=4">
     <link rel="stylesheet" href="{{ asset('frontend/css/enzo-theme.css') }}">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     @include("partials.header-asset")
@@ -128,6 +128,27 @@
         border-radius: 0 0 14px 14px; background: #3B82F6;
         transition: width 4s linear;
     }
+
+    /* Light-mode overrides for the notification system */
+    [data-theme="light"] .notif-bell { background: var(--bg-elevated); border-color: var(--border-color); }
+    [data-theme="light"] .notif-bell svg { color: var(--text-secondary); }
+    [data-theme="light"] .notif-badge { border-color: var(--bg-primary); }
+    [data-theme="light"] .notif-panel { background: var(--bg-card); border-color: var(--border-color); box-shadow: var(--shadow-strong); }
+    [data-theme="light"] .notif-panel-header { border-bottom-color: var(--border-color); }
+    [data-theme="light"] .notif-panel-title { color: var(--text-primary); }
+    [data-theme="light"] .notif-panel-clear { color: var(--text-muted); }
+    [data-theme="light"] .notif-item { border-bottom-color: var(--border-color); }
+    [data-theme="light"] .notif-item:hover { background: var(--accent-soft); }
+    [data-theme="light"] .notif-item.unread { background: var(--accent-soft); }
+    [data-theme="light"] .notif-item-title { color: var(--text-primary); }
+    [data-theme="light"] .notif-item-sub { color: var(--text-muted); }
+    [data-theme="light"] .notif-empty { color: var(--text-muted); }
+    [data-theme="light"] .notif-overlay { background: var(--overlay); }
+    [data-theme="light"] .notif-toast { background: var(--bg-elevated); border-color: var(--border-color); box-shadow: var(--shadow-strong); }
+    [data-theme="light"] .notif-toast-title { color: var(--text-primary); }
+    [data-theme="light"] .notif-toast-sub { color: var(--text-secondary); }
+    [data-theme="light"] .notif-toast-close { color: var(--text-muted); }
+    [data-theme="light"] .notif-toast-close:hover { color: var(--text-primary); }
     </style>
 
 </head>

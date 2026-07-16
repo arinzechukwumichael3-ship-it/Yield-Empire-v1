@@ -32,7 +32,7 @@ body { background: var(--bg-primary, #0A0E1A); font-family: "Inter", system-ui, 
                 animObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.15 });
+    }, { threshold: 0, rootMargin: "0px 0px 15% 0px" });
 
     document.querySelectorAll(".animate-on-scroll").forEach(function(el) {
         animObserver.observe(el);
@@ -63,20 +63,25 @@ body { background: var(--bg-primary, #0A0E1A); font-family: "Inter", system-ui, 
         });
     });
 
-    // Count-up animation for stats
+    // Count-up animation for stats.
+    // Compact notation keeps large values short (2M, not 2,000,000) so all
+    // four stats share the same visual weight and never overflow their cell.
     function countUp(el, target, duration) {
         duration = duration || 2000;
         var suffix = el.getAttribute("data-suffix") || "";
         var prefix = el.getAttribute("data-prefix") || "";
+        var formatter = target >= 10000
+            ? new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 })
+            : new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 });
         var start = 0;
         var increment = target / (duration / 16);
         var timer = setInterval(function() {
             start += increment;
             if (start >= target) {
-                el.textContent = prefix + target.toLocaleString() + suffix;
+                el.textContent = prefix + formatter.format(target) + suffix;
                 clearInterval(timer);
             } else {
-                el.textContent = prefix + Math.floor(start).toLocaleString() + suffix;
+                el.textContent = prefix + formatter.format(Math.floor(start)) + suffix;
             }
         }, 16);
     }

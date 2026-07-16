@@ -36,11 +36,14 @@
 @section('content')
 @php
 $usdWallet = $usd_wallet ?? \App\Models\UserWallet::auth()->first();
-$ngnWallet = $ngn_wallet ?? null;
-$balance = $usdWallet ? $usdWallet->balance : 0;
-$ngnBalance = $ngnWallet ? $ngnWallet->balance : 0;
-$usdParts = explode('.', number_format($balance, 2));
-$ngnParts = explode('.', number_format($ngnBalance, 2));
+$gbpWallet = $gbp_wallet ?? null;
+$eurWallet = $eur_wallet ?? null;
+$usdBalance = $usdWallet ? $usdWallet->balance : 0;
+$gbpBalance = $gbpWallet ? $gbpWallet->balance : 0;
+$eurBalance = $eurWallet ? $eurWallet->balance : 0;
+$usdParts = explode('.', number_format($usdBalance, 2));
+$gbpParts = explode('.', number_format($gbpBalance, 2));
+$eurParts = explode('.', number_format($eurBalance, 2));
 @endphp
 
 <div class="rw-header">
@@ -58,6 +61,7 @@ $ngnParts = explode('.', number_format($ngnBalance, 2));
     <div class="rw-currency-toggle">
         <button class="rw-curr-btn active" data-curr="usd">🇺🇸 USD Wallet</button>
         <button class="rw-curr-btn" data-curr="gbp">🇬🇧 GBP Wallet</button>
+        <button class="rw-curr-btn" data-curr="eur">🇪🇺 EUR Wallet</button>
     </div>
 
     <!-- USD Wallet -->
@@ -68,6 +72,7 @@ $ngnParts = explode('.', number_format($ngnBalance, 2));
         </div>
         <div class="rw-dots">
             <span class="rw-dot active"></span>
+            <span class="rw-dot"></span>
             <span class="rw-dot"></span>
         </div>
         <div class="rw-actions">
@@ -83,11 +88,11 @@ $ngnParts = explode('.', number_format($ngnBalance, 2));
                 </div>
                 <span>Fund</span>
             </a>
-            <a href="#" class="rw-action">
+            <a href="{{ route('user.rise.send') }}" class="rw-action">
                 <div class="rw-action-icon light">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="4" height="4" rx="1"/><rect x="17" y="3" width="4" height="4" rx="1"/><rect x="3" y="17" width="4" height="4" rx="1"/><rect x="17" y="17" width="4" height="4" rx="1"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polyline points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 </div>
-                <span>More</span>
+                <span>Send</span>
             </a>
         </div>
         <div class="rw-interest-row">
@@ -100,9 +105,51 @@ $ngnParts = explode('.', number_format($ngnBalance, 2));
     <div class="rw-wallet-content" id="wallet-gbp">
         <div class="rw-balance-display">
             <span class="rw-balance-label">GBP Balance <span class="rw-eye-toggle" data-visible="true">👁</span></span>
-            <span class="rw-balance-digits" data-visible="true">£<span class="rw-balance-int">{{ $ngnParts[0] }}</span>.<span class="rw-balance-dec">{{ $ngnParts[1] }}</span></span>
+            <span class="rw-balance-digits" data-visible="true">£<span class="rw-balance-int">{{ $gbpParts[0] }}</span>.<span class="rw-balance-dec">{{ $gbpParts[1] }}</span></span>
         </div>
         <div class="rw-dots">
+            <span class="rw-dot"></span>
+            <span class="rw-dot active"></span>
+            <span class="rw-dot"></span>
+        </div>
+        <div class="rw-actions">
+            <a href="{{ setRoute('user.money-out.index') }}" class="rw-action">
+                <div class="rw-action-icon light">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                </div>
+                <span>Withdraw</span>
+            </a>
+            <a href="{{ setRoute('user.crypto.deposit.index') }}" class="rw-action">
+                <div class="rw-action-icon blue">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <span>Fund</span>
+            </a>
+            <a href="{{ route('user.rise.send') }}" class="rw-action">
+                <div class="rw-action-icon light">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polyline points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </div>
+                <span>Send</span>
+            </a>
+        </div>
+        <div class="rw-vault-promo">
+            <span class="rw-vault-emoji">🔒</span>
+            <div class="rw-vault-text">
+                <span class="rw-vault-title">Save with the Sterling Vault</span>
+                <span class="rw-vault-sub">Lock your Sterling and earn up to 23% annual interest, paid monthly.</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+    </div>
+
+    <!-- EUR Wallet -->
+    <div class="rw-wallet-content" id="wallet-eur">
+        <div class="rw-balance-display">
+            <span class="rw-balance-label">EUR Balance <span class="rw-eye-toggle" data-visible="true">👁</span></span>
+            <span class="rw-balance-digits" data-visible="true">€<span class="rw-balance-int">{{ $eurParts[0] }}</span>.<span class="rw-balance-dec">{{ $eurParts[1] }}</span></span>
+        </div>
+        <div class="rw-dots">
+            <span class="rw-dot"></span>
             <span class="rw-dot"></span>
             <span class="rw-dot active"></span>
         </div>
@@ -119,18 +166,18 @@ $ngnParts = explode('.', number_format($ngnBalance, 2));
                 </div>
                 <span>Fund</span>
             </a>
-            <a href="#" class="rw-action">
+            <a href="{{ route('user.rise.send') }}" class="rw-action">
                 <div class="rw-action-icon light">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="4" height="4" rx="1"/><rect x="17" y="3" width="4" height="4" rx="1"/><rect x="3" y="17" width="4" height="4" rx="1"/><rect x="17" y="17" width="4" height="4" rx="1"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polyline points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 </div>
-                <span>More</span>
+                <span>Send</span>
             </a>
         </div>
         <div class="rw-vault-promo">
             <span class="rw-vault-emoji">🔒</span>
             <div class="rw-vault-text">
-                <span class="rw-vault-title">Save with the Sterling Vault</span>
-                <span class="rw-vault-sub">Lock your Sterling and earn up to 23% annual interest, paid monthly.</span>
+                <span class="rw-vault-title">Save with the Euro Vault</span>
+                <span class="rw-vault-sub">Lock your Euros and earn up to 23% annual interest, paid monthly.</span>
             </div>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </div>

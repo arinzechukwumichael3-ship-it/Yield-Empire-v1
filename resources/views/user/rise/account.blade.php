@@ -10,8 +10,12 @@ $user = auth()->user();
 </div>
 
 <div class="ps-avatar-section">
-    <div class="ps-avatar-wrap">
-        {{ substr($user->fullname ?? $user->username, 0, 1) }}
+    <div class="ps-avatar-wrap" style="cursor:pointer;" title="Change photo" onclick="document.getElementById('avatarInput').click()">
+        @if($user->image)
+            <img id="avatarImg" src="{{ $user->userImage }}" alt="avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+        @else
+            <span id="avatarInitial">{{ substr($user->fullname ?? $user->username, 0, 1) }}</span>
+        @endif
         <span class="ps-avatar-upload">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </span>
@@ -49,7 +53,7 @@ $user = auth()->user();
         <p style="font-size:13px;color:#94A3B8;margin:0 0 12px;">{{ __('Share your referral link and earn $50 for each friend who joins and deposits.') }}</p>
         @php $referralLink = url('/register/' . auth()->user()->username); @endphp
         <div style="display:flex;gap:8px;margin-bottom:12px;">
-            <input type="text" id="referralLinkInput" value="{{ $referralLink }}" readonly style="flex:1;padding:12px 14px;border:1px solid #334155;border-radius:10px;font-size:13px;background:#1E293B;color:#fff;outline:none;">
+            <input type="text" id="referralLinkInput" value="{{ $referralLink }}" readonly style="flex:1;padding:12px 14px;border:1px solid var(--border-color);border-radius:10px;font-size:13px;background: var(--input-bg);color: var(--text-primary);outline:none;">
             <button onclick="copyReferralLink()" style="padding:12px 18px;background:#3B82F6;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">{{ __('Copy') }}</button>
         </div>
         <a href="{{ route('user.rise.refer') }}" style="font-size:13px;color:#3B82F6;text-decoration:none;font-weight:500;">{{ __('View full referral details →') }}</a>
@@ -75,9 +79,10 @@ $user = auth()->user();
     <!-- Edit Profile -->
     <div class="ps-card">
         <div class="ps-card-title">Edit Profile</div>
-        <form method="POST" action="{{ setRoute('user.profile.update') }}">
+        <form method="POST" action="{{ setRoute('user.profile.update') }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
+            <input type="file" id="avatarInput" name="image" accept="image/*" style="display:none;" onchange="uploadAvatar(this)">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
                 <div class="ps-field">
                     <label class="ps-label">First Name</label>
@@ -213,6 +218,27 @@ function togglePass(el) {
     if (input) {
         input.type = input.type === 'password' ? 'text' : 'password';
     }
+}
+function uploadAvatar(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const wrap = document.querySelector('.ps-avatar-wrap');
+        let img = document.getElementById('avatarImg');
+        const init = document.getElementById('avatarInitial');
+        if (!img) {
+            img = document.createElement('img');
+            img.id = 'avatarImg';
+            img.alt = 'avatar';
+            img.style.cssText = 'width:100%;height:100%;border-radius:50%;object-fit:cover;';
+            wrap.insertBefore(img, wrap.firstChild);
+        }
+        img.src = e.target.result;
+        if (init) init.style.display = 'none';
+    };
+    reader.readAsDataURL(input.files[0]);
+    // Persist via the existing profile-update endpoint
+    if (input.closest('form')) input.closest('form').submit();
 }
 </script>
 @endpush

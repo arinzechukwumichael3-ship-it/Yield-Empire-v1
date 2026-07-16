@@ -47,11 +47,38 @@
             <div class="enzo-security-right animate-on-scroll" style="transition-delay:200ms">
                 <div class="enzo-security-graphic">
                     <div class="enzo-security-card">
-                        <div class="enzo-security-card-shield">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+
+                        {{-- Ambient particles --}}
+                        <div class="enzo-sec-particle"></div>
+                        <div class="enzo-sec-particle"></div>
+                        <div class="enzo-sec-particle"></div>
+                        <div class="enzo-sec-particle"></div>
+                        <div class="enzo-sec-particle"></div>
+
+                        {{-- Scanning sweep line --}}
+                        <div class="enzo-scan-line"></div>
+
+                        {{-- Ring wrap + shield --}}
+                        <div class="enzo-ring-wrap">
+                            <div class="enzo-ring"></div>
+                            <div class="enzo-ring"></div>
+                            <div class="enzo-ring"></div>
+                            <div class="enzo-shield-core">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5l-8-3z"/>
+                                    <path class="enzo-check-path" d="M8.5 12.5l2.3 2.3L16 9.5" stroke-dasharray="30" stroke-dashoffset="30"/>
+                                </svg>
+                            </div>
                         </div>
-                        <span class="enzo-security-card-text">Protected</span>
-                        <div class="enzo-security-card-badge">AES-256</div>
+
+                        <div class="enzo-sec-title">Protected</div>
+
+                        <div class="enzo-sec-badge-row">
+                            <span class="enzo-sec-badge"><span class="enzo-sec-badge-dot"></span> AES-256</span>
+                            <span class="enzo-sec-badge"><span class="enzo-sec-badge-dot"></span> FDIC INSURED</span>
+                        </div>
+
+                        <div class="enzo-sec-sub">Bank-grade encryption, verified in real time</div>
                     </div>
                 </div>
             </div>

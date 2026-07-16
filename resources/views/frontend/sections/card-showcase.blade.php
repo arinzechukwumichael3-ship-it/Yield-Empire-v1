@@ -1,5 +1,5 @@
 <!-- ====== VIRTUAL CARD SHOWCASE ====== -->
-<section class="enzo-section animate-on-scroll" id="card-showcase">
+<section class="enzo-section" id="card-showcase">
     <div class="enzo-container">
         <div class="enzo-showcase-split">
             <div class="enzo-showcase-left animate-on-scroll">

@@ -12,6 +12,10 @@
             @include('user.components.transaction.balance-update',[
                 'transaction'   => $item,
             ])
+        @elseif ($item->type == payment_gateway_const()::TYPE_MOBILE_WALLET_TRANSFER)
+            @include('user.components.transaction.mobile-wallet-transfer',[
+                'transaction'   => $item,
+            ])
         @elseif ($item->type == payment_gateway_const()::TYPE_OWN_BANK_TRANSFER)
             @include('user.components.transaction.own-bank-transfer',[
                 'transaction'   => $item,
@@ -26,6 +30,10 @@
             ])
         @elseif ($item->type == payment_gateway_const()::SALARYDISBURSEMENT)
             @include('user.components.transaction.salary-disbursement',[
+                'transaction'   => $item,
+            ])
+        @elseif ($item->type == payment_gateway_const()::TYPEINVEST)
+            @include('user.components.transaction.investment',[
                 'transaction'   => $item,
             ])
         @endif

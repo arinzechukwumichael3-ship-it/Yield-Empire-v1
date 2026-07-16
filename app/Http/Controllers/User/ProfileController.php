@@ -51,8 +51,10 @@ class ProfileController extends Controller
             'image'      => "nullable|image|mimes:jpg,png,svg,webp|max:10240",
         ])->validate();
 
-        $validated['mobile']        = get_only_numeric_data($validated['phone']);
-        $validated['mobile_code']   = get_only_numeric_data($validated['phone_code']);
+        // The rise profile form posts a combined "mobile" field, while the
+        // web profile form posts "phone" + "phone_code". Tolerate both.
+        $validated['mobile']        = get_only_numeric_data($validated['phone'] ?? $request->mobile ?? '');
+        $validated['mobile_code']   = get_only_numeric_data($validated['phone_code'] ?? '');
         $complete_phone             = $validated['mobile_code'] . $validated['mobile'];
         $validated['full_mobile']   = $complete_phone;
         $validated                  = Arr::except($validated,['agree','phone_code','phone']);

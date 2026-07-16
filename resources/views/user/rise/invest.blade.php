@@ -618,7 +618,7 @@ $totalValue = $holdings->sum('value') ?? 0;
                 <div class="inv-legend-item">
                     <span class="inv-legend-dot" style="background:{{ $loop->index == 0 ? '#3B82F6' : ($loop->index == 1 ? '#22C55E' : ($loop->index == 2 ? '#F59E0B' : '#8B5CF6')) }};"></span>
                     <span style="flex:1;">{{ $h->asset->name ?? $h->asset_type ?? 'Asset' }}</span>
-                    <span style="font-weight:600;color:#fff;">{{ $h->allocation_percent ?? 0 }}%</span>
+                    <span style="font-weight:600;color:var(--text-primary);">{{ $h->allocation_percent ?? 0 }}%</span>
                     <div class="inv-legend-bar"><div class="inv-legend-fill" style="background:{{ $loop->index == 0 ? '#3B82F6' : ($loop->index == 1 ? '#22C55E' : ($loop->index == 2 ? '#F59E0B' : '#8B5CF6')) }};" data-target="{{ $h->allocation_percent ?? 0 }}"></div></div>
                 </div>
                 @endforeach

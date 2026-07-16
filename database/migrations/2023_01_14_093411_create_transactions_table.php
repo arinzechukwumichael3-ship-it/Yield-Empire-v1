@@ -32,6 +32,7 @@ return new class extends Migration
                 PaymentGatewayConst::TYPE_OWN_BANK_TRANSFER,
                 PaymentGatewayConst::TYPE_MOBILE_WALLET_TRANSFER,
                 PaymentGatewayConst::TYPEVIRTUALCARD,
+                PaymentGatewayConst::TYPEINVEST,
                 PaymentGatewayConst::SALARYDISBURSEMENT
             ]);
             $table->string('trx_id')->comment('Transaction ID');

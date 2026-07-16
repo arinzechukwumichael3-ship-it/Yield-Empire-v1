@@ -36,6 +36,7 @@ class CustomServiceProvider extends ServiceProvider
         DB::extend('pgsql', function ($config, $name) {
             $connector = new \Illuminate\Database\Connectors\PostgresConnector();
             $pdo = $connector->connect($config);
+            $config['name'] = $name;
             return new \App\Database\PostgresConnection($pdo, $config['database'] ?? '', $config['prefix'] ?? '', $config);
         });
     }

@@ -20,33 +20,33 @@ $wallets = $wallets ?? collect([]);
                 <div style="display:flex;justify-content:space-between;align-items:center;">
                     <div>
                         <div style="font-weight:700;font-size:16px;">{{ $plan->name }}</div>
-                        <div style="font-size:13px;color:#3B82F6;font-weight:500;">${{ number_format($plan->min_amount,2) }} — ${{ $plan->max_amount ? number_format($plan->max_amount,2) : '∞' }}</div>
+                        <div class="ip-text-blue" style="font-size:13px;font-weight:500;">${{ number_format($plan->min_amount,2) }} — ${{ $plan->max_amount ? number_format($plan->max_amount,2) : '∞' }}</div>
                     </div>
                     <div style="display:flex;align-items:center;gap:10px;">
-                        <span style="padding:4px 12px;border-radius:20px;background:rgba(16,185,129,0.1);color:#059669;font-size:12px;font-weight:600;">{{ $plan->roi_percent }}% ROI</span>
+                        <span class="ip-pill ip-pill-green">{{ $plan->roi_percent }}% ROI</span>
                         <span class="ip-select-btn">Select</span>
                     </div>
                 </div>
             </div>
             @empty
-            <div style="text-align:center;padding:20px;color:#9CA3AF;">No investment plans available.</div>
+            <div class="ip-text-muted" style="text-align:center;padding:20px;">No investment plans available.</div>
             @endforelse
         </div>
     </div>
 
     <!-- Step 2: Plan Summary (hidden until selected) -->
-    <div class="am-card" id="stepSummary" style="display:none;border-left:4px solid #3B82F6;">
+    <div class="am-card ip-accent-left" id="stepSummary" style="display:none;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
             <div>
-                <div style="font-size:13px;color:#6B7280;">Selected Plan</div>
+                <div class="ip-text-muted" style="font-size:13px;">Selected Plan</div>
                 <div style="font-weight:700;font-size:18px;" id="summaryName">-</div>
-                <div style="font-size:13px;color:#3B82F6;" id="summaryRange">-</div>
+                <div class="ip-text-blue" style="font-size:13px;" id="summaryRange">-</div>
                 <div style="margin-top:6px;display:flex;gap:10px;">
-                    <span style="font-size:12px;color:#059669;font-weight:600;" id="summaryRoi">-</span>
-                    <span style="font-size:12px;color:#6B7280;" id="summaryDuration">-</span>
+                    <span class="ip-text-green" style="font-size:12px;font-weight:600;" id="summaryRoi">-</span>
+                    <span class="ip-text-muted" style="font-size:12px;" id="summaryDuration">-</span>
                 </div>
             </div>
-            <a href="#" style="font-size:13px;color:#3B82F6;font-weight:500;" onclick="resetPlan();return false;">Change Plan</a>
+            <a href="#" class="ip-text-blue" style="font-size:13px;font-weight:500;" onclick="resetPlan();return false;">Change Plan</a>
         </div>
     </div>
 
@@ -54,19 +54,27 @@ $wallets = $wallets ?? collect([]);
     <div class="am-card" id="stepPayment" style="display:none;">
         <div class="am-card-title">Select Payment Method</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="cryptoGrid">
-            @foreach(['BTC' => 'Bitcoin', 'ETH' => 'Ethereum', 'USDT-TRC20' => 'USDT (TRC20)', 'USDT-ERC20' => 'USDT (ERC20)', 'USDT-BEP20' => 'USDT (BEP20)', 'TRX' => 'Tron'] as $key => $name)
-            <div class="cp-method-card" data-method="{{ explode('-', $key)[0] }}" data-network="{{ explode('-', $key)[1] ?? explode('-', $key)[0] }}" onclick="selectMethod(this)">
-                <div style="font-size:24px;margin-bottom:4px;">
-                    @switch(explode('-', $key)[0])
-                        @case('BTC') 🟠 @break
-                        @case('ETH') 🔵 @break
-                        @case('USDT') 💚 @break
-                        @case('TRX') 🔴 @break
-                        @default 💰
-                    @endswitch
+            @php
+            $cpMethods = [
+                'BTC'        => ['ticker' => 'BTC',  'network' => 'BTC',   'sub' => 'Bitcoin',  'main' => 'btc',   'color' => '#F7931A', 'badge' => null],
+                'ETH'        => ['ticker' => 'ETH',  'network' => 'ETH',   'sub' => 'Ethereum', 'main' => 'eth',   'color' => '#627EEA', 'badge' => null],
+                'USDT-TRC20' => ['ticker' => 'USDT', 'network' => 'TRC20', 'sub' => 'TRC20',    'main' => 'usdt',  'color' => '#26A17B', 'badge' => 'trx'],
+                'USDT-ERC20' => ['ticker' => 'USDT', 'network' => 'ERC20', 'sub' => 'ERC20',    'main' => 'usdt',  'color' => '#26A17B', 'badge' => 'eth'],
+                'USDT-BEP20' => ['ticker' => 'USDT', 'network' => 'BEP20', 'sub' => 'BEP20',    'main' => 'usdt',  'color' => '#26A17B', 'badge' => 'bnb'],
+                'TRX'        => ['ticker' => 'TRX',  'network' => 'TRX',   'sub' => 'Tron',     'main' => 'trx',   'color' => '#EF0027', 'badge' => null],
+            ];
+            @endphp
+            @foreach($cpMethods as $key => $m)
+            <div class="cp-method-card" data-method="{{ $m['ticker'] }}" data-network="{{ $m['network'] }}" onclick="selectMethod(this)">
+                <div class="cp-icon-wrap">
+                    <img class="cp-icon-img" src="{{ asset('frontend/images/crypto/'.$m['main'].'.svg') }}" alt="{{ $m['ticker'] }}" loading="lazy" onerror="cpIconError(this)">
+                    <span class="cp-icon-fallback" style="background:{{ $m['color'] }}">{{ $m['ticker'] }}</span>
+                    @if($m['badge'])
+                    <img class="cp-icon-badge" src="{{ asset('frontend/images/crypto/'.$m['badge'].'.svg') }}" alt="{{ $m['network'] }} network" loading="lazy" onerror="this.style.display='none'">
+                    @endif
                 </div>
-                <div style="font-size:12px;font-weight:600;">{{ explode('-', $key)[0] }}</div>
-                <div style="font-size:10px;color:#9CA3AF;">{{ explode('-', $key)[1] ?? explode('-', $key)[0] }}</div>
+                <div class="cp-method-ticker">{{ $m['ticker'] }}</div>
+                <div class="cp-method-net">{{ $m['sub'] }}</div>
             </div>
             @endforeach
         </div>
@@ -81,7 +89,7 @@ $wallets = $wallets ?? collect([]);
                 <span class="am-input-pill" id="currencyPill">USD</span>
             </div>
             <span class="am-hint" id="rangeHint">Min: $0.00 — Max: $0.00</span>
-            <span class="am-hint" id="validationMsg" style="color:#DC2626;display:none;">Amount out of range</span>
+            <span class="ip-text-red" id="validationMsg" style="display:none;">Amount out of range</span>
         </div>
     </div>
 
@@ -93,7 +101,7 @@ $wallets = $wallets ?? collect([]);
         <div class="am-preview-row"><span class="am-preview-label">📈 Expected ROI</span><span class="am-preview-value" id="orderRoi">-</span></div>
         <div class="am-preview-row"><span class="am-preview-label">📅 Duration</span><span class="am-preview-value" id="orderDuration">-</span></div>
         <div class="am-preview-row"><span class="am-preview-label">🔄 Payment via</span><span class="am-preview-value" id="orderMethod">-</span></div>
-        <div class="am-preview-row"><span class="am-preview-label">✅ You will receive</span><span class="am-preview-value" id="orderReturn" style="color:#059669;">-</span></div>
+        <div class="am-preview-row"><span class="am-preview-label">✅ You will receive</span><span class="am-preview-value ip-text-green" id="orderReturn">-</span></div>
     </div>
 
     <!-- Proceed Button -->
@@ -146,16 +154,23 @@ function selectMethod(el) {
     updateOrderSummary();
 }
 
+function cpIconError(img) {
+    img.style.display = 'none';
+    const fb = img.nextElementSibling;
+    if (fb && fb.classList.contains('cp-icon-fallback')) fb.style.display = 'flex';
+}
+
 function validateAmount() {
     const val = parseFloat(document.getElementById('depositAmount').value) || 0;
     const msg = document.getElementById('validationMsg');
+    const input = document.getElementById('depositAmount');
     if (!selectedPlan) return;
     if (val < selectedPlan.min || val > selectedPlan.max) {
         msg.style.display = 'block';
-        document.getElementById('depositAmount').style.borderColor = '#DC2626';
+        input.classList.add('invalid');
     } else {
         msg.style.display = 'none';
-        document.getElementById('depositAmount').style.borderColor = '#E5E7EB';
+        input.classList.remove('invalid');
     }
     updateOrderSummary();
 }
@@ -195,6 +210,7 @@ function resetPlan() {
     document.getElementById('stepAmount').style.display = 'none';
     document.getElementById('stepOrder').style.display = 'none';
     document.getElementById('proceedBtn').disabled = true;
+    document.getElementById('depositAmount').classList.remove('invalid');
     document.querySelectorAll('.ip-select-card').forEach(c => c.classList.remove('selected'));
     document.querySelectorAll('.cp-method-card').forEach(c => c.classList.remove('selected'));
 }

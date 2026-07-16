@@ -1,5 +1,5 @@
 <!-- ====== HOW IT WORKS ====== -->
-<section class="enzo-section enzo-section-dark animate-on-scroll" id="how-it-works">
+<section class="enzo-section enzo-section-dark" id="how-it-works">
     <div class="enzo-container">
         <div class="enzo-section-header">
             <span class="enzo-badge">SIMPLE PROCESS</span>

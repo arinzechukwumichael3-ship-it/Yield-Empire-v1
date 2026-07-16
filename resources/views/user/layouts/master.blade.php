@@ -62,29 +62,7 @@
     </a>
 </div>
 
-<!-- Mobile Bottom Navigation -->
-<nav class="mobile-bottom-nav d-flex d-lg-none">
-    <a href="{{ setRoute('user.rise.home') }}" class="mobile-nav-item {{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
-        <i class="las la-home"></i>
-        <span>{{ __('Home') }}</span>
-    </a>
-    <a href="{{ setRoute('user.rise.invest') }}" class="mobile-nav-item {{ request()->routeIs('user.investments.*') ? 'active' : '' }}">
-        <i class="las la-chart-line"></i>
-        <span>{{ __('Invest') }}</span>
-    </a>
-    <a href="{{ setRoute('user.rise.wallet') }}" class="mobile-nav-item {{ request()->routeIs('user.add.money.*') ? 'active' : '' }}">
-        <i class="las la-wallet"></i>
-        <span>{{ __('Wallet') }}</span>
-    </a>
-    <a href="{{ setRoute('user.rise.feed') }}" class="mobile-nav-item {{ request()->routeIs('user.transactions.*') ? 'active' : '' }}">
-        <i class="las la-rss"></i>
-        <span>{{ __('Feed') }}</span>
-    </a>
-    <a href="{{ setRoute('user.rise.account') }}" class="mobile-nav-item {{ request()->routeIs('user.profile.*') ? 'active' : '' }}">
-        <i class="las la-user"></i>
-        <span>{{ __('Account') }}</span>
-    </a>
-</nav>
+@include('user.partials.glass-bottom-nav')
 
 @include('partials.footer-asset')
 @include('user.partials.push-notification')

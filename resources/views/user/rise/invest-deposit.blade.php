@@ -14,21 +14,19 @@ $returnAmount = $returnAmount ?? 0;
 
 <div class="am-body">
     <!-- Plan Summary -->
-    <div class="am-card" style="border-left:4px solid #3B82F6;">
-        <div style="font-size:13px;color:#6B7280;margin-bottom:4px;">{{ $plan->name ?? '-' }}</div>
+    <div class="am-card ip-accent-left">
+        <div class="ip-text-muted" style="font-size:13px;margin-bottom:4px;">{{ $plan->name ?? '-' }}</div>
         <div style="font-weight:700;font-size:20px;">${{ number_format($amount, 2) }}</div>
-        <div style="font-size:13px;color:#059669;margin-top:4px;">Returns: ${{ number_format($returnAmount, 2) }} ({{ $plan->roi_percent ?? 0 }}% ROI)</div>
+        <div class="ip-text-green" style="font-size:13px;margin-top:4px;">Returns: ${{ number_format($returnAmount, 2) }} ({{ $plan->roi_percent ?? 0 }}% ROI)</div>
     </div>
 
     <!-- Wallet Address Card -->
     <div class="am-card">
         <div class="am-card-title">Send Payment To</div>
         
-        <!-- QR Code Placeholder -->
+        <!-- QR Code -->
         <div style="display:flex;justify-content:center;margin-bottom:20px;">
-            <div id="qrcode" style="width:180px;height:180px;background:#F3F4F6;border-radius:16px;display:flex;align-items:center;justify-content:center;border:2px dashed #D1D5DB;">
-                <span style="font-size:12px;color:#9CA3AF;text-align:center;padding:10px;">QR Code<br><small>{{ $wallet->symbol ?? '' }}</small></span>
-            </div>
+            <div id="qrcode" class="ip-qr" style="background: var(--bg-elevated);border:none;" data-address="{{ $wallet->wallet_address ?? '' }}"></div>
         </div>
 
         <!-- Wallet Address -->
@@ -41,14 +39,14 @@ $returnAmount = $returnAmount ?? 0;
         </div>
 
         <!-- Warning -->
-        <div style="margin-top:12px;padding:12px 16px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;font-size:13px;color:#92400E;">
+        <div class="ip-warning" style="margin-top:12px;">
             <strong>⚠️ Important</strong><br>
             Send exactly <strong>${{ number_format($amount, 2) }}</strong> worth of <strong>{{ $wallet->symbol ?? '' }}</strong> ({{ $wallet->network ?? '' }}). Wrong amount or network = lost funds.
         </div>
 
         <!-- Timer -->
-        <div style="text-align:center;margin-top:12px;font-size:14px;color:#6B7280;">
-            ⏱ This address expires in <span id="timer" style="font-weight:700;color:#3B82F6;">30:00</span>
+        <div class="ip-text-muted" style="text-align:center;margin-top:12px;font-size:14px;">
+            ⏱ This address expires in <span id="timer" class="ip-text-blue" style="font-weight:700;">30:00</span>
         </div>
     </div>
 
@@ -65,11 +63,11 @@ $returnAmount = $returnAmount ?? 0;
 
         <div class="am-field-group">
             <label class="am-label">Upload Screenshot</label>
-            <div style="border:2px dashed #D1D5DB;border-radius:12px;padding:30px;text-align:center;cursor:pointer;background:#FAFAFA;" onclick="document.getElementById('proofInput').click()">
-                <div style="font-size:36px;color:#D1D5DB;">📁</div>
-                <div style="font-size:13px;color:#9CA3AF;margin-top:8px;">Tap to upload transaction screenshot</div>
+            <div class="ip-upload" onclick="document.getElementById('proofInput').click()">
+                <div class="ip-upload-icon">📁</div>
+                <div class="ip-upload-hint" style="margin-top:8px;">Tap to upload transaction screenshot</div>
                 <input type="file" id="proofInput" name="proof" accept="image/*" style="display:none;" onchange="this.closest('div').querySelector('.file-name').textContent = this.files[0]?.name || ''">
-                <div class="file-name" style="font-size:12px;color:#3B82F6;margin-top:4px;"></div>
+                <div class="file-name ip-upload-name" style="margin-top:4px;"></div>
             </div>
         </div>
 
@@ -85,6 +83,30 @@ $returnAmount = $returnAmount ?? 0;
 </div>
 
 @push('script')
+<script src="{{ asset('frontend/js/qrcode.min.js') }}?v=1"></script>
+<script>
+(function () {
+    var box = document.getElementById('qrcode');
+    if (!box) return;
+    var addr = box.getAttribute('data-address') || '';
+    if (!addr || typeof QRCode === 'undefined') {
+        box.innerHTML = '<span class="ip-qr-text" style="color: var(--text-primary);">' + (addr || 'No address') + '</span>';
+        return;
+    }
+    try {
+        new QRCode(box, {
+            text: addr,
+            width: 160,
+            height: 160,
+            colorDark: '#0F172A',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.M
+        });
+    } catch (e) {
+        box.innerHTML = '<span class="ip-qr-text" style="color: var(--text-primary);">' + addr + '</span>';
+    }
+})();
+</script>
 <script>
 function copyAddr() {
     const input = document.getElementById('walletAddr');

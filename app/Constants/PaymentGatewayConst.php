@@ -29,6 +29,7 @@ class PaymentGatewayConst {
     const TYPEVIRTUALCARD               = "VIRTUAL-CARD";
     const CARDBUY                       = "CARD-BUY";
     const CARDFUND                      = "CARD-FUND";
+    const TYPEINVEST                    = "INVESTMENT";
     const SALARYDISBURSEMENT            = "Salary Disbursement";
 
     const ENV_SANDBOX               = "SANDBOX";

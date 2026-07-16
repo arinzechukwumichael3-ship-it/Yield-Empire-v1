@@ -265,8 +265,10 @@ function upload_files_from_path_dynamic($files_path, $destination_path, $old_fil
                     File::move($file_instance, $save_path . "/" . $file_base_name);
                     array_push($output_files_name, $file_base_name);
                 }
-            } catch (Exception $e) {
-                return back()->with(['error' => ['Something went wrong! Faild to upload file.']]);
+            } catch (\Throwable $e) {
+                // WebP encoding unavailable (GD without WebP support / cwebp missing) — keep the original image
+                File::move($file_instance, $save_path . "/" . $file_base_name);
+                array_push($output_files_name, $file_base_name);
             }
         } else { // IF Other Files
             $file_instance = new UploadedFile(
@@ -679,9 +681,10 @@ function upload_files_from_path_static($files_path, $destination_path, $old_file
                     File::move($file_instance, $save_path . "/" . $file_base_name);
                     array_push($output_files_name, $file_base_name);
                 }
-            } catch (Exception $e) {
-
-                return back()->with(['error' => ['Something went wrong! Faild to upload file.']]);
+            } catch (\Throwable $e) {
+                // WebP encoding unavailable (GD without WebP support / cwebp missing) — keep the original image
+                File::move($file_instance, $save_path . "/" . $file_base_name);
+                array_push($output_files_name, $file_base_name);
             }
         } else { // IF Other Files
             $file_instance = new UploadedFile(

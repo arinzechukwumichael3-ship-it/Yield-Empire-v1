@@ -70,13 +70,13 @@
                                 <span class="enzo-card-expiry-date">12/28</span>
                             </div>
                         </div>
+                        <!-- Floating badges (anchored to card edges) -->
+                        <span class="card-badge card-badge-1">🔒 Secured</span>
+                        <span class="card-badge card-badge-2">⚡ Instant</span>
+                        <span class="card-badge card-badge-3">🌍 Global</span>
                     </div>
                     <!-- Glow pulse beneath card -->
                     <div class="card-glow"></div>
-                    <!-- Floating badges -->
-                    <span class="card-badge card-badge-1">🔒 Secured</span>
-                    <span class="card-badge card-badge-2">⚡ Instant</span>
-                    <span class="card-badge card-badge-3">🌍 Global</span>
                 </div>
             </div>
         </div>

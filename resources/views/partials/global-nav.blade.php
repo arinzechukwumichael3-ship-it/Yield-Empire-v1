@@ -274,19 +274,28 @@
     };
 
     // --- Navbar scroll effect (transparent -> solid) ---
-    let lastScroll = 0;
+    // rAF-throttled so heavy logic never runs on every scroll frame.
     const nav = document.querySelector('.global-nav');
-    const scrollThreshold = 30;
+    const scrollThreshold = 60; // toggles solid after ~60px of scroll
+    let navTicking = false;
+    function updateNavState() {
+        const st = window.pageYOffset || document.documentElement.scrollTop || 0;
+        if (st > scrollThreshold) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+        navTicking = false;
+    }
     if (nav) {
-        window.addEventListener('scroll', function() {
-            const st = window.pageYOffset || document.documentElement.scrollTop;
-            if (st > scrollThreshold) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
+        window.addEventListener('scroll', function () {
+            if (!navTicking) {
+                navTicking = true;
+                window.requestAnimationFrame(updateNavState);
             }
-            lastScroll = st <= 0 ? 0 : st;
         }, { passive: true });
+        // Set correct state on load (e.g. restored scroll / back-forward navigation)
+        updateNavState();
     }
 
     // --- Hamburger toggle (public) ---

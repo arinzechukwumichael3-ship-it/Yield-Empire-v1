@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use App\Models\LoanPayment;
 use App\Models\LoanProduct;
+use App\Models\UserWallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\LoanCalculator;
@@ -15,7 +16,7 @@ class LoanController extends Controller
     public function index(Request $request)
     {
         $page_title = __('Loans');
-        $query = Loan::with(['product'])
+        $query = Loan::with(['product', 'payments'])
             ->where('user_id', Auth::id())
             ->when($request->get('q'), function ($q) use ($request) {
                 $term = $request->get('q');
@@ -30,7 +31,63 @@ class LoanController extends Controller
 
         $loans = $query->paginate(10);
 
-        return view('user.sections.loans.index', compact('page_title', 'loans'));
+        // ── Analytics for Loan Dashboard ──
+        $userId = Auth::id();
+        $allLoans = Loan::where('user_id', $userId)->get();
+        $totalPrincipal = $allLoans->sum('principal');
+        $totalBalance = $allLoans->sum('balance_principal');
+        $totalPaid = $totalPrincipal - $totalBalance;
+        $payoffPercent = $totalPrincipal > 0 ? round(($totalPaid / $totalPrincipal) * 100, 1) : 0;
+
+        $activeLoans = $allLoans->where('status', 'active');
+        $activeCount = $activeLoans->count();
+        $pendingCount = $allLoans->where('status', 'pending')->count();
+        $closedCount = $allLoans->where('status', 'closed')->count();
+
+        $nextPayment = LoanPayment::whereHas('loan', fn($q) => $q->where('user_id', $userId))
+            ->where('status', 'due')
+            ->orderBy('due_date')
+            ->first();
+
+        $avgRate = $activeLoans->count() > 0 ? $activeLoans->avg('interest_rate') : 0;
+
+        $allPayments = LoanPayment::whereHas('loan', fn($q) => $q->where('user_id', $userId))->get();
+        $onTimeCount = $allPayments->where('status', 'paid')->count();
+        $totalDue = $allPayments->whereIn('status', ['paid', 'due', 'late'])->count();
+        $onTimeRate = $totalDue > 0 ? round(($onTimeCount / $totalDue) * 100, 1) : 100;
+
+        $monthlyPayments = $allPayments->where('status', 'paid')->sum('amount_due');
+        $utilization = $totalPrincipal > 0 ? round(($totalBalance / $totalPrincipal) * 100, 1) : 0;
+
+        // Loan Health Score
+        $healthScore = round(
+            ($onTimeRate * 0.4) +
+            ((100 - min($utilization, 100)) * 0.25) +
+            ((100 - min(($monthlyPayments > 0 ? 30 : 0), 100)) * 0.2) +
+            (min($payoffPercent, 100) * 0.15)
+        ) / 10;
+        $healthScore = min(max($healthScore, 0), 10);
+        $healthLabel = $healthScore >= 8 ? 'Strong repayment standing' : ($healthScore >= 5 ? 'Fair standing' : 'Needs improvement');
+        $rankLabel = $healthScore >= 8 ? 'Good' : ($healthScore >= 5 ? 'Fair' : 'At Risk');
+
+        $payoffMonthsEarly = 0;
+        if ($activeLoans->count() > 0 && $monthlyPayments > 0) {
+            $avgMonthlyPayment = $monthlyPayments / max($allPayments->where('status', 'paid')->count(), 1);
+            if ($avgMonthlyPayment > 0) {
+                $expectedMonths = $activeLoans->avg('term_months') ?? 12;
+                $actualMonths = $totalBalance / $avgMonthlyPayment;
+                $payoffMonthsEarly = round(max($expectedMonths - $actualMonths, 0));
+            }
+        }
+
+        return view('user.sections.loans.index', compact(
+            'page_title', 'loans',
+            'totalPrincipal', 'totalBalance', 'totalPaid', 'payoffPercent',
+            'activeCount', 'pendingCount', 'closedCount',
+            'nextPayment', 'avgRate', 'onTimeRate', 'utilization',
+            'healthScore', 'healthLabel', 'rankLabel',
+            'payoffMonthsEarly'
+        ));
     }
 
     public function create()

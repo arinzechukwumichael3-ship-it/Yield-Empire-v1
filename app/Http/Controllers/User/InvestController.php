@@ -10,6 +10,7 @@ use App\Models\EarningsLog;
 use App\Models\UserWallet;
 use App\Models\Transaction;
 use App\Constants\PaymentGatewayConst;
+use App\Constants\GlobalConst;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -70,7 +71,7 @@ class InvestController extends Controller
         $returnAmount = $amount + ($amount * floatval($plan->roi_percent) / 100);
 
         return view('user.rise.invest-deposit', compact(
-            'page_title', 'plan', 'wallet', 'amount', 'returnAmount'
+            'plan', 'wallet', 'amount', 'returnAmount'
         ));
     }
 
@@ -117,6 +118,39 @@ class InvestController extends Controller
                 'expected_return'    => $returnAmount,
                 'maturity_date'      => now()->addDays($plan->duration_days),
             ]);
+
+            // Record a transaction so the pending investment shows in the user's transaction history
+            $trx_id = generateTrxString('transactions', 'trx_id', 'INV-', 14);
+            $transaction = Transaction::create([
+                'type'              => PaymentGatewayConst::TYPEINVEST,
+                'trx_id'            => $trx_id,
+                'user_type'         => GlobalConst::USER,
+                'user_id'           => $this->user->id,
+                'request_amount'    => $amount,
+                'request_currency'  => 'USD',
+                'available_balance' => 0,
+                'status'            => PaymentGatewayConst::STATUSPENDING,
+                'attribute'         => GlobalConst::RECEIVED,
+                'details'           => json_encode([
+                    'plan_name'       => $plan->name,
+                    'method'          => $request->method,
+                    'network'         => $request->network,
+                    'tx_hash'         => $request->tx_hash,
+                    'expected_return' => $returnAmount,
+                ]),
+            ]);
+
+            // Notify the user (appears in the notification dropdown)
+            user_notification_data_save(
+                $this->user->id,
+                $type     = PaymentGatewayConst::TYPEINVEST,
+                $title    = "Investment",
+                $transaction->id,
+                $amount,
+                $gateway  = $plan->name,
+                $currency = "USD",
+                $message  = "Investment of $" . number_format($amount, 2) . " submitted for admin review."
+            );
 
             DB::commit();
 
