@@ -86,7 +86,7 @@ class LoanController extends Controller
             'activeCount', 'pendingCount', 'closedCount',
             'nextPayment', 'avgRate', 'onTimeRate', 'utilization',
             'healthScore', 'healthLabel', 'rankLabel',
-            'payoffMonthsEarly'
+            'payoffMonthsEarly', 'monthlyPayments'
         ));
     }
 
