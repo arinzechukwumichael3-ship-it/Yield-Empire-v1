@@ -1,6 +1,13 @@
 @isset($transaction)
 @php
     $precesion = 2;
+    $d = $item->details;
+    if (is_string($d)) { $d = @json_decode($d); }
+    if (!is_object($d)) { $d = (object) []; }
+    $charges = $d->charges ?? null;
+    $walletCur = ($item->user_wallet && $item->user_wallet->currency) ? $item->user_wallet->currency->code : "";
+    $senderCur = $charges->sender_currency_code ?? $walletCur;
+    $gwCur = $charges->gateway_currency_code ?? $senderCur;
 @endphp
     <div class="dashboard-list-wrapper">
         <div class="dashboard-list-item-wrapper">
@@ -11,13 +18,13 @@
                             <i class="las la-arrow-up"></i>
                         </div>
                         <div class="dashboard-list-user-content">
-                            <h4 class="title">{{ __("Money Out From") }} <span class="text--warning">{{ $item->details->charges->sender_currency_code }}</span></h4>
+                            <h4 class="title">{{ __("Money Out From") }} <span class="text--warning">{{ $senderCur }}</span></h4>
                             <span class="{{ $transaction->stringStatus->class }}">{{ __($transaction->stringStatus->value) }} &nbsp; <span class="text-secondary">#{{ $transaction->trx_id }}</span></span>
                         </div>
                     </div>
                 </div>
                 <div class="dashboard-list-right">
-                    <h4 class="main-money text--danger">{{ get_amount($item->request_amount,$item->user_wallet->currency->code,$precesion) }}</h4>
+                    <h4 class="main-money text--danger">{{ get_amount($item->request_amount,$walletCur,$precesion) }}</h4>
                 </div>
             </div>
             <div class="preview-list-wrapper">
@@ -48,9 +55,10 @@
                         </div>
                     </div>
                     <div class="preview-list-right">
-                        <span class="text--danger">{{ get_amount($item->request_amount,$item->user_wallet->currency->code,$precesion) }}</span>
+                        <span class="text--danger">{{ get_amount($item->request_amount,$walletCur,$precesion) }}</span>
                     </div>
                 </div>
+                @if ($charges)
                 <div class="preview-list-item">
                     <div class="preview-list-left">
                         <div class="preview-list-user-wrapper">
@@ -63,7 +71,7 @@
                         </div>
                     </div>
                     <div class="preview-list-right">
-                        <span>1 {{ $item->details->charges->sender_currency_code  }} = {{ get_amount($item->details->charges->exchange_rate,$item->gateway_currency->currency_code,$precesion) }}</span>
+                        <span>1 {{ $senderCur }} = {{ get_amount($charges->exchange_rate, $gwCur, $precesion) }}</span>
                     </div>
                 </div>
                 <div class="preview-list-item">
@@ -78,7 +86,7 @@
                         </div>
                     </div>
                     <div class="preview-list-right">
-                        <span>{{ get_amount($item->details->charges->total_charge,$item->details->charges->sender_currency_code,$precesion) }}</span>
+                        <span>{{ get_amount($charges->total_charge, $senderCur, $precesion) }}</span>
                     </div>
                 </div>
                 <div class="preview-list-item">
@@ -93,7 +101,7 @@
                         </div>
                     </div>
                     <div class="preview-list-right">
-                        <span>{{ get_amount($item->details->charges->total_payable,$item->details->charges->sender_currency_code,$precesion) }}</span>
+                        <span>{{ get_amount($charges->total_payable, $senderCur, $precesion) }}</span>
                     </div>
                 </div>
                 <div class="preview-list-item">
@@ -108,9 +116,33 @@
                         </div>
                     </div>
                     <div class="preview-list-right">
-                        <span>{{ get_amount($item->details->charges->will_get,$item->details->charges->gateway_currency_code,$precesion) }}</span>
+                        <span>{{ get_amount($charges->will_get, $gwCur, $precesion) }}</span>
                     </div>
                 </div>
+                @else
+                    @if (!empty($d->bank_name) || !empty($d->method) || !empty($d->recipient_name) || !empty($d->description))
+                    <div class="preview-list-item">
+                        <div class="preview-list-left">
+                            <div class="preview-list-user-wrapper">
+                                <div class="preview-list-user-icon">
+                                    <i class="las la-university"></i>
+                                </div>
+                                <div class="preview-list-user-content">
+                                    <span>{{ __("Destination") }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="preview-list-right">
+                            <span>
+                                @if(!empty($d->method)){{ ucfirst($d->method) }}@endif
+                                @if(!empty($d->bank_name)) · {{ $d->bank_name }}@endif
+                                @if(!empty($d->recipient_name)) · {{ $d->recipient_name }}@endif
+                                @if(empty($d->method) && empty($d->bank_name) && empty($d->recipient_name) && !empty($d->description)){{ $d->description }}@endif
+                            </span>
+                        </div>
+                    </div>
+                    @endif
+                @endif
                 <div class="preview-list-item">
                     <div class="preview-list-left">
                         <div class="preview-list-user-wrapper">

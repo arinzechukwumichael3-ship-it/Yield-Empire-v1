@@ -444,7 +444,9 @@ $holdings = $holdings ?? collect([]);
 $totalPlans = $assets->count();
 $activePlans = $assets->where('status', true)->count();
 $avgYield = $assets->avg('base_yield') ?? 0;
-$totalValue = $holdings->sum('value') ?? 0;
+$totalValue = $holdings->sum(function ($h) {
+    return (float)($h->quantity ?? 0) * (float)($h->asset->current_price ?? 0);
+});
 @endphp
 
 <div class="io-header" style="border:none;padding-bottom:0;">

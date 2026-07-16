@@ -86,7 +86,7 @@ class RiseController extends Controller
         $page_title = "Invest";
         $user = $this->user;
         $portfolio = Portfolio::auth()->first();
-        $holdings = $portfolio ? PortfolioHolding::where('portfolio_id', $portfolio->id)->get() : collect([]);
+        $holdings = $portfolio ? PortfolioHolding::with('asset')->where('portfolio_id', $portfolio->id)->get() : collect([]);
         $assets = InvestmentAsset::all();
 
         return view('user.rise.invest', compact('page_title', 'user', 'portfolio', 'holdings', 'assets'));
