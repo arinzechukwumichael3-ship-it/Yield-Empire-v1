@@ -49,7 +49,7 @@ class SendAuthorizationCode extends Notification
                     ->bcc('support@enzobank.org')
                     ->greeting("Hello ".$fullname . "!")
                     ->line('Need to verify your account before access your dashboard.')
-                    ->line("Your verification code: ".$data->code)
+                    ->line(mail_otp_box($data->code, 'Your verification code'))
                     ->line('Thank you for using our application!');
     }
     /**

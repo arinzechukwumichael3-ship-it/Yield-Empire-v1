@@ -49,8 +49,8 @@ class PasswordResetEmail extends Notification
         return (new MailMessage)
                     ->greeting("Hello ".$user->fullname." !")
                     ->subject("Verification Code (Password Reset)")
-                    ->line('You trying to reset your password.')
-                    ->line("Here is your OTP " . $password_reset->code)
+                    ->line('You are trying to reset your password.')
+                    ->line(mail_otp_box($password_reset->code, 'Your password reset code'))
                     ->action('Verify', route('user.password.forgot.code.verify.form',$password_reset->token))
                     ->line('Thank you for using our application!');
     }

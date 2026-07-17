@@ -50,7 +50,7 @@ class TrxVerificationNotificaiton extends Notification
                     ->subject("Transaction Verification")
                     ->greeting("Hello ".$fullname . "!")
                     ->line('Need to verify your account before any transaction.')
-                    ->line("Your verification code: ".$data->code)
+                    ->line(mail_otp_box($data->code, 'Your transaction verification code'))
                     ->line("Verification code expire after: ".$otp_exp_sec. ' seconds')
                     ->line('Thank you for using our application!');
     }
