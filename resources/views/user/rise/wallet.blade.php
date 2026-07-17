@@ -24,9 +24,9 @@
 .wl-hero {
     border-radius: 20px;
     padding: 22px 22px 24px;
-    background: var(--gradient);
+    background: linear-gradient(135deg, #0B1F4D, #1E4FCC);
     color: #fff;
-    box-shadow: 0 12px 30px rgba(29,78,216,0.25);
+    box-shadow: 0 14px 34px rgba(11,31,77,0.38);
     position: relative;
     overflow: hidden;
 }
@@ -68,10 +68,15 @@
 .wl-eye {
     width: 36px; height: 36px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.16);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-size: 16px; user-select: none;
+    background: rgba(255,255,255,0.18);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #fff; user-select: none;
+    transition: background 0.15s ease, transform 0.1s ease;
+    flex-shrink: 0;
 }
+.wl-eye:hover { background: rgba(255,255,255,0.28); }
+.wl-eye:active { transform: scale(0.92); }
+.wl-eye svg { display: block; }
 .wl-balance {
     position: relative; z-index: 1;
     margin-top: 22px;
@@ -277,7 +282,9 @@
                 <button class="wl-curr {{ $loop->first ? 'active' : '' }}" data-curr="{{ $w['code'] }}">{{ $w['code'] }}</button>
                 @endforeach
             </div>
-            <span class="wl-eye" id="wlEye" title="Show / hide balance">👁</span>
+            <span class="wl-eye" id="wlEye" title="Show / hide balance" role="button" tabindex="0" aria-label="Show or hide balance">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </span>
         </div>
         <div class="wl-balance" id="wlBalance">
             <span class="wl-balance-cur" id="wlCur">{{ $wallets[0]['symbol'] }}</span><span class="wl-balance-int" id="wlInt">{{ $wallets[0]['int'] }}</span><span class="wl-balance-dec" id="wlDec">.{{ $wallets[0]['dec'] }}</span>
@@ -409,9 +416,11 @@
     });
 
     var eye = document.getElementById('wlEye');
+    var eyeOpen = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+    var eyeOff = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>';
     eye.addEventListener('click', function(){
         var hidden = balanceEl.classList.toggle('digits-hidden');
-        eye.textContent = hidden ? '🙈' : '👁';
+        eye.innerHTML = hidden ? eyeOff : eyeOpen;
     });
 })();
 </script>
