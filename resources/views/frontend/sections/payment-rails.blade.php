@@ -16,6 +16,7 @@
                     <img class="enzo-rails-logo" src="{{ asset('logos/visa.svg') }}" alt="Visa" width="48" height="30" aria-hidden="true" loading="lazy">
                     <img class="enzo-rails-logo" src="{{ asset('logos/mastercard.svg') }}" alt="Mastercard" width="48" height="30" aria-hidden="true" loading="lazy">
                     <img class="enzo-rails-logo" src="{{ asset('logos/sepa.svg') }}" alt="SEPA" width="48" height="30" aria-hidden="true" loading="lazy">
+                    <span class="enzo-rails-logo enzo-rails-text" aria-hidden="true">SWIFT</span>
                     <span class="enzo-rails-logo enzo-rails-text" aria-hidden="true">ACH</span>
                     <span class="enzo-rails-logo enzo-rails-text" aria-hidden="true">Paystack</span>
                 </div>
