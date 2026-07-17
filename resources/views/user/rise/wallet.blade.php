@@ -1,250 +1,418 @@
 @extends('user.layouts.rise-master')
 
-@push("css")
+@push('css')
 <style>
-.rw-balance-dec { font-size: 0.6em; font-weight: 500; color: #9CA3AF; }
-.rw-eye-toggle { cursor: pointer; user-select: none; }
-.rw-balance-digits { position: relative; }
-.rw-balance-digits[data-visible="false"] .rw-balance-int,
-.rw-balance-digits[data-visible="false"] .rw-balance-dec { visibility: hidden; }
-.rw-balance-digits[data-visible="false"]::after {
-    content: "****";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 28px;
-    letter-spacing: 4px;
-    color: #D1D5DB;
-}
-.rw-section-link-pill {
+/* ── Subtitle + statement button ── */
+.wl-subtitle { font-size: 13px; color: var(--text-muted); margin: 4px 0 0; }
+.wl-stmt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border-radius: 100px;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
     font-size: 13px;
     font-weight: 600;
-    color: #3B82F6;
-    padding: 6px 18px;
-    border: 1.5px solid #3B82F6;
+    text-decoration: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+.wl-stmt-btn:hover { background: var(--accent); color: #fff; }
+
+/* ── Hero balance card ── */
+.wl-hero {
     border-radius: 20px;
+    padding: 22px 22px 24px;
+    background: var(--gradient);
+    color: #fff;
+    box-shadow: 0 12px 30px rgba(29,78,216,0.25);
+    position: relative;
+    overflow: hidden;
+}
+.wl-hero::after {
+    content: "";
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+}
+.wl-hero-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+}
+.wl-curr-switch {
+    display: inline-flex;
+    gap: 4px;
+    background: rgba(255,255,255,0.16);
+    border-radius: 100px;
+    padding: 4px;
+}
+.wl-curr {
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.8);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    cursor: pointer;
     transition: all 0.15s;
 }
-.rw-section-link-pill:hover {
-    background: #3B82F6;
+.wl-curr.active { background: #fff; color: #1D4ED8; }
+.wl-eye {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.16);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; user-select: none;
+}
+.wl-balance {
+    position: relative; z-index: 1;
+    margin-top: 22px;
+    display: flex; align-items: baseline; gap: 2px;
+    font-weight: 800;
+    line-height: 1;
+}
+.wl-balance-cur { font-size: 22px; font-weight: 700; opacity: 0.9; }
+.wl-balance-int { font-size: 38px; letter-spacing: -1px; }
+.wl-balance-dec { font-size: 22px; font-weight: 600; opacity: 0.85; }
+.wl-balance.digits-hidden .wl-balance-int,
+.wl-balance.digits-hidden .wl-balance-dec { visibility: hidden; }
+.wl-balance.digits-hidden::after {
+    content: "••••••";
+    position: absolute;
+    left: 0; bottom: 2px;
+    font-size: 30px; letter-spacing: 4px;
+}
+.wl-balance-label {
+    position: relative; z-index: 1;
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* ── Quick actions ── */
+.wl-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+.wl-action {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 16px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: transform 0.15s, border-color 0.15s;
+}
+.wl-action:active { transform: scale(0.97); }
+.wl-action-icon {
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
     color: #fff;
+}
+.wl-action-icon.add { background: #059669; }
+.wl-action-icon.send { background: #3B82F6; }
+.wl-action-icon.out { background: #DC2626; }
+.wl-action-icon.stmt { background: #7C3AED; }
+.wl-action span { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+
+/* ── Section ── */
+.wl-section { }
+.wl-section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+}
+.wl-section-title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.wl-section-link {
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    text-decoration: none;
+}
+
+/* ── Wallets overview ── */
+.wl-wallet-list {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+}
+.wl-wallet-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+.wl-wallet-row:last-child { border-bottom: none; }
+.wl-wallet-flag {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+}
+.wl-wallet-info { flex: 1; min-width: 0; }
+.wl-wallet-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.wl-wallet-code { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.wl-wallet-bal { font-size: 15px; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+
+/* ── Transactions ── */
+.wl-tx-list {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+}
+.wl-tx-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+.wl-tx-item:last-child { border-bottom: none; }
+.wl-tx-icon {
+    width: 40px; height: 40px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; color: #fff;
+}
+.wl-tx-icon.green { background: var(--success-bg); color: var(--success-text); }
+.wl-tx-icon.red { background: var(--danger-bg); color: var(--danger-text); }
+.wl-tx-icon.blue { background: var(--info-bg); color: var(--info); }
+.wl-tx-info { flex: 1; min-width: 0; }
+.wl-tx-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.wl-tx-date { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.wl-tx-amount { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.wl-tx-amount.positive { color: var(--success-text); }
+.wl-tx-amount.negative { color: var(--danger-text); }
+
+/* ── Empty ── */
+.wl-empty {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 44px 20px; text-align: center; gap: 8px;
+}
+.wl-empty-icon { color: var(--border-strong); margin-bottom: 6px; }
+.wl-empty-title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.wl-empty-sub { font-size: 13px; color: var(--text-muted); }
+
+@media (max-width: 430px) {
+    .wl-actions { grid-template-columns: repeat(2, 1fr); }
+    .wl-balance-int { font-size: 32px; }
 }
 </style>
 @endpush
 
 @section('content')
+
 @php
-$usdWallet = $usd_wallet ?? \App\Models\UserWallet::auth()->first();
-$gbpWallet = $gbp_wallet ?? null;
-$eurWallet = $eur_wallet ?? null;
-$usdBalance = $usdWallet ? $usdWallet->balance : 0;
-$gbpBalance = $gbpWallet ? $gbpWallet->balance : 0;
-$eurBalance = $eurWallet ? $eurWallet->balance : 0;
-$usdParts = explode('.', number_format($usdBalance, 2));
-$gbpParts = explode('.', number_format($gbpBalance, 2));
-$eurParts = explode('.', number_format($eurBalance, 2));
+    $usdWallet = $usd_wallet ?? \App\Models\UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
+    $gbpWallet = $gbp_wallet ?? null;
+    $eurWallet = $eur_wallet ?? null;
+
+    function wlParts($balance) {
+        $p = explode('.', number_format((float) $balance, 2));
+        return ['int' => $p[0], 'dec' => $p[1] ?? '00'];
+    }
+
+    $wallets = [
+        ['code' => 'USD', 'symbol' => '$', 'flag' => '🇺🇸', 'name' => 'US Dollar',     'balance' => $usdWallet ? $usdWallet->balance : 0],
+        ['code' => 'GBP', 'symbol' => '£', 'flag' => '🇬🇧', 'name' => 'British Pound',  'balance' => $gbpWallet ? $gbpWallet->balance : 0],
+        ['code' => 'EUR', 'symbol' => '€', 'flag' => '🇪🇺', 'name' => 'Euro',          'balance' => $eurWallet ? $eurWallet->balance : 0],
+    ];
+    foreach ($wallets as &$w) { $w = array_merge($w, wlParts($w['balance'])); }
+    unset($w);
+
+    $default_symbol = get_default_currency_symbol();
+
+    global $creditTypes;
+    $creditTypes = ['ADD-MONEY', 'TRANSFER-MONEY', 'BONUS', 'COMMISSION', 'Salary Disbursement'];
+    function wlIsCredit($tx) {
+        global $creditTypes;
+        if (in_array($tx->type ?? '', ['OWN-BANK-TRANSFER', 'OTHER-BANK-TRANSFER'])) {
+            return ($tx->receiver_id ?? null) == auth()->id();
+        }
+        return in_array($tx->type ?? '', $creditTypes);
+    }
+    function wlTypeLabel($type) {
+        $map = [
+            'ADD-MONEY' => 'Deposit', 'MONEY-OUT' => 'Withdrawal', 'WITHDRAW' => 'Withdrawal',
+            'BONUS' => 'Referral Bonus', 'COMMISSION' => 'Commission',
+            'OWN-BANK-TRANSFER' => 'Own Transfer', 'OTHER-BANK-TRANSFER' => 'Bank Transfer',
+            'TRANSFER-MONEY' => 'Transfer', 'MONEY-EXCHANGE' => 'Currency Exchange',
+            'MAKE-PAYMENT' => 'Payment', 'VIRTUAL-CARD' => 'Virtual Card',
+            'MOBILE-WALLET-TRANSFER' => 'Mobile Wallet', 'Salary Disbursement' => 'Salary',
+        ];
+        return $map[$type] ?? ucwords(str_replace(['-', '_'], ' ', strtolower($type)));
+    }
 @endphp
 
-<div class="rw-header">
-    <div class="rw-header-left">
-        <div class="rw-logo-icon">E</div>
-        <span class="rw-header-title">EnzoBank Wallet</span>
+<div class="am-header">
+    <div>
+        <h1 class="am-header-title">{{ __('My Wallet') }}</h1>
+        <p class="wl-subtitle">{{ __('Manage your balances across currencies') }}</p>
     </div>
-    <a href="#" class="rw-bell">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    <a href="{{ route('user.statements.index') }}" class="wl-stmt-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        {{ __('Statement') }}
     </a>
 </div>
 
-<div class="rw-body">
-    <!-- Currency Toggle -->
-    <div class="rw-currency-toggle">
-        <button class="rw-curr-btn active" data-curr="usd">🇺🇸 USD Wallet</button>
-        <button class="rw-curr-btn" data-curr="gbp">🇬🇧 GBP Wallet</button>
-        <button class="rw-curr-btn" data-curr="eur">🇪🇺 EUR Wallet</button>
-    </div>
+<div class="am-body">
 
-    <!-- USD Wallet -->
-    <div class="rw-wallet-content active" id="wallet-usd">
-        <div class="rw-balance-display">
-            <span class="rw-balance-label">USD Balance <span class="rw-eye-toggle" data-visible="true">👁</span></span>
-            <span class="rw-balance-digits" data-visible="true">$<span class="rw-balance-int">{{ $usdParts[0] }}</span>.<span class="rw-balance-dec">{{ $usdParts[1] }}</span></span>
-        </div>
-        <div class="rw-dots">
-            <span class="rw-dot active"></span>
-            <span class="rw-dot"></span>
-            <span class="rw-dot"></span>
-        </div>
-        <div class="rw-actions">
-            <a href="{{ setRoute('user.money-out.index') }}" class="rw-action">
-                <div class="rw-action-icon light">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                </div>
-                <span>Withdraw</span>
-            </a>
-            <a href="{{ setRoute('user.crypto.deposit.index') }}" class="rw-action">
-                <div class="rw-action-icon blue">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </div>
-                <span>Fund</span>
-            </a>
-            <a href="{{ route('user.rise.send') }}" class="rw-action">
-                <div class="rw-action-icon light">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polyline points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </div>
-                <span>Send</span>
-            </a>
-        </div>
-        <div class="rw-interest-row">
-            <span>Wallet Interest • 8% P/A</span>
-            <span>$0.00 ›</span>
-        </div>
-    </div>
-
-    <!-- GBP Wallet -->
-    <div class="rw-wallet-content" id="wallet-gbp">
-        <div class="rw-balance-display">
-            <span class="rw-balance-label">GBP Balance <span class="rw-eye-toggle" data-visible="true">👁</span></span>
-            <span class="rw-balance-digits" data-visible="true">£<span class="rw-balance-int">{{ $gbpParts[0] }}</span>.<span class="rw-balance-dec">{{ $gbpParts[1] }}</span></span>
-        </div>
-        <div class="rw-dots">
-            <span class="rw-dot"></span>
-            <span class="rw-dot active"></span>
-            <span class="rw-dot"></span>
-        </div>
-        <div class="rw-actions">
-            <a href="{{ setRoute('user.money-out.index') }}" class="rw-action">
-                <div class="rw-action-icon light">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                </div>
-                <span>Withdraw</span>
-            </a>
-            <a href="{{ setRoute('user.crypto.deposit.index') }}" class="rw-action">
-                <div class="rw-action-icon blue">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </div>
-                <span>Fund</span>
-            </a>
-            <a href="{{ route('user.rise.send') }}" class="rw-action">
-                <div class="rw-action-icon light">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polyline points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </div>
-                <span>Send</span>
-            </a>
-        </div>
-        <div class="rw-vault-promo">
-            <span class="rw-vault-emoji">🔒</span>
-            <div class="rw-vault-text">
-                <span class="rw-vault-title">Save with the Sterling Vault</span>
-                <span class="rw-vault-sub">Lock your Sterling and earn up to 23% annual interest, paid monthly.</span>
+    <!-- Hero balance -->
+    <div class="wl-hero" id="wlHero" data-wallets='@json($wallets)'>
+        <div class="wl-hero-top">
+            <div class="wl-curr-switch">
+                @foreach($wallets as $w)
+                <button class="wl-curr {{ $loop->first ? 'active' : '' }}" data-curr="{{ $w['code'] }}">{{ $w['code'] }}</button>
+                @endforeach
             </div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            <span class="wl-eye" id="wlEye" title="Show / hide balance">👁</span>
         </div>
+        <div class="wl-balance" id="wlBalance">
+            <span class="wl-balance-cur" id="wlCur">{{ $wallets[0]['symbol'] }}</span><span class="wl-balance-int" id="wlInt">{{ $wallets[0]['int'] }}</span><span class="wl-balance-dec" id="wlDec">.{{ $wallets[0]['dec'] }}</span>
+        </div>
+        <div class="wl-balance-label">{{ __('Available Balance') }}</div>
     </div>
 
-    <!-- EUR Wallet -->
-    <div class="rw-wallet-content" id="wallet-eur">
-        <div class="rw-balance-display">
-            <span class="rw-balance-label">EUR Balance <span class="rw-eye-toggle" data-visible="true">👁</span></span>
-            <span class="rw-balance-digits" data-visible="true">€<span class="rw-balance-int">{{ $eurParts[0] }}</span>.<span class="rw-balance-dec">{{ $eurParts[1] }}</span></span>
-        </div>
-        <div class="rw-dots">
-            <span class="rw-dot"></span>
-            <span class="rw-dot"></span>
-            <span class="rw-dot active"></span>
-        </div>
-        <div class="rw-actions">
-            <a href="{{ setRoute('user.money-out.index') }}" class="rw-action">
-                <div class="rw-action-icon light">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                </div>
-                <span>Withdraw</span>
-            </a>
-            <a href="{{ setRoute('user.crypto.deposit.index') }}" class="rw-action">
-                <div class="rw-action-icon blue">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </div>
-                <span>Fund</span>
-            </a>
-            <a href="{{ route('user.rise.send') }}" class="rw-action">
-                <div class="rw-action-icon light">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polyline points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </div>
-                <span>Send</span>
-            </a>
-        </div>
-        <div class="rw-vault-promo">
-            <span class="rw-vault-emoji">🔒</span>
-            <div class="rw-vault-text">
-                <span class="rw-vault-title">Save with the Euro Vault</span>
-                <span class="rw-vault-sub">Lock your Euros and earn up to 23% annual interest, paid monthly.</span>
+    <!-- Quick actions -->
+    <div class="wl-actions">
+        <a href="{{ setRoute('user.add.money.index') }}" class="wl-action">
+            <div class="wl-action-icon add">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            <span>{{ __('Add Money') }}</span>
+        </a>
+        <a href="{{ route('user.rise.send') }}" class="wl-action">
+            <div class="wl-action-icon send">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polyline points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </div>
+            <span>{{ __('Send') }}</span>
+        </a>
+        <a href="{{ setRoute('user.money-out.index') }}" class="wl-action">
+            <div class="wl-action-icon out">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </div>
+            <span>{{ __('Withdraw') }}</span>
+        </a>
+        <a href="{{ route('user.statements.index') }}" class="wl-action">
+            <div class="wl-action-icon stmt">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <span>{{ __('Statement') }}</span>
+        </a>
+    </div>
+
+    <!-- Wallets overview -->
+    <div class="wl-section">
+        <div class="wl-section-head">
+            <span class="wl-section-title">{{ __('Your Wallets') }}</span>
+        </div>
+        <div class="wl-wallet-list">
+            @foreach($wallets as $w)
+            <div class="wl-wallet-row">
+                <div class="wl-wallet-flag">{{ $w['flag'] }}</div>
+                <div class="wl-wallet-info">
+                    <div class="wl-wallet-name">{{ $w['name'] }}</div>
+                    <div class="wl-wallet-code">{{ $w['code'] }} • {{ __('Wallet') }}</div>
+                </div>
+                <div class="wl-wallet-bal">{{ $w['symbol'] }}{{ number_format($w['balance'], 2) }}</div>
+            </div>
+            @endforeach
         </div>
     </div>
 
-    <!-- Recent Transactions -->
-    <div class="rw-section-row">
-        <span class="rw-section-title">Recent Transactions</span>
-        <a href="{{ setRoute('user.transactions.index') }}" class="rw-section-link-pill">See all</a>
-    </div>
+    <!-- Recent transactions -->
+    <div class="wl-section">
+        <div class="wl-section-head">
+            <span class="wl-section-title">{{ __('Recent Transactions') }}</span>
+            <a href="{{ setRoute('user.transactions.index') }}" class="wl-section-link">{{ __('See all') }}</a>
+        </div>
 
-    @if($transactions->count() > 0)
-    <div class="rw-tx-list">
-        @foreach($transactions->take(5) as $tx)
-        <div class="rw-tx-item">
-            <div class="rw-tx-icon {{ $tx->type === 'ADD-MONEY' ? 'green' : ($tx->type === 'MONEY-OUT' ? 'red' : 'blue') }}">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    @if($tx->type === 'ADD-MONEY')
-                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+        @if($transactions->count() > 0)
+        <div class="wl-tx-list">
+            @foreach($transactions->take(8) as $tx)
+            @php
+                $isCredit = wlIsCredit($tx);
+                $iconClass = $tx->type === 'ADD-MONEY' ? 'green' : ($tx->type === 'MONEY-OUT' || $tx->type === 'WITHDRAW' ? 'red' : 'blue');
+            @endphp
+            <div class="wl-tx-item">
+                <div class="wl-tx-icon {{ $iconClass }}">
+                    @if($isCredit)
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     @else
-                    <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     @endif
-                </svg>
+                </div>
+                <div class="wl-tx-info">
+                    <div class="wl-tx-name">{{ wlTypeLabel($tx->type) }}</div>
+                    <div class="wl-tx-date">{{ $tx->created_at->diffForHumans() }}</div>
+                </div>
+                <span class="wl-tx-amount {{ $isCredit ? 'positive' : 'negative' }}">
+                    {{ $isCredit ? '+' : '-' }}{{ $default_symbol }}{{ number_format($tx->request_amount, 2) }}
+                </span>
             </div>
-            <div class="rw-tx-info">
-                <span class="rw-tx-name">{{ $tx->type }}</span>
-                <span class="rw-tx-date">{{ $tx->created_at->diffForHumans() }}</span>
-            </div>
-            <span class="rw-tx-amount {{ in_array($tx->type, ['ADD-MONEY', 'TRANSFER-MONEY']) && $tx->receiver_id == auth()->id() ? 'positive' : 'negative' }}">
-                {{ in_array($tx->type, ['ADD-MONEY', 'TRANSFER-MONEY']) && $tx->receiver_id == auth()->id() ? '+' : '-' }}${{ number_format($tx->request_amount, 2) }}
-            </span>
+            @endforeach
         </div>
-        @endforeach
+        @else
+        <div class="wl-empty">
+            <div class="wl-empty-icon">
+                <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="15" rx="2"/><path d="M3 10h18"/><path d="M7 15h2"/><path d="M11 15h6"/></svg>
+            </div>
+            <span class="wl-empty-title">{{ __('No transactions yet') }}</span>
+            <span class="wl-empty-sub">{{ __('Your activity will appear here') }}</span>
+        </div>
+        @endif
     </div>
-    @else
-    <div class="rw-empty">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5"><rect x="3" y="6" width="18" height="15" rx="2"/><path d="M3 10h18"/><path d="M7 15h2"/><path d="M11 15h6"/></svg>
-        <span class="rw-empty-title">No transactions</span>
-        <span class="rw-empty-sub">Your transactions will appear here</span>
-    </div>
-    @endif
+
 </div>
+@endsection
 
-@push("script")
+@push('script')
 <script>
-// Currency toggle
-document.querySelectorAll('.rw-curr-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        document.querySelectorAll('.rw-curr-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.rw-wallet-content').forEach(c => c.classList.remove('active'));
-        this.classList.add('active');
-        document.getElementById('wallet-' + this.dataset.curr).classList.add('active');
-    });
-});
+(function(){
+    var hero = document.getElementById('wlHero');
+    if (!hero) return;
+    var data = JSON.parse(hero.dataset.wallets || '[]');
+    var map = {};
+    data.forEach(function(w){ map[w.code] = w; });
 
-// Eye toggle
-document.querySelectorAll('.rw-eye-toggle').forEach(eye => {
-    eye.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const display = this.closest('.rw-balance-display');
-        const digits = display.querySelector('.rw-balance-digits');
-        const isVisible = digits.dataset.visible === 'true';
-        digits.dataset.visible = isVisible ? 'false' : 'true';
-        this.textContent = isVisible ? '👁‍🗨' : '👁';
-        this.dataset.visible = isVisible ? 'false' : 'true';
+    var curEl = document.getElementById('wlCur');
+    var intEl = document.getElementById('wlInt');
+    var decEl = document.getElementById('wlDec');
+    var balanceEl = document.getElementById('wlBalance');
+
+    function setCurrency(code) {
+        var w = map[code];
+        if (!w) return;
+        curEl.textContent = w.symbol;
+        intEl.textContent = w.int;
+        decEl.textContent = '.' + w.dec;
+    }
+
+    document.querySelectorAll('.wl-curr').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            document.querySelectorAll('.wl-curr').forEach(function(b){ b.classList.remove('active'); });
+            this.classList.add('active');
+            setCurrency(this.dataset.curr);
+        });
     });
-});
+
+    var eye = document.getElementById('wlEye');
+    eye.addEventListener('click', function(){
+        var hidden = balanceEl.classList.toggle('digits-hidden');
+        eye.textContent = hidden ? '🙈' : '👁';
+    });
+})();
 </script>
 @endpush
-@endsection
