@@ -2,7 +2,12 @@
 
 @push('css')
 <style>
-.cd-coin-list { display: flex; flex-direction: column; gap: 10px; }
+/* Section rhythm */
+.cd-stack > * + * { margin-top: 24px; }
+.am-body--funds { gap: 24px; }
+
+/* Crypto coin selection */
+.cd-coin-list { display: flex; flex-direction: column; gap: 12px; }
 .cd-coin-card { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: #111827; border: 1.5px solid #1E293B; border-radius: 14px; cursor: pointer; transition: all 0.15s; }
 .cd-coin-card:hover { border-color: #3B82F6; }
 .cd-coin-card.selected { border-color: #3B82F6; background: rgba(59,130,246,0.08); }
@@ -21,6 +26,39 @@
 [data-theme="light"] .cd-coin-card { background: #fff; border-color: #E2E8F0; }
 [data-theme="light"] .cd-coin-name { color: #1F2937; }
 [data-theme="light"] .cd-coin-badge { background: #F1F5F9; color: #64748B; }
+
+/* Add Money log cards (theme-aware) */
+.cd-log-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.cd-log-title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.cd-log-list { display: flex; flex-direction: column; gap: 12px; }
+.cd-log-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    box-shadow: var(--card-shadow);
+    animation: cdLogIn 0.3s ease both;
+}
+.cd-log-badge {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--inv-success-bg);
+    color: var(--inv-success-text);
+}
+.cd-log-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.cd-log-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.cd-log-date { font-size: 12px; color: var(--text-secondary); }
+.cd-log-amount { font-size: 15px; font-weight: 700; color: var(--inv-success-text); white-space: nowrap; }
+.cd-log-empty {
+    padding: 20px; text-align: center; font-size: 13px;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    border: 1px dashed var(--border-color);
+    border-radius: 14px;
+}
+@keyframes cdLogIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .cd-log-card { animation: none; } }
 </style>
 @endpush
 
@@ -34,9 +72,9 @@ $coins = config("crypto_deposit.coins", []);
     <h1 class="am-header-title">{{ __('Add Funds') }}</h1>
 </div>
 
-<div class="am-body">
+<div class="am-body am-body--funds">
     {{-- Crypto Deposit Form (sole method) --}}
-    <form method="POST" action="{{ route('user.crypto.deposit.store') }}">
+    <form method="POST" action="{{ route('user.crypto.deposit.store') }}" class="cd-stack">
         @csrf
         <div class="am-card">
             <div class="am-field-group">
@@ -77,27 +115,25 @@ $coins = config("crypto_deposit.coins", []);
     </form>
 
     <!-- Add Money Log -->
-    <div style="margin-top:20px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span style="font-size:16px;font-weight:700;">{{ __('Add Money Log') }}</span>
+    <div class="cd-log-section">
+        <div class="cd-log-head">
+            <span class="cd-log-title">{{ __('Add Money Log') }}</span>
             <a href="{{ setRoute('user.transactions.index') }}" class="am-log-link">{{ __('View More') }}</a>
         </div>
-        <div class="rw-tx-list">
-            @forelse(($transactions ?? collect([]))->take(5) as $tx)
-            <div class="rw-tx-item">
-                <div class="rw-tx-icon green">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+        <div class="cd-log-list">
+            @forelse(($transactions ?? collect([]))->take(5) as $i => $tx)
+            <div class="cd-log-card" style="animation-delay: {{ $i * 50 }}ms">
+                <div class="cd-log-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
                 </div>
-                <div class="rw-tx-info">
-                    <span class="rw-tx-name">{{ __('Add Money') }}</span>
-                    <span class="rw-tx-date">{{ $tx->created_at ? $tx->created_at->diffForHumans() : '' }}</span>
+                <div class="cd-log-info">
+                    <span class="cd-log-name">{{ __('Add Money') }}</span>
+                    <span class="cd-log-date">{{ $tx->created_at ? $tx->created_at->diffForHumans() : '' }}</span>
                 </div>
-                <span class="rw-tx-amount positive">+${{ number_format($tx->request_amount ?? 0, 2) }}</span>
+                <span class="cd-log-amount">+${{ number_format($tx->request_amount ?? 0, 2) }}</span>
             </div>
             @empty
-            <div class="rw-empty" style="padding:20px;">
-                <span class="rw-empty-title">{{ __('No deposits yet') }}</span>
-            </div>
+            <div class="cd-log-empty">{{ __('No deposits yet') }}</div>
             @endforelse
         </div>
     </div>
