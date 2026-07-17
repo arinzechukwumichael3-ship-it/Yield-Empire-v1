@@ -1303,7 +1303,6 @@ input, textarea { font-family: inherit; }
 @media (max-width: 991px) {
     .sidebar { display: none !important; }
     .navbar-wrapper { display: none !important; }
-    .mobile-app-header { display: none !important; }
 }
 
 @media (min-width: 992px) {
@@ -1311,7 +1310,6 @@ input, textarea { font-family: inherit; }
     body > .global-nav,
     .global-nav { display: none !important; }
     .glass-bottom-nav { display: none !important; }
-    .mobile-app-header { display: none !important; }
 
     /* Reveal desktop chrome */
     .sidebar { display: block; }

@@ -148,39 +148,6 @@
     </div>
 </nav>
 
-<!-- Mobile App Header -->
-<header class="mobile-app-header d-flex d-lg-none">
-    <div class="mobile-header-left">
-        <a href="{{ setRoute('user.profile.index') }}" class="mobile-user-avatar">
-            <img src="{{ auth()->user()->userImage }}" alt="{{ auth()->user()->username }}">
-        </a>
-        <span class="mobile-greeting">{{ __('Hi') }}, {{ auth()->user()->firstname ?? auth()->user()->username }}</span>
-    </div>
-    <div class="mobile-header-center">
-        <a href="{{ setRoute('user.investments.offers') }}" class="earn-bonus-btn">
-            💰 {{ __('Earn 3% Bonus') }}
-        </a>
-    </div>
-    <div class="mobile-header-right">
-        <label class="mobile-theme-btn" for="mobile-theme-checkbox" aria-label="Toggle Dark Mode">
-            <input type="checkbox" id="mobile-theme-checkbox" />
-            <i class="las la-moon"></i>
-        </label>
-        @php
-            if (!isset($user_notifications)) {
-                $user_notifications = get_user_notifications();
-                $unread_count = $user_notifications->where('seen', 0)->count();
-            }
-        @endphp
-        <button class="mobile-notif-btn" id="mobileNotifToggle" aria-label="Notifications">
-            <i class="las la-bell"></i>
-            @if($unread_count > 0)
-                <span class="mobile-notif-badge">{{ $unread_count > 9 ? '9+' : $unread_count }}</span>
-            @endif
-        </button>
-    </div>
-</header>
-
 @push('script')
 <script>
     (function(){
