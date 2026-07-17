@@ -2547,13 +2547,13 @@ html { scroll-behavior: smooth; }
 /* =============================================
    RISE APP — GLOBAL NAV PADDING
    ============================================= */
-.rise-app { padding-top: 60px; }
+.rise-app { padding-top: 16px; }
 
 /* =============================================
    DASHBOARD — Rebuilt Target Spec
    ============================================= */
 .dash-page {
-    padding: 16px;
+    padding: 0 16px 16px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -3202,7 +3202,7 @@ html { scroll-behavior: smooth; }
    FEED PAGE — Redesigned Cards
    ============================================= */
 .feed-page {
-    padding: 16px;
+    padding: 0 16px 16px;
     display: flex;
     flex-direction: column;
     gap: 16px;
