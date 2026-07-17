@@ -48,7 +48,10 @@ trait OtherBankTransferTrait{
      */
     public function otherBankTransferSubmit($validated,$fees_and_charge,$temp_data){
 
-        $user_wallet = UserWallet::where('user_id', Auth::id())->first();
+        $user_wallet = UserWallet::active()->where('user_id', Auth::id())
+            ->whereHas('currency', function ($query) use ($validated) { $query->where('code', $validated['currency']); })
+            ->first();
+        if(!$user_wallet) return back()->with(['error' => ['Your selected currency wallet was not found']]);
         $charge_calculation = $this->transferCharges($validated['amount'], $fees_and_charge, $user_wallet);
         $limit_response = transactionDailyAndMonthlyLimitCheck($charge_calculation, $fees_and_charge,$type = PaymentGatewayConst::TYPE_OTHER_BANK_TRANSFER); // Daily And Monthly Limit Check
         if($limit_response instanceof RedirectResponse) return $limit_response;
@@ -74,10 +77,13 @@ trait OtherBankTransferTrait{
      */
     public function otherBankTransferPreviewSubmit(TemporaryData $temp_data){
 
-        $sender_wallet = UserWallet::active()->where('user_id', Auth::id())->first();
-        if(!$sender_wallet) return back()->with(['error' => ['Your wallet not found']]);
-
         $charges = $temp_data->data->charges;
+        $sender_currency = $charges->sender_currency ?? null;
+
+        $sender_wallet = UserWallet::active()->where('user_id', Auth::id())
+            ->whereHas('currency', function ($query) use ($sender_currency) { $query->where('code', $sender_currency); })
+            ->first();
+        if(!$sender_wallet) return back()->with(['error' => ['Your wallet not found']]);
         if($charges->payable > $sender_wallet->balance) return back()->with(['error' => ['Your wallet balance is insufficient']]);
 
         $trx_id = generateTrxString('transactions','trx_id','FT-',14);

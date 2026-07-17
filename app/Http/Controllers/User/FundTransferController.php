@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use App\Models\TemporaryData;
+use App\Models\UserWallet;
 use App\Constants\GlobalConst;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -79,6 +80,10 @@ class FundTransferController extends Controller
         $fees_and_charge = TransactionSetting::whereSlug($temp_data->data->beneficiary->method->slug)->active()->first();
 
         if(!$fees_and_charge) return redirect()->route('user.fund-transfer.index')->with(['error'=> ['Fess And Charge Not Defined, Please Contact With Support!']]);
+
+        $user_wallets = UserWallet::where('user_id', auth()->id())->active()->with('currency')->get();
+        $is_own_bank  = $fees_and_charge->title == GlobalConst::TRX_OWN_BANK_TRANSFER;
+
         if($fees_and_charge->title == GlobalConst::TRX_OWN_BANK_TRANSFER){
             $user_daily_total_transactions = Transaction::where('user_id',auth()->user()->id)->OwnBankTransfer()->today()->get()->sum('request_amount');
             $remaining_daily_amount         = $fees_and_charge->daily_limit - $user_daily_total_transactions;
@@ -91,7 +96,7 @@ class FundTransferController extends Controller
             $remaining_monthly_amount         = $fees_and_charge->monthly_limit - $user_monthly_total_transactions;
         }
         
-        return view('user.sections.fund-transfer.create', compact('token','page_title','fees_and_charge','temp_data','remaining_daily_amount','remaining_monthly_amount'));
+        return view('user.sections.fund-transfer.create', compact('token','page_title','fees_and_charge','temp_data','remaining_daily_amount','remaining_monthly_amount','user_wallets','is_own_bank'));
     }
     /**
      *  Fund Transfer Submit
@@ -105,6 +110,7 @@ class FundTransferController extends Controller
             'temp_token' => 'required|exists:temporary_datas,identifier',
             'amount'     => 'numeric|required|gt:0',
             'remarks'    => 'nullable|string',
+            'currency'   => 'required|string|exists:currencies,code',
         ]);
 
         $validated = $validator->validate();
@@ -187,9 +193,9 @@ class FundTransferController extends Controller
      */
     public function transferCharges($sender_amount,$charges,$user_wallet) {
         $data['request_amount']        = $sender_amount;
-        $data['sender_currency']       = get_default_currency_code();
+        $data['sender_currency']       = $user_wallet->currency->code;
         $data['receiver_amount']       = $sender_amount;
-        $data['receiver_currency']     = get_default_currency_code();
+        $data['receiver_currency']     = $user_wallet->currency->code;
         $data['receiver_currency_id']  = $user_wallet->currency->id;
         $data['percent_charge']        = ($sender_amount / 100) * $charges->percent_charge ?? 0;
         $data['fixed_charge']          = $charges->fixed_charge ?? 0;

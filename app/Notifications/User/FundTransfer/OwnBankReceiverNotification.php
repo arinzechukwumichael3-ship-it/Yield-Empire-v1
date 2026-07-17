@@ -57,8 +57,8 @@ class OwnBankReceiverNotification extends Notification
                 ->line("Your Fund Transfer request send successfully")
                 ->line("Transaction Id: " .$trx_id)
                 ->line("Received Amount: " .  get_amount($data->receive_amount, $data->payment_currency))
-                ->line("Sender Full Name: " .  $user->fullName)
-                ->line("Sender Account Number: " .  $user->account_no)
+                ->line("Sender Full Name: " .  ($data->user->fullname ?? 'N/A'))
+                ->line("Sender Account Number: " .  ($data->user->account_no ?? 'N/A'))
                 ->line("Date And Time: " .$dateTime)
                 ->line('Thank you for using our application!');
     }

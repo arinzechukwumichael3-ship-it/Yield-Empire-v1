@@ -16,9 +16,19 @@
                         <div class="input-group currency-type">
                             <input type="number" class="form--control" name="amount" placeholder="{{ __('Enter Amount') }}">
                             <div class="currency">
-                                <p>{{ get_default_currency_code() }}</p>
+                                <p id="amountCurrency">{{ get_default_currency_code() }}</p>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-xl-12 col-lg-12 form-group">
+                        <label>{{ __('Transfer From (Currency)') }} <span>*</span></label>
+                        <select class="form--control" name="currency" id="transferCurrency">
+                            @foreach($user_wallets as $uw)
+                                @if($uw->currency)
+                                <option value="{{ $uw->currency->code }}" {{ $uw->currency->default ? 'selected' : '' }}>{{ $uw->currency->code }} ({{ $uw->currency->symbol }}) - {{ get_amount($uw->balance, $uw->currency->code) }}</option>
+                                @endif
+                            @endforeach
+                        </select>
                     </div>
                     <div class="col-xl-12 col-lg-12 form-group">
                         <label>{{__('Remarks')}} <span>({{ __('Optional') }})</span></label>
@@ -195,6 +205,12 @@
 @push('script')
     <script>
     let defaultCurrency = "{{ get_default_currency_code() }}";
+    function syncCurrency(){
+        defaultCurrency = $("#transferCurrency").val() || defaultCurrency;
+        $("#amountCurrency").text(defaultCurrency);
+    }
+    $("#transferCurrency").on("change", function(){ syncCurrency(); run(); });
+    syncCurrency();
     let precision = 2;
     var limitText = "{{ __('Limit') }}";
     var chargeText = "{{ __('Charge') }}";

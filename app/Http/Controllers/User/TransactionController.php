@@ -36,10 +36,10 @@ class TransactionController extends Controller
 
     public function index($slug = null){
         if($slug != null){
-            $transactions = Transaction::auth()->where("type",$this->slugValue($slug))->orderByDesc("id")->paginate(12);
+            $transactions = Transaction::auth()->orWhere('receiver_id', auth()->id())->where("type",$this->slugValue($slug))->orderByDesc("id")->paginate(12);
             $page_title = ucwords(remove_special_char($slug," ")) . " Log";
         }else {
-            $transactions = Transaction::auth()->orderByDesc("id")->paginate(12);
+            $transactions = Transaction::auth()->orWhere('receiver_id', auth()->id())->orderByDesc("id")->paginate(12);
             $page_title = "Transaction Log";
         }
         return view('user.sections.transactions.index', compact('transactions', 'page_title'));
@@ -64,7 +64,7 @@ class TransactionController extends Controller
         $validated = $validator->validate();
 
         try{
-            $transactions = Transaction::auth()->search($validated['text'])->take(10)->get();
+            $transactions = Transaction::auth()->orWhere('receiver_id', auth()->id())->search($validated['text'])->take(10)->get();
         }catch(Exception $e){
             $error = ['error' => ['Something went wrong!. Please try again.']];
             return Response::error($error,null,500);

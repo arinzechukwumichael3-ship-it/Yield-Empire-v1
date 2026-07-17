@@ -61,8 +61,8 @@ class OwnBankSenderNotification extends Notification
                 ->line("Fees & Charges: " . get_amount($data->total_charge).' '. $data->payment_currency)
                 ->line("Receiver Will Get: " .  get_amount($data->receive_amount, $data->payment_currency))
                 ->line("Total Payable Amount: " . get_amount($data->total_payable, $data->payment_currency))
-                ->line($data->fundReceiverInfo->receiver_number_title.": " . $data->fundReceiverInfo->receiver_number_value)
-                ->line($data->fundReceiverInfo->receiver_holder_title.": " . $data->fundReceiverInfo->receiver_holder_value)
+                ->line("Recipient: " . ($data->details->beneficiary->account_holder_name ?? 'N/A'))
+                ->line("Recipient Account: " . ($data->details->beneficiary->account_number ?? 'N/A'))
                 ->line("Status: ". $data->stringStatus->value)
                 ->line("Date And Time: " .$dateTime)
                 ->line('Thank you for using our application!');

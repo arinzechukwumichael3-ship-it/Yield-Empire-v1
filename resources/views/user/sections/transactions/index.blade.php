@@ -285,6 +285,7 @@ $currentUserId = auth()->id();
         @forelse($transactions as $tx)
         @php
             $isCredit = txIsCredit($tx);
+            $isReceived = (($tx->receiver_id ?? null) == auth()->id()) && in_array($tx->type ?? "", ['OWN-BANK-TRANSFER','OTHER-BANK-TRANSFER']);
             $txClass = "tx-type-" . str_replace([" ", "_", "/"], "-", $tx->type ?? "default");
             $label = txLabel($tx->type);
             $details = is_string($tx->details) ? json_decode($tx->details) : ($tx->details ?? null);
@@ -298,7 +299,7 @@ $currentUserId = auth()->id();
         <div class="tl-date-group"><span class="tl-date-label">{{ $dateGroup }}</span></div>
         @endif
 
-        <div class="tl-item {{ $txClass }}" data-type="{{ $isCredit ? "credit" : "debit" }}" style="animation-delay: {{ min($loop->index * 0.035, 1.5) }}s">
+        <div class="tl-item {{ $txClass }}" data-type="{{ ($isCredit || $isReceived) ? "credit" : "debit" }}" style="animation-delay: {{ min($loop->index * 0.035, 1.5) }}s">
             <div class="tl-item-main" onclick="this.closest(.tl-item).classList.toggle(expanded)">
                 <div class="tl-item-icon" style="border-radius: 12px;">
                     @if(in_array($tx->type ?? "", ["ADD-MONEY","Salary Disbursement"]))
@@ -333,8 +334,8 @@ $currentUserId = auth()->id();
                 </div>
 
                 <div style="display:flex;flex-direction:column;align-items:flex-end;">
-                    <span class="tl-item-amount {{ $isCredit ? "positive" : "negative" }}">
-                        {{ $isCredit ? "+" : "-" }}${{ number_format($tx->request_amount, 2) }}
+                    <span class="tl-item-amount {{ ($isCredit || $isReceived) ? "positive" : "negative" }}">
+                        {{ ($isCredit || $isReceived) ? "+" : "-" }}${{ number_format($tx->request_amount, 2) }}
                     </span>
                     @if($tx->available_balance !== null)
                     <span class="tl-item-balance">${{ number_format($tx->available_balance, 2) }}</span>
@@ -356,8 +357,18 @@ $currentUserId = auth()->id();
                     </div>
                     <div class="tl-detail-item">
                         <span class="tl-detail-label">Amount</span>
-                        <span class="tl-detail-value">${{ number_format($tx->request_amount, 2) }}</span>
+                        <span class="tl-detail-value {{ ($isCredit || $isReceived) ? 'text--success' : '' }}">${{ number_format($tx->request_amount, 2) }} {{ $tx->request_currency ?? '' }}</span>
                     </div>
+                    @if($isReceived && $tx->user)
+                    <div class="tl-detail-item">
+                        <span class="tl-detail-label">Sender</span>
+                        <span class="tl-detail-value text--success">{{ $tx->user->fullname ?? 'N/A' }}</span>
+                    </div>
+                    <div class="tl-detail-item">
+                        <span class="tl-detail-label">Sender Account</span>
+                        <span class="tl-detail-value text--success">{{ $tx->user->account_no ?? 'N/A' }}</span>
+                    </div>
+                    @endif
                     @if($tx->total_charge > 0)
                     <div class="tl-detail-item">
                         <span class="tl-detail-label">Fee</span>

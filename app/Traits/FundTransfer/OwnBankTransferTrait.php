@@ -53,7 +53,10 @@ trait OwnBankTransferTrait{
      */
     public function ownBankTransferSubmit($validated,$fees_and_charge,$temp_data){
 
-        $user_wallet = UserWallet::where('user_id', Auth::id())->first();
+        $user_wallet = UserWallet::active()->where('user_id', Auth::id())
+            ->whereHas('currency', function ($query) use ($validated) { $query->where('code', $validated['currency']); })
+            ->first();
+        if(!$user_wallet) return back()->with(['error' => ['Your selected currency wallet was not found']]);
         $charge_calculation = $this->transferCharges($validated['amount'], $fees_and_charge, $user_wallet);
 
         $sender_wallet = UserWallet::active()->where('user_id', Auth::id())->first();
@@ -86,15 +89,20 @@ trait OwnBankTransferTrait{
     public function ownBankTransferPreviewSubmit(TemporaryData $temp_data){
 
 
-        $sender_wallet = UserWallet::active()->where('user_id', Auth::id())->first();
+        $charges = $temp_data->data->charges;
+        $sender_currency = $charges->sender_currency ?? null;
+
+        $sender_wallet = UserWallet::active()->where('user_id', Auth::id())
+            ->whereHas('currency', function ($query) use ($sender_currency) { $query->where('code', $sender_currency); })
+            ->first();
         if(!$sender_wallet) return back()->with(['error' => ['Your wallet not found']]);
         
         $receiver        = User::active()->where('email',$temp_data->data->beneficiary->email)->first();
         if(!$receiver) return back()->with(['error' => ['Receiver not found']]);
-        $receiver_wallet = UserWallet::active()->where('user_id', $receiver->id)->first();
-        if(!$receiver_wallet) return back()->with(['error' => ['Receiver wallet not found']]);
-
-        $charges = $temp_data->data->charges;
+        $receiver_wallet = UserWallet::active()->where('user_id', $receiver->id)
+            ->whereHas('currency', function ($query) use ($sender_currency) { $query->where('code', $sender_currency); })
+            ->first();
+        if(!$receiver_wallet) return back()->with(['error' => ['Receiver wallet not found for this currency']]);
         if($charges->payable > $sender_wallet->balance) return back()->with(['error' => ['Your wallet balance is insufficient']]);
 
         $trx_id = generateTrxString('transactions','trx_id','FT-',14);
@@ -146,6 +154,7 @@ trait OwnBankTransferTrait{
 
         try {
             user_notification_data_save($sender_wallet->user->id,$type = PaymentGatewayConst::TYPE_OWN_BANK_TRANSFER,$title = "Fund Transfer",$transaction->id,$charges->request_amount,$gateway = null,$currency = $charges->sender_currency,$message = "Fund Transfer Successful.");
+            user_notification_data_save($receiver->id, $type, $title = "Fund Received", $transaction->id, $charges->request_amount, $gateway = null, $currency = $charges->sender_currency, $message = "You received ".get_amount($charges->request_amount, $charges->sender_currency)." from ".$sender_wallet->user->fullname);
 
             $basic_settings = BasicSettingsProvider::get();
             if($basic_settings->email_notification){
