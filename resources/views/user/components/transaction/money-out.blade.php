@@ -3,8 +3,12 @@
     $precesion = 2;
     $d = $item->details;
     if (is_string($d)) { $d = @json_decode($d); }
+    if (is_array($d)) { $d = (object) $d; }
     if (!is_object($d)) { $d = (object) []; }
-    $charges = $d->charges ?? null;
+    $chargesRaw = $d->charges ?? null;
+    if (is_string($chargesRaw)) { $chargesRaw = @json_decode($chargesRaw); }
+    if (is_array($chargesRaw)) { $chargesRaw = (object) $chargesRaw; }
+    $charges = (is_object($chargesRaw)) ? $chargesRaw : null;
     $walletCur = ($item->user_wallet && $item->user_wallet->currency) ? $item->user_wallet->currency->code : "";
     $senderCur = $charges->sender_currency_code ?? $walletCur;
     $gwCur = $charges->gateway_currency_code ?? $senderCur;
