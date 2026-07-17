@@ -116,6 +116,48 @@
 .la-btn-sm.info { background: rgba(59,130,246,0.1); color: var(--accent); }
 .la-empty { text-align: center; padding: 40px; color: var(--text-muted); }
 
+/* Loan cards (redesigned list) */
+.la-loans { display: flex; flex-direction: column; gap: 14px; }
+.la-loan-card {
+    background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px;
+    padding: 16px; box-shadow: var(--card-shadow);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer; outline: none;
+    animation: laCardIn 0.4s ease both;
+}
+.la-loan-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+.la-loan-card:active { transform: scale(0.985); }
+.la-loan-card:focus-visible { border-color: var(--accent); }
+.la-loan-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.la-loan-name { font-size: 16px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+.la-loan-country { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 2px; }
+.la-loan-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; margin-bottom: 14px; }
+.la-loan-stat { display: flex; flex-direction: column; gap: 3px; }
+.la-loan-stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
+.la-loan-stat-value { font-size: 15px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.3px; }
+.la-loan-progress { margin-bottom: 14px; }
+.la-loan-progress-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 12px; }
+.la-loan-progress-head span:first-child { color: var(--text-secondary); font-weight: 500; }
+.la-loan-progress-pct { color: var(--success); font-weight: 700; }
+.la-loan-actions { display: flex; gap: 8px; }
+.la-loan-actions .la-btn-sm { flex: 1; justify-content: center; }
+.la-loans-empty {
+    text-align: center; padding: 48px 24px; background: var(--bg-card);
+    border: 1px dashed var(--border-color); border-radius: 16px;
+}
+.la-loans-empty-icon {
+    width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 14px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(59,130,246,0.12); color: var(--accent);
+}
+.la-loans-empty h3 { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.la-loans-empty p { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+@keyframes laCardIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+    .la-loan-card { animation: none; }
+    .la-bar-fill { transition: none; }
+}
+
 /* Light mode */
 [data-theme="light"] .la-stat-card { background: var(--bg-primary); border-color: var(--text-secondary); }
 [data-theme="light"] .la-stat-value { color: var(--text-primary); }
@@ -126,6 +168,9 @@
 [data-theme="light"] .la-payoff-title { color: var(--text-primary); }
 [data-theme="light"] .la-table td { background: var(--bg-primary); }
 [data-theme="light"] .la-search-bar input { background: var(--bg-primary); border-color: var(--text-secondary); color: var(--text-primary); }
+[data-theme="light"] .la-loan-card { background: var(--bg-primary); border-color: var(--border-color); }
+[data-theme="light"] .la-loan-card:hover { box-shadow: 0 8px 24px rgba(15,23,42,0.12); }
+[data-theme="light"] .la-loans-empty { background: var(--bg-primary); }
 </style>
 @endpush
 
@@ -279,48 +324,74 @@
         </div>
     </div>
 
-    {{-- ===== Loans Table ===== --}}
+    {{-- ===== Loans (card list) ===== --}}
     <div class="la-table-section">
         <div class="la-search-bar">
             <span class="la-search-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </span>
-            <input type="text" id="loanSearch" placeholder="{{ __('Search loans...') }}">
+            <input type="text" id="loanSearch" placeholder="{{ __('Search loans...') }}" value="{{ request('q') }}">
         </div>
 
-        <table class="la-table">
-            <thead>
-                <tr>
-                    <th>{{ __('Product') }}</th>
-                    <th>{{ __('Principal') }}</th>
-                    <th>{{ __('Rate') }}</th>
-                    <th>{{ __('Balance') }}</th>
-                    <th>{{ __('Status') }}</th>
-                    <th>{{ __('Next Due') }}</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($loans as $loan)
-                <tr>
-                    <td>{{ $loan->product->name ?? __('Custom') }}@if($loan->country)<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">{{ $loan->country }}</div>@endif</td>
-                    <td>${{ number_format($loan->principal, 2) }} <span style="font-size:11px;color:var(--text-muted);">{{ $loan->currency ?? 'USD' }}</span></td>
-                    <td>{{ number_format($loan->interest_rate, 1) }}%</td>
-                    <td>${{ number_format($loan->balance_principal, 2) }}</td>
-                    <td><span class="la-badge {{ $loan->status }}">{{ ucfirst($loan->status) }}</span></td>
-                    <td>{{ $loan->next_due_date ? $loan->next_due_date->format('M d, Y') : '—' }}</td>
-                    <td>
-                        <div style="display:flex;gap:6px;">
-                            <a href="{{ route('user.loans.schedule', $loan->id) }}" class="la-btn-sm info">{{ __('Schedule') }}</a>
-                            <a href="{{ route('user.loans.edit', $loan->id) }}" class="la-btn-sm primary">{{ __('Edit') }}</a>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr><td colspan="7" class="la-empty">{{ __('No loans found. Apply for your first loan!') }}</td></tr>
-                @endforelse
-            </tbody>
-        </table>
+        <div class="la-loans">
+            @forelse($loans as $i => $loan)
+            @php
+                $lp = (float)($loan->principal ?? 0);
+                $lb = (float)($loan->balance_principal ?? 0);
+                $lpaid = $lp > 0 ? round((($lp - $lb) / $lp) * 100, 1) : 0;
+            @endphp
+            <div class="la-loan-card" style="animation-delay: {{ $i * 50 }}ms" tabindex="0"
+                 onclick="if(window.getSelection().toString()===''){window.location='{{ route('user.loans.schedule', $loan->id) }}'}">
+                <div class="la-loan-top">
+                    <div class="la-loan-name">
+                        {{ $loan->product->name ?? __('Custom') }}
+                        @if($loan->country)<span class="la-loan-country">{{ $loan->country }}</span>@endif
+                    </div>
+                    <span class="la-badge {{ $loan->status }}">{{ ucfirst($loan->status) }}</span>
+                </div>
+                <div class="la-loan-stats">
+                    <div class="la-loan-stat">
+                        <span class="la-loan-stat-label">{{ __('Principal') }}</span>
+                        <span class="la-loan-stat-value">${{ number_format($lp, 2) }}</span>
+                    </div>
+                    <div class="la-loan-stat">
+                        <span class="la-loan-stat-label">{{ __('Rate') }}</span>
+                        <span class="la-loan-stat-value">{{ number_format($loan->interest_rate, 1) }}%</span>
+                    </div>
+                    <div class="la-loan-stat">
+                        <span class="la-loan-stat-label">{{ __('Balance') }}</span>
+                        <span class="la-loan-stat-value">${{ number_format($lb, 2) }}</span>
+                    </div>
+                    <div class="la-loan-stat">
+                        <span class="la-loan-stat-label">{{ __('Next Due') }}</span>
+                        <span class="la-loan-stat-value">{{ $loan->next_due_date ? $loan->next_due_date->format('M d, Y') : '—' }}</span>
+                    </div>
+                </div>
+                <div class="la-loan-progress">
+                    <div class="la-loan-progress-head">
+                        <span>{{ __('Paid off') }}</span>
+                        <span class="la-loan-progress-pct">{{ $lpaid }}%</span>
+                    </div>
+                    <div class="la-bar">
+                        <div class="la-bar-fill green" style="width:0" data-fill="{{ $lpaid }}"></div>
+                    </div>
+                </div>
+                <div class="la-loan-actions">
+                    <a href="{{ route('user.loans.schedule', $loan->id) }}" class="la-btn-sm info" onclick="event.stopPropagation()">{{ __('Schedule') }}</a>
+                    <a href="{{ route('user.loans.edit', $loan->id) }}" class="la-btn-sm primary" onclick="event.stopPropagation()">{{ __('Edit') }}</a>
+                </div>
+            </div>
+            @empty
+            <div class="la-loans-empty">
+                <div class="la-loans-empty-icon">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h18v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/><path d="M3 8l2.5-4h13L21 8"/><path d="M12 12v5"/><path d="M9.5 14.5h5"/></svg>
+                </div>
+                <h3>{{ __('No loans yet') }}</h3>
+                <p>{{ __('Apply for your first loan to start building your credit profile.') }}</p>
+                <a href="{{ route('user.loans.create') }}" class="la-btn-sm primary">{{ __('Apply for a Loan') }} →</a>
+            </div>
+            @endforelse
+        </div>
 
         <div style="margin-top:16px;">
             {{ $loans->links() }}
@@ -339,19 +410,22 @@ document.getElementById('loanSearch')?.addEventListener('input', function() {
     window.location.href = url.toString();
 });
 
-// Animate progress bars and ring on scroll
+// Animate each loan card's progress bar filling from 0 to its actual value
 document.addEventListener('DOMContentLoaded', function() {
-    const observer = new IntersectionObserver(function(entries) {
+    const fills = document.querySelectorAll('.la-bar-fill[data-fill]');
+    if (!('IntersectionObserver' in window)) {
+        fills.forEach(function(b) { b.style.width = b.dataset.fill + '%'; });
+        return;
+    }
+    const io = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
             if (entry.isIntersecting) {
-                // Bars animate via CSS transition on width
-                // Ring animates via CSS transition on stroke-dashoffset (already set in HTML)
-                observer.unobserve(entry.target);
+                entry.target.style.width = entry.target.dataset.fill + '%';
+                io.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
-    const bars = document.querySelectorAll('.la-bar-fill');
-    bars.forEach(function(bar) { observer.observe(bar); });
+    }, { threshold: 0.2 });
+    fills.forEach(function(b) { io.observe(b); });
 });
 </script>
 @endpush
