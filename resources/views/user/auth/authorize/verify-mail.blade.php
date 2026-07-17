@@ -175,7 +175,7 @@
       document.getElementById('otpSubmit').classList.add('loading');
     });
 
-    var resendSeconds = parseInt("{{ $resend_time ?? 60 }}", 10) || 60;
+    var resendSeconds = 59;
     var remaining = resendSeconds;
     var timeEl = document.getElementById('time');
     var timerWrap = document.getElementById('timerWrap');
