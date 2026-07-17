@@ -15,10 +15,10 @@
                         <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
                     </svg>
                 </div>
-                <h4 class="title">{{ __('Transfer Money Successfully') }}.</h4>
+                <h4 class="title">{{ __('Withdrawal Request Submitted') }}.</h4>
+                <p class="text-center text-muted">{{ __('Please wait for admin confirmation.') }}</p>
                 <div class="recive-dwonload-btn">
-                    <a href="{{ setRoute('user.fund-transfer.index') }}" class="recive-btn"><i class="las la-angle-double-left"></i> {{ __('Transfer Again') }}</a>
-                    <a href="{{ route('user.fund-transfer.pdf.download', $trx_id) }}" class="recive-btn"><i class="las la-download"></i> {{__('Download PDF')}}</a>
+                    <a href="{{ setRoute('user.money-out.index') }}" class="recive-btn"><i class="las la-angle-double-left"></i> {{ __('Back to Withdraw') }}</a>
                 </div>
             </div>
         </div>
@@ -31,10 +31,10 @@
         <div class="banking-statement-area">
             <div class="receipt-head text-center mb-3">
                 <img src="{{ get_logo() }}" alt="Bank Logo" style="max-width:140px;">
-                <h3 class="mt-2">{{ __('Fund Transfer Receipt') }}</h3>
+                <h3 class="mt-2">{{ __('Withdrawal Receipt') }}</h3>
             </div>
             <div class="receipt-info mb-3">
-                <p><strong>{{ __('Transfer Date') }} :</strong> {{ dateFormat('d F Y', @$transaction->created_at) }}</p>
+                <p><strong>{{ __('Date') }} :</strong> {{ dateFormat('d F Y', @$transaction->created_at) }}</p>
                 <p><strong>{{ __('Account Number') }} :</strong> {{ @$transaction->user->account_no }}</p>
                 <p><strong>{{ __('Account Holder') }} :</strong> {{ @$transaction->user->fullname }}</p>
             </div>
@@ -45,22 +45,10 @@
                             <td>{{ __('Transaction Id') }}</td>
                             <td>{{ @$transaction->trx_id }}</td>
                         </tr>
-                        @if (@$transaction->details->beneficiary->method)
                         <tr>
-                            <td>{{ __('Transaction Type') }}</td>
-                            <td>{{ @$transaction->details->beneficiary->method->name }}</td>
+                            <td>{{ __('Gateway') }}</td>
+                            <td>{{ @$transaction->gateway_currency->name }}</td>
                         </tr>
-                        @endif
-                        @if (@$transaction->fundReceiverInfo)
-                        <tr>
-                            <td>{{ @$transaction->fundReceiverInfo->receiver_holder_title }}</td>
-                            <td>{{ @$transaction->fundReceiverInfo->receiver_holder_value }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ @$transaction->fundReceiverInfo->receiver_number_title }}</td>
-                            <td>{{ @$transaction->fundReceiverInfo->receiver_number_value }}</td>
-                        </tr>
-                        @endif
                         <tr>
                             <td>{{ __('Request Amount') }}</td>
                             <td>{{ get_amount(@$transaction->request_amount, @$transaction->request_currency) }}</td>

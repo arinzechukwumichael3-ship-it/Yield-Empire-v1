@@ -234,6 +234,7 @@ Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guar
         Route::post('instruction/submit/{token}','instructionSubmit')->name('instruction.submit');
         Route::get('preview/{token}','preview')->name('preview');
         Route::post('preview/submit','previewSubmit')->name('preview.submit');
+        Route::get('transaction/success/{trx_id}','transactionSuccess')->name('transaction.success');
     });
     // OTP Verification Mail/SMS Send
     Route::controller(AuthorizationController::class)->prefix('verification-code')->name('verification-code.')->group(function(){

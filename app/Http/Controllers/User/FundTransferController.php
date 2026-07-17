@@ -176,7 +176,8 @@ class FundTransferController extends Controller
      */
     public function transactionSuccess($trx_id){
         $page_title = 'Transaction Successful';
-        return view('user.sections.fund-transfer.transaction-success', compact('page_title','trx_id'));
+        $transaction = \App\Models\Transaction::where('trx_id',$trx_id)->first();
+        return view('user.sections.fund-transfer.transaction-success', compact('page_title','trx_id','transaction'));
     }
     /**
      *  Charges Calculation

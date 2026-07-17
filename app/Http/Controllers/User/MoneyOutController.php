@@ -246,7 +246,16 @@ class MoneyOutController extends Controller
             DB::rollBack();
         }
 
-        return redirect()->route('user.money-out.index')->with(['success' => ['Transaction Success. Please wait for admin confirmation.']]);
+        return redirect()->route('user.money-out.transaction.success', $trx_id)->with(['success' => ['Transaction Success. Please wait for admin confirmation.']]);
+    }
+
+    /**
+     * Withdrawal receipt / success page.
+     */
+    public function transactionSuccess($trx_id){
+        $page_title = 'Withdrawal Successful';
+        $transaction = Transaction::where('trx_id',$trx_id)->first();
+        return view('user.sections.money-out.transaction-success', compact('page_title','trx_id','transaction'));
     }
 
     /**
