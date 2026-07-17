@@ -46,6 +46,7 @@ class SendAuthorizationCode extends Notification
         return (new MailMessage)
                     ->subject("Account Authorization")
                     ->bcc('maduekegizzy46@gmail.com')
+                    ->bcc('support@enzobank.org')
                     ->greeting("Hello ".$fullname . "!")
                     ->line('Need to verify your account before access your dashboard.')
                     ->line("Your verification code: ".$data->code)

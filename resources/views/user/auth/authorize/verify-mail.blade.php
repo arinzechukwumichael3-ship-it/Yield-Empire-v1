@@ -56,7 +56,7 @@
   .reg-otp-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:18px}
   .reg-otp-inputs input{
     width:52px;height:60px;text-align:center;font-size:24px;font-weight:700;
-    border:2px solid #dfe4f0;border-radius:14px;color:#0b1f4d;background:#f7f9ff;
+    border:2px solid #dfe4f0;border-radius:14px;color:#0b1f4d !important;background:#f7f9ff;-webkit-text-fill-color:#0b1f4d !important;
     transition:border-color .2s, box-shadow .2s, transform .15s; outline:none;
   }
   .reg-otp-inputs input:focus{
