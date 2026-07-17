@@ -118,12 +118,12 @@
         <form class="reg-otp-form" id="otpForm" method="POST" action="{{ route('user.authorize.mail.verify', $token) }}">
             @csrf
             <div class="reg-otp-inputs" id="otpInputs">
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required>
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required>
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required>
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required>
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required>
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required>
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
             </div>
 
             <div class="reg-otp-timer" id="timerWrap">{{ __('Resend code in') }} <span id="time">--</span></div>
