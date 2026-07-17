@@ -193,6 +193,7 @@ Route::controller(StrowalletVirtualCardController::class)->middleware(['kyc.veri
     Route::controller(StatementController::class)->prefix('statements')->name('statements.')->group(function(){
         Route::get('/', 'index')->name('index');
         Route::get('/filter', 'filterStatement')->name('filter');
+        Route::get('/export', 'export')->name('export');
     });
 
     //setup pin

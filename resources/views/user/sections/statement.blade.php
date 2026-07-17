@@ -7,17 +7,17 @@
 @section('content')
 <div class="banking-statement">
     <form action="{{ setRoute('user.statements.filter') }}" method="GET">
-        
+
     <div class="row mb-10-none">
             <div class="col-lg-3 col-md-6 mb-10">
                 <label>{{ __('Filter By Date') }}</label>
-                <input type="text" class="form--control daterangepicker-filed" 
-                    placeholder="Select Date" 
-                    readonly 
+                <input type="text" class="form--control daterangepicker-filed"
+                    placeholder="Select Date"
+                    readonly
                     value="{{ (isset($_GET['from_date']) && !empty($_GET['from_date'])) || (isset($_GET['to_date']) && !empty($_GET['to_date'])) ? (isset($_GET['from_date']) ? $_GET['from_date'] : '') . (isset($_GET['from_date']) && isset($_GET['to_date']) ? ' To ' : '') . (isset($_GET['to_date']) ? $_GET['to_date'] : '') : '' }}">
                 <input type="hidden" name="from_date" id="from_date" value="{{ isset($_GET['from_date']) ? $_GET['from_date'] : '' }}">
                 <input type="hidden" name="to_date" id="to_date" value="{{ isset($_GET['to_date']) ? $_GET['to_date'] : '' }}">
-            </div>        
+            </div>
             <div class="col-lg-3 col-md-6 mb-10">
                 <label>{{ __('Filter By Trx Id') }}</label>
                 <input type="text" name="trx_id" class="form--control" placeholder="Trx Id" value="{{ isset($_GET['trx_id']) ? $_GET['trx_id'] : '' }}">
@@ -51,8 +51,11 @@
                 <div class="dawonload-statement">
                     <a href="{{ setRoute('user.statements.index') }}" class="btn--danger dawonload-btn"><i class="las la-download"></i>{{ __('Reset') }}</a>
                     @if (isset($transactions) && count($transactions) > 0)
-                        <input type="hidden" class="submit_type">
-                        <a href="#0" class="btn--base dawonload-btn pdf-button"><i class="las la-download"></i>{{ __('Download PDF') }}</a>
+                        @php
+                            $exportParams = request()->only(['trx_id','from_date','to_date','type','status']);
+                            $exportUrl = route('user.statements.export') . (count($exportParams) ? '?' . http_build_query($exportParams) : '');
+                        @endphp
+                        <a href="{{ $exportUrl }}" class="btn--base dawonload-btn"><i class="las la-download"></i>{{ __('Download PDF') }}</a>
                     @endif
                 </div>
             </div>
@@ -133,12 +136,6 @@
                 executeLogSearch();
             }
         });
-
-        $(document).on("click",".pdf-button", function() {
-            $(this).parents("form").find(".submit_type").attr("name","submit_type").val("EXPORT");
-            $(this).parents("form").submit();
-        });
-
     </script>
 
 @endpush
