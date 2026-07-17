@@ -1,92 +1,131 @@
-@extends('user.layouts.master')
+@extends('user.layouts.rise-master')
+
+@push('css')
+<style>
+.inv-offer-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+.inv-offer-name { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.2; }
+.inv-offer-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.inv-offer-section { margin-top: 12px; }
+.inv-offer-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px; }
+.inv-offer-value { font-size: 13px; color: var(--text-secondary); }
+.inv-offer-tier { display: inline-block; margin-right: 8px; }
+.inv-offer-figures { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 14px; }
+.inv-offer-figures .inv-offer-label { margin-bottom: 2px; }
+.inv-offer-earn { font-size: 15px; font-weight: 700; color: #fff; }
+.inv-offer-roi { font-size: 15px; font-weight: 700; color: var(--success); text-align: right; }
+.inv-offer-goal { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+</style>
+@endpush
 
 @section('content')
-<div class="dashboard-list-area mt-20">
-    <div class="dashboard-header-wrapper">
-        <h4 class="title">{{ __($page_title) }}</h4>
-        <div class="dashboard-btn-wrapper d-flex align-items-center gap-2">
-            <form method="GET" class="d-flex gap-2">
-                <select name="type" class="form-select">
+
+<div class="am-header">
+    <h1 class="am-header-title">{{ __($page_title) }}</h1>
+</div>
+
+<div class="am-body">
+
+    <!-- Filter -->
+    <div class="am-card">
+        <div class="am-card-title">{{ __('Filter Opportunities') }}</div>
+        <form method="GET" class="d-flex gap-2 flex-wrap align-items-end">
+            <div class="am-input-wrap" style="flex: 1; min-width: 220px;">
+                <select name="type">
                     <option value="">{{ __('All Types') }}</option>
                     @foreach(['fixed_deposit'=>__('Fixed Deposits'),'mutual_fund'=>__('Mutual Funds'),'gov_bond'=>__('Government Bonds'),'corp_bond'=>__('Corporate Bonds'),'stock'=>__('Stocks'),'retirement'=>__('Retirement Accounts')] as $t => $label)
                         <option value="{{ $t }}" @selected(request('type')===$t)>{{ $label }}</option>
                     @endforeach
                 </select>
-                <button class="btn--base">{{ __('Filter') }}</button>
-            </form>
-        </div>
+            </div>
+            <button class="am-btn" style="width: auto; padding: 14px 28px; border-radius: 100px;">{{ __('Filter') }}</button>
+        </form>
     </div>
 
-    <div class="custom-card p-3 mb-3">
+    <!-- Compound Interest Calculator -->
+    <div class="am-card">
+        <div class="am-card-title">{{ __('Projected Returns Calculator') }}</div>
         <div class="row g-2 align-items-end">
             <div class="col-12 col-md-3">
-                <label class="form-label">{{ __('Investment Amount') }}</label>
-                <input type="number" step="0.01" min="0" id="cmp-amount" class="form-control" value="1000">
+                <label class="am-label">{{ __('Investment Amount') }}</label>
+                <div class="am-input-wrap">
+                    <input type="number" step="0.01" min="0" id="cmp-amount" value="1000">
+                </div>
             </div>
             <div class="col-12 col-md-3">
-                <label class="form-label">{{ __('Maturity (months)') }}</label>
-                <input type="number" min="1" id="cmp-months" class="form-control" value="12">
+                <label class="am-label">{{ __('Maturity (months)') }}</label>
+                <div class="am-input-wrap">
+                    <input type="number" min="1" id="cmp-months" value="12">
+                </div>
             </div>
             <div class="col-12 col-md-3">
-                <label class="form-label">{{ __('Compounding') }}</label>
-                <select id="cmp-frequency" class="form-select">
-                    <option value="12">{{ __('Monthly') }}</option>
-                    <option value="4">{{ __('Quarterly') }}</option>
-                    <option value="1">{{ __('Annually') }}</option>
-                    <option value="0">{{ __('Simple') }}</option>
-                </select>
+                <label class="am-label">{{ __('Compounding') }}</label>
+                <div class="am-input-wrap">
+                    <select id="cmp-frequency">
+                        <option value="12">{{ __('Monthly') }}</option>
+                        <option value="4">{{ __('Quarterly') }}</option>
+                        <option value="1">{{ __('Annually') }}</option>
+                        <option value="0">{{ __('Simple') }}</option>
+                    </select>
+                </div>
             </div>
             <div class="col-12 col-md-3">
-                <button class="btn--base w-100" id="cmp-calc">{{ __('Recalculate') }}</button>
+                <button class="am-btn" id="cmp-calc">{{ __('Recalculate') }}</button>
             </div>
         </div>
     </div>
 
+    <!-- Offers grid -->
     <div class="row g-3" id="offers-grid" data-assets='@json($assetPayload)'>
         @foreach($assets as $a)
-        <div class="col-12 col-md-6 col-xl-4">
-            <div class="custom-card p-3 h-100 d-flex flex-column">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="col-12 col-md-6 col-xl-4 d-flex">
+            <div class="inv-plan-card h-100" style="width: 100%;">
+                <div class="inv-offer-head">
                     <div>
-                        <div class="fw-semibold">{{ $a->name }}</div>
-                        <div class="small text-muted">{{ strtoupper(str_replace('_',' ', $a->offering_type)) }} • {{ $a->symbol }}</div>
+                        <div class="inv-offer-name">{{ $a->name }}</div>
+                        <div class="inv-offer-sub">{{ strtoupper(str_replace('_',' ', $a->offering_type)) }} • {{ $a->symbol }}</div>
                     </div>
                     <div class="text-end">
-                        <div class="badge bg-{{ $a->risk_score >=4 ? 'danger' : ($a->risk_score==3 ? 'warning' : 'success') }}">{{ __('Risk') }} {{ $a->risk_score }}</div>
+                        <span class="inv-badge {{ $a->risk_score >=4 ? 'closed' : ($a->risk_score==3 ? 'pending' : 'active') }}">
+                            <span class="inv-badge-dot"></span>{{ __('Risk') }} {{ $a->risk_score }}
+                        </span>
                     </div>
                 </div>
-                <div class="mt-1">
-                    <div class="small text-muted">{{ __('Tiered Rates') }}</div>
-                    <div class="small">
+
+                <div class="inv-offer-section">
+                    <div class="inv-offer-label">{{ __('Tiered Rates') }}</div>
+                    <div class="inv-offer-value">
                         @php $tiers = $a->tiers ?? []; @endphp
                         @if($tiers)
                             @foreach($tiers as $t)
-                                <span class="me-2">{{ get_amount($t['min']) }}–{{ $t['max'] ? get_amount($t['max']) : __('∞') }}: {{ number_format($t['rate'],2) }}%</span>
+                                <span class="inv-offer-tier">{{ get_amount($t['min']) }}–{{ $t['max'] ? get_amount($t['max']) : __('∞') }}: {{ number_format($t['rate'],2) }}%</span>
                             @endforeach
                         @else
                             <span>{{ number_format($a->base_yield,2) }}%</span>
                         @endif
                     </div>
                 </div>
-                <div class="mt-2">
-                    <div class="small text-muted">{{ __('Maturities') }}</div>
-                    <div class="small">{{ collect($a->maturities ?? [6,12,24])->implode(', ') }} {{ __('months') }}</div>
+
+                <div class="inv-offer-section">
+                    <div class="inv-offer-label">{{ __('Maturities') }}</div>
+                    <div class="inv-offer-value">{{ collect($a->maturities ?? [6,12,24])->implode(', ') }} {{ __('months') }}</div>
                 </div>
-                <div class="mt-3 d-flex justify-content-between align-items-center">
+
+                <div class="inv-offer-figures">
                     <div>
-                        <div class="small text-muted">{{ __('Projected Earnings') }}</div>
-                        <div class="fw-semibold" data-proj-earn="asset-{{ $a->id }}">—</div>
+                        <div class="inv-offer-label">{{ __('Projected Earnings') }}</div>
+                        <div class="inv-offer-earn" data-proj-earn="asset-{{ $a->id }}">—</div>
                     </div>
-                    <div class="text-end">
-                        <div class="small text-muted">{{ __('Projected ROI') }}</div>
-                        <div class="fw-semibold" data-proj-roi="asset-{{ $a->id }}">—</div>
+                    <div style="text-align: right;">
+                        <div class="inv-offer-label">{{ __('Projected ROI') }}</div>
+                        <div class="inv-offer-roi" data-proj-roi="asset-{{ $a->id }}">—</div>
                     </div>
                 </div>
-                <div class="mt-3">
-                    <div class="progress" style="height: 8px;">
-                        <div class="progress-bar" role="progressbar" style="width: 0%" data-goal-progress="asset-{{ $a->id }}"></div>
+
+                <div class="inv-offer-section">
+                    <div class="inv-progress">
+                        <div class="inv-progress-fill blue" data-goal-progress="asset-{{ $a->id }}"></div>
                     </div>
-                    <div class="d-flex justify-content-between small mt-1">
+                    <div class="inv-offer-goal">
                         <span>{{ __('Goal Progress') }}</span>
                         <span data-goal-text="asset-{{ $a->id }}">0%</span>
                     </div>
@@ -95,6 +134,7 @@
         </div>
         @endforeach
     </div>
+
     {{ $assets->links() }}
 </div>
 @endsection
