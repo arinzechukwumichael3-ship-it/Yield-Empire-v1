@@ -3,32 +3,44 @@
 @section('content')
 <div class="tow-fa-security">
     <div class="row mb-20-none">
+        <!-- Setup panel -->
         <div class="col-xl-6 col-lg-6 mb-20">
-            <div class="two-authentic mt-10">
+            <div class="two-authentic mt-10 animate-card" style="animation-delay:.05s">
                 <div class="dashboard-header-wrapper">
                     <h4 class="title">{{ $page_title }}</h4>
                 </div>
                 <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="twofa-badge {{ auth()->user()->two_factor_status ? 'active' : '' }}">
+                            <i class="las {{ auth()->user()->two_factor_status ? 'la-shield-check' : 'la-shield-alt' }}"></i>
+                        </div>
+                        <div class="twofa-status-text {{ auth()->user()->two_factor_status ? 'text--success' : 'text--warning' }}">
+                            {{ auth()->user()->two_factor_status ? __('2FA is Active') : __('2FA is Disabled') }}
+                        </div>
+                    </div>
+
                     <form class="card-form">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 form-group">
                                 <label>{{ __('Two Factor Authenticator') }}<span>*</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form--control" id="copy_text_2fa" value="{{ auth()->user()->two_factor_secret }}" readonly>
-                                    <div class="input-group-text" onclick="copyToClipBoard('copy_text_2fa')"><i class="las la-copy"></i></div>
+                                    <div class="input-group-text copy-btn" onclick="copyToClipBoard('copy_text_2fa')" title="Copy">
+                                        <i class="las la-copy"></i>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 form-group">
                                 <div class="qr-code-thumb text-center">
-                                    <img class="mx-auto" style="width:300px;height:300px" src="{{ $qr_code }}">
+                                    <img class="mx-auto twofa-qr" id="twofaQr" style="width:240px;height:240px" src="{{ $qr_code }}" alt="2FA QR">
                                 </div>
+                                <p class="text-center text-muted small mt-2">{{ __('Scan this QR code with your authenticator app.') }}</p>
                             </div>
                         </div>
                         <div class="col-xl-12 col-lg-12">
                             @if (auth()->user()->two_factor_status)
                                 <button type="button" class="btn--base bg--warning text-white w-100 active-deactive-btn">{{ __("Disable") }}</button>
-                                <br>
-                                <div class="text--danger mt-3">{{ __("Don't forget to add this application in your google authentication app. Otherwise you can't login in your account.") }}</div>
+                                <div class="text--danger mt-3 twofa-note">{{ __("Don't forget to add this application in your google authentication app. Otherwise you can't login in your account.") }}</div>
                             @else
                                 <button type="button" class="btn--base w-100 active-deactive-btn">{{ __("Enable") }}</button>
                             @endif
@@ -37,8 +49,10 @@
                 </div>
             </div>
         </div>
+
+        <!-- Info panel -->
         <div class="col-xl-6 col-lg-6 mb-20">
-            <div class="two-authentic mt-10">
+            <div class="two-authentic mt-10 animate-card" style="animation-delay:.15s">
                 <div class="dashboard-header-wrapper">
                     <h4 class="title">{{__('Google Authenticator')}}</h4>
                 </div>
@@ -49,8 +63,8 @@
                         <img class="mx-auto" src="{{ asset('frontend/') }}/images/element/google-authenticator.webp" alt="img">
                     </div>
                     <div class="2fa-btn pt-3">
-                        <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" class="btn--base mt-10 w-100" target="_blanck"><i class="fab fa-google-play ms-1"></i> {{ __('Download For Android') }}</a>
-                       <a href="https://apps.apple.com/us/app/google-authenticator/id388497605" class="btn--base mt-10 w-100" target="_blanck"><i class="fab fa-apple ms-1"></i> {{ __('Download For IOS') }}</a>
+                        <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" class="btn--base mt-10 w-100 store-btn" target="_blanck"><i class="fab fa-google-play ms-1"></i> {{ __('Download For Android') }}</a>
+                       <a href="https://apps.apple.com/us/app/google-authenticator/id388497605" class="btn--base mt-10 w-100 store-btn" target="_blanck"><i class="fab fa-apple ms-1"></i> {{ __('Download For IOS') }}</a>
                     </div>
                 </div>
             </div>
@@ -59,14 +73,55 @@
 </div>
 @endsection
 
+@push('style')
+<style>
+    .animate-card { opacity:0; transform: translateY(16px); animation: cardUp .5s ease forwards; }
+    @keyframes cardUp { to { opacity:1; transform:none; } }
+
+    .twofa-badge {
+        width: 64px; height: 64px; margin: 0 auto 10px; border-radius: 18px;
+        display:flex; align-items:center; justify-content:center; font-size:30px;
+        color:#fff; background: linear-gradient(135deg,#f0a020,#f5b942);
+        box-shadow: 0 10px 24px rgba(240,160,32,.30);
+        transition: all .3s ease;
+    }
+    .twofa-badge.active { background: linear-gradient(135deg,#22c55e,#16a34a); box-shadow: 0 10px 24px rgba(34,197,94,.30); }
+    .twofa-status-text { font-weight:700; font-size:15px; }
+
+    .copy-btn { cursor:pointer; transition: background .2s ease, transform .15s ease; }
+    .copy-btn:hover { background:#eef3ff; transform: scale(1.06); }
+    .copy-btn.copied { background:#dcfce7; color:#16a34a; }
+
+    .twofa-qr { border-radius: 16px; padding: 10px; background:#fff; border:1px solid #eef1f7; box-shadow:0 8px 24px rgba(20,30,60,.08); transition: transform .3s ease; }
+    .twofa-qr:hover { transform: scale(1.03); }
+
+    .store-btn { display:flex; align-items:center; justify-content:center; gap:8px; transition: transform .2s ease, box-shadow .2s ease; }
+    .store-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(42,125,225,.25); }
+
+    .twofa-note { font-size: 13px; line-height: 1.5; }
+</style>
+@endpush
+
 @push('script')
     <script>
-        $(".active-deactive-btn").click(function(){
-            var actionRoute =  "{{ setRoute('user.security.google.2fa.status.update') }}";
-            var target      = 1;
-            var btnText = $(this).text();
-            var message     = `{{ __("Are you sure to") }} <strong>${btnText}</strong> {{ __("2 factor authentication (Powered by google)?") }}`;
-            openAlertModal(actionRoute,target,message,btnText,"POST");
+    // copy feedback
+    (function(){
+        const btn = document.querySelector('.copy-btn');
+        if(!btn) return;
+        const orig = btn.innerHTML;
+        btn.addEventListener('click', function(){
+            btn.classList.add('copied');
+            btn.innerHTML = '<i class="las la-check"></i>';
+            setTimeout(function(){ btn.classList.remove('copied'); btn.innerHTML = orig; }, 1500);
         });
+    })();
+
+    $(".active-deactive-btn").click(function(){
+        var actionRoute =  "{{ setRoute('user.security.google.2fa.status.update') }}";
+        var target      = 1;
+        var btnText = $(this).text();
+        var message     = `{{ __("Are you sure to") }} <strong>${btnText}</strong> {{ __("2 factor authentication (Powered by google)?") }}`;
+        openAlertModal(actionRoute,target,message,btnText,"POST");
+    });
     </script>
 @endpush
