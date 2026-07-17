@@ -154,6 +154,8 @@
 </head>
 <body>
     @include('frontend.partials.body-overlay')
+    @include('user.partials.side-nav')
+    @include('user.partials.top-nav')
     @include('partials.global-nav')
 
     <div class="rise-app">
@@ -183,6 +185,18 @@
     @stack("script")
     <script>
         AOS.init({ duration: 1000, once: true });
+    </script>
+    <script>
+    // Copy Account Number (used by the desktop top-nav pill)
+    function copyAccountNo() {
+        var el = document.querySelector('.account-pill-v2');
+        var num = el ? el.getAttribute('data-account-number') : '';
+        if (navigator.clipboard && num) {
+            navigator.clipboard.writeText(num).then(function(){
+                if (typeof throwMessage === 'function') throwMessage('success', ['Account number copied']);
+            });
+        }
+    }
     </script>
     <script>
     (function(){

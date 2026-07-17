@@ -1285,3 +1285,69 @@ input, textarea { font-family: inherit; }
     }
 }
 
+
+
+/* ============================================================
+   DESKTOP VIEW — RISE USER PANEL
+   Mobile-first: sidebar + topbar are hidden by default and only
+   revealed at >=992px. Mobile keeps global-nav + glass-bottom-nav.
+   ============================================================ */
+.sidebar,
+.navbar-wrapper,
+.mobile-app-header { display: none; }
+
+@media (min-width: 992px) {
+    /* Reveal desktop chrome */
+    .sidebar { display: block; }
+    .navbar-wrapper { display: flex; }
+
+    /* Hide mobile-only chrome */
+    .glass-bottom-nav { display: none !important; }
+    .mobile-app-header { display: none !important; }
+    body > .global-nav,
+    .global-nav { display: none !important; }
+
+    /* Fixed, collapsible sidebar (68px -> 280px on hover/focus) */
+    body > .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: var(--sidebar-collapsed, 68px);
+        height: 100vh;
+        z-index: 1000;
+        overflow: hidden auto;
+        transition: width var(--transition-speed-standard, .3s) var(--easing-standard, ease);
+    }
+    body > .sidebar:hover,
+    body > .sidebar:focus-within,
+    body.sidebar-visible > .sidebar { width: var(--sidebar-expanded, 280px); }
+
+    /* Topbar sits to the right of the sidebar */
+    .navbar-wrapper {
+        margin-left: var(--sidebar-collapsed, 68px);
+        transition: margin-left var(--transition-speed-standard, .3s) var(--easing-standard, ease);
+    }
+    body > .sidebar:hover ~ .navbar-wrapper,
+    body > .sidebar:focus-within ~ .navbar-wrapper,
+    body.sidebar-visible > .navbar-wrapper {
+        margin-left: var(--sidebar-expanded, 280px);
+    }
+
+    /* Content shell fills the area right of the sidebar */
+    .rise-app {
+        max-width: none;
+        margin-left: var(--sidebar-collapsed, 68px);
+        margin-right: 0;
+        padding-bottom: 24px;
+        transition: margin-left var(--transition-speed-standard, .3s) var(--easing-standard, ease);
+    }
+    body > .sidebar:hover ~ .rise-app,
+    body > .sidebar:focus-within ~ .rise-app,
+    body.sidebar-visible > .rise-app {
+        margin-left: var(--sidebar-expanded, 280px);
+    }
+    .rise-screen { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+}
+
+@media (min-width: 1400px) {
+    .rise-screen { max-width: 1040px; }
+}
