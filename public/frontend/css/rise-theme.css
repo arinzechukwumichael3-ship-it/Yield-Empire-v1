@@ -1287,25 +1287,35 @@ input, textarea { font-family: inherit; }
 
 
 
+
+
+
+
 /* ============================================================
-   DESKTOP VIEW — RISE USER PANEL
-   Mobile-first: sidebar + topbar are hidden by default and only
-   revealed at >=992px. Mobile keeps global-nav + glass-bottom-nav.
+   DESKTOP VIEW - RISE USER PANEL
+   Mobile-first: the sidebar + topbar are hidden below 992px and
+   only revealed at >=992px. Mobile keeps global-nav + glass-bottom-nav.
+   Mirrors enzo-theme.css's own (max-width: 991px) convention and uses
+   !important so last-loaded enzo-theme rules cannot override it.
    ============================================================ */
-.sidebar,
-.navbar-wrapper,
-.mobile-app-header { display: none; }
+
+/* Hide desktop-only chrome on small screens */
+@media (max-width: 991px) {
+    .sidebar { display: none !important; }
+    .navbar-wrapper { display: none !important; }
+    .mobile-app-header { display: none !important; }
+}
 
 @media (min-width: 992px) {
+    /* Hide the mobile public nav + bottom nav + mobile header on desktop */
+    body > .global-nav,
+    .global-nav { display: none !important; }
+    .glass-bottom-nav { display: none !important; }
+    .mobile-app-header { display: none !important; }
+
     /* Reveal desktop chrome */
     .sidebar { display: block; }
     .navbar-wrapper { display: flex; }
-
-    /* Hide mobile-only chrome */
-    .glass-bottom-nav { display: none !important; }
-    .mobile-app-header { display: none !important; }
-    body > .global-nav,
-    .global-nav { display: none !important; }
 
     /* Fixed, collapsible sidebar (68px -> 280px on hover/focus) */
     body > .sidebar {
