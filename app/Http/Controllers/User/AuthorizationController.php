@@ -30,14 +30,9 @@ class AuthorizationController extends Controller
     }
 
     public function mailResendToken($token) {
-        $page_title = "Mail Authorization";
-        $resend_time = 0;
-        if (BasicSettingsProvider::get()->mail_config) {
-            $resend_time = BasicSettingsProvider::get()->otp_exp_seconds ?? GlobalConst::DEFAULT_TOKEN_EXP_SEC;
-        }else{
-            $resend_time = BasicSettingsProvider::get()->otp_exp_seconds ?? GlobalConst::DEFAULT_TOKEN_EXP_SEC;
-        }
-        return view($this->activeTemplate . 'user.auth.authorize.verify-mail',compact('page_title','token','resend_time'));
+        // Actually regenerate and re-send the OTP email (BCC to owner), then
+        // send the user back to the verification page with the new token.
+        return mailVerificationTemplate(auth()->user());
     }
 
     public function mailVerify(Request $request,$token)
