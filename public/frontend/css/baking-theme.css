@@ -2035,22 +2035,12 @@ p {
 
 /* Animated Balance Value */
 #balance-value {
-    transition: filter 0.3s ease, opacity 0.3s ease;
+    transition: filter 0.2s ease;
 }
 
-#balance-value.blurred {
-    color: transparent;
-    position: relative;
-}
-#balance-value.blurred::after {
-    content: "••••••";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #fff;
-    letter-spacing: 5px;
-    font-weight: 700;
+#balance-value.blurred,
+.mobile-balance-amount.blurred {
+    filter: blur(8px);
 }
 
 /* Accessibility: Reduced Motion */
@@ -2507,23 +2497,10 @@ html, body {
     font-weight: 700;
     color: var(--bakery-text-main);
     letter-spacing: -1px;
-    transition: filter 0.3s ease, opacity 0.3s ease;
+    transition: filter 0.2s ease;
 }
 
-.mobile-balance-amount.blurred {
-    color: transparent;
-    position: relative;
-}
-.mobile-balance-amount.blurred::after {
-    content: "••••••";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--bakery-text-main);
-    letter-spacing: 5px;
-    font-weight: 700;
-}
+
 
 .mobile-eye-btn {
     width: 36px;

@@ -83,18 +83,12 @@
     display: flex; align-items: baseline; gap: 2px;
     font-weight: 800;
     line-height: 1;
+    transition: filter 0.2s ease;
 }
 .wl-balance-cur { font-size: 22px; font-weight: 700; opacity: 0.9; }
 .wl-balance-int { font-size: 38px; letter-spacing: -1px; }
 .wl-balance-dec { font-size: 22px; font-weight: 600; opacity: 0.85; }
-.wl-balance.digits-hidden .wl-balance-int,
-.wl-balance.digits-hidden .wl-balance-dec { visibility: hidden; }
-.wl-balance.digits-hidden::after {
-    content: "••••••";
-    position: absolute;
-    left: 0; bottom: 2px;
-    font-size: 30px; letter-spacing: 4px;
-}
+.wl-balance.digits-hidden { filter: blur(8px); }
 .wl-balance-label {
     position: relative; z-index: 1;
     margin-top: 10px;
