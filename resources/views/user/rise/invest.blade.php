@@ -409,7 +409,7 @@
 .inv-modal-close:active { background: #2563EB; }
 
 /* Light mode */
-@media (prefers-color-scheme: light) {
+[data-theme="light"] {
     .inv-stat-card { background: #fff; border-color: #E2E8F0; }
     .inv-stat-label { color: var(--text-muted); }
     .inv-filter-select { background: #F8FAFC; border-color: #CBD5E1; color: #0F172A; }
@@ -429,6 +429,8 @@
     .inv-modal-title { color: #0F172A; }
     .inv-modal-step-num { background: var(--text-primary); border-color: #CBD5E1; }
     .inv-modal-step-body h4 { color: #0F172A; }
+    .io-title { color: #0F172A; }
+    .ri-find-btn { background: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; }
 }
 </style>
 @endpush
