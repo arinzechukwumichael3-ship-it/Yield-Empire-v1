@@ -184,7 +184,6 @@
     <!-- Header -->
     <div class="doc-header">
         <div class="brand">
-            <img src="{{ get_logo() }}" alt="Logo">
             <div>
                 <div class="brand-name">{{ $basic_settings->site_name }}</div>
                 <div class="brand-tag">{{ __('International Banking') }}</div>
