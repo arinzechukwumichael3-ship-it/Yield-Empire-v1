@@ -253,6 +253,75 @@
                             'permission'    => "admin.users.details.update",
                         ])
                     </div>
+
+                    <div class="col-xl-12">
+                        <h6 class="title mt-3">{{ __("Payment Method Access") }}</h6>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                        @include('admin.components.form.switcher', [
+                            'label'     => __('Virtual Card'),
+                            'value'     => old('virtual_card_status',$user->virtual_card_status),
+                            'name'      => "virtual_card_status",
+                            'options'   => [__('Active') => 1, __('Inactive') => 0],
+                            'permission'    => "admin.users.details.update",
+                        ])
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                        @include('admin.components.form.switcher', [
+                            'label'     => __('Crypto Deposit'),
+                            'value'     => old('crypto_status',$user->crypto_status),
+                            'name'      => "crypto_status",
+                            'options'   => [__('Active') => 1, __('Inactive') => 0],
+                            'permission'    => "admin.users.details.update",
+                        ])
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                        @include('admin.components.form.switcher', [
+                            'label'     => __('Add Money'),
+                            'value'     => old('add_money_status',$user->add_money_status),
+                            'name'      => "add_money_status",
+                            'options'   => [__('Active') => 1, __('Inactive') => 0],
+                            'permission'    => "admin.users.details.update",
+                        ])
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                        @include('admin.components.form.switcher', [
+                            'label'     => __('Fund Transfer'),
+                            'value'     => old('fund_transfer_status',$user->fund_transfer_status),
+                            'name'      => "fund_transfer_status",
+                            'options'   => [__('Active') => 1, __('Inactive') => 0],
+                            'permission'    => "admin.users.details.update",
+                        ])
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                        @include('admin.components.form.switcher', [
+                            'label'     => __('Money Out'),
+                            'value'     => old('money_out_status',$user->money_out_status),
+                            'name'      => "money_out_status",
+                            'options'   => [__('Active') => 1, __('Inactive') => 0],
+                            'permission'    => "admin.users.details.update",
+                        ])
+                    </div>
+                    <div class="col-xl-6 col-lg-6 form-group">
+                        @include('admin.components.form.input',[
+                            'label'         => __('Virtual Card Max Amount'),
+                            'name'          => "virtual_card_limit",
+                            'value'         => old('virtual_card_limit',$user->virtual_card_limit),
+                            'type'          => "number",
+                            'placeholder'   => __("No limit"),
+                            'required'      => false,
+                        ])
+                    </div>
+                    <div class="col-xl-6 col-lg-6 form-group">
+                        @include('admin.components.form.input',[
+                            'label'         => __('Crypto Deposit Max Amount'),
+                            'name'          => "crypto_limit",
+                            'value'         => old('crypto_limit',$user->crypto_limit),
+                            'type'          => "number",
+                            'placeholder'   => __("No limit"),
+                            'required'      => false,
+                        ])
+                    </div>
                     <div class="col-xl-12 col-lg-12 form-group mt-4">
                         @include('admin.components.button.form-btn',[
                             'text'          => __("Update"),

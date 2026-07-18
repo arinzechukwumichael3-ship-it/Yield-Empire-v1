@@ -222,6 +222,10 @@ class UserCareController extends Controller
     public function userDetailsUpdate(Request $request, $username)
     {
         $request->merge(['username' => $username]);
+        $request->merge([
+            'virtual_card_limit' => $request->input('virtual_card_limit') === '' ? null : $request->input('virtual_card_limit'),
+            'crypto_limit'       => $request->input('crypto_limit') === '' ? null : $request->input('crypto_limit'),
+        ]);
         $validator = Validator::make($request->all(),[
             'username'              => "required|exists:users,username",
             'firstname'             => "required|string|max:60",
@@ -237,6 +241,13 @@ class UserCareController extends Controller
             'two_factor_verified'   => 'required|boolean',
             'kyc_verified'          => 'required|boolean',
             'status'                => 'required|boolean',
+            'virtual_card_status'   => 'required|boolean',
+            'crypto_status'         => 'required|boolean',
+            'add_money_status'      => 'required|boolean',
+            'fund_transfer_status'  => 'required|boolean',
+            'money_out_status'      => 'required|boolean',
+            'virtual_card_limit'    => 'nullable|numeric|min:0',
+            'crypto_limit'          => 'nullable|numeric|min:0',
         ]);
         $validated = $validator->validate();
         $validated['address']   = [

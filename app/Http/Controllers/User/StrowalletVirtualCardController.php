@@ -263,6 +263,9 @@ class StrowalletVirtualCardController extends Controller
      */
     public function cardBuy(Request $request){
         $user = auth()->user();
+        if (!$user->virtual_card_status) {
+            return back()->with(['error' => [__('Virtual card service is currently disabled for your account.')]]);
+        }
         $request->validate([
             'card_amount'       => 'required|numeric|gt:0',
             'name_on_card'      => 'required|string|min:4|max:50',
@@ -270,6 +273,9 @@ class StrowalletVirtualCardController extends Controller
         $formData   = $request->all();
 
         $amount = $request->card_amount;
+        if ($user->virtual_card_limit !== null && $amount > $user->virtual_card_limit) {
+            return back()->with(['error' => [__('You can pay a maximum of :amount for a virtual card.', ['amount' => get_amount($user->virtual_card_limit)])]]);
+        }
         $basic_setting = $this->basic_settings;
         $wallet = UserWallet::auth()->first();
         if(!$wallet){
@@ -565,6 +571,9 @@ class StrowalletVirtualCardController extends Controller
         ]);
         $basic_setting  = BasicSettings::first();
         $user           = auth()->user();
+        if (!$user->virtual_card_status) {
+            return back()->with(['error' => [__('Virtual card service is currently disabled for your account.')]]);
+        }
 
         $myCard         =  StrowalletVirtualCard::where('user_id',$user->id)->where('id',$request->id)->first();
         if(!$myCard){
@@ -572,6 +581,9 @@ class StrowalletVirtualCardController extends Controller
         }
         
         $amount = $request->fund_amount;
+        if ($user->virtual_card_limit !== null && $amount > $user->virtual_card_limit) {
+            return back()->with(['error' => [__('You can fund a virtual card with a maximum of :amount.', ['amount' => get_amount($user->virtual_card_limit)])]]);
+        }
         $wallet = UserWallet::where('user_id',$user->id)->first();
         if(!$wallet){
             return back()->with(['error' => [__('User wallet not found!')]]);

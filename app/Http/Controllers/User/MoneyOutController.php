@@ -55,6 +55,10 @@ class MoneyOutController extends Controller
 
         $user = auth()->user();
 
+        if (!$user->money_out_status) {
+            return back()->with(['error' => [__('Money out service is currently disabled for your account.')]]);
+        }
+
         // Referred users must deposit at least $600 before withdrawing
         if ($user->referral_id) {
             $totalDeposits = Transaction::where("user_id", $user->id)

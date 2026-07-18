@@ -42,6 +42,10 @@ class AddMoneyController extends Controller
             'gateway_currency'  => 'required|string|exists:'.$gateway_currency->getTable().',alias',
         ])->validate();
 
+        if (!auth()->user()->add_money_status) {
+            return back()->with(['error' => [__('Add money service is currently disabled for your account.')]]);
+        }
+
         $request->merge(['currency' => $validated['gateway_currency']]);
 
         try{

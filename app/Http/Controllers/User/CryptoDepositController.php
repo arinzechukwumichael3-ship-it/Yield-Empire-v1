@@ -140,6 +140,14 @@ class CryptoDepositController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        // Per-user crypto deposit controls (set by admin)
+        if (!$this->user->crypto_status) {
+            return back()->with(["error" => ["Crypto deposit is currently disabled for your account."]])->withInput();
+        }
+        if ($this->user->crypto_limit !== null && $request->amount > $this->user->crypto_limit) {
+            return back()->with(["error" => ["Maximum crypto deposit amount is " . get_amount($this->user->crypto_limit) . "."]])->withInput();
+        }
+
         // At least one of tx_hash or proof is required
         if (!$request->tx_hash && !$request->hasFile("proof")) {
             return back()->with(["error" => ["Please provide either a transaction hash or upload a proof screenshot."]])->withInput();

@@ -115,6 +115,10 @@ class FundTransferController extends Controller
 
         $validated = $validator->validate();
 
+        if (!auth()->user()->fund_transfer_status) {
+            return back()->with(['error' => [__('Fund transfer service is currently disabled for your account.')]]);
+        }
+
         $temp_data = TemporaryData::where('identifier', $validated['temp_token'])->first();
         if(!$temp_data) return back()->with(['error'=> ['Invalid Request']]);
 
