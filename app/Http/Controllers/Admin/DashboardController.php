@@ -30,7 +30,7 @@ class DashboardController extends Controller
         //user data
 
         $total_users     = (User::toBase()->count() == 0) ? 1 : User::toBase()->count();
-        $unverified_user = User::toBase()->where('email_verified',0)->count();
+        $unverified_user = User::toBase()->where('email_verified',false)->count();
         $active_user     = User::toBase()->where('status',true)->count();
         $banned_user     = User::toBase()->where('status',false)->count();
         $user_percent    = (($active_user * 100 ) / $total_users);

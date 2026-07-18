@@ -76,7 +76,7 @@ class StrowalletVirtualCardController extends Controller{
                 'status_info' =>(object)$statusInfo ,
             ];
         });
-        $cardCharge = TransactionSetting::where('slug','virtual_card')->where('status',1)->get()->map(function($data){
+        $cardCharge = TransactionSetting::where('slug','virtual_card')->where('status',true)->get()->map(function($data){
 
             return [
                 'id' => $data->id,
@@ -119,7 +119,7 @@ class StrowalletVirtualCardController extends Controller{
     }
     //charge
     public function charges(){
-        $cardCharge = TransactionSetting::where('slug','virtual_card')->where('status',1)->get()->map(function($data){
+        $cardCharge = TransactionSetting::where('slug','virtual_card')->where('status',true)->get()->map(function($data){
             return [
                 'id' => $data->id,
                 'slug' => $data->slug,
@@ -763,7 +763,7 @@ class StrowalletVirtualCardController extends Controller{
         if(!$wallet){
             return Response::error([__('User wallet not found')],[],400);
         }
-        $cardCharge = TransactionSetting::where('slug','virtual_card')->where('status',1)->first();
+        $cardCharge = TransactionSetting::where('slug','virtual_card')->where('status',true)->first();
         $baseCurrency = Currency::default();
         $rate = $baseCurrency->rate;
         if(!$baseCurrency){
@@ -955,7 +955,7 @@ class StrowalletVirtualCardController extends Controller{
         if(!$wallet){
             return Response::error([__('User wallet not found')],[],400);
         }
-        $cardCharge = TransactionSetting::where('slug','reload_card')->where('status',1)->first();
+        $cardCharge = TransactionSetting::where('slug','reload_card')->where('status',true)->first();
         $baseCurrency = Currency::default();
         $rate = $baseCurrency->rate;
         if(!$baseCurrency){

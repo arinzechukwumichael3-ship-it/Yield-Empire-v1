@@ -55,8 +55,8 @@ class StrowalletVirtualCardController extends Controller
         }else{
             $customer_card = StrowalletVirtualCard::auth()->where('customer_email', $customer_email)->count();
         }
-        $cardCharge         = TransactionSetting::where('slug',GlobalConst::TRX_VIRTUAL_CARD)->where('status',1)->first();
-        $cardReloadCharge   = TransactionSetting::where('slug',GlobalConst::TRX_RELOAD_CARD)->where('status',1)->first();
+        $cardCharge         = TransactionSetting::where('slug',GlobalConst::TRX_VIRTUAL_CARD)->where('status',true)->first();
+        $cardReloadCharge   = TransactionSetting::where('slug',GlobalConst::TRX_RELOAD_CARD)->where('status',true)->first();
         $cardApi            = $this->api;
         $card_limit         = $this->card_limit;
         $transactions       = Transaction::auth()->where('type',PaymentGatewayConst::TYPEVIRTUALCARD)->orderBy('id','desc')->latest()->take(3)->get();
@@ -78,7 +78,7 @@ class StrowalletVirtualCardController extends Controller
     public function createPage(){
         $page_title = __("Create Virtual Card");
         $user       = userGuard()['user'];
-        $cardCharge     = TransactionSetting::where('slug','virtual_card')->where('status',1)->first();
+        $cardCharge     = TransactionSetting::where('slug','virtual_card')->where('status',true)->first();
         if($user->strowallet_customer != null){
             //get customer api response
             $customer = $user->strowallet_customer;
@@ -281,7 +281,7 @@ class StrowalletVirtualCardController extends Controller
         if(!$wallet){
             return back()->with(['error' => [__('User wallet not found')]]);
         }
-        $cardCharge = TransactionSetting::where('slug',GlobalConst::TRX_VIRTUAL_CARD)->where('status',1)->first();
+        $cardCharge = TransactionSetting::where('slug',GlobalConst::TRX_VIRTUAL_CARD)->where('status',true)->first();
         $baseCurrency = Currency::default();
         $rate = $baseCurrency->rate;
         if(!$baseCurrency){
@@ -489,7 +489,7 @@ class StrowalletVirtualCardController extends Controller
         }
         $validated = $validator->safe()->all();
         if($request->status == 1){
-            $card           = StrowalletVirtualCard::where('id',$request->data_target)->where('is_active',1)->first();
+            $card           = StrowalletVirtualCard::where('id',$request->data_target)->where('is_active',true)->first();
             $client         = new \GuzzleHttp\Client();
             $public_key     = $this->api->config->strowallet_public_key;
             $base_url       = $this->api->config->strowallet_url;
@@ -513,7 +513,7 @@ class StrowalletVirtualCardController extends Controller
                 return Response::error($error,null,400);
             }
         }else{
-            $card           = StrowalletVirtualCard::where('id',$request->data_target)->where('is_active',0)->first();
+            $card           = StrowalletVirtualCard::where('id',$request->data_target)->where('is_active',false)->first();
             $client         = new \GuzzleHttp\Client();
             $public_key     = $this->api->config->strowallet_public_key;
             $base_url       = $this->api->config->strowallet_url;
@@ -588,7 +588,7 @@ class StrowalletVirtualCardController extends Controller
         if(!$wallet){
             return back()->with(['error' => [__('User wallet not found!')]]);
         }
-        $cardCharge     = TransactionSetting::where('slug','reload_card')->where('status',1)->first();
+        $cardCharge     = TransactionSetting::where('slug','reload_card')->where('status',true)->first();
         $baseCurrency   = Currency::default();
         $rate = $baseCurrency->rate;
         if(!$baseCurrency){

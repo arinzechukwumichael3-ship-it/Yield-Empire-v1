@@ -51,7 +51,7 @@ class MoneyOutController extends Controller
 
         $payment_gateway        = PaymentGatewayCurrency::whereHas('gateway', function ($gateway) {
             $gateway->where('slug', PaymentGatewayConst::money_out_slug());
-            $gateway->where('status', 1);
+            $gateway->where('status', true);
         })->get()->map(function($data){
             return [
                 'name'          => $data->gateway->name,

@@ -33,7 +33,7 @@ class SettingController extends Controller
         $languages          = Language::select(['id','name','code','status'])->get();
 
         $app_settings       = AppSettings::select('splash_screen_image as image','version')->first();
-        $onboard_screens    = AppOnboardScreens::orderByDesc('id')->where('status',1)->get()->map(function($data){
+        $onboard_screens    = AppOnboardScreens::orderByDesc('id')->where('status',true)->get()->map(function($data){
             $app_local = get_default_language_code();
             return[
                 'id'            => $data->id,
@@ -98,7 +98,7 @@ class SettingController extends Controller
      * Method for onboard screen data
      */
     public function onboardScreens() {
-        $onboard_screens = AppOnboardScreens::orderByDesc('id')->where('status',1)->get()->map(function($data){
+        $onboard_screens = AppOnboardScreens::orderByDesc('id')->where('status',true)->get()->map(function($data){
             $app_local = get_default_language_code();
             return[
                 'id'            => $data->id,

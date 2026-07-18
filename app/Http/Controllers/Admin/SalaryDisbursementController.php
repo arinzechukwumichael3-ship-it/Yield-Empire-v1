@@ -30,7 +30,7 @@ class SalaryDisbursementController extends Controller
      */
     public function index(){
         $page_title         = "Salary Disbursement";
-        $companies          = User::with(['wallet'])->where('account_type',GlobalConst::BUSINESS_ACCOUNT)->where('status',1)->orderBy('id','desc')->get();
+        $companies          = User::with(['wallet'])->where('account_type',GlobalConst::BUSINESS_ACCOUNT)->where('status',true)->orderBy('id','desc')->get();
         
         return view('admin.sections.salary-disbursement.index',compact(
             'page_title',
@@ -62,7 +62,7 @@ class SalaryDisbursementController extends Controller
         $page_title         = "Company Details";
         $company            = User::with(['wallet'])->where('username',$username)->first();
         if(!$company) return back()->with(['error' => ['Sorry! Company not found.']]);
-        $users              = User::where('account_type',GlobalConst::PERSONAL_ACCOUNT)->where('status',1)->orderBy('id','desc')->get();
+        $users              = User::where('account_type',GlobalConst::PERSONAL_ACCOUNT)->where('status',true)->orderBy('id','desc')->get();
         $company_users      = SalaryDisbursementUser::where('company_username',$username)->get();
 
         return view('admin.sections.salary-disbursement.details',compact(
