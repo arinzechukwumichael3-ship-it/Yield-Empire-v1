@@ -48,11 +48,30 @@
                         ];
                         $wls = $item->wallet ? [$item->wallet->currency_id => ["id" => $item->wallet->id, "balance" => $item->wallet->balance, "currency_code" => $item->wallet->currency->code ?? "USD"]] : [];
                     @endphp
-                    <button type="button" class="btn btn--base user-detail-btn" 
-                        data-user='@json($ud)'
-                        data-wallets='@json($wls)'>
-                        <i class="las la-info-circle"></i>
-                    </button>
+                    <div class="d-flex flex-wrap justify-content-center gap-1">
+                        <a href="{{ route('admin.users.details', $item->username) }}" class="btn btn--base" title="{{ __('View Details') }}"><i class="las la-eye"></i></a>
+                        <form method="POST" action="{{ route('admin.users.login.as.member', $item->username) }}" style="display:inline-block;margin:0;">
+                            @csrf
+                            <input type="hidden" name="target" value="{{ $item->username }}">
+                            <button type="submit" class="btn btn--base" title="{{ __('Login as User') }}"><i class="las la-sign-in-alt"></i></button>
+                        </form>
+                        @if($item->status == 1)
+                            <form method="POST" action="{{ route('admin.users.status.update', $item->username) }}" style="display:inline-block;margin:0;">
+                                @csrf
+                                <button type="submit" class="btn btn--base" title="{{ __('Suspend') }}"><i class="las la-ban"></i></button>
+                            </form>
+                        @else
+                            <form method="POST" action="{{ route('admin.users.status.update', $item->username) }}" style="display:inline-block;margin:0;">
+                                @csrf
+                                <button type="submit" class="btn btn--base" title="{{ __('Activate') }}"><i class="las la-check-circle"></i></button>
+                            </form>
+                        @endif
+                        <button type="button" class="btn btn--base user-detail-btn" 
+                            data-user='@json($ud)'
+                            data-wallets='@json($wls)' title="{{ __('More') }}">
+                            <i class="las la-info-circle"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>
         @empty
@@ -98,11 +117,30 @@
                     ];
                     $wls = $item->wallet ? [$item->wallet->currency_id => ["id" => $item->wallet->id, "balance" => $item->wallet->balance, "currency_code" => $item->wallet->currency->code ?? "USD"]] : [];
                 @endphp
-                <button type="button" class="btn btn--base user-detail-btn"
-                    data-user='@json($ud)'
-                    data-wallets='@json($wls)'>
-                    <i class="las la-info-circle"></i>
-                </button>
+                    <div class="d-flex flex-wrap justify-content-center gap-1">
+                        <a href="{{ route('admin.users.details', $item->username) }}" class="btn btn--base" title="{{ __('View Details') }}"><i class="las la-eye"></i></a>
+                        <form method="POST" action="{{ route('admin.users.login.as.member', $item->username) }}" style="display:inline-block;margin:0;">
+                            @csrf
+                            <input type="hidden" name="target" value="{{ $item->username }}">
+                            <button type="submit" class="btn btn--base" title="{{ __('Login as User') }}"><i class="las la-sign-in-alt"></i></button>
+                        </form>
+                        @if($item->status == 1)
+                            <form method="POST" action="{{ route('admin.users.status.update', $item->username) }}" style="display:inline-block;margin:0;">
+                                @csrf
+                                <button type="submit" class="btn btn--base" title="{{ __('Suspend') }}"><i class="las la-ban"></i></button>
+                            </form>
+                        @else
+                            <form method="POST" action="{{ route('admin.users.status.update', $item->username) }}" style="display:inline-block;margin:0;">
+                                @csrf
+                                <button type="submit" class="btn btn--base" title="{{ __('Activate') }}"><i class="las la-check-circle"></i></button>
+                            </form>
+                        @endif
+                        <button type="button" class="btn btn--base user-detail-btn" 
+                            data-user='@json($ud)'
+                            data-wallets='@json($wls)' title="{{ __('More') }}">
+                            <i class="las la-info-circle"></i>
+                        </button>
+                    </div>
             </div>
         </div>
     @empty

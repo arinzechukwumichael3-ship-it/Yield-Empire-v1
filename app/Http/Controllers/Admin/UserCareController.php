@@ -273,6 +273,22 @@ class UserCareController extends Controller
         return back()->with(['success' => ['Profile Information Updated Successfully!']]);
     }
 
+
+    /**
+     * Toggle a user's active/suspended status directly from the user list.
+     */
+    public function userStatusToggle(Request $request, $username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+        $user->status = $user->status == 1 ? 0 : 1;
+        $user->save();
+
+        $message = $user->status == 1
+            ? ['User activated successfully!']
+            : ['User suspended successfully!'];
+
+        return back()->with(['success' => $message]);
+    }
     public function loginLogs($username)
     {
         $page_title = "Login Logs";
