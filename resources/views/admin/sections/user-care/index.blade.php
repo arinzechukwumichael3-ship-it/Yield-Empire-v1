@@ -337,6 +337,8 @@
             html += walletHtml;
 
             var username = encodeURIComponent(userData.username);
+            var detailsUrl = "{{ route('admin.users.details', 'PLACEHOLDER') }}".replace('PLACEHOLDER', username);
+            var loginUrl = "{{ route('admin.users.login.as.member', 'PLACEHOLDER') }}".replace('PLACEHOLDER', username);
             html += '<div class="user-modal-actions">';
             if (!isActive && !isBanned) {
                 html += '  <a href="{{ route('admin.users.details.update', '') }}/' + username + '?action=active" class="btn btn-green btn-sm-action"><i class="las la-check-circle"></i> Activate</a>';
@@ -349,6 +351,8 @@
             html += '  <a href="{{ route('admin.users.wallet.balance.update', '') }}/' + username + '" class="btn btn-blue btn-sm-action"><i class="las la-plus-circle"></i> Credit</a>';
             html += '  <a href="{{ route('admin.users.wallet.balance.update', '') }}/' + username + '" class="btn btn-red btn-sm-action"><i class="las la-minus-circle"></i> Debit</a>';
             html += '  <a href="{{ route('admin.users.details.update', '') }}/' + username + '?action=delete" class="btn btn-red btn-sm-action" onclick="return confirm(\'Delete this user?\')"><i class="las la-trash"></i> Delete</a>';
+            html += '  <a href="' + detailsUrl + '" class="btn btn-grey btn-sm-action"><i class="las la-eye"></i> View Details</a>';
+            html += '  <form method="POST" action="' + loginUrl + '" style="display:inline-block;margin:0 2px;">@csrf<button type="submit" class="btn btn-blue btn-sm-action"><i class="las la-sign-in-alt"></i> Login as User</button></form>';
             html += '  <button type="button" class="btn btn-grey btn-sm-action" id="modalCloseBtn2"><i class="las la-times"></i> Close</button>';
             html += '</div>';
 
