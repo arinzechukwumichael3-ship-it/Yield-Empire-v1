@@ -339,16 +339,16 @@
             var username = encodeURIComponent(userData.username);
             html += '<div class="user-modal-actions">';
             if (!isActive && !isBanned) {
-                html += '  <a href="{{ route(\'admin.users.details.update\', \'\') }}/' + username + '?action=active" class="btn btn-green btn-sm-action"><i class="las la-check-circle"></i> Activate</a>';
+                html += '  <a href="{{ route('admin.users.details.update', '') }}/' + username + '?action=active" class="btn btn-green btn-sm-action"><i class="las la-check-circle"></i> Activate</a>';
             }
             if (isActive) {
-                html += '  <a href="{{ route(\'admin.users.details.update\', \'\') }}/' + username + '?action=suspend" class="btn btn-amber btn-sm-action"><i class="las la-ban"></i> Suspend</a>';
+                html += '  <a href="{{ route('admin.users.details.update', '') }}/' + username + '?action=suspend" class="btn btn-amber btn-sm-action"><i class="las la-ban"></i> Suspend</a>';
             }
             html += '  <button type="button" class="btn btn-blue btn-sm-action" onclick="alert(\'Unlock card for ' + userData.username + '\')"><i class="las la-credit-card"></i> Unlock Card</button>';
             html += '  <button type="button" class="btn btn-blue btn-sm-action" onclick="alert(\'Unlock withdrawal for ' + userData.username + '\')"><i class="las la-unlock"></i> Unlock Withdrawal</button>';
-            html += '  <a href="{{ route(\'admin.users.wallet.balance.update\', \'\') }}/' + username + '" class="btn btn-blue btn-sm-action"><i class="las la-plus-circle"></i> Credit</a>';
-            html += '  <a href="{{ route(\'admin.users.wallet.balance.update\', \'\') }}/' + username + '" class="btn btn-red btn-sm-action"><i class="las la-minus-circle"></i> Debit</a>';
-            html += '  <a href="{{ route(\'admin.users.details.update\', \'\') }}/' + username + '?action=delete" class="btn btn-red btn-sm-action" onclick="return confirm(\'Delete this user?\')"><i class="las la-trash"></i> Delete</a>';
+            html += '  <a href="{{ route('admin.users.wallet.balance.update', '') }}/' + username + '" class="btn btn-blue btn-sm-action"><i class="las la-plus-circle"></i> Credit</a>';
+            html += '  <a href="{{ route('admin.users.wallet.balance.update', '') }}/' + username + '" class="btn btn-red btn-sm-action"><i class="las la-minus-circle"></i> Debit</a>';
+            html += '  <a href="{{ route('admin.users.details.update', '') }}/' + username + '?action=delete" class="btn btn-red btn-sm-action" onclick="return confirm(\'Delete this user?\')"><i class="las la-trash"></i> Delete</a>';
             html += '  <button type="button" class="btn btn-grey btn-sm-action" id="modalCloseBtn2"><i class="las la-times"></i> Close</button>';
             html += '</div>';
 

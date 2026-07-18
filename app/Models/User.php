@@ -55,7 +55,7 @@ class User extends Authenticatable
         'address'             => 'object',
         'email_verified' => 'boolean',
         'sms_verified' => 'boolean',
-        'kyc_verified' => 'boolean',
+        'kyc_verified' => 'integer',
         'ver_code'            => 'integer',
         'ver_code_send_at'    => 'datetime',
         'two_factor_verified' => 'boolean',

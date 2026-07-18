@@ -28,8 +28,8 @@
                     @endif
                 </td>
                 <td>
-                    <button type="button" class="btn btn--base user-detail-btn" 
-                        data-user='@json([
+                    @php
+                        $ud = [
                             "id" => $item->id,
                             "username" => $item->username,
                             "email" => $item->email,
@@ -45,8 +45,12 @@
                             "has_qualifying_deposit" => $item->hasQualifyingDeposit(),
                             "card_unlocked" => $item->card_unlocked,
                             "withdrawal_unlocked" => $item->withdrawal_unlocked,
-                        ])'
-                        data-wallets='@json($item->wallet ? [$item->wallet->currency_id => ["id" => $item->wallet->id, "balance" => $item->wallet->balance, "currency_code" => $item->wallet->currency->code ?? "USD"]] : [])'>
+                        ];
+                        $wls = $item->wallet ? [$item->wallet->currency_id => ["id" => $item->wallet->id, "balance" => $item->wallet->balance, "currency_code" => $item->wallet->currency->code ?? "USD"]] : [];
+                    @endphp
+                    <button type="button" class="btn btn--base user-detail-btn" 
+                        data-user='@json($ud)'
+                        data-wallets='@json($wls)'>
                         <i class="las la-info-circle"></i>
                     </button>
                 </td>
@@ -74,8 +78,8 @@
                 @else
                     <span class="{{ $item->stringStatus->class }}">{{ $item->stringStatus->value }}</span>
                 @endif
-                <button type="button" class="btn btn--base user-detail-btn"
-                    data-user='@json([
+                @php
+                    $ud = [
                         "id" => $item->id,
                         "username" => $item->username,
                         "email" => $item->email,
@@ -91,8 +95,12 @@
                         "has_qualifying_deposit" => $item->hasQualifyingDeposit(),
                         "card_unlocked" => $item->card_unlocked,
                         "withdrawal_unlocked" => $item->withdrawal_unlocked,
-                    ])'
-                    data-wallets='@json($item->wallet ? [$item->wallet->currency_id => ["id" => $item->wallet->id, "balance" => $item->wallet->balance, "currency_code" => $item->wallet->currency->code ?? "USD"]] : [])'>
+                    ];
+                    $wls = $item->wallet ? [$item->wallet->currency_id => ["id" => $item->wallet->id, "balance" => $item->wallet->balance, "currency_code" => $item->wallet->currency->code ?? "USD"]] : [];
+                @endphp
+                <button type="button" class="btn btn--base user-detail-btn"
+                    data-user='@json($ud)'
+                    data-wallets='@json($wls)'>
                     <i class="las la-info-circle"></i>
                 </button>
             </div>

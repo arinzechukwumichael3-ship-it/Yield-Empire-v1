@@ -55,7 +55,7 @@ class CustomServiceProvider extends ServiceProvider
             $view_share['__languages']                  = Language::get();
             $view_share['all_user_count']               = User::count();
             $view_share['email_verified_user_count']    = User::where('email_verified', '=', \DB::raw('true'))->count();
-            $view_share['kyc_verified_user_count']      = User::where('kyc_verified', '=', \DB::raw('true'))->count();
+            $view_share['kyc_verified_user_count']      = User::where('kyc_verified', '=', GlobalConst::VERIFIED)->count();
             $view_share['__extensions']                 = Extension::get();
             $view_share['pending_ticket_count']         = UserSupportTicket::pending()->get()->count();
             $view_share['__website_sections']           = SiteSections::get();
