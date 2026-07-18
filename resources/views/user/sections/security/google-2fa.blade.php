@@ -5,9 +5,11 @@
     <div class="row mb-20-none">
         <!-- Setup panel -->
         <div class="col-xl-6 col-lg-6 mb-20">
-            <div class="two-authentic mt-10 animate-card" style="animation-delay:.05s">
+            <div class="custom-card mt-10 animate-card" style="animation-delay:.05s">
                 <div class="dashboard-header-wrapper">
-                    <h4 class="title">{{ $page_title }}</h4>
+                    <div class="header-title">
+                        <h4 class="title">{{ $page_title }}</h4>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-3">
@@ -52,7 +54,7 @@
 
         <!-- Info panel -->
         <div class="col-xl-6 col-lg-6 mb-20">
-            <div class="two-authentic mt-10 animate-card" style="animation-delay:.15s">
+            <div class="custom-card mt-10 animate-card" style="animation-delay:.15s">
                 <div class="dashboard-header-wrapper">
                     <h4 class="title">{{__('Google Authenticator')}}</h4>
                 </div>

@@ -48,7 +48,10 @@ class StrowalletVirtualCardController extends Controller
         $page_title         = "Virtual Card";
         $myCards            = StrowalletVirtualCard::auth()->latest()->limit($this->card_limit)->get();
         $user               = auth()->user();
-        $customer_email     = $user->strowallet_customer->customerEmail ?? '';
+        $customer           = $user->strowallet_customer;
+        $customer_email     = ($customer && isset($customer->customerEmail))
+            ? $customer->customerEmail
+            : '';
 
         if($customer_email === false){
             $customer_card = 0;

@@ -9,19 +9,19 @@
                 <div class="breadcrumb-area d-none d-sm-flex">
                     <span class="main-path"><a href="{{ setRoute('user.dashboard') }}">{{ __('Dashboard') }}</a></span>
                     <i class="las la-angle-right"></i>
-                    <span class="active-path">{{ __($page_title) ?? 'Dashboard' }}</span>
+                    <span class="active-path">{{ (isset($page_title) ? __($page_title) : __('Dashboard')) }}</span>
                 </div>
             </div>
 
             <!-- Navigation Right: Functional Info & User Controls -->
             <div class="nav-right">
                 <!-- Account Info Pill -->
-                <div class="account-pill-v2" aria-label="Account Number" data-account-number="{{ auth()->user()->account_no }}">
+                <div class="account-pill-v2" aria-label="Account Number" data-account-number="{{ auth()->user()?->account_no }}">
                     <div class="pill-label">{{ __('ACCOUNT NUMBER') }}</div>
                     <div class="pill-value-group">
-                        <span class="pill-number" title="{{ auth()->user()->account_no }}">
-                            <span class="full-number d-none d-md-inline">{{ auth()->user()->account_no }}</span>
-                            <span class="truncated-number d-inline d-md-none">***{{ substr(auth()->user()->account_no, -4) }}</span>
+                        <span class="pill-number" title="{{ auth()->user()?->account_no }}">
+                            <span class="full-number d-none d-md-inline">{{ auth()->user()?->account_no }}</span>
+                            <span class="truncated-number d-inline d-md-none">***{{ substr(auth()->user()?->account_no ?? '', -4) }}</span>
                         </span>
                         <button class="copy-trigger" onclick="copyAccountNo()" aria-label="Copy Account Number">
                             <i class="las la-copy"></i>
@@ -139,7 +139,7 @@
 
                     <div class="control-item user-item">
                         <a href="{{ setRoute('user.profile.index') }}" class="user-avatar-v2" aria-label="User Profile">
-                            <img src="{{ auth()->user()->userImage }}" alt="{{ auth()->user()->username }}">
+                            <img src="{{ auth()->user()?->userImage }}" alt="{{ auth()->user()?->username }}">
                         </a>
                     </div>
                 </div>

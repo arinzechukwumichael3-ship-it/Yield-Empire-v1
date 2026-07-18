@@ -32,7 +32,8 @@ class DepositGateService
      */
     public static function isCardUnlocked(User $user): bool
     {
-        return (bool) $user->card_unlocked;
+        // Per-user admin toggle must also be enabled, not just the KYC unlock.
+        return (bool) ($user->card_unlocked && $user->virtual_card_status);
     }
 
     /**

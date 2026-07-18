@@ -248,6 +248,7 @@
         payment_gateway_const()::TYPE_OWN_BANK_TRANSFER,
     ];
 
+    if (!function_exists('stmIsCredit')) {
     function stmIsCredit($tx, $creditTypes, $transferTypes) {
         $type = $tx->type ?? '';
         if (in_array($type, $transferTypes)) {
@@ -255,6 +256,8 @@
         }
         return in_array($type, $creditTypes);
     }
+    }
+    if (!function_exists('stmTypeLabel')) {
     function stmTypeLabel($type) {
         $map = [
             'ADD-MONEY' => 'Deposit', 'MONEY-OUT' => 'Withdrawal', 'WITHDRAW' => 'Withdrawal',
@@ -267,6 +270,8 @@
         ];
         return $map[$type] ?? ucwords(str_replace(['-', '_'], ' ', strtolower($type)));
     }
+    }
+    if (!function_exists('stmStatusClass')) {
     function stmStatusClass($status) {
         return match((int) $status) {
             1 => 'success', 3 => 'hold', 4 => 'rejected',
@@ -274,6 +279,7 @@
         };
     }
 
+    }
     $totalCredit = 0;
     $totalDebit = 0;
     foreach ($transactions as $tx) {

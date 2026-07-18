@@ -10,6 +10,9 @@ use App\Constants\GlobalConst;
 use App\Http\Controllers\Controller;
 use App\Providers\Admin\BasicSettingsProvider;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use App\Http\Helpers\Response;
+use App\Notifications\User\Auth\SendAuthorizationCode;
 
 class AuthorizationController extends Controller
 {
@@ -80,7 +83,10 @@ class AuthorizationController extends Controller
 
     public function showKycFrom() {
         $page_title = "KYC Verification";
-        return view($this->activeTemplate . 'user.auth.authorize.verify-kyc',compact('page_title'));
+        $user_kyc  = \App\Models\Admin\SetupKyc::userKyc()->first();
+        $kyc_data  = $user_kyc ? $user_kyc->fields : [];
+        $kyc_fields = $kyc_data ? array_reverse($kyc_data) : [];
+        return view($this->activeTemplate . 'user.auth.authorize.verify-kyc',compact('page_title','kyc_fields'));
     }
 
     public function kycSubmit(Request $request) {
@@ -153,5 +159,81 @@ class AuthorizationController extends Controller
         $user->save();
 
         return redirect()->intended(route('user.dashboard'))->with(['success' => ['Authentication successful']]);
+    }
+
+    /**
+     * AJAX: send a fresh email/SMS verification code.
+     */
+    public function verificationCodeSend() {
+        return $this->sendUserVerificationCode();
+    }
+
+    /**
+     * AJAX: resend the existing verification code.
+     */
+    public function verificationCodeResend() {
+        return $this->sendUserVerificationCode();
+    }
+
+    protected function sendUserVerificationCode() {
+        $user = auth()->user();
+
+        $data = [
+            'user_id'    => $user->id,
+            'code'       => generate_random_code(),
+            'token'      => generate_unique_string('user_authorizations', 'token', 200),
+            'created_at' => now(),
+        ];
+
+        DB::beginTransaction();
+        try {
+            UserAuthorization::where('user_id', $user->id)->delete();
+            DB::table('user_authorizations')->insert($data);
+            try {
+                $user->notify(new SendAuthorizationCode((object) $data));
+            } catch (Exception $e) {}
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return Response::error([__('Something went wrong! Please try again')], [], 500);
+        }
+
+        $resend_time = BasicSettingsProvider::get()->otp_exp_seconds ?? GlobalConst::DEFAULT_TOKEN_EXP_SEC;
+
+        return Response::success([__('Verification code send successfully!')], [
+            'to_address'  => $this->maskContact($user->email),
+            'resend_time' => (int) $resend_time,
+        ], 200);
+    }
+
+    /**
+     * AJAX: verify the entered OTP code.
+     */
+    public function verificationCodeCheck(Request $request) {
+        $request->validate([
+            'code'     => 'required|array',
+            'code.*'   => 'required',
+        ]);
+
+        $code = implode($request->code);
+        $user = auth()->user();
+
+        $match = UserAuthorization::where('user_id', $user->id)->where('code', $code)->exists();
+
+        return Response::success([], ['check' => (bool) $match], 200);
+    }
+
+    protected function maskContact(string $value): string {
+        if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
+            $parts = explode('@', $value);
+            $name  = $parts[0];
+            $domain = $parts[1] ?? '';
+            $visible = substr($name, 0, 2);
+            $masked = $visible . str_repeat('*', max(3, strlen($name) - 2));
+            return $masked . '@' . $domain;
+        }
+        $len = strlen($value);
+        if ($len <= 3) return str_repeat('*', $len);
+        return substr($value, 0, 2) . str_repeat('*', $len - 4) . substr($value, -2);
     }
 }

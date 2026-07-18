@@ -86,7 +86,7 @@ Route::prefix("user")->name("user.")->group(function(){
     });
 
 // Crypto Deposit Routes
-Route::controller(\App\Http\Controllers\User\CryptoDepositController::class)->prefix("crypto-deposit")->name("crypto.deposit.")->group(function() {
+Route::controller(\App\Http\Controllers\User\CryptoDepositController::class)->middleware(['kyc.verification.guard','pin.setup.guard','deposit.gate:crypto'])->prefix("crypto-deposit")->name("crypto.deposit.")->group(function() {
     Route::get("/","index")->name("index");
     Route::post("/","store")->name("store");
     Route::get("address","address")->name("address");
@@ -232,8 +232,6 @@ Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guar
         Route::post('crypto/submit','cryptoSubmit')->name('crypto.submit');
         Route::get('instruction/{token}','instruction')->name('instruction');
         Route::post('instruction/submit/{token}','instructionSubmit')->name('instruction.submit');
-        Route::get('preview/{token}','preview')->name('preview');
-        Route::post('preview/submit','previewSubmit')->name('preview.submit');
         Route::get('transaction/success/{trx_id}','transactionSuccess')->name('transaction.success');
     });
     // OTP Verification Mail/SMS Send

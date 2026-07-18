@@ -27,6 +27,11 @@ class DepositGateMiddleware
             if (!DepositGateService::isCardUnlocked($user)) {
                 return redirect()->route('user.strowallet.virtual.card.locked');
             }
+        } elseif ($gate === 'crypto') {
+            if (!$user->crypto_status) {
+                return redirect()->route('user.dashboard')
+                    ->with(['error' => [__('Crypto deposit is currently disabled for your account.')]]);
+            }
         } elseif ($gate === 'withdrawal') {
             if (!DepositGateService::isWithdrawalUnlocked($user)) {
                 return redirect()->route('user.money-out.locked');
