@@ -19,16 +19,16 @@
             <tr>
                 <td>
                     <ul class="user-list">
-                        <li><img src="{{ get_image($item->creator->image,'user-profile') }}" alt="user"></li>
+                        <li><img src="{{ get_image($item->creator?->image ?? '','user-profile') }}" alt="user"></li>
                     </ul>
                 </td>
                 <td>{{ $item->trx_id }}</td>
-                <td>{{ $item->creator->full_name }}</td>
-                <td>{{ $item->creator->email }}</td>
-                <td>{{ $item->creator->username }}</td>
+                <td>{{ $item->creator?->full_name ?? '' }}</td>
+                <td>{{ $item->creator?->email ?? '' }}</td>
+                <td>{{ $item->creator?->username ?? '' }}</td>
                 <td>{{ $item->creator->full_mobile ?? '' }}</td>
                 <td>{{ get_amount($item->request_amount,$item->request_currency) }}</td>
-                <td><span class="text--info">{{ $item->gateway_currency->gateway->name }}</span></td>
+                <td><span class="text--info">{{ $item->gateway_currency?->gateway?->name ?? '' }}</span></td>
                 <td>
                     <span class="{{ $item->string_status->class }}">{{ $item->string_status->value }}</span>
                 </td>

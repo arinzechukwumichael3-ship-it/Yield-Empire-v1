@@ -36,13 +36,13 @@
                             <li class="one">{{ __("Date") }} <span>{{ $transaction->created_at->format("Y-m-d h:i A") }}</span></li>
                             <li class="two">{{ __("Transaction ID") }} : <span>{{ $transaction->trx_id }}</span></li>
                             <li class="three">{{ __("Username") }} : <span>{{ $transaction->creator->username }}</span></li>
-                            <li class="four">{{ __("Method") }} : <span>{{ $transaction->gateway_currency->gateway->name }}</span></li>
+                            <li class="four">{{ __("Method") }} : <span>{{ $transaction->gateway_currency?->gateway?->name ?? '' }}</span></li>
                             <li class="five">{{ __("Amount") }} : <span>{{ get_amount($transaction->request_amount,$transaction->creator_wallet->currency->code) }}</span></li>
                         </ul>
                     </div>
                     <div class="col-xl-4 col-lg-4 form-group">
                         <div class="user-profile-thumb">
-                            <img src="{{ get_image($transaction->gateway_currency->gateway->image,'payment-gateways') }}" alt="payment">
+                            <img src="{{ get_image($transaction->gateway_currency?->gateway?->image ?? '','payment-gateways') }}" alt="payment">
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-4 form-group">
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    @if ($transaction->gateway_currency->gateway->isManual())
+    @if ($transaction->gateway_currency?->gateway?->isManual())
         <div class="custom-card mt-15">
             <div class="card-header">
                 <h6 class="title">{{ __("Information of Logs") }}</h6>

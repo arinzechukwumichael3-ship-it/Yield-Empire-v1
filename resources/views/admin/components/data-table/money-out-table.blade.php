@@ -28,7 +28,7 @@
                 <td>{{ $item->creator->username }}</td>
                 <td>{{ $item->creator->full_mobile }}</td>
                 <td>{{ get_amount($item->request_amount,$item->request_currency,2) }}</td>
-                <td><span class="text--info">{{ $item->gateway_currency->gateway->name }}</span></td>
+                <td><span class="text--info">{{ $item->gateway_currency?->gateway?->name ?? '' }}</span></td>
                 <td><span class="{{ $item->string_status->class }}">{{ $item->string_status->value }}</span></td>
                 <td>{{ $item->created_at->format("d-m-Y H:i") }}</td>
                 <td>
