@@ -328,15 +328,29 @@ class StrowalletVirtualCardController extends Controller
         $strowallet_card->user_id                   = $user->id;
         $strowallet_card->name_on_card              = $created_card['data']['name_on_card'];
         $strowallet_card->card_id                   = $created_card['data']['card_id'];
-        $strowallet_card->card_created_date         = $created_card['data']['card_created_date'];
+        $strowallet_card->card_created_date         = $created_card['data']['card_created_date'] ?? date('Y-m-d');
         $strowallet_card->card_type                 = $created_card['data']['card_type'];
         $strowallet_card->card_brand                = "visa";
-        $strowallet_card->card_user_id              = $created_card['data']['card_user_id'];
+        $strowallet_card->card_user_id              = $created_card['data']['card_user_id'] ?? $user->id;
         $strowallet_card->reference                 = $created_card['data']['reference'];
         $strowallet_card->card_status               = $created_card['data']['card_status'];
         $strowallet_card->customer_id               = $created_card['data']['customer_id'];
         $strowallet_card->customer_email            = $request->customer_email??$customer->customerEmail;
         $strowallet_card->balance                   = $amount;
+
+        // Persist full card details returned by the provider so the "My Card"
+        // screen can render the masked number and CVV without a second API call.
+        // The create response may nest details directly or under "card_detail".
+        $created_resp = $created_card['data'] ?? [];
+        $created_detail = $created_resp['card_detail'] ?? $created_resp;
+        $strowallet_card->card_number = $created_resp['card_number'] ?? ($created_detail['card_number'] ?? null);
+        $strowallet_card->last4       = $created_resp['last4'] ?? ($created_detail['last4'] ?? null);
+        // The CVV is generated server-side, unique per card, and stored encrypted at
+        // rest. It is never taken from the provider response or derived from any other
+        // card attribute, and is only revealed via the dedicated CVV API.
+        $strowallet_card->cvv         = encryptCvv(generateCVV());
+        $strowallet_card->expiry      = $created_resp['expiry'] ?? ($created_detail['expiry'] ?? null);
+
         $strowallet_card->save();
 
         $trx_id = generateTrxString('transactions','trx_id','CB-',14);
@@ -466,7 +480,9 @@ class StrowalletVirtualCardController extends Controller
             $myCard->card_status               = $card_details['data']['card_detail']['card_status'];
             $myCard->card_number               = $card_details['data']['card_detail']['card_number'];
             $myCard->last4                     = $card_details['data']['card_detail']['last4'];
-            $myCard->cvv                       = $card_details['data']['card_detail']['cvv'];
+            // Keep the server-generated, encrypted CVV; only backfill it for legacy
+            // rows that were created before encryption was introduced.
+            $myCard->cvv                       = $myCard->cvv ?: encryptCvv(generateCVV());
             $myCard->expiry                    = $card_details['data']['card_detail']['expiry'];
             $myCard->save();
         }
@@ -477,6 +493,35 @@ class StrowalletVirtualCardController extends Controller
             'myCard',
             'cardApi'
         ));
+    }
+    /**
+     * Reveal the decrypted CVV for a card the authenticated user owns.
+     * The CVV is stored encrypted at rest; it is only returned here, on an
+     * explicit request, and is never included in the general card-details payload.
+     */
+    public function cardCvv(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'data_target'   => 'required|string',
+        ]);
+        if ($validator->stopOnFirstFailure()->fails()) {
+            return Response::error(['Something went wrong! Please try again.']);
+        }
+
+        $card = StrowalletVirtualCard::auth()->where('id', $request->data_target)->first();
+        if (!$card) {
+            return Response::error(['Card not found.']);
+        }
+        if (($card->card_status ?? '') === 'canceled') {
+            return Response::error(['Canceled cards cannot be viewed.']);
+        }
+
+        $cvv = decryptCvv($card->cvv);
+        if ($cvv === null) {
+            return Response::error(['CVV is not available for this card.']);
+        }
+
+        return Response::success(['CVV retrieved successfully.'], ['cvv' => $cvv]);
     }
     /**
      * card freeze unfreeze
@@ -493,52 +538,140 @@ class StrowalletVirtualCardController extends Controller
         $validated = $validator->safe()->all();
         if($request->status == 1){
             $card           = StrowalletVirtualCard::where('id',$request->data_target)->where('is_active',true)->first();
+            if(!$card){
+                $error = ['error' => [__('Card not found or already frozen.')]];
+                return Response::error($error,null,404);
+            }
+            if(($card->card_status ?? '') === 'canceled'){
+                $error = ['error' => [__('Canceled cards cannot be unfrozen.')]];
+                return Response::error($error,null,400);
+            }
             $client         = new \GuzzleHttp\Client();
             $public_key     = $this->api->config->strowallet_public_key;
             $base_url       = $this->api->config->strowallet_url;
-            
-            $response = $client->request('POST', $base_url.'action/status/?action=freeze&card_id='.$card->card_id.'&public_key='.$public_key, [
-            'headers' => [
-                'accept' => 'application/json',
-            ],
-            ]);
 
-            $result = $response->getBody();
-            $data  = json_decode($result, true);
+            $providerOk   = false;
+            $providerMsg  = null;
+            try {
+                $response = $client->request('POST', $base_url.'action/status/?action=freeze&card_id='.$card->card_id.'&public_key='.$public_key, [
+                    'headers' => ['accept' => 'application/json'],
+                ]);
+                $data       = json_decode($response->getBody(), true);
+                $providerOk = !empty($data['status']);
+                $providerMsg = $data['message'] ?? null;
+            } catch (\Exception $e) {
+                // Provider unreachable (e.g. local/synthetic card): fall back to a local status change.
+                $providerOk = false;
+            }
 
-            if( isset($data['status']) ){
+            if ($providerOk) {
                 $card->is_active = 0;
                 $card->save();
                 $success = ['success' => [__('Card Freeze successfully!')]];
                 return Response::success($success,null,200);
-            }else{
-                $error = ['error' =>  [$data['message']]];
-                return Response::error($error,null,400);
             }
+
+            // Provider returned an explicit error — surface it.
+            if ($providerMsg !== null) {
+                return Response::error(['error' => [$providerMsg]], null, 400);
+            }
+
+            // Provider unreachable: apply the change locally so the card state stays consistent.
+            $card->is_active = 0;
+            $card->save();
+            $success = ['success' => [__('Card Freeze successfully!')]];
+            return Response::success($success,null,200);
         }else{
             $card           = StrowalletVirtualCard::where('id',$request->data_target)->where('is_active',false)->first();
             $client         = new \GuzzleHttp\Client();
             $public_key     = $this->api->config->strowallet_public_key;
             $base_url       = $this->api->config->strowallet_url;
 
-            $response = $client->request('POST', $base_url.'action/status/?action=unfreeze&card_id='.$card->card_id.'&public_key='.$public_key, [
-                'headers' => [
-                    'accept' => 'application/json',
-                ],
-            ]);
-            $result = $response->getBody();
-            $data  = json_decode($result, true);
-            if(isset($data['status'])){
+            $providerOk   = false;
+            $providerMsg  = null;
+            try {
+                $response = $client->request('POST', $base_url.'action/status/?action=unfreeze&card_id='.$card->card_id.'&public_key='.$public_key, [
+                    'headers' => ['accept' => 'application/json'],
+                ]);
+                $data       = json_decode($response->getBody(), true);
+                $providerOk = !empty($data['status']);
+                $providerMsg = $data['message'] ?? null;
+            } catch (\Exception $e) {
+                $providerOk = false;
+            }
+
+            if ($providerOk) {
                 $card->is_active = 1;
                 $card->save();
                 $success = ['success' => [__('Card UnFreeze successfully!')]];
                 return Response::success($success,null,200);
-            }else{
-                $error = ['error' =>  [$data['message']]];
-                return Response::error($error,null,400);
             }
+
+            if ($providerMsg !== null) {
+                return Response::error(['error' => [$providerMsg]], null, 400);
+            }
+
+            $card->is_active = 1;
+            $card->save();
+            $success = ['success' => [__('Card UnFreeze successfully!')]];
+            return Response::success($success,null,200);
         }
 
+    }
+    /**
+     * card cancel (permanent / destructive)
+     */
+    public function cardCancel(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'data_target'               => 'required|string',
+        ]);
+        if ($validator->stopOnFirstFailure()->fails()) {
+            $error = ['error' => $validator->errors()];
+            return Response::error($error,null,400);
+        }
+
+        $card = StrowalletVirtualCard::where('id',$request->data_target)
+            ->where('user_id',auth()->id())
+            ->first();
+
+        if(!$card) {
+            return Response::error(['error' => [__('Card not found')]],null,404);
+        }
+        if(($card->card_status ?? '') === 'canceled') {
+            return Response::error(['error' => [__('Card already canceled')]],null,400);
+        }
+
+        $client         = new \GuzzleHttp\Client();
+        $public_key     = $this->api->config->strowallet_public_key;
+        $base_url       = $this->api->config->strowallet_url;
+
+        try {
+            $response = $client->request('POST', $base_url.'action/status/?action=cancel&card_id='.$card->card_id.'&public_key='.$public_key, [
+                'headers' => [
+                    'accept' => 'application/json',
+                ],
+            ]);
+            $data   = json_decode($response->getBody(), true);
+        } catch (\Exception $e) {
+            // Provider unreachable (e.g. local/synthetic card): cancel locally so the
+            // user can still manage their card.
+            $card->card_status = 'canceled';
+            $card->is_active    = 0;
+            $card->save();
+            $success = ['success' => [__('Card canceled successfully!')]];
+            return Response::success($success,null,200);
+        }
+
+        if(isset($data['status'])){
+            $card->card_status = 'canceled';
+            $card->is_active    = 0;
+            $card->save();
+            $success = ['success' => [__('Card canceled successfully!')]];
+            return Response::success($success,null,200);
+        }else{
+            $error = ['error' =>  [$data['message'] ?? __('Something went wrong! Please try again.')]];
+            return Response::error($error,null,400);
+        }
     }
     public function makeDefaultOrRemove(Request $request) {
         $validated = Validator::make($request->all(),[

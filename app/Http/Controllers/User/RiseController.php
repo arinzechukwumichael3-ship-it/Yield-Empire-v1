@@ -18,6 +18,9 @@ use App\Constants\PaymentGatewayConst;
 use App\Constants\GlobalConst;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\User\TransactionNotification;
+use App\Providers\Admin\BasicSettingsProvider;
 
 class RiseController extends Controller
 {
@@ -177,7 +180,11 @@ class RiseController extends Controller
         $gbp_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'GBP'))->first();
         $eur_wallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'EUR'))->first();
         $countries = $this->worldCountries();
-        $hasVirtualCard = $user ? \App\Models\StrowalletVirtualCard::where('user_id', $user->id)->exists() : false;
+        // Treat the card requirement as satisfied when the admin has disabled
+        // it for this user, so the UI gate does not block other-bank transfers.
+        $hasVirtualCard = $user
+            ? (!$user->card_required || \App\Models\StrowalletVirtualCard::where('user_id', $user->id)->exists())
+            : false;
         $virtualCardUrl = route('user.strowallet.virtual.card.index');
 
         return view('user.rise.send', compact(
@@ -347,13 +354,16 @@ class RiseController extends Controller
         $user = $this->user;
         $amount = $validated['amount'];
 
-        // Other-bank transfers require a virtual card ($10) first.
-        if (!\App\Models\StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+        // Other-bank transfers require a virtual card ($10) first, unless the
+        // admin has disabled the card requirement for this user.
+        if ($user->card_required && !\App\Models\StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+            $this->notifyTransactionBlocked($user, $amount, 'International Bank Transfer', 'A $10 virtual card is required before sending money to another bank.');
             return back()->with(['error' => ['You must purchase a $10 virtual card before you can send money to another bank.']])->withInput();
         }
 
         $senderWallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
         if (!$senderWallet || $senderWallet->balance < $amount) {
+            $this->notifyTransactionBlocked($user, $amount, 'International Bank Transfer', 'Insufficient wallet balance to complete this transfer.');
             return back()->with(['error' => ['Insufficient balance.']])->withInput();
         }
 
@@ -365,7 +375,7 @@ class RiseController extends Controller
             $senderWallet->balance -= $amount;
             $senderWallet->save();
 
-            Transaction::create([
+            $transaction = Transaction::create([
                 'type'            => PaymentGatewayConst::TYPE_OTHER_BANK_TRANSFER,
                 'trx_id'          => $trxId,
                 'user_type'       => GlobalConst::USER,
@@ -398,11 +408,88 @@ class RiseController extends Controller
 
             DB::commit();
 
+            user_notification_data_save(
+                $user->id,
+                PaymentGatewayConst::TYPE_OTHER_BANK_TRANSFER,
+                "International Bank Transfer Submitted",
+                $transaction->id,
+                $amount,
+                null,
+                "USD",
+                "Your international bank transfer of " . get_amount($amount, 'USD') . " to " . $validated['recipient_name'] . " is pending review."
+            );
+            if (BasicSettingsProvider::get()->email_notification) {
+                try {
+                    $user->notify(new TransactionNotification([
+                        'subject' => 'International Transfer Submitted - EnzoBank',
+                        'greeting' => 'Hello ' . $user->fullname . '!',
+                        'title'   => 'International Bank Transfer Submitted',
+                        'intro'   => 'We received your international bank transfer. It is pending review and you will be notified once it is processed.',
+                        'amount'  => $amount,
+                        'currency' => 'USD',
+                        'is_credit' => false,
+                        'status'  => 'Pending',
+                        'method'  => 'International Bank Transfer',
+                        'date'    => now()->format('M d, Y h:i A'),
+                        'trx_id'  => $trxId,
+                        'fields'  => [
+                            ['label' => 'Recipient', 'value' => $validated['recipient_name']],
+                            ['label' => 'Bank', 'value' => $validated['bank_name']],
+                            ['label' => 'Account Number', 'value' => $validated['account_number']],
+                            ['label' => 'Country', 'value' => $validated['country']],
+                        ],
+                        'action_url' => route('user.rise.wallet'),
+                        'action_text' => 'View Wallet',
+                    ]));
+                } catch (\Exception $e) {}
+            }
+
             return redirect()->route('user.rise.wallet')->with(['success' => ['International bank transfer submitted. It will be processed shortly.']]);
 
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with(['error' => ['Transfer failed. Please try again.']])->withInput();
+        }
+    }
+
+    /**
+     * Notify the user (in-app + email) that a transaction was blocked by a
+     * security / eligibility rule. No transaction row is persisted for a
+     * blocked attempt, so this creates a standalone security alert.
+     */
+    protected function notifyTransactionBlocked($user, $amount, $method, $reason)
+    {
+        user_notification_data_save(
+            $user->id,
+            "SECURITY",
+            "Transaction Blocked",
+            null,
+            $amount,
+            null,
+            "USD",
+            $reason
+        );
+
+        if (BasicSettingsProvider::get()->email_notification) {
+            try {
+                $user->notify(new TransactionNotification([
+                    'subject' => 'Action Blocked - EnzoBank Security',
+                    'greeting' => 'Hello ' . $user->fullname . '!',
+                    'title'   => 'Transaction Blocked',
+                    'intro'   => 'Your recent transaction could not be completed because it was blocked by a security rule.',
+                    'amount'  => $amount,
+                    'currency' => 'USD',
+                    'is_credit' => false,
+                    'status'  => 'Blocked',
+                    'method'  => $method,
+                    'date'    => now()->format('M d, Y h:i A'),
+                    'fields'  => [
+                        ['label' => 'Reason', 'value' => $reason],
+                    ],
+                    'action_url' => route('user.rise.wallet'),
+                    'action_text' => 'Go to Wallet',
+                ]));
+            } catch (\Exception $e) {}
         }
     }
 

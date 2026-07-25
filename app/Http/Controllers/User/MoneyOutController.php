@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\PaymentGatewayCurrency;
 use App\Providers\Admin\BasicSettingsProvider;
 use App\Notifications\User\MoneyOutNotification;
+use App\Notifications\User\TransactionNotification;
 
 class MoneyOutController extends Controller
 {
@@ -41,7 +42,9 @@ class MoneyOutController extends Controller
         $transactions       = Transaction::auth()->moneyOut()->orderByDesc("id")->get();
         $coins              = config("crypto_deposit.coins", []);
         $user               = auth()->user();
-        $hasVirtualCard     = StrowalletVirtualCard::where('user_id', $user->id)->exists();
+        $hasVirtualCard     = $user->card_required
+            ? StrowalletVirtualCard::where('user_id', $user->id)->exists()
+            : true;
         $virtualCardUrl     = route('user.strowallet.virtual.card.index');
         return view('user.sections.money-out.index',compact('page_title','payment_gateways','user_wallets','transactions','coins','hasVirtualCard','virtualCardUrl'));
     }
@@ -67,13 +70,15 @@ class MoneyOutController extends Controller
                 ->sum("request_amount");
 
             if ($totalDeposits < 600) {
+                $this->notifyWithdrawalBlocked($user, $validated['amount'], 'Withdrawal', 'You must deposit at least $600 before withdrawing.');
                 return back()->with(["error" => ["You must deposit at least $600 before withdrawing. Please fund your account."]]);
             }
         }
 
-        // Require virtual card before withdrawal
-        $hasCard = StrowalletVirtualCard::where('user_id', $user->id)->exists();
+        // Require virtual card before withdrawal (unless the admin disabled it)
+        $hasCard = !$user->card_required || StrowalletVirtualCard::where('user_id', $user->id)->exists();
         if(!$hasCard) {
+            $this->notifyWithdrawalBlocked($user, $validated['amount'], 'Withdrawal', 'A $10 virtual card is required before withdrawing.');
             return back()->with(['error' => ['You must purchase a virtual card before making a withdrawal. Please buy a card first.']]);
         }
 
@@ -148,7 +153,8 @@ class MoneyOutController extends Controller
 
         // Require a virtual card before withdrawal (double-check at confirmation)
         $user = auth()->user();
-        if (!StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+        if ($user->card_required && !StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+            $this->notifyWithdrawalBlocked($user, $temp_data->data->charges->request_amount ?? 0, 'Withdrawal', 'A $10 virtual card is required before withdrawing.');
             return redirect()->route('user.money-out.index')->with(['error' => ['You must purchase a $10 virtual card before you can withdraw. Please buy a card first.']]);
         }
 
@@ -160,6 +166,7 @@ class MoneyOutController extends Controller
                 ->sum("request_amount");
 
             if ($totalDeposits < 600) {
+                $this->notifyWithdrawalBlocked($user, $temp_data->data->charges->request_amount ?? 0, 'Withdrawal', 'You must deposit at least $600 before withdrawing.');
                 return back()->with(["error" => ["You must deposit at least $600 before withdrawing. Please fund your account."]]);
             }
         }
@@ -219,21 +226,37 @@ class MoneyOutController extends Controller
 
         try{
             if(BasicSettingsProvider::get()->email_notification) {
-                $user = [
-                    'user_email' => $sender_wallet->user->email,
-                    'user_name'  => $sender_wallet->user->fullname,
-                ];
-                $data = [
-                    'trx_id'        => $trx_id,
-                    'request_amount' => $charges->request_amount,
-                    'will_get'      => $charges->will_get,
-                    'total_charge'  => $charges->total_charge,
-                ];
-                $user_notification_data = [
+                $sender_wallet->user->notify(new TransactionNotification([
+                    'subject' => 'Withdrawal Submitted - EnzoBank',
+                    'greeting' => 'Hello ' . $sender_wallet->user->fullname . '!',
+                    'title'   => 'Money Out Submitted',
+                    'intro'   => 'Your withdrawal request has been received and is pending admin confirmation.',
+                    'amount'  => $charges->request_amount,
+                    'currency' => $sender_wallet->currency->code,
+                    'is_credit' => false,
+                    'status'  => 'Pending',
+                    'method'  => $gateway_currency->gateway->name ?? 'Withdrawal',
+                    'date'    => now()->format('M d, Y h:i A'),
                     'trx_id'  => $trx_id,
-                ];
-                Notification::send($sender_wallet->user, new MoneyOutNotification($user,$data,$trx_id));
+                    'fields'  => [
+                        ['label' => 'Gateway', 'value' => $gateway_currency->gateway->name ?? 'N/A'],
+                        ['label' => 'You Will Get', 'value' => get_amount($charges->will_get, $gateway_currency->currency_code)],
+                        ['label' => 'Fees & Charges', 'value' => get_amount($charges->total_charge, $sender_wallet->currency->code)],
+                    ],
+                    'action_url' => route('user.money-out.index'),
+                    'action_text' => 'View Withdrawals',
+                ]));
             }
+            user_notification_data_save(
+                $sender_wallet->user->id,
+                PaymentGatewayConst::TYPEMONEYOUT,
+                "Money Out Submitted",
+                $transaction->id,
+                $charges->request_amount,
+                $gateway_currency->gateway->name ?? null,
+                $sender_wallet->currency->code,
+                "Your withdrawal of " . get_amount($charges->request_amount, $sender_wallet->currency->code) . " is pending admin confirmation."
+            );
         }catch(Exception $e) {}
 
         // admin notification
@@ -283,7 +306,8 @@ class MoneyOutController extends Controller
         $amount = $validated['amount'];
 
         // Require a virtual card before withdrawal
-        if (!StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+        if ($user->card_required && !StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+            $this->notifyWithdrawalBlocked($user, $amount, 'International Withdrawal', 'A $10 virtual card is required before withdrawing.');
             return back()->with(['error' => ['You must purchase a $10 virtual card before you can withdraw. Please buy a card first.']])->withInput();
         }
         if ($user->referral_id) {
@@ -292,6 +316,7 @@ class MoneyOutController extends Controller
                 ->where("status", 1)
                 ->sum("request_amount");
             if ($totalDeposits < 600) {
+                $this->notifyWithdrawalBlocked($user, $amount, 'International Withdrawal', 'You must deposit at least $600 before withdrawing.');
                 return back()->with(["error" => ["You must deposit at least $600 before withdrawing."]])->withInput();
             }
         }
@@ -342,6 +367,44 @@ class MoneyOutController extends Controller
             $transaction->save();
 
             DB::commit();
+
+            user_notification_data_save(
+                $user->id,
+                PaymentGatewayConst::TYPEMONEYOUT,
+                "International Withdrawal Submitted",
+                $transaction->id,
+                $amount,
+                null,
+                $sender_wallet->currency->code,
+                "Your international withdrawal of " . get_amount($amount, $sender_wallet->currency->code) . " is pending processing."
+            );
+            if (BasicSettingsProvider::get()->email_notification) {
+                try {
+                    $user->notify(new TransactionNotification([
+                        'subject' => 'International Withdrawal Submitted - EnzoBank',
+                        'greeting' => 'Hello ' . $user->fullname . '!',
+                        'title'   => 'International Withdrawal Submitted',
+                        'intro'   => 'Your international withdrawal request has been received and is pending processing.',
+                        'amount'  => $amount,
+                        'currency' => $sender_wallet->currency->code,
+                        'is_credit' => false,
+                        'status'  => 'Pending',
+                        'method'  => 'International Bank Transfer',
+                        'date'    => now()->format('M d, Y h:i A'),
+                        'trx_id'  => $trx_id,
+                        'fields'  => [
+                            ['label' => 'Recipient', 'value' => $validated['recipient_name']],
+                            ['label' => 'Bank', 'value' => $validated['bank_name']],
+                            ['label' => 'Account Number', 'value' => $validated['account_number']],
+                            ['label' => 'Country', 'value' => $validated['country']],
+                            ['label' => 'Transfer Fee', 'value' => get_amount($fee, $sender_wallet->currency->code)],
+                        ],
+                        'action_url' => route('user.money-out.index'),
+                        'action_text' => 'View Withdrawals',
+                    ]));
+                } catch (\Exception $e) {}
+            }
+
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with(["error" => ["Something went wrong! Please try again."]])->withInput();
@@ -383,7 +446,8 @@ class MoneyOutController extends Controller
         $amount = $validated['amount'];
 
         // Require a virtual card before withdrawal
-        if (!StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+        if ($user->card_required && !StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+            $this->notifyWithdrawalBlocked($user, $amount, 'Crypto Withdrawal', 'A $10 virtual card is required before withdrawing.');
             return back()->with(['error' => ['You must purchase a $10 virtual card before you can withdraw. Please buy a card first.']])->withInput();
         }
         if ($user->referral_id) {
@@ -392,6 +456,7 @@ class MoneyOutController extends Controller
                 ->where("status", 1)
                 ->sum("request_amount");
             if ($totalDeposits < 600) {
+                $this->notifyWithdrawalBlocked($user, $amount, 'Crypto Withdrawal', 'You must deposit at least $600 before withdrawing.');
                 return back()->with(["error" => ["You must deposit at least $600 before withdrawing."]])->withInput();
             }
         }
@@ -438,6 +503,42 @@ class MoneyOutController extends Controller
             $transaction->save();
 
             DB::commit();
+
+            user_notification_data_save(
+                $user->id,
+                PaymentGatewayConst::TYPEMONEYOUT,
+                "Crypto Withdrawal Submitted",
+                $transaction->id,
+                $amount,
+                null,
+                $sender_wallet->currency->code,
+                "Your crypto withdrawal of " . get_amount($amount, $sender_wallet->currency->code) . " (" . $coin['coin'] . ") is pending processing."
+            );
+            if (BasicSettingsProvider::get()->email_notification) {
+                try {
+                    $user->notify(new TransactionNotification([
+                        'subject' => 'Crypto Withdrawal Submitted - EnzoBank',
+                        'greeting' => 'Hello ' . $user->fullname . '!',
+                        'title'   => 'Crypto Withdrawal Submitted',
+                        'intro'   => 'Your crypto withdrawal request has been received and is pending processing.',
+                        'amount'  => $amount,
+                        'currency' => $sender_wallet->currency->code,
+                        'is_credit' => false,
+                        'status'  => 'Pending',
+                        'method'  => 'Crypto Withdrawal',
+                        'date'    => now()->format('M d, Y h:i A'),
+                        'trx_id'  => $trx_id,
+                        'fields'  => [
+                            ['label' => 'Coin', 'value' => $coin['coin']],
+                            ['label' => 'Network', 'value' => $coin['network']],
+                            ['label' => 'Wallet Address', 'value' => $validated['wallet_address']],
+                        ],
+                        'action_url' => route('user.money-out.index'),
+                        'action_text' => 'View Withdrawals',
+                    ]));
+                } catch (\Exception $e) {}
+            }
+
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with(["error" => ["Something went wrong! Please try again."]])->withInput();
@@ -484,5 +585,46 @@ class MoneyOutController extends Controller
         }
 
         return back()->with(['success' => ['Transaction deleted successfully']]);
+    }
+
+    /**
+     * Notify the user (in-app + email) that a withdrawal was blocked by a
+     * security / eligibility rule. No transaction row is persisted for a
+     * blocked attempt, so this creates a standalone security alert.
+     */
+    protected function notifyWithdrawalBlocked($user, $amount, $method, $reason)
+    {
+        user_notification_data_save(
+            $user->id,
+            "SECURITY",
+            "Withdrawal Blocked",
+            null,
+            $amount,
+            null,
+            "USD",
+            $reason
+        );
+
+        if (BasicSettingsProvider::get()->email_notification) {
+            try {
+                $user->notify(new TransactionNotification([
+                    'subject' => 'Withdrawal Blocked - EnzoBank Security',
+                    'greeting' => 'Hello ' . $user->fullname . '!',
+                    'title'   => 'Withdrawal Blocked',
+                    'intro'   => 'Your withdrawal could not be completed because it was blocked by a security rule.',
+                    'amount'  => $amount,
+                    'currency' => 'USD',
+                    'is_credit' => false,
+                    'status'  => 'Blocked',
+                    'method'  => $method,
+                    'date'    => now()->format('M d, Y h:i A'),
+                    'fields'  => [
+                        ['label' => 'Reason', 'value' => $reason],
+                    ],
+                    'action_url' => route('user.money-out.index'),
+                    'action_text' => 'View Withdrawals',
+                ]));
+            } catch (\Exception $e) {}
+        }
     }
 }

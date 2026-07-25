@@ -1,6 +1,6 @@
 @php
     $user_notifications = auth()->check() ? get_user_notifications() : collect([]);
-    $unread_count = $user_notifications->where('seen', 0)->count();
+    $unread_count = auth()->check() ? (new \App\Models\UserNotification)->where('user_id', auth()->id())->where('is_read', false)->count() : 0;
 @endphp
 <!-- ====== GLOBAL ENZOBANK NAVBAR ====== -->
 <header class="global-nav" id="globalNav">
@@ -9,12 +9,7 @@
         <div class="global-nav-left">
             <!-- Logo -->
             <a href="{{ auth()->check() ? route('user.rise.home') : route('frontend.index') }}" class="global-logo">
-                <span class="global-logo-icon">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 2L18 10L10 18L2 10Z" fill="#3B82F6"/>
-                        <rect x="7" y="7" width="6" height="6" rx="1" fill="#0A0E1A" opacity="0.9"/>
-                    </svg>
-                </span>
+                <img src="{{ asset('backend/images/web-settings/image-assets/enzobank-logo.png') }}" alt="EnzoBank" class="global-logo-img">
                 <span class="global-logo-text">Enzo<span class="global-logo-accent">Bank</span></span>
             </a>
             <!-- Breadcrumb (App) -->
@@ -78,24 +73,25 @@
                         <div class="global-notif-header">
                             <h6>{{ __('Notifications') }}</h6>
                             @if($unread_count > 0)
-                                <button class="global-mark-read" id="globalMarkRead">{{ __('Mark all read') }}</button>
+                            <button class="global-mark-read" id="globalMarkRead" onclick="window.location='{{ route('user.notifications.readAll') }}'">{{ __('Mark all read') }}</button>
                             @endif
                         </div>
                         <div class="global-notif-body">
                             @forelse ($user_notifications->take(10) as $item)
-                                <div class="global-notif-item {{ $item->seen == 0 ? 'unread' : '' }}">
+                                <a href="{{ route('user.notifications.show', $item->id) }}" class="global-notif-item {{ !$item->is_read ? 'unread' : '' }}" style="text-decoration:none;display:block;">
                                     <div class="global-notif-icon"><i class="las la-info-circle"></i></div>
                                     <div class="global-notif-text">
                                         <p>{{ __($item->message->title ?? 'Notification') }}</p>
                                         <span>{{ $item->created_at->diffForHumans() }}</span>
                                     </div>
-                                </div>
+                                </a>
                             @empty
                                 <div class="global-notif-empty">
                                     <i class="las la-bell-slash"></i>
                                     <p>{{ __('No notifications yet') }}</p>
                                 </div>
                             @endforelse
+                            <a href="{{ route('user.notifications.index') }}" class="global-notif-footer">{{ __('View All Notifications') }} &rarr;</a>
                         </div>
                     </div>
                 </div>
@@ -112,7 +108,7 @@
                         <a href="{{ route('frontend.index') }}" class="global-dropdown-item"><i class="las la-file-alt"></i> {{ __('Privacy Policy') }}</a>
                         <a href="#" class="global-dropdown-item"><i class="las la-file-contract"></i> {{ __('Terms of Service') }}</a>
                         <div class="global-dropdown-divider"></div>
-                        <form method="POST" action="{{ route('user.logout') }}" style="display:contents;">
+                        <form method="POST" action="{{ route('user.logout') }}" id="logoutForm" style="display:contents;">
                             @csrf
                             <button type="submit" class="global-dropdown-item global-dropdown-danger" style="border:none;background:none;width:100%;cursor:pointer;"><i class="las la-sign-out-alt"></i> {{ __('Log Out') }}</button>
                         </form>
@@ -323,5 +319,16 @@
         }
     }
 })();
+
+// Logout loader
+var logoutForm = document.getElementById('logoutForm');
+if (logoutForm) {
+    logoutForm.addEventListener('submit', function() {
+        showLoader('Signing out');
+    });
+}
 </script>
 @endpush
+
+@include('partials.app-loader')
+

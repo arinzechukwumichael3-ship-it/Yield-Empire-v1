@@ -136,7 +136,7 @@
                                 </ul>
                             </td>
                             <td>{{ __("Server Software") }}</td>
-                            <td><span>{{ $_SERVER['SERVER_SOFTWARE'] }}</span></td>
+                            <td><span>{{ $_SERVER['SERVER_SOFTWARE'] ?? '' }}</span></td>
                         </tr>
                         <tr>
                             <td>

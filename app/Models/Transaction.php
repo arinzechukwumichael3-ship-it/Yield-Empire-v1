@@ -40,7 +40,6 @@ class Transaction extends Model
         "available_balance"             => "decimal:8",
         "payment_currency"              => "string",
         "remark"                        => "string",
-        'details'                       => 'object',
         'status'                        => 'integer',
     ];
 
@@ -99,6 +98,21 @@ class Transaction extends Model
         }else if($this->user_type == GlobalConst::ADMIN) { //  if user type ADMIN wallet_id is user wallet id. Because admin has no wallet.
             return $this->user_wallet;
         }
+    }
+
+    public function getDetailsAttribute($value)
+    {
+        if (is_string($value)) {
+            $decoded = json_decode($value, false);
+            if (is_string($decoded)) {
+                $decoded = json_decode($decoded, false);
+            }
+            return is_object($decoded) ? $decoded : (is_array($decoded) ? (object) $decoded : (object) []);
+        }
+        if (is_array($value)) {
+            return (object) $value;
+        }
+        return is_object($value) ? $value : (object) [];
     }
 
     public function getStringStatusAttribute() {
@@ -220,49 +234,23 @@ class Transaction extends Model
 
 
     public function getFundReceiverInfoAttribute() {
-        $beneficiary = $this->details->beneficiary;
-        $data = [
-            'receiver_number_title' => "",
-            'receiver_number_value' => "",
-            'receiver_holder_title' => "",
-            'receiver_holder_value' => "",
-        ];
+        $details = $this->details;
+        $receiverName   = $details->receiver_name ?? $details->account_holder_name ?? $details->description ?? $details->sender ?? 'N/A';
+        $receiverNumber = $details->receiver_account ?? $details->account_number ?? $details->card_number ?? 'N/A';
 
-        if($beneficiary->method->slug == Str::slug(GlobalConst::TRX_MOBILE_WALLET_TRANSFER)){
-            $data = [
-                'receiver_number_title' =>  'Account Holder Number',
-                'receiver_number_value' => $beneficiary->account_number,
-                'receiver_holder_title' => 'Account Holder Name',
-                'receiver_holder_value' => $beneficiary->account_holder_name,
-            ];
-        }else{
-            if($beneficiary->beneficiary_subtype == GlobalConst::TRX_ACCOUNT_NUMBER){
-                $data = [
-                    'receiver_number_title' =>  'Account Holder Number',
-                    'receiver_number_value' => $beneficiary->account_number,
-                    'receiver_holder_title' => 'Account Holder Name',
-                    'receiver_holder_value' => $beneficiary->account_holder_name,
-                ];
-            }else{
-                $data = [
-                    'receiver_number_title' =>  'Card Holder Number',
-                    'receiver_number_value' => $beneficiary->card_number,
-                    'receiver_holder_title' => 'Card Holder Name',
-                    'receiver_holder_value' => $beneficiary->card_holder_name,
-                ];
-            }
-        }
+        $data = [
+            'receiver_number_title' =>  'Account Holder Number',
+            'receiver_number_value' => $receiverNumber,
+            'receiver_holder_title' => 'Account Holder Name',
+            'receiver_holder_value' => $receiverName,
+        ];
 
         return (object) $data;
     }
 
     public function getOtherBankNameAttribute(){
-        $beneficiary = $this->details->beneficiary;
-        if($beneficiary->method->slug == Str::slug(GlobalConst::TRX_MOBILE_WALLET_TRANSFER)){
-            return $beneficiary->mobile_bank->name;
-        }elseif($beneficiary->method->slug == Str::slug(GlobalConst::TRX_OTHER_BANK_TRANSFER)){
-            return $beneficiary->bank->name;
-        }
+        $details = $this->details;
+        return $details->receiver_bank ?? $details->bank_name ?? 'N/A';
     }
 
     public function getUserTrxTypeAttribute(){

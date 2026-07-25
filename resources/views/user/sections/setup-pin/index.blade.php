@@ -1,4 +1,4 @@
-@extends('user.layouts.master')
+@extends('user.layouts.rise-master')
 
 @push('css')
 

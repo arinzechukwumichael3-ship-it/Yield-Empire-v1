@@ -16,6 +16,9 @@
 </style>
 @endpush
 
+@php
+    $cryptoEnabled = optional(auth()->user())->crypto_status;
+@endphp
 @section('content')
 <div class="vc-locked">
     <div class="vc-locked-card-bg">
@@ -24,11 +27,19 @@
     <div class="vc-locked-icon">🔒</div>
     <h2>Virtual Card Locked</h2>
     <div class="vc-locked-divider"></div>
-    <p>To activate your virtual card, you must make a personal crypto deposit of at least $10.</p>
-    <div class="vc-locked-warning">
-        ⚠️ Internal transfers do not qualify for card activation.
-    </div>
-    <a href="{{ route('user.crypto.deposit.index') }}" class="vc-locked-btn">Make a Deposit &rarr;</a>
-    <p class="vc-locked-sub">Already deposited? Deposits are reviewed within 1-3 hours.</p>
+    @if($cryptoEnabled)
+        <p>To activate your virtual card, you must make a personal crypto deposit of at least $10.</p>
+        <div class="vc-locked-warning">
+            ⚠️ Internal transfers do not qualify for card activation.
+        </div>
+        <a href="{{ route('user.crypto.deposit.index') }}" class="vc-locked-btn">Make a Deposit &rarr;</a>
+        <p class="vc-locked-sub">Already deposited? Deposits are reviewed within 1-3 hours.</p>
+    @else
+        <p>Crypto deposits are currently disabled for your account, so card activation via deposit is not required.</p>
+        <div class="vc-locked-warning">
+            ⚠️ Your virtual card feature is managed by an administrator. Please contact support if you need access.
+        </div>
+        <a href="{{ route('user.rise.home') }}" class="vc-locked-btn">Back to Home</a>
+    @endif
 </div>
 @endsection

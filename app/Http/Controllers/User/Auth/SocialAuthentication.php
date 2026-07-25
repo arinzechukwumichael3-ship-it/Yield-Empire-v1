@@ -58,7 +58,7 @@ class SocialAuthentication extends Controller
             $user_info['image']     = $user->user['picture'];
             $user_info['email_verified']    = ($basic_settings->email_verification == true) ? false : true;
             $user_info['sms_verified']      = ($basic_settings->sms_verification == true) ? false : true;
-            $validated['kyc_verified']      = ($basic_settings->kyc_verification == true) ? false : true;
+            $validated['kyc_verified']      = ($basic_settings->kyc_verification == true) ? 0 : 1;
             $user = User::create($user_info);
         }catch(Exception $e) {
             return redirect()->route('user.login')->with(['error' => ["Something went wrong! Please try again"]]);
@@ -106,7 +106,7 @@ class SocialAuthentication extends Controller
             $user_info['image']     = $user->avatar ?? "";
             $user_info['email_verified']    = ($basic_settings->email_verification == true) ? false : true;
             $user_info['sms_verified']      = ($basic_settings->sms_verification == true) ? false : true;
-            $validated['kyc_verified']      = ($basic_settings->kyc_verification == true) ? false : true;
+            $validated['kyc_verified']      = ($basic_settings->kyc_verification == true) ? 0 : 1;
             $user = User::create($user_info);
         }catch(Exception $e) {
             return redirect()->route('user.login')->with(['error' => ["Something went wrong! Please try again"]]);

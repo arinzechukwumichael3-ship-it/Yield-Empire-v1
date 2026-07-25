@@ -17,9 +17,13 @@ class DashboardController extends Controller
     }
 
     public function logout(Request $request) {
+        $authSource = session('auth_source', 'web');
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        if ($authSource === 'app') {
+            return redirect()->route('app.login');
+        }
         return redirect()->route('user.login');
     }
 
@@ -38,12 +42,15 @@ class DashboardController extends Controller
     public function checkPin(Request $request){
         $pin = $request->pin;
         $user = auth()->user();
-        if($pin != $user->pin_code){
-            $data = 0;
-            return response($data);
-        }else{
-            $data = 1;
-            return response( $data);
+
+        // No PIN set yet — tell client to show setup mode
+        if (is_null($user->pin_code)) {
+            return response('2');
         }
+
+        if ($pin != $user->pin_code) {
+            return response('0');
+        }
+        return response('1');
     }
 }

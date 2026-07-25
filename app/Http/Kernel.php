@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\PreventAuthPageCaching::class,
     ];
 
     /**
@@ -81,6 +82,7 @@ class Kernel extends HttpKernel
         'kyc.verification.guard'        => \App\Http\Middleware\KycVerificationGuard::class,
         'pin.setup.guard'               => \App\Http\Middleware\User\PinSetupGuard::class,
         'deposit.gate'                  => \App\Http\Middleware\DepositGateMiddleware::class,
+        'set.app.mode'                  => \App\Http\Middleware\SetAppModeCookie::class,
 
         // Api middleware
         'api.user.auth.guard'           => \App\Http\Middleware\Api\V1\User\AuthGuard::class,

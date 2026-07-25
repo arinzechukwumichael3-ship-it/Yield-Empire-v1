@@ -243,6 +243,7 @@ class UserCareController extends Controller
             'status'                => 'required|boolean',
             'virtual_card_status'   => 'required|boolean',
             'crypto_status'         => 'required|boolean',
+            'card_required'         => 'required|boolean',
             'add_money_status'      => 'required|boolean',
             'fund_transfer_status'  => 'required|boolean',
             'money_out_status'      => 'required|boolean',

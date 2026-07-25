@@ -226,31 +226,31 @@
         $typeLabels = [
             "ADD-MONEY" => "Deposit", "MONEY-OUT" => "Withdrawal", "WITHDRAW" => "Withdrawal",
             "BONUS" => "Referral Bonus", "COMMISSION" => "Commission",
-            "OWN-BANK-TRANSFER" => "Own Transfer", "OTHER-BANK-TRANSFER" => "Bank Transfer",
+            "OWN-BANK-TRANSFER" => "Bank Transfer", "OTHER-BANK-TRANSFER" => "Bank Transfer",
             "TRANSFER-MONEY" => "Transfer", "MONEY-EXCHANGE" => "Currency Exchange",
             "ADD-SUBTRACT-BALANCE" => "Adjustment", "MAKE-PAYMENT" => "Payment",
             "CAPITAL-RETURN" => "Capital Return", "VIRTUAL-CARD" => "Virtual Card",
             "MOBILE-WALLET-TRANSFER" => "Mobile Wallet", "Salary Disbursement" => "Salary",
+            "FUND-RECEIVED" => "Money Received", "SECURITY" => "Security Alert",
         ];
-        $recentNotifs = \App\Models\Transaction::where("user_id", auth()->id())
-            ->where("status", 1)
-            ->latest()
-            ->take(5)
+        $creditTypes = ["ADD-MONEY","BONUS","COMMISSION","CAPITAL-RETURN","Salary Disbursement","FUND-RECEIVED"];
+        $recentNotifs = \App\Models\UserNotification::where("user_id", auth()->id())
+            ->latest("id")
+            ->take(10)
             ->get()
-            ->map(function($t) use ($typeLabels) {
-                $det = is_string($t->details) ? json_decode($t->details) : $t->details;
-                $isCredit = in_array($t->type, ["ADD-MONEY","BONUS","COMMISSION","CAPITAL-RETURN","Salary Disbursement"])
-                    && (!in_array($t->type, ["TRANSFER-MONEY","OWN-BANK-TRANSFER","OTHER-BANK-TRANSFER"]) || ($t->receiver_id ?? null) == auth()->id());
+            ->map(function($n) use ($typeLabels, $creditTypes) {
+                $msg  = is_object($n->message) ? $n->message : (object)[];
+                $type = $n->type ?? "GENERAL";
                 return [
-                    "id" => $t->id,
-                    "trx" => $t->trx_id,
-                    "type" => $t->type,
-                    "label" => $typeLabels[$t->type] ?? ucwords(str_replace(["-","_"], " ", strtolower($t->type))),
-                    "amount" => (float)$t->request_amount,
-                    "is_credit" => $isCredit,
-                    "desc" => $det->description ?? "",
-                    "date" => $t->created_at ? $t->created_at->format("M d, Y h:i A") : "",
-                    "created" => $t->created_at ? $t->created_at->timestamp : 0,
+                    "id"        => $n->id,
+                    "trx"       => "",
+                    "type"      => $type,
+                    "label"     => $typeLabels[$type] ?? ($msg->title ?? "Notification"),
+                    "amount"    => floatval($msg->amount ?? 0),
+                    "is_credit" => in_array($type, $creditTypes),
+                    "desc"      => $msg->message ?? ($msg->title ?? ""),
+                    "date"      => $n->created_at ? $n->created_at->format("M d, Y h:i A") : "",
+                    "created"   => $n->created_at ? $n->created_at->timestamp : 0,
                 ];
             })->values();
     @endphp
@@ -281,13 +281,19 @@
             list.innerHTML = notifs.map(function(n) {
                 var isNew = newNotifs.some(function(nn) { return nn.id === n.id; });
                 var dotClass = n.is_credit ? "credit" : (n.type === "BONUS" ? "bonus" : "debit");
+                var hasAmount = (n.amount && parseFloat(n.amount) > 0);
+                var amountStr = hasAmount ? n.amount.toLocaleString("en-US", {style:"currency",currency:"USD"}) : "";
+                var titleStr  = (hasAmount ? (n.is_credit ? "+" : "-") + amountStr + " " : "") + n.label;
+                var amtHtml   = hasAmount
+                    ? "<span class=\"notif-item-amt " + (n.is_credit ? "positive" : "negative") + "\">" + (n.is_credit ? "+" : "-") + "$" + n.amount.toLocaleString("en-US", {minimumFractionDigits:2}) + "</span>"
+                    : "";
                 return "<a href=\"/user/transactions\" class=\"notif-item" + (isNew ? " unread" : "") + "\">" +
                     "<span class=\"notif-dot " + dotClass + "\"></span>" +
                     "<div class=\"notif-item-info\">" +
-                        "<span class=\"notif-item-title\">" + (n.is_credit ? "+" + n.amount.toLocaleString("en-US", {style:"currency",currency:"USD"}) : "-" + n.amount.toLocaleString("en-US", {style:"currency",currency:"USD"})) + " " + n.label + "</span>" +
+                        "<span class=\"notif-item-title\">" + titleStr + "</span>" +
                         "<span class=\"notif-item-sub\">" + (n.desc || n.label) + " · " + n.date + "</span>" +
                     "</div>" +
-                    "<span class=\"notif-item-amt " + (n.is_credit ? "positive" : "negative") + "\">" + (n.is_credit ? "+" : "-") + "$" + n.amount.toLocaleString("en-US", {minimumFractionDigits:2}) + "</span>" +
+                    amtHtml +
                 "</a>";
             }).join("");
         }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Exception;
 use App\Models\Transaction;
+use App\Models\UserNotification;
 use Illuminate\Http\Request;
 use App\Http\Helpers\Response;
 use Illuminate\Support\Facades\DB;
@@ -80,6 +81,7 @@ class FundTransferController extends Controller
 
     public function ownDetails($trx_id) {
         $transaction = Transaction::where('trx_id',$trx_id)->first();
+        if(!$transaction) return back()->with(['error' => [__('Transaction not found')]]);
         $page_title = "Details";
         return view('admin.sections.fund-transfer-log.details',compact("page_title","transaction"));
     }
@@ -93,6 +95,7 @@ class FundTransferController extends Controller
 
      public function otherDetails($trx_id) {
         $transaction = Transaction::where('trx_id',$trx_id)->first();
+        if(!$transaction) return back()->with(['error' => [__('Transaction not found')]]);
         $page_title = "Details";
         return view('admin.sections.fund-transfer-log.other-details',compact("page_title","transaction"));
     }
@@ -125,6 +128,22 @@ class FundTransferController extends Controller
 
         try {
             $transaction->creator->notify(new ApprovedNotification((object) $validated));
+        } catch (\Exception $th) {
+
+        }
+
+        try {
+            UserNotification::create([
+                'user_id'       => $transaction->user_id,
+                'transaction_id'=> $transaction->id,
+                'type'          => $transaction->type,
+                'message'       => [
+                    'title'     => 'Transaction Approved',
+                    'amount'    => floatval($transaction->request_amount),
+                    'currency'  => $transaction->request_currency,
+                    'message'   => 'Your transaction ('.$transaction->trx_id.') has been approved.',
+                ],
+            ]);
         } catch (\Exception $th) {
 
         }
@@ -173,6 +192,22 @@ class FundTransferController extends Controller
 
         try {
             $transaction->creator->notify(new RejectNotification((object) $validated));
+        } catch (\Exception $th) {
+
+        }
+
+        try {
+            UserNotification::create([
+                'user_id'       => $transaction->user_id,
+                'transaction_id'=> $transaction->id,
+                'type'          => $transaction->type,
+                'message'       => [
+                    'title'     => 'Transaction Rejected',
+                    'amount'    => floatval($transaction->request_amount),
+                    'currency'  => $transaction->request_currency,
+                    'message'   => 'Your transaction ('.$transaction->trx_id.') has been rejected. Reason: '.$validated['reason'],
+                ],
+            ]);
         } catch (\Exception $th) {
 
         }

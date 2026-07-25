@@ -5,7 +5,7 @@
     if (is_string($d)) { $d = @json_decode($d); }
     if (is_array($d)) { $d = (object) $d; }
     if (!is_object($d)) { $d = (object) []; }
-    $chargesRaw = $d->charges ?? null;
+    $chargesRaw = is_object($d) ? ($d->charges ?? null) : null;
     if (is_string($chargesRaw)) { $chargesRaw = @json_decode($chargesRaw); }
     if (is_array($chargesRaw)) { $chargesRaw = (object) $chargesRaw; }
     $charges = (is_object($chargesRaw)) ? $chargesRaw : null;

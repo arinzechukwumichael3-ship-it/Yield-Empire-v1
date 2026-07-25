@@ -1359,3 +1359,89 @@ input, textarea { font-family: inherit; }
 @media (min-width: 1400px) {
     .rise-screen { max-width: 1040px; }
 }
+
+
+/* ============================================================
+   VIRTUAL CARD — FACE ELEMENTS (previously unstyled)
+   ============================================================ */
+.vc-card-shimmer {
+    position: absolute; top: -60%; left: -60%;
+    width: 55%; height: 220%;
+    background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.16) 50%, transparent 100%);
+    transform: rotate(20deg);
+    animation: vcShimmer 4.5s ease-in-out infinite;
+    pointer-events: none; z-index: 3;
+}
+@keyframes vcShimmer { 0% { left: -60%; } 55%,100% { left: 140%; } }
+
+.vc-card-top { display: flex; align-items: center; justify-content: space-between; }
+.vc-card-logo { font-size: 18px; font-weight: 800; letter-spacing: .5px; color: #fff; }
+.vc-card-visa { font-style: italic; font-weight: 800; font-size: 20px; color: #fff; letter-spacing: 1px; }
+
+.vc-card-chip {
+    width: 44px; height: 33px; border-radius: 7px; margin-top: 12px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #e9c46a, #f4d58d 45%, #c89b3c);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+}
+.vc-card-chip-line { position: absolute; left: 0; right: 0; height: 1px; background: rgba(0,0,0,0.28); }
+.vc-card-chip-line:nth-child(1) { top: 11px; }
+.vc-card-chip-line:nth-child(2) { top: 16px; }
+.vc-card-chip-line:nth-child(3) { top: 21px; }
+
+.vc-card-number {
+    font-family: 'Courier New', monospace; font-size: 20px; font-weight: 600;
+    letter-spacing: 3px; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.45); margin-top: 8px;
+}
+
+.vc-card-bottom { display: flex; align-items: flex-end; justify-content: space-between; }
+.vc-card-holder-label, .vc-card-expiry-label {
+    display: block; font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.6);
+}
+.vc-card-holder-name { display: block; font-size: 14px; font-weight: 600; color: #fff; text-transform: uppercase; letter-spacing: .5px; }
+.vc-card-expiry-date { display: block; font-size: 14px; font-weight: 600; color: #fff; }
+
+.vc-card-magstripe { height: 42px; background: #0b1220; margin-top: 16px; }
+.vc-card-signature { display: flex; align-items: center; gap: 10px; margin: 14px 0; padding: 0 4px; }
+.vc-card-signature-line {
+    flex: 1; height: 30px; border-radius: 4px;
+    background: repeating-linear-gradient(45deg, #e5e7eb, #e5e7eb 6px, #cbd5e1 6px, #cbd5e1 12px);
+}
+.vc-card-cvv {
+    font-size: 14px; font-weight: 700; color: #0b1220; background: #fff;
+    padding: 4px 10px; border-radius: 4px; letter-spacing: 1px;
+}
+.vc-card-footer-text { font-size: 8px; line-height: 1.5; color: rgba(255,255,255,0.55); }
+
+/* Status + actions polish */
+.vc-status-row { display: flex; justify-content: center; }
+.vc-action-btn {
+    transition: background .18s ease, transform .12s ease, box-shadow .18s ease, color .18s ease;
+}
+.vc-action-btn:hover { background: rgba(59,130,246,0.12); box-shadow: 0 4px 14px rgba(59,130,246,0.25); }
+.vc-action-btn:active { transform: scale(0.97); }
+.vc-details-card { transition: box-shadow .2s ease, transform .2s ease; }
+.vc-details-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
+
+/* Card page entrance animations */
+.vc-header, .vc-card-scene, .vc-status-row, .vc-actions, .vc-details-card, .vc-tx-section-title {
+    opacity: 0; transform: translateY(16px);
+    animation: vcFadeUp .55s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.vc-header { animation-delay: .02s; }
+.vc-card-scene { animation-delay: .10s; }
+.vc-status-row { animation-delay: .18s; }
+.vc-actions { animation-delay: .24s; }
+.vc-details-card { animation-delay: .30s; }
+.vc-tx-section-title { animation-delay: .36s; }
+.rw-tx-item { opacity: 0; transform: translateY(14px); animation: vcFadeUp .5s cubic-bezier(0.22,1,0.36,1) forwards; }
+.rw-tx-item:nth-child(1) { animation-delay: .40s; }
+.rw-tx-item:nth-child(2) { animation-delay: .46s; }
+.rw-tx-item:nth-child(3) { animation-delay: .52s; }
+.rw-tx-item:nth-child(4) { animation-delay: .58s; }
+.rw-tx-item:nth-child(5) { animation-delay: .64s; }
+@keyframes vcFadeUp { to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+    .vc-header, .vc-card-scene, .vc-status-row, .vc-actions, .vc-details-card,
+    .vc-tx-section-title, .rw-tx-item, .vc-card-shimmer { animation: none !important; opacity: 1 !important; transform: none !important; }
+}

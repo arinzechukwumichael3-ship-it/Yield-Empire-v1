@@ -51,22 +51,6 @@
                             <td>{{ __('Transaction Id') }}</td>
                             <td>{{ @$transaction->trx_id }}</td>
                         </tr>
-                        @if (@$transaction->details->beneficiary->method)
-                        <tr>
-                            <td>{{ __('Transaction Type') }}</td>
-                            <td>{{ @$transaction->details->beneficiary->method->name }}</td>
-                        </tr>
-                        @endif
-                        @if (@$transaction->details->beneficiary)
-                        <tr>
-                            <td>{{ __('Recipient Name') }}</td>
-                            <td>{{ @$transaction->details->beneficiary->account_holder_name }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ __('Recipient Account') }}</td>
-                            <td>{{ @$transaction->details->beneficiary->account_number }}</td>
-                        </tr>
-                        @endif
                         @if (@$transaction->fundReceiverInfo)
                         <tr>
                             <td>{{ @$transaction->fundReceiverInfo->receiver_holder_title }}</td>

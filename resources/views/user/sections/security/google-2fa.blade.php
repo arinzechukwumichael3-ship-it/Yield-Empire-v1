@@ -1,4 +1,4 @@
-@extends('user.layouts.master')
+@extends('user.layouts.rise-master')
 
 @section('content')
 <div class="tow-fa-security">

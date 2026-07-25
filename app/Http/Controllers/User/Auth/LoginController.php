@@ -137,6 +137,17 @@ class LoginController extends Controller
 
         $this->refreshUserWallets($user);
         $this->createLoginLog($user);
+
+        if ($request->wantsJson()) {
+            session(['auth_source' => 'app']);
+            return response()->json([
+                'success'  => true,
+                'redirect' => route('app.pin'),
+                'user'     => $user->only(['id', 'fullname', 'email', 'username', 'image']),
+            ]);
+        }
+
+        session(['auth_source' => 'web']);
         return redirect()->intended(route('user.dashboard'));
     }
 }

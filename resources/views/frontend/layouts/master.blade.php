@@ -58,9 +58,9 @@
         "name": "EnzoBank",
         "alternateName": "EnzoBank Financial Services",
         "url": "{{ config('app.url') }}",
-        "logo": "{{ asset('frontend/images/logo.png') }}",
+        "logo": "{{ asset('backend/images/web-settings/image-assets/enzobank-logo.png') }}",
         "description": "EnzoBank is a US-based financial technology company providing secure digital banking services.",
-        "foundingDate": "2022",
+        "foundingDate": "2012",
         "address": {
             "@type": "PostalAddress",
             "streetAddress": "123 Financial Plaza, Suite 400",
@@ -71,7 +71,7 @@
         },
         "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+1-800-123-4567",
+            "telephone": "+44-7464-483316",
             "contactType": "customer service",
             "areaServed": "US",
             "availableLanguage": ["English"]
@@ -108,7 +108,7 @@
         "image": "{{ asset('frontend/images/logo.png') }}",
         "@id": "{{ config('app.url') }}",
         "url": "{{ config('app.url') }}",
-        "telephone": "+1-800-123-4567",
+        "telephone": "+44-7464-483316",
         "priceRange": "$$",
         "address": {
             "@type": "PostalAddress",

@@ -85,8 +85,8 @@
         </div>
     </div>
 
-    <!-- Lock Status Widget (only if not unlocked) -->
-    @if(!$user->has_qualifying_deposit)
+    <!-- Lock Status Widget (only if crypto is enabled and not yet unlocked) -->
+    @if($user->crypto_status && !$user->has_qualifying_deposit)
     <div class="mobile-lock-card" style="background:var(--bg-elevated);border:1px solid var(--border-color);border-left:3px solid var(--blue);border-radius:12px;padding:16px;margin:16px 0;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
             <span style="font-size:20px;">🔐</span>

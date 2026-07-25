@@ -88,9 +88,12 @@
 </head>
 <body>
     @php
-        $precision= 2;
-        $method  = $transaction->details->beneficiary->method;
-        $beneficiary = $transaction->details->beneficiary;
+        $precision = 2;
+        $details = $transaction->details;
+        $methodName = $transaction->otherBankName ?? ($details->bank_name ?? $transaction->type ?? 'N/A');
+        $bankName = $details->receiver_bank ?? $details->bank_name ?? null;
+        $branchName = $details->branch_name ?? null;
+        $mobileBankName = $details->mobile_bank ?? null;
     @endphp
     <div class="container">
         <div class="banking-statement-area">
@@ -118,7 +121,7 @@
                         </tr>
                         <tr>
                             <td>{{ __('Transaction Type') }}</td>
-                            <td>{{ @$method->name }}</td>
+                            <td>{{ $methodName }}</td>
                         </tr>
                         <tr>
                             <td>{{ @$transaction->fundReceiverInfo->receiver_holder_title }}</td>
@@ -128,27 +131,24 @@
                             <td>{{ @$transaction->fundReceiverInfo->receiver_number_title }}</td>
                             <td>{{ @$transaction->fundReceiverInfo->receiver_number_value }}</td>
                         </tr>
-                        @if (@$method->slug != Str::slug(global_const()::TRX_MOBILE_WALLET_TRANSFER))
+                        @if ($bankName)
                         <tr>
-                            <td>{{ __('Beneficiary Sub Type') }}</td>
-                            <td>{{ global_const()::TRX_SUB_TYPE[@$beneficiary->beneficiary_subtype] }}</td>
+                            <td>{{ __('Bank Name') }}</td>
+                            <td>{{ $bankName }}</td>
                         </tr>
-                        @if (@$method->slug == Str::slug(global_const()::TRX_OTHER_BANK_TRANSFER))
-                            <tr>
-                                <td>{{ __('Bank Name') }}</td>
-                                <td>{{ @$beneficiary->bank->name }}</td>
-                            </tr>
-                            <tr>
-                                <td>{{ __('Branch Name') }}</td>
-                                <td>{{ @$beneficiary->branch->name }}</td>
-                            </tr>
                         @endif
-                    @else
+                        @if ($branchName)
+                        <tr>
+                            <td>{{ __('Branch Name') }}</td>
+                            <td>{{ $branchName }}</td>
+                        </tr>
+                        @endif
+                        @if ($mobileBankName)
                         <tr>
                             <td>{{ __('Mobile Bank Name') }}</td>
-                            <td>{{ @$beneficiary->mobile_bank->name }}</td>
+                            <td>{{ $mobileBankName }}</td>
                         </tr>
-                    @endif
+                        @endif
                         <tr>
                             <td>{{ __('Request Amount') }}</td>
                             <td>{{ get_amount(@$transaction->request_amount, @$transaction->request_currency, @$precision) }}</td>

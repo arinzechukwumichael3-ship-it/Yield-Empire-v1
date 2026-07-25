@@ -28,10 +28,27 @@ class DepositGateService
     }
 
     /**
+     * Check if a crypto deposit is required to unlock features for this user.
+     * When an admin disables crypto deposits for a user, the crypto-deposit
+     * unlock requirement can never be satisfied, so it no longer applies.
+     */
+    public static function cryptoDepositRequired(User $user): bool
+    {
+        return (bool) $user->crypto_status;
+    }
+
+    /**
      * Check if card is unlocked for a user.
      */
     public static function isCardUnlocked(User $user): bool
     {
+        // If crypto deposits are disabled for this user the deposit-to-unlock
+        // requirement cannot be met, so it does not apply. The card is then
+        // available unless the admin turned off virtual cards entirely.
+        if (!static::cryptoDepositRequired($user)) {
+            return (bool) $user->virtual_card_status;
+        }
+
         // Per-user admin toggle must also be enabled, not just the KYC unlock.
         return (bool) ($user->card_unlocked && $user->virtual_card_status);
     }
@@ -41,6 +58,12 @@ class DepositGateService
      */
     public static function isWithdrawalUnlocked(User $user): bool
     {
+        // If crypto deposits are disabled for this user the deposit-to-unlock
+        // requirement cannot be met, so withdrawals are not gated by it.
+        if (!static::cryptoDepositRequired($user)) {
+            return true;
+        }
+
         return (bool) $user->withdrawal_unlocked;
     }
 

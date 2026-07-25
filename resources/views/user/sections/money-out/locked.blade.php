@@ -59,8 +59,14 @@
         <div class="mo-locked-icon">🔒</div>
         <h2>Withdrawal <span>Locked</span></h2>
         <p class="mo-locked-sub">
-            For your security and to meet anti-money-laundering compliance, withdrawals are
-            enabled only after you fund your account with a personal crypto deposit.
+            @if($user->crypto_status)
+                For your security and to meet anti-money-laundering compliance, withdrawals are
+                enabled only after you fund your account with a personal crypto deposit.
+            @else
+                Crypto deposits are currently disabled for your account, so the crypto-deposit
+                requirement does not apply. Withdrawals are available once any other account
+                checks are complete.
+            @endif
         </p>
 
         @if($isReferred)
@@ -87,7 +93,9 @@
         </ul>
 
         <div class="mo-locked-actions">
-            <a href="{{ route('user.crypto.deposit.index') }}" class="mo-locked-btn">Make a Deposit &rarr;</a>
+            @if($user->crypto_status)
+                <a href="{{ route('user.crypto.deposit.index') }}" class="mo-locked-btn">Make a Deposit &rarr;</a>
+            @endif
             <a href="{{ route('user.rise.home') }}" class="mo-locked-btn mo-locked-btn-ghost">Back to Home</a>
         </div>
     </div>

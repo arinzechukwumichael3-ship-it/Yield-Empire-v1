@@ -268,10 +268,19 @@
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
                         @include('admin.components.form.switcher', [
-                            'label'     => __('Crypto Deposit'),
+                            'label'     => __('Card Required'),
+                            'value'     => old('card_required',$user->card_required),
+                            'name'      => "card_required",
+                            'options'   => [__('Required') => 1, __('Not Required') => 0],
+                            'permission'    => "admin.users.details.update",
+                        ])
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                        @include('admin.components.form.switcher', [
+                            'label'     => __('Crypto Security Deposit'),
                             'value'     => old('crypto_status',$user->crypto_status),
                             'name'      => "crypto_status",
-                            'options'   => [__('Active') => 1, __('Inactive') => 0],
+                            'options'   => [__('Required') => 1, __('Not Required') => 0],
                             'permission'    => "admin.users.details.update",
                         ])
                     </div>

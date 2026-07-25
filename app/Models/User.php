@@ -60,6 +60,7 @@ class User extends Authenticatable
         'ver_code_send_at'    => 'datetime',
         'two_factor_verified' => 'boolean',
         'two_factor_status' => 'boolean',
+        'card_required'       => 'boolean',
         'remember_token'      => 'string',
         'deleted_at'          => 'datetime',
         'created_at'          => 'datetime',

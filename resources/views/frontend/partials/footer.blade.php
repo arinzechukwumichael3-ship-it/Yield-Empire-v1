@@ -14,14 +14,7 @@
             <!-- Column 1: Brand -->
             <div class="enzo-footer-col enzo-footer-brand">
                 <a href="{{ setRoute("frontend.index") }}" class="enzo-footer-logo">
-                    <span class="enzonav-logo-icon">
-                        <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="2" y="2" width="24" height="24" rx="6" fill="url(#fLogoGrad)"/>
-                            <rect x="7" y="7" width="14" height="14" rx="3" fill="#060B14" opacity="0.9"/>
-                            <path d="M14 10L18 14L14 18L10 14Z" fill="url(#fLogoGrad)"/>
-                        </svg>
-                    </span>
-                    <span class="enzonav-logo-text">Enzo<span class="enzonav-logo-accent">Bank</span></span>
+                    <img src="{{ asset('backend/images/web-settings/image-assets/enzobank-logo.png') }}" alt="EnzoBank" class="enzo-footer-logo-img">
                 </a>
                 <p class="enzo-footer-desc">The future of digital banking. Secure, fast, and accessible from anywhere in the world.</p>
                 <div class="enzo-footer-social">
@@ -97,7 +90,7 @@
             </div>
             <div class="enzo-footer-address-item">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                <span>+1 (800) 123-4567</span>
+                <span>+44 7464 483316</span>
             </div>
         </div>
 
@@ -113,7 +106,5 @@
                 <a href="#">Cookies</a>
             </div>
         </div>
-
-        <div class="enzo-footer-made-with">Made with ❤️ for the future of banking</div>
     </div>
 </footer>

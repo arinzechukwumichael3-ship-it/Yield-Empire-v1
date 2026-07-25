@@ -26,9 +26,9 @@
                 <div class="list-wrapper">
                     <ul class="list">
                         <li>{{ __("Company Name") }}<span>{{ $sender_transaction->user->company_name ?? '' }}</span></li>
-                        <li>{{ __("Email") }}<span class="text-lowercase">{{ $sender_transaction->user->email ?? '' }}</span></li>
-                        <li>{{ __("Username") }}<span class="text-lowercase">{{ $sender_transaction->user->username ?? '' }}</span></li> 
-                        <li>{{ __("Available Balance") }}<span>{{ get_amount($sender_transaction->user_wallet->balance,get_default_currency_code()) }}</span></li> 
+                        <li>{{ __("Email") }}<span class="text-lowercase">{{ $sender_transaction?->user?->email ?? '' }}</span></li>
+                        <li>{{ __("Username") }}<span class="text-lowercase">{{ $sender_transaction?->user?->username ?? '' }}</span></li> 
+                        <li>{{ __("Available Balance") }}<span>{{ get_amount($sender_transaction?->user_wallet?->balance ?? 0,get_default_currency_code()) }}</span></li> 
                     </ul>
                 </div>
             </div>

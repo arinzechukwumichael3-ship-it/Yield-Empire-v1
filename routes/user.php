@@ -137,6 +137,8 @@ Route::controller(StrowalletVirtualCardController::class)->middleware(['kyc.veri
         Route::get('details/{card_id}','cardDetails')->name('details');
         Route::get('transaction/{card_id}','cardTransaction')->name('transaction');
         Route::put('change/status','cardBlockUnBlock')->name('change.status');
+        Route::post('cancel','cardCancel')->name('cancel');
+        Route::post('cvv','cardCvv')->name('cvv');
         Route::post('make/default/remove/default','makeDefaultOrRemove')->name('make.default.or.remove');
     });
 
@@ -255,6 +257,14 @@ Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guar
         Route::get("send","send")->name("send");
         Route::post("send/submit","sendSubmit")->name("send.submit");
         Route::get("withdraw/crypto","cryptoWithdraw")->name("withdraw.crypto")->middleware('deposit.gate:withdrawal');
+    });
+
+    // User Notifications
+    Route::prefix("notifications")->name("notifications.")->controller(\App\Http\Controllers\User\NotificationController::class)->group(function(){
+        Route::get("/","index")->name("index");
+        Route::post("read/{notification}","read")->name("read");
+        Route::post("read-all","readAll")->name("readAll");
+        Route::get("show/{notification}","show")->name("show");
     });
 
 });

@@ -1796,3 +1796,44 @@ if (!function_exists('mail_otp_box')) {
         return new \Illuminate\Support\HtmlString($html);
     }
 }
+
+if (!function_exists('generateCVV')) {
+    /**
+     * Generate a fresh, cryptographically-random 3-digit CVV (000-999, zero-padded).
+     *
+     * Called when a new virtual card is created. The value is unique per card and is
+     * never derived from the card number, holder name or expiry.
+     */
+    function generateCVV(): string
+    {
+        return str_pad((string) random_int(0, 999), 3, '0', STR_PAD_LEFT);
+    }
+}
+
+if (!function_exists('encryptCvv')) {
+    /**
+     * Encrypt a CVV for storage at rest (uses the application cipher / APP_KEY).
+     */
+    function encryptCvv(string $cvv): string
+    {
+        return \Illuminate\Support\Facades\Crypt::encryptString($cvv);
+    }
+}
+
+if (!function_exists('decryptCvv')) {
+    /**
+     * Decrypt a stored CVV. Falls back to the raw value for legacy plaintext rows
+     * that were created before encryption was introduced.
+     */
+    function decryptCvv($value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+        try {
+            return \Illuminate\Support\Facades\Crypt::decryptString($value);
+        } catch (\Throwable $e) {
+            return (string) $value;
+        }
+    }
+}

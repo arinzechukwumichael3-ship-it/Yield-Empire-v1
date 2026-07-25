@@ -7,13 +7,8 @@
     <div class="enzonav-inner">
         <!-- Logo -->
         <a href="{{ setRoute("frontend.index") }}" class="enzonav-logo">
-            <span class="enzonav-logo-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 2L18 10L10 18L2 10Z" fill="#3B82F6"/>
-                    <rect x="7" y="7" width="6" height="6" rx="1" fill="#0A0E1A" opacity="0.9"/>
-                </svg>
-            </span>
-            <span class="enzonav-logo-text">Enzo</span><span class="enzonav-logo-accent" style="margin-left:0">Bank</span>
+            <img src="{{ asset('backend/images/web-settings/image-assets/enzobank-logo.png') }}" alt="EnzoBank" class="enzonav-logo-img">
+            <span class="enzonav-logo-text">Enzo<span class="enzonav-logo-accent">Bank</span></span>
         </a>
 
         <!-- Desktop Nav Links -->

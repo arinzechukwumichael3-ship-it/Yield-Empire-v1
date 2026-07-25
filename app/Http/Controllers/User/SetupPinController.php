@@ -27,6 +27,9 @@ class SetupPinController extends Controller
             'pin_code'  => 'required|digits:4',
         ]);
         if($validator->fails()){
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+            }
             return back()->withErrors($validator)->withInput($request->all());
         }
         $validated  = $validator->validated();
@@ -37,25 +40,34 @@ class SetupPinController extends Controller
                 'pin_status'    => true,
             ]);
         }catch(Exception $e){
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Something went wrong!'], 500);
+            }
             return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'PIN set successfully.']);
         }
         return back()->with(['success' => ['Pin setup successfully.']]);
     }
-    /**
-     * Method for update pin information
-     * @param Illuminate\Http\Request $request
-     */
+
     public function update(Request $request){
         $validator      = Validator::make($request->all(),[
             'old_pin'  => 'required|digits:4',
             'new_pin'  => 'required|digits:4',
         ]);
         if($validator->fails()){
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+            }
             return back()->withErrors($validator)->withInput($request->all());
         }
         $validated  = $validator->validated();
         $user       = auth()->user();
         if($validated['old_pin'] != $user->pin_code){
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Old PIN does not match.'], 422);
+            }
             return back()->with(['error' => ['Old pin code not matched!']]);
         }
         try{
@@ -64,7 +76,13 @@ class SetupPinController extends Controller
                 'pin_status'    => true,
             ]);
         }catch(Exception $e){
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Something went wrong!'], 500);
+            }
             return back()->with(['error' => ['Something went wrong! Please try again.']]);
+        }
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'PIN updated successfully.']);
         }
         return back()->with(['success' => ['Pin updated successfully.']]);
     }
