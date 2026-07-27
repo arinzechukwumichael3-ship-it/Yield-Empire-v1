@@ -254,11 +254,11 @@ class Transaction extends Model
     }
 
     public function getUserTrxTypeAttribute(){
-        $user = Auth::user();
-        if($user->id == $this->user->id){
-            return GlobalConst::SEND;
-        }else{
+        // Use the attribute field directly (SEND/RECEIVED)
+        $attr = $this->attribute ?? '';
+        if(strtoupper($attr) === 'RECEIVED') {
             return GlobalConst::RECEIVED;
         }
+        return GlobalConst::SEND;
     }
 }

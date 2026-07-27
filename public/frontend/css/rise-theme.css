@@ -406,7 +406,7 @@ input, textarea { font-family: inherit; }
 .ri-empty-sub, .rw-empty-sub, .rf-empty-sub { font-size: 13px; color: #94A3B8; }
 
 /* === ACCOUNT/PROFILE SCREEN === */
-.ps-banner { height: 140px; background: linear-gradient(135deg, #0F172A, #1E3A5F); border-radius: 0; position: relative; overflow: hidden; }
+.ps-banner { height: 140px; background: linear-gradient(135deg, #0B0B0F, #161622); border-radius: 0; position: relative; overflow: hidden; }
 .ps-banner-img { width: 100%; height: 100%; }
 .ps-avatar-section { display: flex; align-items: flex-end; gap: 16px; padding: 0 16px; margin-top: -36px; margin-bottom: 16px; position: relative; }
 .ps-avatar-wrap { width: 72px; height: 72px; border-radius: 50%; border: 3px solid #1E293B; background: linear-gradient(135deg, #3B82F6, #1D4ED8); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: #fff; text-transform: uppercase; position: relative; flex-shrink: 0; }
@@ -500,8 +500,8 @@ input, textarea { font-family: inherit; }
 .vc-card-wrapper { position: relative; width: 100%; aspect-ratio: 1.586/1; cursor: pointer; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); }
 .vc-card-wrapper.flipped { transform: rotateY(180deg); }
 .vc-card-front, .vc-card-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 16px; backface-visibility: hidden; -webkit-backface-visibility: hidden; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
-.vc-card-front { background: linear-gradient(135deg, #0F172A, #1E3A5F, #1E40AF); box-shadow: 0 20px 60px rgba(59,130,246,0.3); z-index: 2; }
-.vc-card-back { background: linear-gradient(135deg, #0F172A, #1E3A5F); transform: rotateY(180deg); z-index: 1; padding: 0; }
+.vc-card-front { background: var(--vc-card-grad, linear-gradient(135deg, #0B0B0F, #161622, #1A1A2E)); box-shadow: 0 20px 60px rgba(0,0,0,0.45); z-index: 2; }
+.vc-card-back { background: linear-gradient(135deg, #0B0B0F, #161622); transform: rotateY(180deg); z-index: 1; padding: 0; }
 .vc-details-card { background: #111827; border: 1px solid #1E293B; border-radius: 16px; padding: 20px; }
 .vc-details-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; }
 .vc-detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; }

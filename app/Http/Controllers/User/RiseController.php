@@ -183,7 +183,7 @@ class RiseController extends Controller
         // Treat the card requirement as satisfied when the admin has disabled
         // it for this user, so the UI gate does not block other-bank transfers.
         $hasVirtualCard = $user
-            ? (!$user->card_required || \App\Models\StrowalletVirtualCard::where('user_id', $user->id)->exists())
+            ? (!$user->card_required || \App\Models\StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists())
             : false;
         $virtualCardUrl = route('user.strowallet.virtual.card.index');
 
@@ -282,6 +282,7 @@ class RiseController extends Controller
                 'receiver_id'     => $recipientWallet->id,
                 'available_balance' => $senderWallet->balance,
                 'payment_currency'=> 'USD',
+                'attribute'         => GlobalConst::SEND,
                 'remark'          => PaymentGatewayConst::TYPE_MOBILE_WALLET_TRANSFER,
                 'details'         => json_encode([
                     'sender_name'   => $user->fullname,
@@ -312,6 +313,7 @@ class RiseController extends Controller
                 'receiver_id'     => $senderWallet->id,
                 'available_balance' => $recipientWallet->balance,
                 'payment_currency'=> 'USD',
+                'attribute'         => GlobalConst::RECEIVED,
                 'remark'          => 'received',
                 'details'         => json_encode([
                     'sender_name'   => $user->fullname,
@@ -327,7 +329,7 @@ class RiseController extends Controller
 
             DB::commit();
 
-            return redirect()->route('user.rise.wallet')->with(['success' => ['Transfer completed successfully.']]);
+            return redirect()->route('user.fund-transfer.transaction.success', $trxId)->with(['success' => ['Transfer completed successfully.']]);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -356,7 +358,7 @@ class RiseController extends Controller
 
         // Other-bank transfers require a virtual card ($10) first, unless the
         // admin has disabled the card requirement for this user.
-        if ($user->card_required && !\App\Models\StrowalletVirtualCard::where('user_id', $user->id)->exists()) {
+        if ($user->card_required && !\App\Models\StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
             $this->notifyTransactionBlocked($user, $amount, 'International Bank Transfer', 'A $10 virtual card is required before sending money to another bank.');
             return back()->with(['error' => ['You must purchase a $10 virtual card before you can send money to another bank.']])->withInput();
         }

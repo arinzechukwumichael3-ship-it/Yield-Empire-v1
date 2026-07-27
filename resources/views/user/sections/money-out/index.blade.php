@@ -202,6 +202,7 @@ $coins = config("crypto_deposit.coins", []);
 <script>
 window.__hasVirtualCard = {{ $hasVirtualCard ? 'true' : 'false' }};
 window.__virtualCardUrl = "{{ $virtualCardUrl }}";
+window.__cardFee = {{ optional(auth()->user())->vc_fee_override ?? 10 }};
 document.addEventListener("DOMContentLoaded", function() {
     // Tab switching
     document.querySelectorAll('.mo-tab').forEach(function(tab) {
@@ -217,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function gateVirtualCard(e) {
         if (!window.__hasVirtualCard) {
             e.preventDefault();
-            alert("To withdraw you must first get a virtual card for $10 USD.\n\nYour virtual card unlocks withdrawals from your EnzoBank account.");
+            alert("To withdraw you must first get a virtual card for $" + window.__cardFee + " USD.\n\nYour virtual card unlocks withdrawals from your EnzoBank account.");
             window.location = window.__virtualCardUrl;
             return false;
         }

@@ -214,6 +214,7 @@ $typeLabels = [
 ];
 function txLabel($type) { global $typeLabels; return $typeLabels[$type] ?? ucwords(str_replace(["-","_"], " ", strtolower($type))); }
 function txIsCredit($tx) {
+    if (($tx->attribute ?? "") === "RECEIVED") return true;
     return in_array($tx->type ?? "", ["ADD-MONEY","BONUS","COMMISSION","CAPITAL-RETURN","TRANSFER-MONEY","Salary Disbursement"])
         && (!in_array($tx->type ?? "", ["TRANSFER-MONEY","OWN-BANK-TRANSFER","OTHER-BANK-TRANSFER"]) || ($tx->receiver_id ?? null) == auth()->id());
 }
@@ -285,12 +286,24 @@ $currentUserId = auth()->id();
         @forelse($transactions as $tx)
         @php
             $isCredit = txIsCredit($tx);
-            $isReceived = (($tx->receiver_id ?? null) == auth()->id()) && in_array($tx->type ?? "", ['OWN-BANK-TRANSFER','OTHER-BANK-TRANSFER']);
+            $isReceived = (($tx->attribute ?? "") === "RECEIVED") || (($tx->receiver_id ?? null) == auth()->user()->wallet?->id) && in_array($tx->type ?? "", ['OWN-BANK-TRANSFER','OTHER-BANK-TRANSFER','MOBILE-WALLET-TRANSFER']);
             $txClass = "tx-type-" . str_replace([" ", "_", "/"], "-", $tx->type ?? "default");
-            $label = txLabel($tx->type);
             $details = is_string($tx->details) ? json_decode($tx->details) : ($tx->details ?? null);
             $desc = $details->description ?? "";
             $bank = $details->bank_name ?? $details->receiver_bank ?? "";
+            $senderName = $details->sender_name ?? "";
+            $senderBank = $details->sender_bank ?? "";
+            $receiverName = $details->receiver_name ?? "";
+            $receiverBank = $details->receiver_bank ?? "";
+            if ($tx->type === "MOBILE-WALLET-TRANSFER" && $details) {
+                if ($isReceived) {
+                    $label = 'From: ' . ($senderName ?: 'Someone');
+                } else {
+                    $label = 'To: ' . ($receiverName ?: 'Someone');
+                }
+            } else {
+                $label = txLabel($tx->type);
+            }
             $dateGroup = $tx->created_at ? $tx->created_at->format("F Y") : "";
         @endphp
 
@@ -300,7 +313,7 @@ $currentUserId = auth()->id();
         @endif
 
         <div class="tl-item {{ $txClass }}" data-type="{{ ($isCredit || $isReceived) ? "credit" : "debit" }}" style="animation-delay: {{ min($loop->index * 0.035, 1.5) }}s">
-            <div class="tl-item-main" onclick="this.closest(.tl-item).classList.toggle(expanded)">
+            <div class="tl-item-main" onclick="this.closest('.tl-item').classList.toggle('expanded')">
                 <div class="tl-item-icon" style="border-radius: 12px;">
                     @if(in_array($tx->type ?? "", ["ADD-MONEY","Salary Disbursement"]))
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -308,7 +321,7 @@ $currentUserId = auth()->id();
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><line x1="19" y1="12" x2="5" y2="12"/></svg>
                     @elseif($tx->type === "BONUS")
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    @elseif(in_array($tx->type ?? "", ["OWN-BANK-TRANSFER","OTHER-BANK-TRANSFER"]))
+                    @elseif(in_array($tx->type ?? "", ["OWN-BANK-TRANSFER","OTHER-BANK-TRANSFER","MOBILE-WALLET-TRANSFER"]))
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
                     @elseif($tx->type === "VIRTUAL-CARD")
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
@@ -331,6 +344,7 @@ $currentUserId = auth()->id();
                     <div class="tl-item-desc">{{ $desc }}</div>
                     @endif
                     <div class="tl-item-date">{{ $tx->created_at ? $tx->created_at->format("M d, Y  h:i A") : "" }}</div>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">#{{ $tx->trx_id }}</div>
                 </div>
 
                 <div style="display:flex;flex-direction:column;align-items:flex-end;">
@@ -362,12 +376,18 @@ $currentUserId = auth()->id();
                     @if($isReceived && $tx->user)
                     <div class="tl-detail-item">
                         <span class="tl-detail-label">Sender</span>
-                        <span class="tl-detail-value text--success">{{ $tx->user->fullname ?? 'N/A' }}</span>
+                        <span class="tl-detail-value text--success">{{ $senderName ?: ($tx->user->fullname ?? 'N/A') }}</span>
                     </div>
                     <div class="tl-detail-item">
                         <span class="tl-detail-label">Sender Account</span>
                         <span class="tl-detail-value text--success">{{ $tx->user->account_no ?? 'N/A' }}</span>
                     </div>
+                    @if($senderBank)
+                    <div class="tl-detail-item">
+                        <span class="tl-detail-label">From Bank</span>
+                        <span class="tl-detail-value text--success">{{ $senderBank }}</span>
+                    </div>
+                    @endif
                     @endif
                     @if($tx->total_charge > 0)
                     <div class="tl-detail-item">

@@ -234,11 +234,16 @@
     $default_symbol = get_default_currency_symbol();
 
     global $creditTypes;
-    $creditTypes = ['ADD-MONEY', 'TRANSFER-MONEY', 'BONUS', 'COMMISSION', 'Salary Disbursement'];
+    $creditTypes = ['ADD-MONEY', 'TRANSFER-MONEY', 'BONUS', 'COMMISSION', 'Salary Disbursement', 'MOBILE-WALLET-TRANSFER'];
     function wlIsCredit($tx) {
         global $creditTypes;
-        if (in_array($tx->type ?? '', ['OWN-BANK-TRANSFER', 'OTHER-BANK-TRANSFER'])) {
-            return ($tx->receiver_id ?? null) == auth()->id();
+        // Check attribute field first (SEND/RECEIVED)
+        if (($tx->attribute ?? '') === 'RECEIVED') {
+            return true;
+        }
+        // For wallet transfers, check if current user is the recipient (receiver_id stores wallet_id)
+        if (in_array($tx->type ?? '', ['MOBILE-WALLET-TRANSFER', 'OWN-BANK-TRANSFER', 'OTHER-BANK-TRANSFER'])) {
+            return ($tx->receiver_id ?? null) == auth()->user()->wallet?->id;
         }
         return in_array($tx->type ?? '', $creditTypes);
     }

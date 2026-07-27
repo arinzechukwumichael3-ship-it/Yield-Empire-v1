@@ -77,8 +77,8 @@ class RegisterController extends Controller
         $validated = $this->validator($request->all())->validate();
         $basic_settings             = $this->basic_settings;
 
-        $validated['email_verified'] = ($basic_settings->email_verification == true) ? false : true;
-        $validated['sms_verified']   = ($basic_settings->sms_verification == true) ? false : true;
+        $validated["email_verified"] = ($basic_settings->email_verification == true) ? 0 : 1;
+        $validated["sms_verified"]   = ($basic_settings->sms_verification == true) ? 0 : 1;
         $validated['kyc_verified']   = ($basic_settings->kyc_verification == true) ? 0 : 1;
         $validated['password']       = Hash::make($validated['password']);
         $validated['username']       = make_username($validated['firstname'],$validated['lastname']);

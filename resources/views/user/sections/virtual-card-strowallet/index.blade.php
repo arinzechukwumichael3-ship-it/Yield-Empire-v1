@@ -23,10 +23,10 @@
     --vc-success:   var(--success, #059669);
     --vc-danger:    var(--danger, #DC2626);
     --vc-warning:   var(--warning, #B45309);
-    --vc-shadow:    var(--shadow-strong, 0 16px 48px rgba(15,23,42,0.12));
+    --vc-shadow:    var(--shadow-strong, 0 20px 60px rgba(0,0,0,0.45));
     /* Premium deep-blue → indigo → purple card gradient with depth */
-    --vc-card-grad:  linear-gradient(135deg, #312E81 0%, #4F46E5 52%, #6D28D9 100%);
-    --vc-card-grad2: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+    --vc-card-grad:  linear-gradient(135deg, #0B0B0F 0%, #161622 50%, #1A1A2E 100%);
+    --vc-card-grad2: linear-gradient(135deg, #050508 0%, #0D0D14 100%);
 }
 
 .vc-page {
@@ -97,11 +97,11 @@
     overflow: hidden;
     color: #fff;
     box-shadow: var(--vc-shadow);
-    border: 1px solid rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.06);
 }
 .vc-card-front {
     background:
-        radial-gradient(130% 100% at 0% 0%, rgba(255,255,255,0.22), rgba(255,255,255,0) 52%),
+        radial-gradient(130% 100% at 0% 0%, rgba(255,255,255,0.08), rgba(255,255,255,0) 52%),
         var(--vc-card-grad);
     padding: 22px 24px;
 }
@@ -110,7 +110,7 @@
 /* Animated sheen sweeping across the card */
 .vc-card-shimmer {
     position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.22) 48%, transparent 66%);
+    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.10) 50%, transparent 66%);
     background-size: 250% 250%;
     animation: vcSheen 4.5s ease-in-out infinite;
     mix-blend-mode: screen;
@@ -120,7 +120,7 @@
 /* Decorative glowing orbs */
 .vc-card-front::after, .vc-card-back::after {
     content: ""; position: absolute; width: 220px; height: 220px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%);
+    background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%);
     top: -90px; right: -70px; pointer-events: none;
 }
 
@@ -155,10 +155,10 @@
 }
 
 /* Back face */
-.vc-card-magstripe { height: 42px; background: #0B0B14; border-radius: 4px; margin: 0 -22px; }
+.vc-card-magstripe { height: 42px; background: #000000; border-radius: 4px; margin: 0 -22px; }
 .vc-card-signature {
     margin-top: 16px; display: flex; align-items: center; justify-content: space-between;
-    background: rgba(255,255,255,0.92); border-radius: 6px; padding: 8px 12px;
+    background: rgba(255,255,255,0.96); border-radius: 6px; padding: 8px 12px;
 }
 .vc-card-signature-panel {
     flex: 1; height: 30px; margin-right: 12px;
@@ -261,8 +261,8 @@
     min-width: 130px; padding: 14px; flex-shrink: 0;
     border-radius: 14px; color: #fff; position: relative; overflow: hidden;
     background: var(--vc-card-grad);
-    box-shadow: 0 10px 24px rgba(49,46,129,0.35);
-    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.06);
 }
 .vc-mini-card .vc-mini-num { font-size: 13px; font-weight: 700; letter-spacing: 1px; }
 .vc-mini-card .vc-mini-status { display: block; font-size: 11px; margin-top: 6px; opacity: 0.85; }
@@ -296,7 +296,7 @@ $cardStatus = $firstCard->is_active ?? true;
 $initialStatus = ($firstCard->card_status ?? '') === 'canceled' ? 'canceled' : ($cardStatus ? 'active' : 'frozen');
 $cardId = $firstCard->id ?? '';
 $cardType = $firstCard->card_type ?? 'Virtual Debit';
-$spendingLimit = $firstCard->balance ?? '$5,000.00';
+$spendingLimit = $firstCard->card_amount ?? '$5,000.00';
 @endphp
 
 <div class="vc-page">
@@ -309,6 +309,8 @@ $spendingLimit = $firstCard->balance ?? '$5,000.00';
         </a>
         @endif
     </div>
+
+    @if($showCardGate)
 
     <div class="vc-card-scene">
         <div class="vc-card-tilt" id="cardTilt">
@@ -326,21 +328,21 @@ $spendingLimit = $firstCard->balance ?? '$5,000.00';
                                 <svg viewBox="0 0 48 36" role="img" aria-label="EMV chip">
                                     <defs>
                                         <linearGradient id="vcChipGrad" x1="0" y1="0" x2="1" y2="1">
-                                            <stop offset="0" stop-color="#FBF1B8"/>
-                                            <stop offset="0.45" stop-color="#E6C34A"/>
-                                            <stop offset="0.55" stop-color="#F3D271"/>
-                                            <stop offset="1" stop-color="#B8860B"/>
+                                            <stop offset="0" stop-color="#F0F0F0"/>
+                                            <stop offset="0.45" stop-color="#C0C0C0"/>
+                                            <stop offset="0.55" stop-color="#D0D0D0"/>
+                                            <stop offset="1" stop-color="#888888"/>
                                         </linearGradient>
                                     </defs>
-                                    <rect x="2" y="3" width="44" height="30" rx="6" fill="url(#vcChipGrad)" stroke="#8A6D1B" stroke-width="0.8"/>
-                                    <line x1="6" y1="18" x2="42" y2="18" stroke="#8A6D1B" stroke-width="1"/>
-                                    <line x1="16" y1="6" x2="16" y2="30" stroke="#8A6D1B" stroke-width="1"/>
-                                    <line x1="32" y1="6" x2="32" y2="30" stroke="#8A6D1B" stroke-width="1"/>
-                                    <rect x="6" y="6" width="10" height="9" rx="2" fill="none" stroke="#8A6D1B" stroke-width="1"/>
-                                    <rect x="32" y="6" width="10" height="9" rx="2" fill="none" stroke="#8A6D1B" stroke-width="1"/>
-                                    <rect x="6" y="21" width="10" height="9" rx="2" fill="none" stroke="#8A6D1B" stroke-width="1"/>
-                                    <rect x="32" y="21" width="10" height="9" rx="2" fill="none" stroke="#8A6D1B" stroke-width="1"/>
-                                    <rect x="18" y="13" width="12" height="10" rx="2" fill="none" stroke="#8A6D1B" stroke-width="1"/>
+                                    <rect x="2" y="3" width="44" height="30" rx="6" fill="url(#vcChipGrad)" stroke="#777777" stroke-width="0.8"/>
+                                    <line x1="6" y1="18" x2="42" y2="18" stroke="#777777" stroke-width="1"/>
+                                    <line x1="16" y1="6" x2="16" y2="30" stroke="#777777" stroke-width="1"/>
+                                    <line x1="32" y1="6" x2="32" y2="30" stroke="#777777" stroke-width="1"/>
+                                    <rect x="6" y="6" width="10" height="9" rx="2" fill="none" stroke="#777777" stroke-width="1"/>
+                                    <rect x="32" y="6" width="10" height="9" rx="2" fill="none" stroke="#777777" stroke-width="1"/>
+                                    <rect x="6" y="21" width="10" height="9" rx="2" fill="none" stroke="#777777" stroke-width="1"/>
+                                    <rect x="32" y="21" width="10" height="9" rx="2" fill="none" stroke="#777777" stroke-width="1"/>
+                                    <rect x="18" y="13" width="12" height="10" rx="2" fill="none" stroke="#777777" stroke-width="1"/>
                                 </svg>
                             </span>
                             <span class="vc-card-contactless">
@@ -474,6 +476,7 @@ $spendingLimit = $firstCard->balance ?? '$5,000.00';
             @endforeach
         </div>
     </div>
+    @endif
     @endif
 </div>
 

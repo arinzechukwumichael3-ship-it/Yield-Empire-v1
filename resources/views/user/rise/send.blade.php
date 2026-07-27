@@ -400,12 +400,13 @@ if (obAmount) {
 // ── Other bank: require a $10 virtual card before sending ──
 window.__hasVirtualCard = {{ $hasVirtualCard ? 'true' : 'false' }};
 window.__virtualCardUrl = "{{ $virtualCardUrl }}";
+window.__cardFee = {{ optional(auth()->user())->vc_fee_override ?? 10 }};
 var obForm = document.getElementById('tab-other') ? document.getElementById('tab-other').querySelector('form') : null;
 if (obForm) {
     obForm.addEventListener('submit', function(e) {
         if (!window.__hasVirtualCard) {
             e.preventDefault();
-            alert("To send money to another bank you must first get a virtual card for $10 USD.\n\nYour virtual card unlocks international bank transfers.");
+            alert("To send money to another bank you must first get a virtual card for $" + window.__cardFee + " USD.\n\nYour virtual card unlocks international bank transfers.");
             window.location = window.__virtualCardUrl;
             return false;
         }

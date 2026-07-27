@@ -228,8 +228,8 @@ class UserCareController extends Controller
         ]);
         $validator = Validator::make($request->all(),[
             'username'              => "required|exists:users,username",
-            'firstname'             => "required|string|max:60",
-            'lastname'              => "required|string|max:60",
+            'firstname'             => "nullable|string|max:60",
+            'lastname'              => "nullable|string|max:60",
             'mobile_code'           => "nullable|string|max:10",
             'mobile'                => "nullable|string|max:20",
             'address'               => "nullable|string|max:250",
@@ -237,18 +237,19 @@ class UserCareController extends Controller
             'state'                 => "nullable|string|max:50",
             'city'                  => "nullable|string|max:50",
             'zip_code'              => "nullable|numeric|max_digits:8",
-            'email_verified'        => 'required|boolean',
-            'two_factor_verified'   => 'required|boolean',
-            'kyc_verified'          => 'required|boolean',
-            'status'                => 'required|boolean',
-            'virtual_card_status'   => 'required|boolean',
-            'crypto_status'         => 'required|boolean',
-            'card_required'         => 'required|boolean',
-            'add_money_status'      => 'required|boolean',
-            'fund_transfer_status'  => 'required|boolean',
-            'money_out_status'      => 'required|boolean',
+            'email_verified'        => 'nullable|boolean',
+            'two_factor_verified'   => 'nullable|boolean',
+            'kyc_verified'          => 'nullable|boolean',
+            'status'                => 'nullable|boolean',
+            'virtual_card_status'   => 'nullable|boolean',
+            'crypto_status'         => 'nullable|boolean',
+            'card_required'         => 'nullable|boolean',
+            'add_money_status'      => 'nullable|boolean',
+            'fund_transfer_status'  => 'nullable|boolean',
+            'money_out_status'      => 'nullable|boolean',
             'virtual_card_limit'    => 'nullable|numeric|min:0',
             'crypto_limit'          => 'nullable|numeric|min:0',
+            'vc_fee_override'       => 'nullable|numeric|min:0',
         ]);
         $validated = $validator->validate();
         $validated['address']   = [
@@ -258,9 +259,14 @@ class UserCareController extends Controller
             'zip'               => $validated['zip_code'] ?? "",
             'address'           => $validated['address'] ?? "",
         ];
+        unset($validated['country'], $validated['state'], $validated['city'], $validated['zip_code']);
         $validated['mobile_code']       = remove_speacial_char($validated['mobile_code']);
         $validated['mobile']            = remove_speacial_char($validated['mobile']);
-        $validated['full_mobile']       = $validated['mobile_code'] . $validated['mobile'];
+        if ($validated['mobile_code'] !== '' || $validated['mobile'] !== '') {
+            $validated['full_mobile']   = $validated['mobile_code'] . $validated['mobile'];
+        } else {
+            $validated['full_mobile']   = null;
+        }
 
         $user = User::where('username', $username)->first();
         if(!$user) return back()->with(['error' => ['Opps! User not exists']]);

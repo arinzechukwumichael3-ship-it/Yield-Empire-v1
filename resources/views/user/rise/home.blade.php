@@ -248,7 +248,18 @@ $accountNo = $user->account_no ?? '0000000000';
     <div class="dash-tx-list">
         @forelse($transactions->take(5) as $tx)
         @php
-            $isCredit = in_array($tx->type ?? '', ['ADD-MONEY', 'TRANSFER-MONEY']) && ($tx->receiver_id ?? null) == auth()->id();
+            $txDetails = is_string($tx->details) ? json_decode($tx->details) : ($tx->details ?? null);
+            $isReceived = ($tx->attribute ?? '') === 'RECEIVED' || (in_array($tx->type ?? '', ['ADD-MONEY', 'TRANSFER-MONEY']) && ($tx->receiver_id ?? null) == auth()->id());
+            $isCredit = $isReceived;
+            if ($tx->type === 'MOBILE-WALLET-TRANSFER' && $txDetails) {
+                if ($isReceived) {
+                    $txLabel = 'From: ' . ($txDetails->sender_name ?? 'Someone');
+                } else {
+                    $txLabel = 'To: ' . ($txDetails->receiver_name ?? 'Someone');
+                }
+            } else {
+                $txLabel = $tx->type ?? 'Transaction';
+            }
         @endphp
         <div class="dash-tx-item">
             <div class="dash-tx-icon {{ $isCredit ? 'dash-tx-icon-green' : 'dash-tx-icon-red' }}">
@@ -257,7 +268,7 @@ $accountNo = $user->account_no ?? '0000000000';
                 </svg>
             </div>
             <div class="dash-tx-info">
-                <span class="dash-tx-name">{{ $tx->type ?? 'Transaction' }}</span>
+                <span class="dash-tx-name">{{ $txLabel }}</span>
                 <span class="dash-tx-date">{{ $tx->created_at ? $tx->created_at->diffForHumans() : '' }}</span>
             </div>
             <span class="dash-tx-amount {{ $isCredit ? 'dash-tx-positive' : 'dash-tx-negative' }}">{{ $isCredit ? '+' : '-' }}${{ number_format($tx->request_amount ?? 0, 2) }}</span>

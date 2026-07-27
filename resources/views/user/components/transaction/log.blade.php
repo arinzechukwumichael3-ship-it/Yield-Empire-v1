@@ -5,9 +5,9 @@
                 'transaction'   => $item,
             ])
         @elseif ($item->type == payment_gateway_const()::TYPEMONEYOUT)
-          @include('user.components.transaction.money-out',[
-              'transaction'   => $item,
-          ])
+            @include('user.components.transaction.money-out',[
+                'transaction'   => $item,
+            ])
         @elseif ($item->type == payment_gateway_const()::TYPEADDSUBTRACTBALANCE)
             @include('user.components.transaction.balance-update',[
                 'transaction'   => $item,
@@ -43,4 +43,3 @@
     </div>
     @endforelse
 @endisset
-

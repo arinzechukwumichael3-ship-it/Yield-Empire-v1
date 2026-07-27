@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Helpers\Response;
 use App\Http\Controllers\Controller;
 use App\Constants\PaymentGatewayConst;
+use App\Constants\GlobalConst;
 use Illuminate\Support\Facades\Validator;
 
 class SalaryDisbursementLogsController extends Controller
@@ -18,7 +19,7 @@ class SalaryDisbursementLogsController extends Controller
     public function index(){
         $page_title     = "Salary Disbursement Logs";
         $transactions   = Transaction::with(['user'])->where('type',PaymentGatewayConst::SALARYDISBURSEMENT)
-                            ->where('attribute',PaymentGatewayConst::SEND)
+                            ->where('attribute',GlobalConst::SEND)
                             ->orderBy('id','desc')
                             ->get();
 
@@ -36,7 +37,7 @@ class SalaryDisbursementLogsController extends Controller
         $page_title             = "Salary Disbursement Logs Details";
         $receiver_transaction   = Transaction::with(['user'])
                             ->where('salary_disbursement_id',$salary_disbursement_id)
-                            ->whereNot('attribute',PaymentGatewayConst::SEND)
+                            ->whereNot('attribute',GlobalConst::SEND)
                             ->get();
         $sender_transaction     = Transaction::with(['user','user_wallet'])
                             ->where('salary_disbursement_id',$salary_disbursement_id)
@@ -63,7 +64,7 @@ class SalaryDisbursementLogsController extends Controller
 
         $validated = $validator->validate();
         $transactions = Transaction::with(['user'])->where('type',PaymentGatewayConst::SALARYDISBURSEMENT)
-        ->where('attribute',PaymentGatewayConst::SEND)->search($validated['text'])->limit(10)->get();
+        ->where('attribute',GlobalConst::SEND)->search($validated['text'])->limit(10)->get();
         
         return view('admin.components.data-table.salary-disbursement-table',compact(
             'transactions',

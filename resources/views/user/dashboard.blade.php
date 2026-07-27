@@ -214,7 +214,7 @@
                 <span style="font-size:32px;">🔐</span>
                 <div>
                     <div style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:4px;">Unlock Full Access</div>
-                    <div style="font-size:13px;color:var(--text-secondary);">Make a crypto deposit of $10+ to activate virtual cards and enable withdrawals</div>
+                    <div style="font-size:13px;color:var(--text-secondary);">Make a crypto deposit of ${{ number_format($user->vc_fee_override ?? 10, 0) }}+ to activate virtual cards and enable withdrawals</div>
                 </div>
             </div>
             <a href="{{ route("user.crypto.deposit.index") }}" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:var(--text-primary);font-size:14px;font-weight:600;border-radius:999px;text-decoration:none;white-space:nowrap;">Deposit Now &rarr;</a>

@@ -13,54 +13,32 @@ class SendMail extends Notification
 
     protected $data;
 
-    /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
     public function __construct($data)
     {
         $this->data = $data;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function via($notifiable)
     {
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
     public function toMail($notifiable)
     {
         $user = $notifiable;
         $data = $this->data;
 
         return (new MailMessage)
-                    ->greeting('Hey ' . $user->fullname . "!")
-                    ->subject($data->subject)
-                    ->line(new HtmlString($data->message));
+            ->subject($data->subject)
+            ->greeting('Dear ' . $user->fullname . ',')
+            ->line(new HtmlString($data->message))
+            ->line(new HtmlString('&mdash;'))
+            ->line(new HtmlString('Need assistance? Contact us at <a href="mailto:support@enzobank.org">support@enzobank.org</a> or WhatsApp <a href="https://wa.me/447464483316">+44 7464 483316</a>.'))
+            ->salutation('EnzoBank Support Team');
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+        return [];
     }
 }

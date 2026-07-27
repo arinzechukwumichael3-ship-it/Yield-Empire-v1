@@ -356,7 +356,7 @@ class SalaryDisbursementController extends Controller
                 'available_balance'     => $available_balance,
                 'details'               => json_encode($data),
                 'status'                => PaymentGatewayConst::STATUSSUCCESS,
-                'attribute'             => PaymentGatewayConst::SEND,
+                'attribute'             => GlobalConst::SEND,
                 'created_at'            => now()
             ]);
             $this->updateSenderWalletBalance($wallet,$amount);

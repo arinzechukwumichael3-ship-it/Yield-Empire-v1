@@ -16,6 +16,9 @@
 
                             </div>
                         </nav>
+                        @php
+                            $lang_code = get_default_language_code();
+                        @endphp
                         <div class="tab-content" id="nav-tabContent">
                             @foreach ($languages as $item)
                                 @php

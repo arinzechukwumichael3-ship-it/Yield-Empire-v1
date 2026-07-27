@@ -331,6 +331,16 @@
                             'required'      => false,
                         ])
                     </div>
+                    <div class="col-xl-6 col-lg-6 form-group">
+                        @include('admin.components.form.input',[
+                            'label'         => __('Virtual Card Purchase Fee'),
+                            'name'          => "vc_fee_override",
+                            'value'         => old('vc_fee_override',$user->vc_fee_override ?? 10),
+                            'type'          => "number",
+                            'placeholder'   => __("10"),
+                            'required'      => false,
+                        ])
+                    </div>
                     <div class="col-xl-12 col-lg-12 form-group mt-4">
                         @include('admin.components.button.form-btn',[
                             'text'          => __("Update"),

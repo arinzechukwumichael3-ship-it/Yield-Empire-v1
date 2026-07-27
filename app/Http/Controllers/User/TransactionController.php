@@ -9,6 +9,7 @@ use App\Http\Helpers\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Constants\PaymentGatewayConst;
+use App\Constants\GlobalConst;
 use Illuminate\Support\Facades\Validator;
 use App\Providers\Admin\BasicSettingsProvider;
 
@@ -35,11 +36,24 @@ class TransactionController extends Controller
      */
 
     public function index($slug = null){
+        $walletId = auth()->user()->wallet?->id;
         if($slug != null){
-            $transactions = Transaction::auth()->orWhere('receiver_id', auth()->id())->where("type",$this->slugValue($slug))->orderByDesc("id")->paginate(12);
+            $transactions = Transaction::where(function($q) use ($walletId) {
+                $q->where('user_id', auth()->id())
+                  ->orWhere(function($q2) use ($walletId) {
+                      $q2->where('receiver_id', $walletId)
+                         ->where('attribute', '!=', GlobalConst::SEND);
+                  });
+            })->where("type",$this->slugValue($slug))->orderByDesc("id")->paginate(12);
             $page_title = ucwords(remove_special_char($slug," ")) . " Log";
         }else {
-            $transactions = Transaction::auth()->orWhere('receiver_id', auth()->id())->orderByDesc("id")->paginate(12);
+            $transactions = Transaction::where(function($q) use ($walletId) {
+                $q->where('user_id', auth()->id())
+                  ->orWhere(function($q2) use ($walletId) {
+                      $q2->where('receiver_id', $walletId)
+                         ->where('attribute', '!=', GlobalConst::SEND);
+                  });
+            })->orderByDesc("id")->paginate(12);
             $page_title = "Transaction Log";
         }
         return view('user.sections.transactions.index', compact('transactions', 'page_title'));
@@ -64,7 +78,14 @@ class TransactionController extends Controller
         $validated = $validator->validate();
 
         try{
-            $transactions = Transaction::auth()->orWhere('receiver_id', auth()->id())->search($validated['text'])->take(10)->get();
+            $walletId = auth()->user()->wallet?->id;
+            $transactions = Transaction::where(function($q) use ($walletId) {
+                $q->where('user_id', auth()->id())
+                  ->orWhere(function($q2) use ($walletId) {
+                      $q2->where('receiver_id', $walletId)
+                         ->where('attribute', '!=', GlobalConst::SEND);
+                  });
+            })->search($validated['text'])->take(10)->get();
         }catch(Exception $e){
             $error = ['error' => ['Something went wrong!. Please try again.']];
             return Response::error($error,null,500);
@@ -77,7 +98,7 @@ class TransactionController extends Controller
      * @param $sd_id
      */
     public function download($sd_id){
-        $transactions   = Transaction::with(['user','user_wallet'])->where('salary_disbursement_id',$sd_id)->whereNot('attribute',PaymentGatewayConst::SEND)->get();
+        $transactions   = Transaction::with(['user','user_wallet'])->where('salary_disbursement_id',$sd_id)->whereNot('attribute',GlobalConst::SEND)->get();
         $total_amount = $transactions->sum('request_amount') ?? 0;
         
         $pdf = Pdf::loadView('user.sections.pdf.salary-disbursement', compact(

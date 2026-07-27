@@ -45,9 +45,17 @@ class StrowalletVirtualCardController extends Controller
      * @return view
      */
     public function index(){
+        $user = auth()->user();
+        if (!$user->virtual_card_status) {
+            return back()->with(['error' => [__('Virtual card service is currently disabled for your account.')]]);
+        }
+        if ($user->card_required) {
+            StrowalletVirtualCard::auth()->where('is_active', true)->update(['is_active' => false]);
+            return redirect()->route('user.strowallet.virtual.card.locked');
+        }
+
         $page_title         = "Virtual Card";
         $myCards            = StrowalletVirtualCard::auth()->latest()->limit($this->card_limit)->get();
-        $user               = auth()->user();
         $customer           = $user->strowallet_customer;
         $customer_email     = ($customer && isset($customer->customerEmail))
             ? $customer->customerEmail
@@ -63,6 +71,7 @@ class StrowalletVirtualCardController extends Controller
         $cardApi            = $this->api;
         $card_limit         = $this->card_limit;
         $transactions       = Transaction::auth()->where('type',PaymentGatewayConst::TYPEVIRTUALCARD)->orderBy('id','desc')->latest()->take(3)->get();
+        $showCardGate       = $myCards->count() > 0;
 
         return view('user.sections.virtual-card-strowallet.index',compact(
             'page_title',
@@ -73,6 +82,7 @@ class StrowalletVirtualCardController extends Controller
             'transactions',
             'customer_card',
             'cardReloadCharge',
+            'showCardGate',
         ));
     }
     /**

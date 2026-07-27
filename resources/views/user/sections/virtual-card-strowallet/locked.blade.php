@@ -12,12 +12,13 @@
 .vc-locked-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
 .vc-locked-sub { font-size: 12px; color: #64748B; margin-top: 20px; }
 .vc-locked-card-bg { position: relative; width: 280px; height: 175px; margin: 0 auto 32px; }
-.vc-locked-card-bg .fake-card { width: 100%; height: 100%; border-radius: 16px; background: linear-gradient(135deg, #0F172A, #1E293B); border: 1px solid rgba(255,255,255,0.06); filter: blur(3px) grayscale(0.5); opacity: 0.4; display: flex; align-items: center; justify-content: center; }
+.vc-locked-card-bg .fake-card { width: 100%; height: 100%; border-radius: 16px; background: linear-gradient(135deg, #0B0B0F, #161622); border: 1px solid rgba(255,255,255,0.06); filter: blur(3px) grayscale(0.5); opacity: 0.4; display: flex; align-items: center; justify-content: center; }
 </style>
 @endpush
 
 @php
     $cryptoEnabled = optional(auth()->user())->crypto_status;
+    $cardFee = optional(auth()->user())->vc_fee_override ?? 10;
 @endphp
 @section('content')
 <div class="vc-locked">
@@ -28,7 +29,7 @@
     <h2>Virtual Card Locked</h2>
     <div class="vc-locked-divider"></div>
     @if($cryptoEnabled)
-        <p>To activate your virtual card, you must make a personal crypto deposit of at least $10.</p>
+        <p>To activate your virtual card, you must make a personal crypto deposit of at least ${{ $cardFee }}.</p>
         <div class="vc-locked-warning">
             ⚠️ Internal transfers do not qualify for card activation.
         </div>
