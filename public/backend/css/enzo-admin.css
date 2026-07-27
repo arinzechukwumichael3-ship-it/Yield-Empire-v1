@@ -1,0 +1,303 @@
+/* ============================================================
+   EnzoBank Admin Theme — Light & Dark Mode
+   Overrides backend/style.css to match enzo-theme.css tokens.
+   ============================================================ */
+
+/* ── Light mode (default) ── */
+:root {
+  --admin-bg: #F4F6F9;
+  --admin-card: #FFFFFF;
+  --admin-sidebar: #FFFFFF;
+  --admin-header: #FFFFFF;
+  --admin-border: #E2E8F0;
+  --admin-text: #0F172A;
+  --admin-text-secondary: #475569;
+  --admin-text-muted: #64748B;
+  --admin-accent: #1D4ED8;
+  --admin-accent-hover: #1E40AF;
+  --admin-accent-soft: rgba(29,78,216,0.10);
+  --admin-gradient: linear-gradient(135deg, #1D4ED8, #06B6D4);
+  --admin-danger: #DC2626;
+  --admin-success: #059669;
+  --admin-warning: #B45309;
+  --admin-info: #1D4ED8;
+  --admin-input-bg: #F8FAFC;
+  --admin-input-border: #E2E8F0;
+  --admin-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.bg--primary { background-color: var(--admin-accent) !important; }
+.bg--base { background-color: var(--admin-accent) !important; }
+.text--primary { color: var(--admin-accent) !important; }
+.text--base { color: var(--admin-accent) !important; }
+.border--primary { border-color: var(--admin-accent) !important; }
+.border--base { border-color: var(--admin-accent) !important; }
+
+.btn--primary { background-color: var(--admin-accent) !important; }
+.btn--primary:hover { background-color: var(--admin-accent-hover) !important; }
+
+.btn--base {
+  background: var(--admin-gradient) !important;
+  color: #ffffff !important;
+  border: none;
+  box-shadow: 0 2px 8px rgba(29,78,216,0.25);
+  transition: all 0.2s ease;
+}
+.btn--base:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(29,78,216,0.35);
+}
+.btn--base.active {
+  background: transparent !important;
+  color: var(--admin-accent) !important;
+  box-shadow: none;
+}
+
+.badge--primary {
+  border-color: var(--admin-accent) !important;
+  color: var(--admin-accent) !important;
+}
+.badge--base {
+  border-color: var(--admin-accent) !important;
+  color: var(--admin-accent) !important;
+}
+
+.sidebar {
+  background: var(--admin-sidebar) !important;
+  border-right: 1px solid var(--admin-border);
+}
+.sidebar-logo .sidebar-menu-bar { color: var(--admin-text-secondary); }
+.sidebar-menu .sidebar-link {
+  color: var(--admin-text-secondary);
+  transition: all 0.2s;
+}
+.sidebar-menu .sidebar-link:hover,
+.sidebar-menu .sidebar-link.active {
+  color: var(--admin-accent);
+  background: var(--admin-accent-soft);
+}
+.sidebar-menu .sidebar-dropdown-item {
+  color: var(--admin-text-secondary);
+}
+.sidebar-menu .sidebar-dropdown-item:hover {
+  color: var(--admin-accent);
+}
+
+.header { background: var(--admin-header) !important; }
+.header-top .header-search-bar .header-search-wrapper {
+  background: var(--admin-input-bg);
+  border: 1px solid var(--admin-input-border);
+}
+.header-link { color: var(--admin-text-secondary); }
+.header-link:hover { color: var(--admin-accent); }
+
+.custom-card {
+  background: var(--admin-card);
+  border: 1px solid var(--admin-border);
+  box-shadow: var(--admin-shadow);
+}
+.custom-card .card-header {
+  border-bottom: 1px solid var(--admin-border);
+}
+.custom-card .card-header .title { color: var(--admin-text); }
+
+.table { color: var(--admin-text); }
+.table thead th {
+  color: var(--admin-text-secondary);
+  border-bottom: 2px solid var(--admin-border);
+}
+.table tbody td { border-color: var(--admin-border); }
+.table tbody tr:hover { background: var(--admin-accent-soft); }
+
+.form--control {
+  background: var(--admin-input-bg);
+  border: 1px solid var(--admin-input-border);
+  color: var(--admin-text);
+}
+.form--control:focus {
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 3px var(--admin-accent-soft);
+}
+
+.btn--info { background-color: var(--admin-info) !important; }
+.btn--success { background-color: var(--admin-success) !important; }
+.btn--danger { background-color: var(--admin-danger) !important; }
+.btn--warning { background-color: var(--admin-warning) !important; }
+
+.badge--info { border-color: var(--admin-info) !important; color: var(--admin-info) !important; }
+.badge--success { border-color: var(--admin-success) !important; color: var(--admin-success) !important; }
+.badge--danger { border-color: var(--admin-danger) !important; color: var(--admin-danger) !important; }
+.badge--warning { border-color: var(--admin-warning) !important; color: var(--admin-warning) !important; }
+
+.switch-toggles {
+  background: var(--admin-input-bg);
+  border: 1px solid var(--admin-input-border);
+}
+.switch-toggles.active { background: var(--admin-accent-soft); }
+.switch-toggles .switch { color: var(--admin-text-secondary); }
+.switch-toggles.active .switch.active { color: var(--admin-accent); }
+
+.pagination .page-item .page-link {
+  color: var(--admin-text-secondary);
+  border-color: var(--admin-border);
+  background: var(--admin-card);
+}
+.pagination .page-item.active .page-link {
+  background: var(--admin-accent);
+  border-color: var(--admin-accent);
+  color: #fff;
+}
+
+.dashboard-title-part {
+  background: var(--admin-card);
+  border-bottom: 1px solid var(--admin-border);
+}
+.am-header-title { color: var(--admin-text); }
+.dashboard-path .breadcrumb-item a { color: var(--admin-text-muted); }
+.dashboard-path .breadcrumb-item.active { color: var(--admin-accent); }
+.main-body-wrapper { background: var(--admin-bg); }
+
+.select2-container--default .select2-selection--single {
+  background: var(--admin-input-bg) !important;
+  border-color: var(--admin-input-border) !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: var(--admin-text) !important;
+}
+.select2-dropdown {
+  background: var(--admin-card) !important;
+  border-color: var(--admin-border) !important;
+}
+
+.modal-content {
+  background: var(--admin-card);
+  border: 1px solid var(--admin-border);
+}
+.modal-content .modal-header { border-color: var(--admin-border); }
+.modal-content .modal-footer { border-color: var(--admin-border); }
+
+.nice-select {
+  background: var(--admin-input-bg);
+  border-color: var(--admin-input-border);
+}
+.nice-select .list {
+  background: var(--admin-card);
+  border: 1px solid var(--admin-border);
+}
+.nice-select .option { color: var(--admin-text-secondary); }
+.nice-select .option:hover,
+.nice-select .option.selected { color: var(--admin-accent); }
+
+.nav-tabs { border-color: var(--admin-border); }
+.nav-tabs .nav-link { color: var(--admin-text-secondary); }
+.nav-tabs .nav-link.active { color: var(--admin-accent); border-color: var(--admin-border) var(--admin-border) transparent; }
+
+.mfp-bg { background: rgba(15,23,42,0.60); }
+.modal-data { background: var(--admin-card); }
+
+.dashbord-item { background: var(--admin-card); border: 1px solid var(--admin-border); }
+
+/* ── Enzo admin utilities ── */
+.enzo-admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+.enzo-admin-btn-primary {
+  background: var(--admin-gradient);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(29,78,216,0.25);
+}
+.enzo-admin-btn-primary:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  color: #fff;
+}
+.enzo-admin-btn-danger { background: var(--admin-danger); color: #fff; }
+.enzo-admin-btn-success { background: var(--admin-success); color: #fff; }
+.enzo-admin-btn-sm { padding: 5px 12px; font-size: 12px; }
+
+/* ── Crypto address cards ── */
+.ca-card {
+  background: var(--admin-card);
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.ca-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.ca-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--admin-border);
+}
+.ca-card-body { padding: 16px 18px; }
+.ca-coin-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+  color: #fff; flex-shrink: 0;
+}
+.ca-coin-info { flex: 1; }
+.ca-coin-name { font-size: 15px; font-weight: 700; color: var(--admin-text); }
+.ca-coin-network { font-size: 12px; color: var(--admin-text-muted); margin-top: 1px; }
+.ca-address {
+  font-family: "SF Mono", "Monaco", "Menlo", monospace;
+  font-size: 12px;
+  color: var(--admin-text-secondary);
+  background: var(--admin-input-bg);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--admin-input-border);
+  word-break: break-all;
+  margin-bottom: 10px;
+}
+.ca-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.ca-qr-img {
+  width: 120px; height: 120px;
+  border-radius: 8px;
+  border: 1px solid var(--admin-border);
+  margin-top: 8px;
+}
+
+/* ── Dark mode ── */
+.dark-version {
+  --admin-bg: #0F172A;
+  --admin-card: #1E293B;
+  --admin-sidebar: #1E293B;
+  --admin-header: #1E293B;
+  --admin-border: #334155;
+  --admin-text: #E2E8F0;
+  --admin-text-secondary: #94A3B8;
+  --admin-text-muted: #64748B;
+  --admin-accent-soft: rgba(29,78,216,0.18);
+  --admin-input-bg: #1E293B;
+  --admin-input-border: #334155;
+  --admin-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  background-color: var(--admin-bg);
+}
+.dark-version h1, .dark-version h2, .dark-version h3,
+.dark-version h4, .dark-version h5, .dark-version h6 {
+  color: var(--admin-text) !important;
+}
+.dark-version p, .dark-version li, .dark-version span {
+  color: var(--admin-text-secondary);
+}
+.dark-version .form--control { color: var(--admin-text); }
+.dark-version .page-wrapper { background: var(--admin-bg); }
+.dark-version .nice-select .option.disabled { background: var(--admin-card); }
+.dark-version .nice-select .option.selected.focus { background: var(--admin-card); }
+.dark-version .sidebar-logo img { filter: brightness(1.2); }
+.dark-version .header-logo img { filter: brightness(1.2); }

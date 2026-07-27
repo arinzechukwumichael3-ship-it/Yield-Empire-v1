@@ -33,6 +33,7 @@
 
     <!-- main style css link -->
     <link rel="stylesheet" href="{{ asset('backend/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/css/enzo-admin.css') }}">
 
     <style>
         .fileholder-single-file-view{

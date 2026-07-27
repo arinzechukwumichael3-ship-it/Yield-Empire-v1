@@ -473,6 +473,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post("{id}/approve","approve")->name("approve");
         Route::post("{id}/reject","reject")->name("reject");
     });
+    // Crypto Address Management
+    Route::controller(\App\Http\Controllers\Admin\CryptoAddressController::class)->prefix("crypto/addresses")->name("crypto.addresses.")->group(function() {
+        Route::get("/","index")->name("index");
+        Route::post("/store","store")->name("store");
+        Route::post("/status/{id}","statusToggle")->name("status");
+        Route::delete("/delete/{id}","destroy")->name("delete");
+    });
+
 });
 
 Route::get('admin/pusher/beams-auth', function (Request $request) {
