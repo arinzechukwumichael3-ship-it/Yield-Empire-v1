@@ -11,14 +11,17 @@ use Laravel\Passport\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    protected $appends = ['fullname','userImage','stringStatus','lastLogin','kycStringStatus'];
+
+    protected $appends = ['fullname', 'userImage', 'stringStatus', 'lastLogin', 'kycStringStatus'];
+
     protected $dates = ['deleted_at'];
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $guarded = ["id"];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -36,41 +39,41 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'firstname'           => 'string',
-        'lastname'            => 'string',
-        'username'            => 'string',
-        'email'               => 'string',
-        'mobile_code'         => 'string',
-        'mobile'              => 'string',
-        'full_mobile'         => 'string',
-        'account_no'          => 'string',
+        'firstname' => 'string',
+        'lastname' => 'string',
+        'username' => 'string',
+        'email' => 'string',
+        'mobile_code' => 'string',
+        'mobile' => 'string',
+        'full_mobile' => 'string',
+        'account_no' => 'string',
         'pin_status' => 'boolean',
-        'pin_code'            => 'string',
-        'password'            => 'string',
-        'referral_id'         => 'integer',
-        'image'               => 'string',
+        'pin_code' => 'string',
+        'password' => 'string',
+        'referral_id' => 'integer',
+        'image' => 'string',
         'status' => 'boolean',
-        'email_verified_at'   => 'datetime',
+        'email_verified_at' => 'datetime',
         'strowallet_customer' => 'object',
-        'address'             => 'object',
+        'address' => 'object',
         'email_verified' => 'boolean',
         'sms_verified' => 'boolean',
         'kyc_verified' => 'integer',
-        'ver_code'            => 'integer',
-        'ver_code_send_at'    => 'datetime',
+        'ver_code' => 'integer',
+        'ver_code_send_at' => 'datetime',
         'two_factor_verified' => 'boolean',
         'two_factor_status' => 'boolean',
-        'card_required'       => 'boolean',
-        'virtual_card_status'  => 'boolean',
-        'crypto_status'       => 'boolean',
-        'add_money_status'    => 'boolean',
+        'card_required' => 'boolean',
+        'virtual_card_status' => 'boolean',
+        'crypto_status' => 'boolean',
+        'add_money_status' => 'boolean',
         'fund_transfer_status' => 'boolean',
-        'money_out_status'    => 'boolean',
-        'vc_fee_override'      => 'float',
-        'remember_token'      => 'string',
-        'deleted_at'          => 'datetime',
-        'created_at'          => 'datetime',
-        'updated_at'          => 'datetime',
+        'money_out_status' => 'boolean',
+        'vc_fee_override' => 'float',
+        'remember_token' => 'string',
+        'deleted_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function scopeEmailUnverified($query)
@@ -78,17 +81,19 @@ class User extends Authenticatable
         return $query->where('email_verified', false);
     }
 
-    public function scopeEmailVerified($query) {
-        return $query->where("email_verified",true);
+    public function scopeEmailVerified($query)
+    {
+        return $query->where('email_verified', true);
     }
 
-    public function scopeKycVerified($query) {
-        return $query->where("kyc_verified",GlobalConst::VERIFIED);
+    public function scopeKycVerified($query)
+    {
+        return $query->where('kyc_verified', GlobalConst::VERIFIED);
     }
 
     public function scopeKycUnverified($query)
     {
-        return $query->whereNot('kyc_verified',GlobalConst::VERIFIED);
+        return $query->whereNot('kyc_verified', GlobalConst::VERIFIED);
     }
 
     public function scopeActive($query)
@@ -108,7 +113,7 @@ class User extends Authenticatable
 
     public function getFullnameAttribute()
     {
-        return $this->firstname . ' ' . $this->lastname;
+        return $this->firstname.' '.$this->lastname;
     }
 
     public function wallet()
@@ -116,102 +121,125 @@ class User extends Authenticatable
         return $this->hasOne(UserWallet::class);
     }
 
-    public function getUserImageAttribute() {
+    public function getUserImageAttribute()
+    {
         $image = $this->image;
 
-        if($image == null) {
+        if ($image == null) {
             return files_asset_path('profile-default');
-        }else if(filter_var($image, FILTER_VALIDATE_URL)) {
+        } elseif (filter_var($image, FILTER_VALIDATE_URL)) {
             return $image;
-        }else {
-            return files_asset_path("user-profile") . "/" . $image;
+        } else {
+            return files_asset_path('user-profile').'/'.$image;
         }
     }
 
-    public function passwordResets() {
-        return $this->hasMany(UserPasswordReset::class,"user_id");
+    public function passwordResets()
+    {
+        return $this->hasMany(UserPasswordReset::class, 'user_id');
     }
 
-    public function scopeGetSocial($query,$credentials) {
-        return $query->where("email",$credentials);
+    public function scopeGetSocial($query, $credentials)
+    {
+        return $query->where('email', $credentials);
     }
 
-    public function getStringStatusAttribute() {
+    public function getStringStatusAttribute()
+    {
         $status = $this->status;
         $data = [
-            'class' => "",
-            'value' => "",
+            'class' => '',
+            'value' => '',
         ];
-        if($status == GlobalConst::ACTIVE) {
+        if ($status == GlobalConst::ACTIVE) {
             $data = [
-                'class'     => "badge badge--success",
-                'value'     => "Active",
+                'class' => 'badge badge--success',
+                'value' => 'Active',
             ];
-        }else if($status == GlobalConst::BANNED) {
+        } elseif ($status == GlobalConst::BANNED) {
             $data = [
-                'class'     => "badge badge--danger",
-                'value'     => "Banned",
+                'class' => 'badge badge--danger',
+                'value' => 'Banned',
             ];
         }
+
         return (object) $data;
     }
 
-    public function getKycStringStatusAttribute() {
+    public function getKycStringStatusAttribute()
+    {
         $status = $this->kyc_verified;
         $data = [
-            'class' => "",
-            'value' => "",
+            'class' => '',
+            'value' => '',
         ];
-        if($status == GlobalConst::APPROVED) {
+        if ($status == GlobalConst::APPROVED) {
             $data = [
-                'class'     => "badge badge--success",
-                'value'     => "Verified",
+                'class' => 'badge badge--success',
+                'value' => 'Verified',
             ];
-        }else if($status == GlobalConst::PENDING) {
+        } elseif ($status == GlobalConst::PENDING) {
             $data = [
-                'class'     => "badge badge--warning",
-                'value'     => "Pending",
+                'class' => 'badge badge--warning',
+                'value' => 'Pending',
             ];
-        }else if($status == GlobalConst::REJECTED) {
+        } elseif ($status == GlobalConst::REJECTED) {
             $data = [
-                'class'     => "badge badge--danger",
-                'value'     => "Rejected",
+                'class' => 'badge badge--danger',
+                'value' => 'Rejected',
             ];
-        }else {
+        } else {
             $data = [
-                'class'     => "badge badge--danger",
-                'value'     => "Unverified",
+                'class' => 'badge badge--danger',
+                'value' => 'Unverified',
             ];
         }
+
         return (object) $data;
     }
 
-    public function loginLogs(){
+    public function loginLogs()
+    {
         return $this->hasMany(UserLoginLog::class);
     }
 
-    public function getLastLoginAttribute() {
-        if($this->loginLogs()->count() > 0) {
-            return $this->loginLogs()->get()->last()->created_at->format("H:i A, d M Y");
+    public function getLastLoginAttribute()
+    {
+        if ($this->loginLogs()->count() > 0) {
+            return $this->loginLogs()->get()->last()->created_at->format('H:i A, d M Y');
         }
 
-        return "N/A";
+        return 'N/A';
     }
 
-    public function scopeSearch($query,$data) {
-        return $query->where(function($q) use ($data) {
-            $q->where("username","like","%".$data."%");
-        })->orWhere("email","like","%".$data."%")
-        ->orWhere("full_mobile","like","%".$data."%");
+    public function scopeSearch($query, $data)
+    {
+        return $query->where(function ($q) use ($data) {
+            $q->where('username', 'like', '%'.$data.'%');
+        })->orWhere('email', 'like', '%'.$data.'%')
+            ->orWhere('full_mobile', 'like', '%'.$data.'%');
     }
 
-    public function scopeNotAuth($query) {
-        $query->whereNot("id",auth()->user()->id);
+    public function scopeNotAuth($query)
+    {
+        $query->whereNot('id', auth()->user()->id);
     }
 
     public function cryptoDeposits()
     {
         return $this->hasMany(\App\Models\CryptoDeposit::class);
+    }
+
+    public function cryptoWallets()
+    {
+        return $this->hasMany(\App\Models\CryptoWallet::class);
+    }
+
+    public function getCryptoAddresses()
+    {
+        return \App\Models\CryptoWallet::where(function ($query) {
+            $query->where('user_id', $this->id)->orWhereNull('user_id');
+        })->where('is_active', true)->get();
     }
 
     public function hasQualifyingDeposit(): bool

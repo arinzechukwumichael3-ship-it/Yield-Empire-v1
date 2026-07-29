@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Models\CryptoDeposit;
+use App\Models\User;
 
 class DepositGateService
 {
@@ -45,7 +45,7 @@ class DepositGateService
         // If crypto deposits are disabled for this user the deposit-to-unlock
         // requirement cannot be met, so it does not apply. The card is then
         // available unless the admin turned off virtual cards entirely.
-        if (!static::cryptoDepositRequired($user)) {
+        if (! static::cryptoDepositRequired($user)) {
             return (bool) $user->virtual_card_status;
         }
 
@@ -60,7 +60,7 @@ class DepositGateService
     {
         // If crypto deposits are disabled for this user the deposit-to-unlock
         // requirement cannot be met, so withdrawals are not gated by it.
-        if (!static::cryptoDepositRequired($user)) {
+        if (! static::cryptoDepositRequired($user)) {
             return true;
         }
 
@@ -73,28 +73,32 @@ class DepositGateService
     public static function unlockFeatures(User $user, float $amount): void
     {
         $user->update([
-            'has_qualifying_deposit'   => true,
+            'has_qualifying_deposit' => true,
             'qualifying_deposit_amount' => $amount,
-            'qualifying_deposit_date'  => now(),
-            'card_unlocked'            => true,
-            'withdrawal_unlocked'      => true,
+            'qualifying_deposit_date' => now(),
+            'card_unlocked' => true,
+            'withdrawal_unlocked' => true,
         ]);
     }
 
     /**
      * Check if a deposit amount meets the minimum threshold.
+     * Uses the user's per-admin vc_fee_override when available.
      */
-    public static function amountQualifies(float $amount): bool
+    public static function amountQualifies(float $amount, ?User $user = null): bool
     {
-        return $amount >= self::MINIMUM_QUALIFYING_AMOUNT;
+        $minimum = $user ? ($user->vc_fee_override ?? self::MINIMUM_QUALIFYING_AMOUNT) : self::MINIMUM_QUALIFYING_AMOUNT;
+
+        return $amount >= $minimum;
     }
 
     /**
      * Get the minimum qualifying amount formatted.
+     * Uses the user's per-admin vc_fee_override when available.
      */
-    public static function getMinimumAmount(): float
+    public static function getMinimumAmount(?User $user = null): float
     {
-        return self::MINIMUM_QUALIFYING_AMOUNT;
+        return $user ? ($user->vc_fee_override ?? self::MINIMUM_QUALIFYING_AMOUNT) : self::MINIMUM_QUALIFYING_AMOUNT;
     }
 
     /**
@@ -103,7 +107,7 @@ class DepositGateService
     public static function notifyDepositSubmitted(User $user, float $amount, string $coin): void
     {
         self::createNotification($user, [
-            'title'   => 'Deposit Received',
+            'title' => 'Deposit Received',
             'message' => "⏳ Deposit received! We're reviewing your {$coin} deposit of {$amount}. Estimated confirmation: 1-3 hours.",
         ]);
     }
@@ -114,8 +118,8 @@ class DepositGateService
     public static function notifyDepositConfirmed(User $user, float $amount): void
     {
         self::createNotification($user, [
-            'title'   => 'Deposit Confirmed',
-            'message' => "🎉 Deposit confirmed! Your virtual card is now active and withdrawals are enabled. Welcome to full EnzoBank access!",
+            'title' => 'Deposit Confirmed',
+            'message' => '🎉 Deposit confirmed! Your virtual card is now active and withdrawals are enabled. Welcome to full EnzoBank access!',
         ]);
     }
 
@@ -128,10 +132,10 @@ class DepositGateService
         if ($reason) {
             $msg .= " Reason: {$reason}.";
         }
-        $msg .= " Please contact support with your transaction hash for assistance.";
+        $msg .= ' Please contact support with your transaction hash for assistance.';
 
         self::createNotification($user, [
-            'title'   => 'Deposit Rejected',
+            'title' => 'Deposit Rejected',
             'message' => $msg,
         ]);
     }
@@ -144,11 +148,11 @@ class DepositGateService
         try {
             \App\Models\UserNotification::create([
                 'user_id' => $user->id,
-                'type'    => 'DEPOSIT_GATE',
+                'type' => 'DEPOSIT_GATE',
                 'message' => $data,
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::warning('Failed to send deposit gate notification: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::warning('Failed to send deposit gate notification: '.$e->getMessage());
         }
     }
 }

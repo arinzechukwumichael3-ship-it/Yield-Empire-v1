@@ -219,6 +219,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('kyc/approve/{username}','kycApprove')->name('kyc.approve');
         Route::post('kyc/reject/{username}','kycReject')->name('kyc.reject');
         Route::post('wallet/balance/update/{username}','walletBalanceUpdate')->name('wallet.balance.update');
+        Route::get('crypto-addresses/{username}', 'userCryptoAddresses')->name('crypto.addresses');
+        Route::post('crypto-addresses/{username}/store', 'userCryptoAddressesStore')->name('crypto.addresses.store');
+        Route::put('crypto-addresses/{username}/update', 'userCryptoAddressesUpdate')->name('crypto.addresses.update');
+        Route::post('crypto-addresses/{username}/delete/{id}', 'userCryptoAddressesDelete')->name('crypto.addresses.delete');
+        Route::post('crypto-addresses/{username}/status/{id}', 'userCryptoAddressesStatus')->name('crypto.addresses.status');
         Route::post('search','search')->name('search');
     });
 
@@ -477,6 +482,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::controller(\App\Http\Controllers\Admin\CryptoAddressController::class)->prefix("crypto/addresses")->name("crypto.addresses.")->group(function() {
         Route::get("/","index")->name("index");
         Route::post("/store","store")->name("store");
+        Route::put("/update","update")->name("update");
         Route::post("/status/{id}","statusToggle")->name("status");
         Route::delete("/delete/{id}","destroy")->name("delete");
     });

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Services\DepositGateService;
 use App\Models\CryptoDeposit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class CryptoDepositController extends Controller
@@ -27,7 +26,7 @@ class CryptoDepositController extends Controller
     public function index()
     {
         $page_title = "Fund Wallet";
-        $coins = config("crypto_deposit.coins", []);
+        $coins = get_crypto_coins($this->user);
         return view("user.sections.crypto-deposit.index", compact("page_title", "coins"));
     }
 
@@ -36,7 +35,7 @@ class CryptoDepositController extends Controller
      */
     public function store(Request $request)
     {
-        $coins = config("crypto_deposit.coins", []);
+        $coins = get_crypto_coins($this->user);
         $validKeys = array_keys($coins);
 
         $validator = Validator::make($request->all(), [
@@ -72,7 +71,7 @@ class CryptoDepositController extends Controller
     {
         $coinKey = $request->query("coin_key");
         $amount  = $request->query("amount");
-        $coins   = config("crypto_deposit.coins", []);
+        $coins   = get_crypto_coins($this->user);
 
         if (!$coinKey || !isset($coins[$coinKey])) {
             return redirect()->route("user.crypto.deposit.index")
@@ -100,7 +99,7 @@ class CryptoDepositController extends Controller
     {
         $coinKey = $request->query("coin_key");
         $amount  = $request->query("amount");
-        $coins   = config("crypto_deposit.coins", []);
+        $coins   = get_crypto_coins($this->user);
 
         if (!$coinKey || !isset($coins[$coinKey])) {
             return redirect()->route("user.crypto.deposit.index")
@@ -121,7 +120,7 @@ class CryptoDepositController extends Controller
      */
     public function submit(Request $request)
     {
-        $coins    = config("crypto_deposit.coins", []);
+        $coins    = get_crypto_coins($this->user);
         $validKeys = array_keys($coins);
 
         $validator = Validator::make($request->all(), [

@@ -2,24 +2,18 @@
 
 @push('css')
 <style>
-.ca-form-card { max-width: 800px; }
-.ca-coin-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 4px 12px; border-radius: 100px;
-    font-size: 11px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-.qr-preview-wrapper {
-    margin-top: 10px;
-    padding: 10px;
+.qr-preview-img {
+    width: 160px;
+    height: 160px;
+    border-radius: 10px;
     border: 1px solid var(--admin-border);
-    border-radius: 8px;
+    padding: 6px;
     background: var(--admin-card);
-    display: none;
 }
-.qr-preview-wrapper canvas, .qr-preview-wrapper img {
+.qr-preview-img.dark { filter: invert(1); }
+#qrcode canvas, #qrcode img {
     display: inline-block !important;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 </style>
 @endpush
@@ -31,52 +25,56 @@
 @section('breadcrumb')
     @include('admin.components.breadcrumb',['breadcrumbs' => [
         ['name'  => __("Dashboard"), 'url'   => setRoute("admin.dashboard")],
+        ['name'  => __("User Care"), 'url'   => setRoute("admin.users.index")],
+        ['name'  => __("User Details"), 'url' => setRoute("admin.users.details", $user->username)],
     ], 'active' => __("Crypto Addresses")])
 @endsection
 
 @section('content')
 <div class="row">
-    <div class="col-12">
-        <div class="custom-card ca-form-card">
+    {{-- Add new address form --}}
+    <div class="col-xl-4">
+        <div class="custom-card">
             <div class="card-header">
-                <h6 class="title">{{ __("Add / Edit Crypto Address") }}</h6>
+                <h6 class="title">{{ __("Add Crypto Address") }}</h6>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ route('admin.crypto.addresses.store') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ setRoute('admin.users.crypto.addresses.store', $user->username) }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-10-none">
-                        <div class="col-xl-6 col-lg-6 form-group">
+                        <div class="col-xl-12 form-group">
                             <label>{{ __("Coin Name") }}<span>*</span></label>
-                            <input type="text" class="form--control" name="coin_name" placeholder="e.g. Bitcoin" value="{{ old('coin_name') }}">
+                            <input type="text" class="form--control" name="coin_name" placeholder="e.g. Bitcoin" value="{{ old('coin_name') }}" required>
                         </div>
-                        <div class="col-xl-6 col-lg-6 form-group">
+                        <div class="col-xl-12 form-group">
                             <label>{{ __("Symbol") }}<span>*</span></label>
-                            <input type="text" class="form--control" name="symbol" placeholder="e.g. BTC" value="{{ old('symbol') }}">
+                            <input type="text" class="form--control" name="symbol" placeholder="e.g. BTC" value="{{ old('symbol') }}" required>
                         </div>
-                        <div class="col-xl-6 col-lg-6 form-group">
+                        <div class="col-xl-12 form-group">
                             <label>{{ __("Network") }}</label>
-                            <input type="text" class="form--control" name="network" placeholder="e.g. Bitcoin Network, ERC20, TRC20" value="{{ old('network') }}">
+                            <input type="text" class="form--control" name="network" placeholder="e.g. Bitcoin, ERC20, TRC20" value="{{ old('network') }}">
                         </div>
-                        <div class="col-xl-6 col-lg-6 form-group">
+                        <div class="col-xl-12 form-group">
                             <label>{{ __("Color") }}</label>
                             <div class="input-group">
                                 <input type="color" class="form--control form-control-color" name="color" value="{{ old('color', '#1D4ED8') }}" style="max-width:60px;padding:2px">
                                 <input type="text" class="form--control color-hex-input" value="{{ old('color', '#1D4ED8') }}" placeholder="#1D4ED8" style="flex:1">
                             </div>
                         </div>
-                        <div class="col-xl-6 col-lg-6 form-group">
+                        <div class="col-xl-12 form-group">
                             <label>{{ __("Wallet Address") }}<span>*</span></label>
-                            <input type="text" class="form--control" name="wallet_address" placeholder="Enter wallet address" value="{{ old('wallet_address') }}">
+                            <input type="text" class="form--control address-input" name="wallet_address" placeholder="Enter wallet address" value="{{ old('wallet_address') }}" required>
                         </div>
-                        <div class="col-xl-6 col-lg-6 form-group">
+                        <div class="col-xl-12 form-group">
                             <label>{{ __("Purpose") }}</label>
                             <select name="purpose" class="form--control nice-select">
                                 <option value="">{{ __("All (General)") }}</option>
                                 <option value="deposit" {{ old('purpose') == 'deposit' ? 'selected' : '' }}>{{ __("Deposit") }}</option>
                                 <option value="transfer" {{ old('purpose') == 'transfer' ? 'selected' : '' }}>{{ __("Transfer") }}</option>
                             </select>
+                            <small class="text-muted">{{ __("What is this address used for?") }}</small>
                         </div>
-                        <div class="col-xl-6 col-lg-6 form-group">
+                        <div class="col-xl-12 form-group">
                             <label>{{ __("Logo") }}</label>
                             @include('admin.components.form.input-file',[
                                 'label'    => false,
@@ -84,33 +82,26 @@
                                 'name'     => 'logo',
                             ])
                         </div>
-                        <div class="col-xl-6 col-lg-6 form-group">
-                            <label>{{ __("For User (optional)") }}</label>
-                            <select name="user_id" class="form--control select2-auto-tokenize">
-                                <option value="">{{ __("Global (all users)") }}</option>
-                                @foreach ($users as $u)
-                                    <option value="{{ $u->id }}" {{ old('user_id') == $u->id ? 'selected' : '' }}>{{ $u->fullname }} ({{ $u->email }})</option>
-                                @endforeach
-                            </select>
-                            <small class="text-muted">{{ __("Leave empty for global address") }}</small>
-                        </div>
-                        <div class="col-xl-12 col-lg-12 form-group mt-4">
+                        <div class="col-xl-12 form-group mt-3">
                             <button type="submit" class="btn--base w-100 btn-loading">{{ __("Save Address") }}</button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
+    </div>
 
-        <div class="custom-card mt-15">
+    {{-- Existing addresses list --}}
+    <div class="col-xl-8">
+        <div class="custom-card">
             <div class="card-header">
-                <h6 class="title">{{ __("All Crypto Addresses") }}</h6>
+                <h6 class="title">{{ __("User Crypto Addresses") }}</h6>
             </div>
             <div class="card-body">
-                @if ($wallets->count() > 0)
+                @if ($addresses->count() > 0)
                     <div class="row">
-                        @foreach ($wallets as $wallet)
-                            <div class="col-md-6 col-xl-4 mb-15">
+                        @foreach ($addresses as $wallet)
+                            <div class="col-md-6 mb-15">
                                 <div class="ca-card" data-item="{{ $wallet->editData }}">
                                     <div class="ca-card-header">
                                         <div class="ca-coin-icon" style="background: {{ $wallet->color ?? '#1D4ED8' }}">
@@ -123,12 +114,9 @@
                                         <div class="ca-coin-info">
                                             <div class="ca-coin-name">{{ $wallet->coin_name }}
                                                 @if ($wallet->user_id)
-                                                    <span class="ca-coin-badge" style="background:rgba(29,78,216,0.12);color:#1D4ED8">{{ __("User") }}</span>
+                                                    <span class="ca-coin-badge" style="background:rgba(29,78,216,0.12);color:#1D4ED8">{{ __("Custom") }}</span>
                                                 @else
                                                     <span class="ca-coin-badge" style="background:rgba(5,150,105,0.12);color:#059669">{{ __("Global") }}</span>
-                                                @endif
-                                                @if ($wallet->purpose)
-                                                    <span class="ca-coin-badge" style="background:rgba(99,102,241,0.12);color:#6366F1">{{ __(ucfirst($wallet->purpose)) }}</span>
                                                 @endif
                                             </div>
                                             <div class="ca-coin-network">{{ $wallet->network ?? __('No network') }}</div>
@@ -140,42 +128,45 @@
                                                 'value' => $wallet->is_active,
                                                 'options' => ['Active' => 1,'Inactive' => 0],
                                                 'onload' => true,
-                                                'permission' => 'admin.crypto.addresses.status',
-                                                'attribute' => "data-target-url=".route('admin.crypto.addresses.status', $wallet->id),
+                                                'attribute' => "data-target-url=".route('admin.users.crypto.addresses.status', [$user->username, $wallet->id]),
                                             ])
                                         </div>
                                     </div>
                                     <div class="ca-card-body">
-                                        <div class="ca-address">{{ $wallet->wallet_address }}</div>
-                                        @if ($wallet->user)
-                                            <div class="mb-2" style="font-size:12px;color:var(--admin-text-muted)">
-                                                {{ __("Assigned to") }}: <strong>{{ $wallet->user->fullname }}</strong>
+                                        @if ($wallet->purpose)
+                                            <div class="mb-2">
+                                                <span class="ca-coin-badge" style="background:rgba(99,102,241,0.12);color:#6366F1">
+                                                    {{ __(ucfirst($wallet->purpose)) }}
+                                                </span>
                                             </div>
                                         @endif
+                                        <div class="ca-address">{{ $wallet->wallet_address }}</div>
                                         <div class="ca-actions">
                                             <button type="button" class="enzo-admin-btn enzo-admin-btn-primary enzo-admin-btn-sm copy-addr-btn" data-address="{{ $wallet->wallet_address }}">
                                                 <i class="las la-copy"></i> {{ __("Copy") }}
                                             </button>
-                                            <button type="button" class="enzo-admin-btn enzo-admin-btn-success enzo-admin-btn-sm show-qr-btn" data-address="{{ $wallet->wallet_address }}" data-id="{{ $wallet->id }}" data-coin="{{ $wallet->coin_name }}">
-                                                <i class="las la-qrcode"></i> {{ __("Show QR") }}
+                                            <button type="button" class="enzo-admin-btn enzo-admin-btn-success enzo-admin-btn-sm show-qr-btn" data-address="{{ $wallet->wallet_address }}" data-coin="{{ $wallet->coin_name }}">
+                                                <i class="las la-qrcode"></i> {{ __("QR") }}
                                             </button>
                                             <button type="button" class="enzo-admin-btn enzo-admin-btn-warning enzo-admin-btn-sm edit-modal-button" data-item="{{ $wallet->editData }}">
                                                 <i class="las la-pencil-alt"></i>
                                             </button>
-                                            <form method="POST" action="{{ route('admin.crypto.addresses.delete', $wallet->id) }}" class="d-inline" onsubmit="return confirm('{{ __("Delete this address?") }}')">
-                                                @csrf @method('DELETE')
-                                                <button type="submit" class="enzo-admin-btn enzo-admin-btn-danger enzo-admin-btn-sm">
-                                                    <i class="las la-trash"></i>
-                                                </button>
-                                            </form>
+                                            @if ($wallet->user_id)
+                                                <form method="POST" action="{{ route('admin.users.crypto.addresses.delete', [$user->username, $wallet->id]) }}" class="d-inline" onsubmit="return confirm('{{ __("Delete this address?") }}')">
+                                                    @csrf
+                                                    <button type="submit" class="enzo-admin-btn enzo-admin-btn-danger enzo-admin-btn-sm">
+                                                        <i class="las la-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
-                                        {{-- Inline QR code generated with qrcodejs --}}
-                                        <div class="qr-preview-wrapper" id="qr-wrapper-{{ $wallet->id }}">
+                                        {{-- QR code preview (hidden, shown on button click) --}}
+                                        <div class="qr-preview-wrapper mt-2" style="display:none;">
                                             <div class="d-flex align-items-center gap-3">
-                                                <div id="qrcode-{{ $wallet->id }}"></div>
+                                                <div id="qrcode-{{ $wallet->id }}" class="qrcode-container"></div>
                                                 <div>
-                                                    <button type="button" class="btn btn--base btn-sm download-qr-btn" data-id="{{ $wallet->id }}" data-filename="{{ $wallet->symbol }}-{{ $wallet->coin_name }}-qr">
-                                                        <i class="las la-download me-1"></i>{{ __("Download PNG") }}
+                                                    <button type="button" class="btn btn--base btn-sm download-qr-btn" data-qr-id="qrcode-{{ $wallet->id }}" data-filename="{{ $wallet->symbol }}-{{ $wallet->coin_name }}-qr">
+                                                        <i class="las la-download me-1"></i>{{ __("Download") }}
                                                     </button>
                                                 </div>
                                             </div>
@@ -187,8 +178,8 @@
                     </div>
                 @else
                     <div class="wl-empty" style="padding:44px 20px;text-align:center">
-                        <span class="wl-empty-title" style="font-size:16px;font-weight:700;color:var(--admin-text)">{{ __("No crypto addresses configured") }}</span>
-                        <span class="wl-empty-sub" style="font-size:13px;color:var(--admin-text-muted)">{{ __("Add your first crypto address above") }}</span>
+                        <span class="wl-empty-title" style="font-size:16px;font-weight:700;color:var(--admin-text)">{{ __("No crypto addresses for this user") }}</span>
+                        <span class="wl-empty-sub" style="font-size:13px;color:var(--admin-text-muted)">{{ __("Add an address using the form on the left") }}</span>
                     </div>
                 @endif
             </div>
@@ -203,7 +194,7 @@
                 <h5 class="modal-title">{{ __("Edit Crypto Address") }}</h5>
             </div>
             <div class="modal-form-data">
-                <form class="modal-form" method="POST" action="{{ setRoute('admin.crypto.addresses.update') }}" enctype="multipart/form-data">
+                <form class="modal-form" method="POST" action="{{ setRoute('admin.users.crypto.addresses.update', $user->username) }}" enctype="multipart/form-data">
                     @csrf
                     @method("PUT")
                     @include('admin.components.form.hidden-input',[
@@ -221,7 +212,7 @@
                         </div>
                         <div class="col-xl-6 col-lg-6 form-group">
                             <label>{{ __("Network") }}</label>
-                            <input type="text" class="form--control" name="network" placeholder="e.g. Bitcoin Network, ERC20, TRC20" value="{{ old('network') }}">
+                            <input type="text" class="form--control" name="network" placeholder="e.g. ERC20, TRC20" value="{{ old('network') }}">
                         </div>
                         <div class="col-xl-6 col-lg-6 form-group">
                             <label>{{ __("Color") }}</label>
@@ -317,41 +308,46 @@ $(document).ready(function(){
         });
     });
 
-    // Show/hide inline QR code
+    // Show/hide QR code
     $('.show-qr-btn').on('click', function(){
         var btn = $(this);
-        var id = btn.data('id');
+        var cardBody = btn.closest('.ca-card-body');
+        var wrapper = cardBody.find('.qr-preview-wrapper');
         var address = btn.data('address');
-        var wrapper = $('#qr-wrapper-' + id);
+        var coin = btn.data('coin');
 
         if(wrapper.is(':visible')) {
             wrapper.slideUp();
-            btn.html('<i class="las la-qrcode"></i> {{ __("Show QR") }}');
+            btn.html('<i class="las la-qrcode"></i> {{ __("QR") }}');
             return;
         }
 
         btn.html('<i class="las la-times"></i> {{ __("Close QR") }}');
         wrapper.slideDown();
 
-        var container = document.getElementById('qrcode-' + id);
-        container.innerHTML = '';
-        var darkColor = $('body').hasClass('dark-version') ? '#F1F5F9' : '#0F172A';
+        var container = wrapper.find('.qrcode-container');
+        container.empty();
 
-        new QRCode(container, {
+        var qr = new QRCode(container[0], {
             text: address,
-            width: 140,
-            height: 140,
-            colorDark: darkColor,
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.H
+            width: 160,
+            height: 160,
+            colorDark : '#0F172A',
+            colorLight : '#ffffff',
+            correctLevel : QRCode.CorrectLevel.H
         });
+
+        // Check if dark mode
+        if($('body').hasClass('dark-version')) {
+            container.find('canvas, img').css('filter', 'invert(1)');
+        }
     });
 
     // Download QR code as PNG
     $(document).on('click', '.download-qr-btn', function(){
-        var id = $(this).data('id');
+        var qrId = $(this).data('qr-id');
         var filename = $(this).data('filename');
-        var canvas = document.querySelector('#qrcode-' + id + ' canvas');
+        var canvas = document.querySelector('#' + qrId + ' canvas');
         if(!canvas) {
             throwMessage('error', ['{{ __("Generate QR code first") }}']);
             return;
@@ -361,6 +357,30 @@ $(document).ready(function(){
         link.href = canvas.toDataURL('image/png');
         link.click();
         throwMessage('success', ['{{ __("QR code downloaded!") }}']);
+    });
+
+    // Generate QR on address input for live preview
+    $('.address-input').on('input', function(){
+        var val = $(this).val().trim();
+        var preview = $('#address-qr-preview');
+        if(val.length > 5) {
+            if(preview.length === 0) {
+                $(this).after('<div id="address-qr-preview" class="mt-2 p-2" style="border:1px solid var(--admin-border);border-radius:8px;display:inline-block"></div>');
+                preview = $('#address-qr-preview');
+            }
+            preview.empty().show();
+            new QRCode(preview[0], {
+                text: val,
+                width: 120,
+                height: 120,
+                colorDark : '#0F172A',
+                colorLight : '#ffffff',
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        } else {
+            preview = $('#address-qr-preview');
+            if(preview.length) preview.hide();
+        }
     });
 });
 </script>

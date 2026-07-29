@@ -28,7 +28,39 @@ class CryptoWallet extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'color' => 'string',
     ];
+
+    protected $appends = [
+        'editData',
+        'logo_image',
+    ];
+
+    public function getLogoImageAttribute()
+    {
+        if ($this->logo) {
+            return asset('backend/images/crypto-logos/'.$this->logo);
+        }
+
+        return null;
+    }
+
+    public function getEditDataAttribute()
+    {
+        $data = [
+            'id' => $this->id,
+            'coin_name' => $this->coin_name,
+            'symbol' => $this->symbol,
+            'network' => $this->network,
+            'wallet_address' => $this->wallet_address,
+            'color' => $this->color ?? '#1D4ED8',
+            'logo' => $this->logo,
+            'purpose' => $this->purpose,
+            'is_active' => $this->is_active,
+        ];
+
+        return json_encode($data);
+    }
 
     public function scopeActive($query)
     {

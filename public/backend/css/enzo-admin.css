@@ -1,31 +1,57 @@
 /* ============================================================
-   EnzoBank Admin Theme — Light & Dark Mode
-   Overrides backend/style.css to match enzo-theme.css tokens.
-   ============================================================ */
+  EnzoBank Admin Theme — Light & Dark Mode
+  Matches frontend enzo-theme.css design tokens exactly.
+  ============================================================ */
 
 /* ── Light mode (default) ── */
 :root {
-  --admin-bg: #F4F6F9;
-  --admin-card: #FFFFFF;
-  --admin-sidebar: #FFFFFF;
-  --admin-header: #FFFFFF;
-  --admin-border: #E2E8F0;
-  --admin-text: #0F172A;
-  --admin-text-secondary: #475569;
-  --admin-text-muted: #64748B;
-  --admin-accent: #1D4ED8;
+  /* Base colors - matching frontend enzo-theme.css */
+  --admin-bg: #F4F6F9;         /* --bg-primary */
+  --admin-card: #FFFFFF;       /* --bg-card */
+  --admin-sidebar: #FFFFFF;    /* --bg-card */
+  --admin-header: #FFFFFF;     /* --bg-card */
+  --admin-border: #E2E8F0;     /* --border-color */
+  --admin-border-strong: #CBD5E1; /* --border-strong */
+  --admin-text: #0F172A;       /* --text-primary */
+  --admin-text-secondary: #475569;  /* --text-secondary */
+  --admin-text-muted: #64748B;      /* --text-muted */
+  --admin-text-on-accent: #FFFFFF;  /* --text-on-accent */
+
+  /* Brand colors - matching frontend */
+  --admin-blue: #1D4ED8;       /* --blue */
+  --admin-cyan: #06B6D4;       /* --cyan */
+  --admin-accent: #1D4ED8;     /* --accent */
   --admin-accent-hover: #1E40AF;
-  --admin-accent-soft: rgba(29,78,216,0.10);
-  --admin-gradient: linear-gradient(135deg, #1D4ED8, #06B6D4);
-  --admin-danger: #DC2626;
-  --admin-success: #059669;
-  --admin-warning: #B45309;
-  --admin-info: #1D4ED8;
-  --admin-input-bg: #F8FAFC;
-  --admin-input-border: #E2E8F0;
-  --admin-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --admin-accent-soft: rgba(29,78,216,0.10);  /* --accent-soft */
+  --admin-gradient: linear-gradient(135deg, #1D4ED8, #06B6D4); /* --gradient */
+
+  /* Semantic colors */
+  --admin-success: #059669;    /* --success */
+  --admin-success-text: #047857; /* --success-text */
+  --admin-success-bg: rgba(16,185,129,0.12); /* --success-bg */
+  --admin-danger: #DC2626;     /* --danger */
+  --admin-danger-text: #B91C1C; /* --danger-text */
+  --admin-danger-bg: rgba(239,68,68,0.10); /* --danger-bg */
+  --admin-warning: #B45309;    /* --warning */
+  --admin-warning-text: #92400E; /* --warning-text */
+  --admin-warning-bg: rgba(245,158,11,0.14); /* --warning-bg */
+  --admin-info: #1D4ED8;       /* --info */
+  --admin-info-bg: rgba(59,130,246,0.10); /* --info-bg */
+
+  /* Form inputs */
+  --admin-input-bg: #F8FAFC;   /* --input-bg */
+  --admin-input-border: #E2E8F0; /* --input-border */
+  --admin-placeholder: #94A3B8; /* --placeholder */
+
+  /* Shadows & overlay */
+  --admin-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04); /* --card-shadow */
+  --admin-shadow-strong: 0 16px 48px rgba(15,23,42,0.12); /* --shadow-strong */
+  --admin-overlay: rgba(15,23,42,0.40); /* --overlay */
+  --admin-scrollbar: #CBD5E1; /* --scrollbar */
+  --admin-font-sans: "Inter", system-ui, sans-serif; /* --font-sans */
 }
 
+/* ── Button & badge utilities ── */
 .bg--primary { background-color: var(--admin-accent) !important; }
 .bg--base { background-color: var(--admin-accent) !important; }
 .text--primary { color: var(--admin-accent) !important; }
@@ -38,7 +64,7 @@
 
 .btn--base {
   background: var(--admin-gradient) !important;
-  color: #ffffff !important;
+  color: var(--admin-text-on-accent) !important;
   border: none;
   box-shadow: 0 2px 8px rgba(29,78,216,0.25);
   transition: all 0.2s ease;
@@ -63,6 +89,7 @@
   color: var(--admin-accent) !important;
 }
 
+/* ── Sidebar ── */
 .sidebar {
   background: var(--admin-sidebar) !important;
   border-right: 1px solid var(--admin-border);
@@ -84,6 +111,7 @@
   color: var(--admin-accent);
 }
 
+/* ── Header ── */
 .header { background: var(--admin-header) !important; }
 .header-top .header-search-bar .header-search-wrapper {
   background: var(--admin-input-bg);
@@ -92,6 +120,7 @@
 .header-link { color: var(--admin-text-secondary); }
 .header-link:hover { color: var(--admin-accent); }
 
+/* ── Cards ── */
 .custom-card {
   background: var(--admin-card);
   border: 1px solid var(--admin-border);
@@ -102,6 +131,7 @@
 }
 .custom-card .card-header .title { color: var(--admin-text); }
 
+/* ── Tables ── */
 .table { color: var(--admin-text); }
 .table thead th {
   color: var(--admin-text-secondary);
@@ -110,16 +140,22 @@
 .table tbody td { border-color: var(--admin-border); }
 .table tbody tr:hover { background: var(--admin-accent-soft); }
 
+/* ── Forms ── */
 .form--control {
   background: var(--admin-input-bg);
   border: 1px solid var(--admin-input-border);
   color: var(--admin-text);
+  font-family: var(--admin-font-sans);
 }
 .form--control:focus {
   border-color: var(--admin-accent);
   box-shadow: 0 0 0 3px var(--admin-accent-soft);
 }
+.form--control::placeholder {
+  color: var(--admin-placeholder);
+}
 
+/* ── Semantic buttons ── */
 .btn--info { background-color: var(--admin-info) !important; }
 .btn--success { background-color: var(--admin-success) !important; }
 .btn--danger { background-color: var(--admin-danger) !important; }
@@ -130,6 +166,7 @@
 .badge--danger { border-color: var(--admin-danger) !important; color: var(--admin-danger) !important; }
 .badge--warning { border-color: var(--admin-warning) !important; color: var(--admin-warning) !important; }
 
+/* ── Switch toggles ── */
 .switch-toggles {
   background: var(--admin-input-bg);
   border: 1px solid var(--admin-input-border);
@@ -138,6 +175,7 @@
 .switch-toggles .switch { color: var(--admin-text-secondary); }
 .switch-toggles.active .switch.active { color: var(--admin-accent); }
 
+/* ── Pagination ── */
 .pagination .page-item .page-link {
   color: var(--admin-text-secondary);
   border-color: var(--admin-border);
@@ -149,6 +187,7 @@
   color: #fff;
 }
 
+/* ── Dashboard title & breadcrumb ── */
 .dashboard-title-part {
   background: var(--admin-card);
   border-bottom: 1px solid var(--admin-border);
@@ -158,6 +197,7 @@
 .dashboard-path .breadcrumb-item.active { color: var(--admin-accent); }
 .main-body-wrapper { background: var(--admin-bg); }
 
+/* ── Select2 ── */
 .select2-container--default .select2-selection--single {
   background: var(--admin-input-bg) !important;
   border-color: var(--admin-input-border) !important;
@@ -170,6 +210,7 @@
   border-color: var(--admin-border) !important;
 }
 
+/* ── Modals ── */
 .modal-content {
   background: var(--admin-card);
   border: 1px solid var(--admin-border);
@@ -177,6 +218,7 @@
 .modal-content .modal-header { border-color: var(--admin-border); }
 .modal-content .modal-footer { border-color: var(--admin-border); }
 
+/* ── Nice select ── */
 .nice-select {
   background: var(--admin-input-bg);
   border-color: var(--admin-input-border);
@@ -189,13 +231,16 @@
 .nice-select .option:hover,
 .nice-select .option.selected { color: var(--admin-accent); }
 
+/* ── Nav tabs ── */
 .nav-tabs { border-color: var(--admin-border); }
 .nav-tabs .nav-link { color: var(--admin-text-secondary); }
 .nav-tabs .nav-link.active { color: var(--admin-accent); border-color: var(--admin-border) var(--admin-border) transparent; }
 
-.mfp-bg { background: rgba(15,23,42,0.60); }
+/* ── Popups ── */
+.mfp-bg { background: var(--admin-overlay); }
 .modal-data { background: var(--admin-card); }
 
+/* ── Dashboard items ── */
 .dashbord-item { background: var(--admin-card); border: 1px solid var(--admin-border); }
 
 /* ── Enzo admin utilities ── */
@@ -225,6 +270,8 @@
 .enzo-admin-btn-danger { background: var(--admin-danger); color: #fff; }
 .enzo-admin-btn-success { background: var(--admin-success); color: #fff; }
 .enzo-admin-btn-sm { padding: 5px 12px; font-size: 12px; }
+.enzo-admin-btn-warning { background: #F59E0B; color: #fff; }
+.enzo-admin-btn-warning:hover { background: #D97706; color: #fff; }
 
 /* ── Crypto address cards ── */
 .ca-card {
@@ -274,18 +321,45 @@
 
 /* ── Dark mode ── */
 .dark-version {
-  --admin-bg: #0F172A;
-  --admin-card: #1E293B;
-  --admin-sidebar: #1E293B;
-  --admin-header: #1E293B;
-  --admin-border: #334155;
-  --admin-text: #E2E8F0;
-  --admin-text-secondary: #94A3B8;
-  --admin-text-muted: #64748B;
-  --admin-accent-soft: rgba(29,78,216,0.18);
-  --admin-input-bg: #1E293B;
-  --admin-input-border: #334155;
-  --admin-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  --admin-bg: #0B1121;         /* --bg-primary */
+  --admin-card: #1A2440;       /* --bg-card */
+  --admin-sidebar: #1A2440;    /* --bg-card */
+  --admin-header: #1A2440;     /* --bg-card */
+  --admin-border: #1E2D4A;     /* --border-color */
+  --admin-border-strong: #2A3A5C; /* --border-strong */
+  --admin-text: #F1F5F9;       /* --text-primary */
+  --admin-text-secondary: #94A3B8; /* --text-secondary */
+  --admin-text-muted: #64748B;     /* --text-muted */
+  --admin-text-on-accent: #FFFFFF;
+  --admin-accent-soft: rgba(59,130,246,0.16);
+  --admin-input-bg: #0F172A;   /* --input-bg */
+  --admin-input-border: #1E2D4A; /* --input-border */
+  --admin-placeholder: #64748B;  /* --placeholder */
+  --admin-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3); /* --card-shadow */
+  --admin-shadow-strong: 0 16px 48px rgba(0,0,0,0.55); /* --shadow-strong */
+  --admin-overlay: rgba(0,0,0,0.60); /* --overlay */
+  --admin-scrollbar: #1E2D4A; /* --scrollbar */
+
+  /* Brand colors for dark mode */
+  --admin-blue: #3B82F6;
+  --admin-cyan: #22D3EE;
+  --admin-accent: #3B82F6;
+  --admin-accent-hover: #2563EB;
+  --admin-gradient: linear-gradient(135deg, #3B82F6, #22D3EE);
+
+  /* Semantic colors for dark mode */
+  --admin-success: #34D399;
+  --admin-success-text: #6EE7B7;
+  --admin-success-bg: rgba(16,185,129,0.16);
+  --admin-danger: #F87171;
+  --admin-danger-text: #FCA5A5;
+  --admin-danger-bg: rgba(239,68,68,0.16);
+  --admin-warning: #FBBF24;
+  --admin-warning-text: #FCD34D;
+  --admin-warning-bg: rgba(245,158,11,0.16);
+  --admin-info: #60A5FA;
+  --admin-info-bg: rgba(59,130,246,0.16);
+
   background-color: var(--admin-bg);
 }
 .dark-version h1, .dark-version h2, .dark-version h3,
@@ -301,3 +375,32 @@
 .dark-version .nice-select .option.selected.focus { background: var(--admin-card); }
 .dark-version .sidebar-logo img { filter: brightness(1.2); }
 .dark-version .header-logo img { filter: brightness(1.2); }
+.dark-version .sidebar { border-right-color: var(--admin-border); }
+.dark-version .header-top .header-search-bar .header-search-wrapper {
+  background: var(--admin-input-bg);
+  border-color: var(--admin-input-border);
+}
+.dark-version .custom-card { background: var(--admin-card); border-color: var(--admin-border); box-shadow: var(--admin-shadow); }
+.dark-version .table thead th { border-bottom-color: var(--admin-border-strong); }
+.dark-version .table tbody td { border-color: var(--admin-border); }
+.dark-version .table tbody tr:hover { background: var(--admin-accent-soft); }
+.dark-version .dashboard-title-part { background: var(--admin-card); border-bottom-color: var(--admin-border); }
+.dark-version .main-body-wrapper { background: var(--admin-bg); }
+.dark-version .btn--base { box-shadow: 0 2px 8px rgba(59,130,246,0.3); }
+.dark-version .btn--base:hover { box-shadow: 0 4px 16px rgba(59,130,246,0.4); }
+.dark-version .select2-container--default .select2-selection--single { background: var(--admin-input-bg) !important; border-color: var(--admin-input-border) !important; }
+.dark-version .select2-container--default .select2-selection--single .select2-selection__rendered { color: var(--admin-text) !important; }
+.dark-version .select2-dropdown { background: var(--admin-card) !important; border-color: var(--admin-border) !important; }
+.dark-version .modal-content { background: var(--admin-card); border-color: var(--admin-border); }
+.dark-version .nice-select { background: var(--admin-input-bg); border-color: var(--admin-input-border); }
+.dark-version .nice-select .list { background: var(--admin-card); border-color: var(--admin-border); }
+.dark-version .nav-tabs { border-color: var(--admin-border); }
+.dark-version .mfp-bg { background: var(--admin-overlay); }
+.dark-version .dashbord-item { background: var(--admin-card); border-color: var(--admin-border); }
+.dark-version .ca-card { background: var(--admin-card); border-color: var(--admin-border); }
+.dark-version .ca-address { background: var(--admin-input-bg); border-color: var(--admin-input-border); color: var(--admin-text-secondary); }
+.dark-version .ca-qr-img { border-color: var(--admin-border); }
+.dark-version .switch-toggles { background: var(--admin-input-bg); border-color: var(--admin-input-border); }
+.dark-version .switch-toggles.active { background: var(--admin-accent-soft); }
+.dark-version .pagination .page-item .page-link { background: var(--admin-card); border-color: var(--admin-border); color: var(--admin-text-secondary); }
+.dark-version .pagination .page-item.active .page-link { background: var(--admin-accent); border-color: var(--admin-accent); }

@@ -61,9 +61,8 @@
         </div>
 
         <div class="cd-qr-card">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data={{ urlencode($coin["address"]) }}"
-                 alt="QR Code" class="cd-qr-img" id="qrImg">
-            <span class="cd-qr-caption">Scan to copy address</span>
+            <div id="qrcode" style="display:flex;justify-content:center;"></div>
+            <span class="cd-qr-caption">{{ __("Scan to copy address") }}</span>
         </div>
 
         <div class="cd-amount-card">
@@ -120,7 +119,20 @@
 </div>
 
 @push("script")
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var addr = '{{ $coin["address"] }}';
+    new QRCode(document.getElementById("qrcode"), {
+        text: addr,
+        width: 240,
+        height: 240,
+        colorDark: '#111827',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+    });
+});
+
 function copyAddress() {
     var addr = document.getElementById("walletAddress");
     var text = addr.textContent.trim();

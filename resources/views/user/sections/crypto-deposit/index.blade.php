@@ -67,9 +67,15 @@
                 <div class="cd-coin-list" style="margin-top:12px">
                     @foreach($coins as $key => $coin)
                     <label class="cd-coin-card" data-key="{{ $key }}">
+                        @if(!empty($coin["logo_image"]))
+                        <div class="cd-coin-icon" style="background:{{ $coin["color"] }};overflow:hidden;">
+                            <img src="{{ $coin["logo_image"] }}" alt="{{ $coin["coin"] }}" style="width:100%;height:100%;object-fit:cover;">
+                        </div>
+                        @else
                         <div class="cd-coin-icon" style="background:{{ $coin["color"] }}">
                             {{ $coin["symbol"] }}
                         </div>
+                        @endif
                         <div class="cd-coin-info">
                             <span class="cd-coin-name">
                                 {{ $coin["name"] }}

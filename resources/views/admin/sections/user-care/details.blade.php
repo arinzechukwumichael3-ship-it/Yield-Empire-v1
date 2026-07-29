@@ -119,6 +119,15 @@
                                     'permission'    => "admin.users.mail.logs",
                                 ])
                             </div>
+                            <div class="user-action-btn">
+                                @include('admin.components.link.custom',[
+                                    'href'          => setRoute('admin.users.crypto.addresses',$user->username),
+                                    'class'         => "bg--dark five",
+                                    'icon'          => "las la-coins me-1",
+                                    'text'          => __("Crypto Addresses"),
+                                    'permission'    => "admin.users.crypto.addresses",
+                                ])
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-4 form-group">

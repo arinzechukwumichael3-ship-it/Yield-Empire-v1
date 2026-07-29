@@ -12,8 +12,8 @@
         data-preview-path="{{ $old_files_path }}"
     @endif
 {{ $attribute ?? "" }} id="{{ $for_id ?? "" }}">
-@error($name ?? false)
+@if (isset($errors) && $errors->has($name ?? ''))
     <span class="invalid-feedback d-block" role="alert">
-        <strong>{{ $message }}</strong>
+        <strong>{{ $errors->first($name ?? '') }}</strong>
     </span>
-@enderror
+@endif

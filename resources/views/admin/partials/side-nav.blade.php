@@ -288,6 +288,11 @@
                     'icon'      => "menu-icon las la-calendar-check",
                 ])
                 @include('admin.components.side-nav.link',[
+                    'route'     => 'admin.crypto.addresses.index',
+                    'title'     => __("Crypto Addresses"),
+                    'icon'      => "menu-icon las la-coins",
+                ])
+                @include('admin.components.side-nav.link',[
                     'route'     => 'admin.system.maintenance.index',
                     'title'     => __("System Maintenance"),
                     'icon'      => "menu-icon las la-tools",

@@ -1,36 +1,36 @@
 <?php
 
-use App\Models\UserWallet;
-use App\Models\Admin\Admin;
-use App\Models\Transaction;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Constants\GlobalConst;
-use App\Http\Helpers\Response;
-use App\Models\Admin\Language;
-use App\Constants\LanguageConst;
-use App\Models\UserNotification;
 use App\Constants\AdminRoleConst;
 use App\Constants\ExtensionConst;
-use App\Models\UserAuthorization;
-use Illuminate\Http\UploadedFile;
-use App\Models\Admin\AdminHasRole;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\App;
+use App\Constants\GlobalConst;
+use App\Constants\LanguageConst;
 use App\Constants\NotificationConst;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use App\Constants\SupportTicketConst;
-use Illuminate\Support\Facades\Route;
-use Intervention\Image\Facades\Image;
 use App\Constants\PaymentGatewayConst;
-use Buglinjo\LaravelWebp\Facades\Webp;
+use App\Constants\SupportTicketConst;
+use App\Http\Helpers\Response;
+use App\Models\Admin\Admin;
+use App\Models\Admin\AdminHasRole;
 use App\Models\Admin\AdminNotification;
-use App\Providers\Admin\CurrencyProvider;
-use App\Providers\Admin\BasicSettingsProvider;
-use Illuminate\Validation\ValidationException;
+use App\Models\Admin\Language;
+use App\Models\Transaction;
+use App\Models\UserAuthorization;
+use App\Models\UserNotification;
+use App\Models\UserWallet;
 use App\Notifications\User\Auth\SendAuthorizationCode;
+use App\Providers\Admin\BasicSettingsProvider;
+use App\Providers\Admin\CurrencyProvider;
+use Buglinjo\LaravelWebp\Facades\Webp;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Intervention\Image\Facades\Image;
 
 function setRoute($route_name, $param = null)
 {
@@ -48,7 +48,8 @@ function setRoute($route_name, $param = null)
                 return route($route_name);
             }
         }
-        return "javascript:void(0)";
+
+        return 'javascript:void(0)';
     }
 }
 
@@ -58,30 +59,32 @@ function get_all_countries($item = [])
 
     $countries = array_map(function ($array) {
         return [
-            'id'                    => $array['id'],
-            'name'                  => $array['name'],
-            'mobile_code'           => $array['phone_code'],
-            'currency_name'         => $array['currency_name'],
-            'currency_code'         => $array['currency'],
-            'currency_symbol'       => $array['currency_symbol'],
+            'id' => $array['id'],
+            'name' => $array['name'],
+            'mobile_code' => $array['phone_code'],
+            'currency_name' => $array['currency_name'],
+            'currency_code' => $array['currency'],
+            'currency_symbol' => $array['currency_symbol'],
         ];
     }, $countries);
 
     return json_decode(json_encode($countries));
 }
 
-function get_country_phone_code($country) {
+function get_country_phone_code($country)
+{
     $countries = json_decode(file_get_contents(resource_path('world/countries.json')), true);
-    $phone_code = "";
-    foreach($countries as $item) {
-        if($item['name'] == $country) {
+    $phone_code = '';
+    foreach ($countries as $item) {
+        if ($item['name'] == $country) {
             $phone_code = $item['phone_code'];
         }
     }
-    if($phone_code == "") {
-        throw new Exception("Sorry, country (" . $country . ") is not available in our list");
+    if ($phone_code == '') {
+        throw new Exception('Sorry, country ('.$country.') is not available in our list');
     }
-    $phone_code = str_replace("+","",$phone_code);
+    $phone_code = str_replace('+', '', $phone_code);
+
     return $phone_code;
 }
 
@@ -91,7 +94,7 @@ function get_all_timezones()
 
     $timezones = array_map(function ($array) {
         return [
-            'name'  => $array['timezones'][0]['zoneName'],
+            'name' => $array['timezones'][0]['zoneName'],
         ];
     }, $countries);
 
@@ -108,10 +111,10 @@ function get_country_states($country_id)
         if (array_key_exists($item_array['country_id'], $all_states)) {
             if ($item_array['country_id'] == $country_id) {
                 $states[] = [
-                    'country_id'    => $item_array['country_id'],
-                    'name'          => $item_array['name'],
-                    'id'            => $item_array['id'],
-                    'state_code'    => $item_array['state_code'],
+                    'country_id' => $item_array['country_id'],
+                    'name' => $item_array['name'],
+                    'id' => $item_array['id'],
+                    'state_code' => $item_array['state_code'],
                 ];
             }
         }
@@ -130,10 +133,10 @@ function get_state_cities($state_id)
         if (array_key_exists($item_array['state_id'], $all_cities)) {
             if ($item_array['state_id'] == $state_id) {
                 $cities[] = [
-                    'name'          => $item_array['name'],
-                    'id'            => $item_array['id'],
-                    'state_code'    => $item_array['state_code'],
-                    'state_name'    => $item_array['state_name'],
+                    'name' => $item_array['name'],
+                    'id' => $item_array['id'],
+                    'state_code' => $item_array['state_code'],
+                    'state_name' => $item_array['state_name'],
                 ];
             }
         }
@@ -144,27 +147,27 @@ function get_state_cities($state_id)
 
 function get_files_from_fileholder($request, $file_input_name)
 {
-    $keyword = "fileholder";
+    $keyword = 'fileholder';
     $fileholder_stored_file_path = public_path('fileholder/img');
 
     $files_link = [];
     if ($request->hasFile($file_input_name)) {
-        $input_name = $keyword . "-" . $file_input_name;
+        $input_name = $keyword.'-'.$file_input_name;
         $file_name_array = explode(',', $request->$input_name);
 
         foreach ($file_name_array as $item) {
-            $file_link = $fileholder_stored_file_path . "/" . $item;
+            $file_link = $fileholder_stored_file_path.'/'.$item;
             if (File::isFile($file_link)) {
                 array_push($files_link, $file_link);
             } else {
                 throw ValidationException::withMessages([
-                    $file_input_name => "Uploaded file is not a proper file. Please upload valid file.",
+                    $file_input_name => 'Uploaded file is not a proper file. Please upload valid file.',
                 ]);
             }
         }
     } else {
         throw ValidationException::withMessages([
-            $file_input_name => $file_input_name . " is required.",
+            $file_input_name => $file_input_name.' is required.',
         ]);
     }
 
@@ -173,9 +176,10 @@ function get_files_from_fileholder($request, $file_input_name)
 
 function delete_files_from_fileholder(array $files_link)
 {
-    foreach($files_link as $item) {
+    foreach ($files_link as $item) {
         delete_file($item);
     }
+
     return true;
 }
 
@@ -183,16 +187,16 @@ function upload_files_from_path_dynamic($files_path, $destination_path, $old_fil
 {
     $output_files_name = [];
     foreach ($files_path as $path) {
-        $file_name      = File::name($path);
+        $file_name = File::name($path);
         $file_extension = File::extension($path);
-        $file_base_name = $file_name . "." . $file_extension;
+        $file_base_name = $file_name.'.'.$file_extension;
         $file_mime_type = File::mimeType($path);
-        $file_size      = File::size($path);
+        $file_size = File::size($path);
 
         $save_path = get_files_path($destination_path);
 
         $file_mime_type_array = explode('/', $file_mime_type);
-        if (array_shift($file_mime_type_array) == "image" && $file_extension != "svg") { // If Image
+        if (array_shift($file_mime_type_array) == 'image' && $file_extension != 'svg') { // If Image
 
             $file = Image::make($path)->orientate();
 
@@ -256,18 +260,18 @@ function upload_files_from_path_dynamic($files_path, $destination_path, $old_fil
                 $file_size,
             );
 
-            $store_file_name = $file_name . ".webp";
+            $store_file_name = $file_name.'.webp';
             try {
-                if ($file_extension != "webp") {
-                    $webp = Webp::make($file_instance)->save($save_path . "/" . $store_file_name);
+                if ($file_extension != 'webp') {
+                    $webp = Webp::make($file_instance)->save($save_path.'/'.$store_file_name);
                     array_push($output_files_name, $store_file_name);
                 } else {
-                    File::move($file_instance, $save_path . "/" . $file_base_name);
+                    File::move($file_instance, $save_path.'/'.$file_base_name);
                     array_push($output_files_name, $file_base_name);
                 }
             } catch (\Throwable $e) {
                 // WebP encoding unavailable (GD without WebP support / cwebp missing) — keep the original image
-                File::move($file_instance, $save_path . "/" . $file_base_name);
+                File::move($file_instance, $save_path.'/'.$file_base_name);
                 array_push($output_files_name, $file_base_name);
             }
         } else { // IF Other Files
@@ -279,7 +283,7 @@ function upload_files_from_path_dynamic($files_path, $destination_path, $old_fil
             );
 
             try {
-                File::move($file_instance, $save_path . "/" . $file_base_name);
+                File::move($file_instance, $save_path.'/'.$file_base_name);
                 array_push($output_files_name, $file_base_name);
             } catch (Exception $e) {
                 return back()->with(['error' => ['Something went wrong! Faild to upload file.']]);
@@ -292,12 +296,12 @@ function upload_files_from_path_dynamic($files_path, $destination_path, $old_fil
                 if (is_array($old_files)) {
                     // Delete Multiple File
                     foreach ($old_files as $item) {
-                        $file_link = $save_path . "/" . $item;
+                        $file_link = $save_path.'/'.$item;
                         delete_file($item);
                     }
-                } else if (is_string($old_files)) {
+                } elseif (is_string($old_files)) {
                     // Delete Single File
-                    $file_link = $save_path . "/" . $old_files;
+                    $file_link = $save_path.'/'.$old_files;
                     delete_file($file_link);
                 }
             }
@@ -309,6 +313,7 @@ function upload_files_from_path_dynamic($files_path, $destination_path, $old_fil
     if (count($output_files_name) == 1) {
         return $output_files_name[0];
     }
+
     // delete_files_from_fileholder($output_files_name);
     return $output_files_name;
 }
@@ -324,8 +329,11 @@ function get_files_path($slug)
 
 function create_asset_dir($path)
 {
-    $path = "public/" . $path;
-    if (file_exists($path)) return true;
+    $path = 'public/'.$path;
+    if (file_exists($path)) {
+        return true;
+    }
+
     return mkdir($path, 0755, true);
 }
 
@@ -333,16 +341,16 @@ function get_image($image_name, $path_type = null, $image_type = null, $size = n
 {
 
     if ($image_type == 'profile') {
-        $image =  asset('' . files_path('profile-default')->path);
+        $image = asset(''.files_path('profile-default')->path);
     } else {
-        $image =  asset('' . files_path('default')->path);
+        $image = asset(''.files_path('default')->path);
     }
     if ($image_name != null) {
         if ($path_type != null) {
             $image_path = files_path($path_type)->path;
-            $image_link = $image_path . "/" . $image_name;
+            $image_link = $image_path.'/'.$image_name;
             if (file_exists(public_path($image_link))) {
-                $image = asset('' . $image_link);
+                $image = asset(''.$image_link);
             }
         }
     }
@@ -354,14 +362,14 @@ function get_storage_image($image_name, $path_type = null, $image_type = null, $
 {
 
     if ($image_type == 'profile') {
-        $image =  asset(files_path('profile-default')->path);
+        $image = asset(files_path('profile-default')->path);
     } else {
-        $image =  asset(files_path('default')->path);
+        $image = asset(files_path('default')->path);
     }
     if ($image_name != null) {
         if ($path_type != null) {
             $image_path = files_path($path_type)->path;
-            $image_link = $image_path . "/" . $image_name;
+            $image_link = $image_path.'/'.$image_name;
 
             if (file_exists(storage_path($image_link))) {
                 // if(file_exists(public_path($image_link))) {
@@ -376,72 +384,75 @@ function get_storage_image($image_name, $path_type = null, $image_type = null, $
 function files_path($slug)
 {
     $data = [
-        'admin-profile'         => [
-            'path'              => 'backend/images/admin/profile',
-            'width'             => 800,
-            'height'            => 800,
+        'admin-profile' => [
+            'path' => 'backend/images/admin/profile',
+            'width' => 800,
+            'height' => 800,
         ],
-        'default'               => [
-            'path'              => 'backend/images/default/default.webp',
-            'width'             => 800,
-            'height'            => 800,
+        'default' => [
+            'path' => 'backend/images/default/default.webp',
+            'width' => 800,
+            'height' => 800,
         ],
-        'profile-default'       => [
-            'path'              => 'backend/images/default/profile-default.webp',
-            'width'             => 800,
-            'height'            => 800,
+        'profile-default' => [
+            'path' => 'backend/images/default/profile-default.webp',
+            'width' => 800,
+            'height' => 800,
         ],
-        'currency-flag'         => [
-            'path'              => 'backend/images/currency-flag',
-            'width'             => 400,
-            'height'            => 400,
+        'currency-flag' => [
+            'path' => 'backend/images/currency-flag',
+            'width' => 400,
+            'height' => 400,
         ],
-        'image-assets'          => [
-            'path'              => 'backend/images/web-settings/image-assets',
+        'image-assets' => [
+            'path' => 'backend/images/web-settings/image-assets',
         ],
-        'seo'                   => [
-            'path'              => 'backend/images/seo',
+        'seo' => [
+            'path' => 'backend/images/seo',
         ],
-        'app-images'            => [
-            'path'              => 'backend/images/app',
-            'width'             => 414,
-            'height'            => 896,
+        'app-images' => [
+            'path' => 'backend/images/app',
+            'width' => 414,
+            'height' => 896,
         ],
-        'payment-gateways'      => [
-            'path'              => 'backend/images/payment-gateways',
+        'payment-gateways' => [
+            'path' => 'backend/images/payment-gateways',
         ],
-        'extensions'      => [
-            'path'              => 'backend/images/extensions',
+        'extensions' => [
+            'path' => 'backend/images/extensions',
         ],
-        'user-profile'      => [
-            'path'              => 'frontend/user',
+        'user-profile' => [
+            'path' => 'frontend/user',
         ],
-        'language-file'     => [
-            'path'          => 'backend/files/language',
+        'language-file' => [
+            'path' => 'backend/files/language',
         ],
-        'site-section'         => [
-            'path'          => 'frontend/images/site-section',
+        'site-section' => [
+            'path' => 'frontend/images/site-section',
         ],
-        'support-attachment'    => [
-            'path'          => 'frontend/images/support-ticket/attachment',
+        'support-attachment' => [
+            'path' => 'frontend/images/support-ticket/attachment',
         ],
-        'kyc-files'         => [
-            'path'          => 'backend/files/kyc-files'
+        'kyc-files' => [
+            'path' => 'backend/files/kyc-files',
         ],
-        'junk-files'        => [
-            'path'      => 'backend/files/junk-files',
+        'junk-files' => [
+            'path' => 'backend/files/junk-files',
         ],
-        'transaction'   => [
-            'path'      => 'frontend/files/transaction',
+        'transaction' => [
+            'path' => 'frontend/files/transaction',
         ],
-        'card-kyc-images'      => [
-            'path'              => 'frontend/user/card-kyc-images',
+        'card-kyc-images' => [
+            'path' => 'frontend/user/card-kyc-images',
         ],
-        'card-api'   => [
-            'path'      => 'backend/images/card-settings',
+        'card-api' => [
+            'path' => 'backend/images/card-settings',
         ],
-        'error-images'   => [
-            'path'      => 'error-images',
+        'error-images' => [
+            'path' => 'error-images',
+        ],
+        'crypto-logos' => [
+            'path' => 'backend/images/crypto-logos',
         ],
     ];
 
@@ -451,52 +462,60 @@ function files_path($slug)
 function files_asset_path($slug)
 {
     $files_path = files_path($slug)->path;
-    return asset('' . $files_path);
+
+    return asset(''.$files_path);
 }
 
 function get_amount($amount, $currency = null, $precision = null)
 {
-    if (!is_numeric($amount)) return "Not Number";
-    if($precision == "double") {
-        $amount = (double) $amount;
-    }else {
-        $amount = ($precision) ? number_format($amount, $precision, ".", "") : number_format($amount, 2, ".", "");
+    if (! is_numeric($amount)) {
+        return 'Not Number';
     }
-    if (!$currency) return $amount;
-    $amount = $amount . " " . $currency;
+    if ($precision == 'double') {
+        $amount = (float) $amount;
+    } else {
+        $amount = ($precision) ? number_format($amount, $precision, '.', '') : number_format($amount, 2, '.', '');
+    }
+    if (! $currency) {
+        return $amount;
+    }
+    $amount = $amount.' '.$currency;
+
     return $amount;
 }
 
 function get_logo($basic_settings = null, $type = null)
 {
-    if($basic_settings == null) $basic_settings = BasicSettingsProvider::get();
+    if ($basic_settings == null) {
+        $basic_settings = BasicSettingsProvider::get();
+    }
 
-    $logo = "";
+    $logo = '';
     if ($type == 'white') {
-        if (!$basic_settings->site_logo) {
+        if (! $basic_settings->site_logo) {
             $logo = files_asset_path('default');
         } else {
-            $logo = files_asset_path('image-assets') . "/" . $basic_settings->site_logo;
+            $logo = files_asset_path('image-assets').'/'.$basic_settings->site_logo;
         }
     }
 
     if ($type == 'dark') {
-        if (!$basic_settings->site_logo_dark) {
+        if (! $basic_settings->site_logo_dark) {
             $logo = files_asset_path('default');
         } else {
-            $logo = files_asset_path('image-assets') . "/" . $basic_settings->site_logo_dark;
+            $logo = files_asset_path('image-assets').'/'.$basic_settings->site_logo_dark;
         }
     }
 
     if ($type == null) {
-        if (!$basic_settings->site_logo) {
-            if (!$basic_settings->site_logo_dark) {
+        if (! $basic_settings->site_logo) {
+            if (! $basic_settings->site_logo_dark) {
                 $logo = files_asset_path('default');
             } else {
-                $logo = files_asset_path('image-assets') . "/" . $basic_settings->site_logo_dark;
+                $logo = files_asset_path('image-assets').'/'.$basic_settings->site_logo_dark;
             }
         } else {
-            $logo = files_asset_path('image-assets') . "/" . $basic_settings->site_logo;
+            $logo = files_asset_path('image-assets').'/'.$basic_settings->site_logo;
         }
     }
 
@@ -505,83 +524,87 @@ function get_logo($basic_settings = null, $type = null)
 
 function get_logo_public_path($basic_settings, $type = null)
 {
-    $logo = "";
+    $logo = '';
     if ($type == 'white') {
-        if (!$basic_settings->site_logo) {
+        if (! $basic_settings->site_logo) {
             $logo = get_files_path('default');
         } else {
-            $logo = get_files_path('image-assets') . "/" . $basic_settings->site_logo;
+            $logo = get_files_path('image-assets').'/'.$basic_settings->site_logo;
         }
     }
 
     if ($type == 'dark') {
-        if (!$basic_settings->site_logo_dark) {
+        if (! $basic_settings->site_logo_dark) {
             $logo = get_files_path('default');
         } else {
-            $logo = get_files_path('image-assets') . "/" . $basic_settings->site_logo_dark;
+            $logo = get_files_path('image-assets').'/'.$basic_settings->site_logo_dark;
         }
     }
 
     if ($type == null) {
-        if (!$basic_settings->site_logo) {
-            if (!$basic_settings->site_logo_dark) {
+        if (! $basic_settings->site_logo) {
+            if (! $basic_settings->site_logo_dark) {
                 $logo = get_files_path('default');
             } else {
-                $logo = get_files_path('image-assets') . "/" . $basic_settings->site_logo_dark;
+                $logo = get_files_path('image-assets').'/'.$basic_settings->site_logo_dark;
             }
         } else {
-            $logo = get_files_path('image-assets') . "/" . $basic_settings->site_logo;
+            $logo = get_files_path('image-assets').'/'.$basic_settings->site_logo;
         }
     }
 
     return $logo;
 }
 
-function get_fav($basic_settings = null, $type = null){
-    if(!$basic_settings) $basic_settings = BasicSettingsProvider::get();
-    $fav = "";
+function get_fav($basic_settings = null, $type = null)
+{
+    if (! $basic_settings) {
+        $basic_settings = BasicSettingsProvider::get();
+    }
+    $fav = '';
     if ($type == 'white') {
-        if (!$basic_settings->site_fav) {
+        if (! $basic_settings->site_fav) {
             $fav = files_asset_path('default');
         } else {
-            $fav = files_asset_path('image-assets') . "/" . $basic_settings->site_fav;
+            $fav = files_asset_path('image-assets').'/'.$basic_settings->site_fav;
         }
     }
     if ($type == 'dark') {
-        if (!$basic_settings->site_fav_dark) {
+        if (! $basic_settings->site_fav_dark) {
             $fav = files_asset_path('default');
         } else {
-            $fav = files_asset_path('image-assets') . "/" . $basic_settings->site_fav_dark;
+            $fav = files_asset_path('image-assets').'/'.$basic_settings->site_fav_dark;
         }
     }
     if ($type == null) {
-        if (!$basic_settings->site_fav) {
-            if (!$basic_settings->site_fav_dark) {
+        if (! $basic_settings->site_fav) {
+            if (! $basic_settings->site_fav_dark) {
                 $fav = files_asset_path('default');
             } else {
-                $fav = files_asset_path('image-assets') . "/" . $basic_settings->site_fav_dark;
+                $fav = files_asset_path('image-assets').'/'.$basic_settings->site_fav_dark;
             }
         } else {
-            $fav = files_asset_path('image-assets') . "/" . $basic_settings->site_fav;
+            $fav = files_asset_path('image-assets').'/'.$basic_settings->site_fav;
         }
     }
+
     return $fav;
 }
 
-function upload_files_from_path_static($files_path, $destination_path, $old_files = null, $crop = true, $compress = false, $crop_position = "center")
+function upload_files_from_path_static($files_path, $destination_path, $old_files = null, $crop = true, $compress = false, $crop_position = 'center')
 {
     $output_files_name = [];
     foreach ($files_path as $path) {
-        $file_name      = File::name($path);
+        $file_name = File::name($path);
         $file_extension = File::extension($path);
-        $file_base_name = $file_name . "." . $file_extension;
+        $file_base_name = $file_name.'.'.$file_extension;
         $file_mime_type = File::mimeType($path);
-        $file_size      = File::size($path);
+        $file_size = File::size($path);
 
         $save_path = get_files_path($destination_path);
 
         $file_mime_type_array = explode('/', $file_mime_type);
-        if (array_shift($file_mime_type_array) == "image" && $file_extension != "svg") { // If Image
+        if (array_shift($file_mime_type_array) == 'image' && $file_extension != 'svg') { // If Image
 
             $file = Image::make($path)->orientate();
 
@@ -643,8 +666,8 @@ function upload_files_from_path_static($files_path, $destination_path, $old_file
             // Crop Image
             if ($crop === true) {
                 $image_settings = files_path('app-images');
-                $crop_width     = $image_settings->width ?? false;
-                $crop_height    = $image_settings->height ?? false;
+                $crop_width = $image_settings->width ?? false;
+                $crop_height = $image_settings->height ?? false;
 
                 if ($crop_width != false && $crop_height != false) {
                     $file->fit($crop_width, $crop_height, null, $crop_position);
@@ -671,19 +694,19 @@ function upload_files_from_path_static($files_path, $destination_path, $old_file
                 $file_size,
             );
 
-            $store_file_name = $file_name . ".webp";
+            $store_file_name = $file_name.'.webp';
             try {
-                if ($file_extension != "webp") {
+                if ($file_extension != 'webp') {
 
-                    $webp = Webp::make($file_instance)->save($save_path . "/" . $store_file_name);
+                    $webp = Webp::make($file_instance)->save($save_path.'/'.$store_file_name);
                     array_push($output_files_name, $store_file_name);
                 } else {
-                    File::move($file_instance, $save_path . "/" . $file_base_name);
+                    File::move($file_instance, $save_path.'/'.$file_base_name);
                     array_push($output_files_name, $file_base_name);
                 }
             } catch (\Throwable $e) {
                 // WebP encoding unavailable (GD without WebP support / cwebp missing) — keep the original image
-                File::move($file_instance, $save_path . "/" . $file_base_name);
+                File::move($file_instance, $save_path.'/'.$file_base_name);
                 array_push($output_files_name, $file_base_name);
             }
         } else { // IF Other Files
@@ -695,7 +718,7 @@ function upload_files_from_path_static($files_path, $destination_path, $old_file
             );
 
             try {
-                File::move($file_instance, $save_path . "/" . $file_base_name);
+                File::move($file_instance, $save_path.'/'.$file_base_name);
                 array_push($output_files_name, $file_base_name);
             } catch (Exception $e) {
                 return back()->with(['error' => ['Something went wrong! Faild to upload file.']]);
@@ -708,12 +731,12 @@ function upload_files_from_path_static($files_path, $destination_path, $old_file
                 if (is_array($old_files)) {
                     // Delete Multiple File
                     foreach ($old_files as $item) {
-                        $file_link = $save_path . "/" . $item;
+                        $file_link = $save_path.'/'.$item;
                         delete_file($item);
                     }
-                } else if (is_string($old_files)) {
+                } elseif (is_string($old_files)) {
                     // Delete Single File
-                    $file_link = $save_path . "/" . $old_files;
+                    $file_link = $save_path.'/'.$old_files;
                     delete_file($file_link);
                 }
             }
@@ -725,6 +748,7 @@ function upload_files_from_path_static($files_path, $destination_path, $old_file
     if (count($output_files_name) == 1) {
         return $output_files_name[0];
     }
+
     // delete_files_from_fileholder($output_files_name);
     return $output_files_name;
 }
@@ -738,54 +762,63 @@ function delete_file($file_link)
             return false;
         }
     }
+
     return true;
 }
 
 function get_default_currency_code($default_currency = null)
 {
-    if($default_currency == null) $default_currency = CurrencyProvider::default();
+    if ($default_currency == null) {
+        $default_currency = CurrencyProvider::default();
+    }
     if ($default_currency != false) {
         return $default_currency->code;
     }
-    return "";
+
+    return '';
 }
 function get_default_currency_rate($default_currency = null)
 {
-    if($default_currency == null) $default_currency = CurrencyProvider::default();
+    if ($default_currency == null) {
+        $default_currency = CurrencyProvider::default();
+    }
     if ($default_currency != false) {
         return $default_currency->rate;
     }
-    return "";
+
+    return '';
 }
 function get_default_currency_symbol($default_currency = null)
 {
-    if($default_currency == null) $default_currency = CurrencyProvider::default();
+    if ($default_currency == null) {
+        $default_currency = CurrencyProvider::default();
+    }
     if ($default_currency != false) {
         return $default_currency->symbol;
     }
-    return "";
+
+    return '';
 }
 
-function replace_array_key($array, $remove_keyword, $replace_keyword = "")
+function replace_array_key($array, $remove_keyword, $replace_keyword = '')
 {
     $filter = [];
     foreach ($array as $key => $value) {
-        $update_key = preg_replace('/' . $remove_keyword . '/i', $replace_keyword, $key);
+        $update_key = preg_replace('/'.$remove_keyword.'/i', $replace_keyword, $key);
         $filter[$update_key] = $value;
     }
+
     return $filter;
 }
-
 
 function get_paginate($data)
 {
     try {
         return $data->onEachSide(2)->links();
     } catch (Exception $e) {
-        return "";
+        return '';
     }
 }
-
 
 function set_payment_gateway_code($last_record_of_code)
 {
@@ -794,15 +827,17 @@ function set_payment_gateway_code($last_record_of_code)
 
 function make_input_name($string)
 {
-    $string         = preg_replace('/[^A-Za-z0-9]/', ' ', $string);
-    $string         = preg_replace("/ /i", "_", $string);
-    $string         = Str::lower($string);
+    $string = preg_replace('/[^A-Za-z0-9]/', ' ', $string);
+    $string = preg_replace('/ /i', '_', $string);
+    $string = Str::lower($string);
+
     return $string;
 }
 
 /**
  * Function for Making Input field array with all information that comes from Frontend Form
- * @param array $validated
+ *
+ * @param  array  $validated
  * @return array $input_fields
  */
 function decorate_input_fields($validated)
@@ -811,74 +846,74 @@ function decorate_input_fields($validated)
     $input_fields = [];
 
     $field_necessity_list = [
-        '1'             => true,
-        '0'             => false,
+        '1' => true,
+        '0' => false,
     ];
     $file_array_key = 0;
     $select_array_key = 0;
     $global_array_key = 0;
     foreach ($validated['input_type'] ?? [] as $key => $item) {
-        $field_necessity = $validated['field_necessity'][$key] ?? "";
+        $field_necessity = $validated['field_necessity'][$key] ?? '';
 
         $validation_rules = ['min' => 0, 'mimes' => []];
 
-        if ($item == "file") {
-            $extensions = $validated['file_extensions'][$file_array_key] ?? "";
-            $extensions = explode(",", $extensions);
+        if ($item == 'file') {
+            $extensions = $validated['file_extensions'][$file_array_key] ?? '';
+            $extensions = explode(',', $extensions);
 
             $validation_rules = [
-                'max'       => $validated['file_max_size'][$file_array_key] ?? 0,
-                'mimes'     => $extensions,
-                'min'       => 0,
-                'options'  => [],
+                'max' => $validated['file_max_size'][$file_array_key] ?? 0,
+                'mimes' => $extensions,
+                'min' => 0,
+                'options' => [],
             ];
 
             $file_array_key++;
-        } else if ($item == "select") {
-            $options = $validated['select_options'][$select_array_key] ?? "";
-            $options = explode(",", $options);
+        } elseif ($item == 'select') {
+            $options = $validated['select_options'][$select_array_key] ?? '';
+            $options = explode(',', $options);
 
             $validation_rules = [
-                'max'       => 0,
-                'min'       => 0,
-                'mimes'     => [],
-                'options'   => $options,
+                'max' => 0,
+                'min' => 0,
+                'mimes' => [],
+                'options' => $options,
             ];
 
             $select_array_key++;
         } else {
             $validation_rules = [
-                'max'      => $validated['max_char'][$global_array_key] ?? 0,
-                'mimes'    => [],
-                'min'      => $validated['min_char'][$global_array_key] ?? 0,
-                'options'  => [],
+                'max' => $validated['max_char'][$global_array_key] ?? 0,
+                'mimes' => [],
+                'min' => $validated['min_char'][$global_array_key] ?? 0,
+                'options' => [],
             ];
             $global_array_key++;
         }
 
         $validation_rules['required'] = $field_necessity_list[$field_necessity] ?? false;
 
-        $input_fields[]     = [
-            'type'          => $item,
-            'label'         => $validated['label'][$key] ?? "",
-            'name'          => make_input_name($validated['label'][$key] ?? ""),
-            'required'      => $field_necessity_list[$field_necessity] ?? false,
-            'validation'    => $validation_rules,
+        $input_fields[] = [
+            'type' => $item,
+            'label' => $validated['label'][$key] ?? '',
+            'name' => make_input_name($validated['label'][$key] ?? ''),
+            'required' => $field_necessity_list[$field_necessity] ?? false,
+            'validation' => $validation_rules,
         ];
     }
 
     return $input_fields;
 }
 
-
 /**
  * Function for replace ENV Value based on key
- * @param array $replace_array
+ *
+ * @param  array  $replace_array
  */
 function modifyEnv($replace_array = [])
 {
 
-    $array_going_to_modify  = $replace_array;
+    $array_going_to_modify = $replace_array;
 
     if (count($array_going_to_modify) == 0) {
         return false;
@@ -887,7 +922,7 @@ function modifyEnv($replace_array = [])
     $env_file = App::environmentFilePath();
     $env_content = $_ENV;
 
-    $update_array = ["APP_ENV" => App::environment()];
+    $update_array = ['APP_ENV' => App::environment()];
 
     foreach ($env_content as $key => $value) {
         foreach ($array_going_to_modify as $modify_key => $modify_value) {
@@ -900,10 +935,10 @@ function modifyEnv($replace_array = [])
         }
     }
 
-    $string_content = "";
+    $string_content = '';
     foreach ($update_array as $key => $item) {
-        $line = $key . "=" . $item;
-        $string_content .= $line . "\n\r";
+        $line = $key.'='.$item;
+        $string_content .= $line."\n\r";
     }
 
     sleep(2);
@@ -922,7 +957,7 @@ function permission_skip()
         'admin.notifications.clear',
         'admin.users.search',
         'admin.admins.search',
-        'admin.users.sms.unverified'
+        'admin.users.sms.unverified',
     ];
 }
 
@@ -932,14 +967,14 @@ function get_role_permission_routes()
     $routes_name = [];
     foreach ($routes_info as $key => $item) {
         if (isset($item->action['as'])) {
-            if (Str::is("admin.*", $item->action['as'])) {
-                if (Str::is("admin.login*", $item->action['as'])) {
+            if (Str::is('admin.*', $item->action['as'])) {
+                if (Str::is('admin.login*', $item->action['as'])) {
                     continue;
-                } else if (Str::is("admin.profile*", $item->action['as'])) {
+                } elseif (Str::is('admin.profile*', $item->action['as'])) {
                     continue;
-                } else if (Str::is("admin.password*", $item->action['as'])) {
+                } elseif (Str::is('admin.password*', $item->action['as'])) {
                     continue;
-                } else if (in_array($item->action['as'], permission_skip())) {
+                } elseif (in_array($item->action['as'], permission_skip())) {
                     continue;
                 }
                 $routes_name[] = $item->action['as'];
@@ -949,12 +984,12 @@ function get_role_permission_routes()
 
     $readable_route_text = [];
     foreach ($routes_name as $item) {
-        $make_title = str_replace('admin.', "", $item);
-        $make_title = str_replace('.', " ", $make_title);
+        $make_title = str_replace('admin.', '', $item);
+        $make_title = str_replace('.', ' ', $make_title);
         $make_title = ucwords($make_title);
         $readable_route_text[] = [
-            'route'     => $item,
-            'text'      => $make_title,
+            'route' => $item,
+            'text' => $make_title,
         ];
     }
 
@@ -964,14 +999,18 @@ function get_role_permission_routes()
 function get_route_info($route_name)
 {
     $route_info = Route::getRoutes()->getByName($route_name);
+
     return $route_info;
 }
 
 function system_super_admin()
 {
     if (AdminHasRole::whereHas('role', function ($query) {
-        $query->where("name", AdminRoleConst::SUPER_ADMIN);
-    })->exists()) return true;
+        $query->where('name', AdminRoleConst::SUPER_ADMIN);
+    })->exists()) {
+        return true;
+    }
+
     return false;
 }
 
@@ -982,7 +1021,7 @@ function admin_role_const()
 
 function auth_admin_roles()
 {
-    return auth()->guard("admin")->user()->getRolesCollection();
+    return auth()->guard('admin')->user()->getRolesCollection();
 }
 
 function auth_admin_permissions()
@@ -996,20 +1035,25 @@ function auth_admin_permissions()
             }
         }
     }
+
     return array_unique($permissions);
 }
 
 function auth_is_super_admin()
 {
     $auth_admin_roles = auth_admin_roles();
-    if (in_array(AdminRoleConst::SUPER_ADMIN, $auth_admin_roles)) return true;
+    if (in_array(AdminRoleConst::SUPER_ADMIN, $auth_admin_roles)) {
+        return true;
+    }
+
     return false;
 }
 
 function permission_protected()
 {
     $permissions = get_role_permission_routes();
-    $permissions = Arr::pluck($permissions, ["route"]);
+    $permissions = Arr::pluck($permissions, ['route']);
+
     return $permissions;
 }
 
@@ -1018,16 +1062,28 @@ function auth_admin_incomming_permission()
     $incomming_access = Route::currentRouteName();
     $auth_admin_permissions = auth_admin_permissions();
 
-    if (auth_is_super_admin() == true) return true;
-    if (!in_array($incomming_access, permission_protected())) return true;
-    if (in_array($incomming_access, $auth_admin_permissions)) return true;
+    if (auth_is_super_admin() == true) {
+        return true;
+    }
+    if (! in_array($incomming_access, permission_protected())) {
+        return true;
+    }
+    if (in_array($incomming_access, $auth_admin_permissions)) {
+        return true;
+    }
+
     return false;
 }
 
 function admin_permission_by_name($name)
 {
-    if (auth_is_super_admin()) return true;
-    if (in_array($name, auth_admin_permissions())) return true;
+    if (auth_is_super_admin()) {
+        return true;
+    }
+    if (in_array($name, auth_admin_permissions())) {
+        return true;
+    }
+
     return false;
 }
 
@@ -1036,6 +1092,7 @@ function auth_has_no_role()
     if (count(auth_admin_roles()) == 0) {
         return true;
     }
+
     return false;
 }
 
@@ -1044,37 +1101,39 @@ function auth_has_role()
     if (count(auth_admin_roles()) > 0) {
         return true;
     }
+
     return false;
 }
-
 
 function admin_permission_by_name_array($names)
 {
     $auth_admin_permissions = auth_admin_permissions();
-    if (auth_is_super_admin()) return true;
+    if (auth_is_super_admin()) {
+        return true;
+    }
     $match = array_intersect($auth_admin_permissions, $names);
     if (count($match) > 0) {
         return true;
     }
+
     return false;
 }
 
 // Role Permission END
 function remove_spaces($string)
 {
-    return str_replace(' ', "", $string);
+    return str_replace(' ', '', $string);
 }
-
 
 function get_admin_notifications()
 {
     $admin = auth()->user();
-    $notification_clear_at =   $admin->notification_clear_at;
-    if ($notification_clear_at  == null) {
+    $notification_clear_at = $admin->notification_clear_at;
+    if ($notification_clear_at == null) {
         $notifications = AdminNotification::notAuth()->getByType([NotificationConst::SIDE_NAV])->get();
     } else {
         $notifications = AdminNotification::notAuth()->getByType([NotificationConst::SIDE_NAV])->where(function ($query) use ($notification_clear_at) {
-            $query->where("created_at", ">", $notification_clear_at);
+            $query->where('created_at', '>', $notification_clear_at);
         })->select('message', 'created_at', 'type')->get();
     }
 
@@ -1101,125 +1160,141 @@ function addMoneyChargeCalc($amount, $charges)
     $total_charge = $fixed_charge_calc + $percent_charge_calc;
     $total_amount = $amount + $total_charge;
     $data = [
-        'requested_amount'  => $amount,
-        'total_amount'      => $total_amount,
-        'total_charges'     => $total_charge,
-        'fixed_charge'      => $fixed_charge_calc,
-        'percent_charges'   => $percent_charge_calc,
+        'requested_amount' => $amount,
+        'total_amount' => $total_amount,
+        'total_charges' => $total_charge,
+        'fixed_charge' => $fixed_charge_calc,
+        'percent_charges' => $percent_charge_calc,
     ];
+
     return (object) $data;
 }
 
-function create_file($path, $mode = "w")
+function create_file($path, $mode = 'w')
 {
     return fopen($path, $mode);
 }
 
-
-function get_first_file_from_dir($dir) {
+function get_first_file_from_dir($dir)
+{
     $files = scandir($dir);
-    if(is_array($files) && count($files) > 2) return $files[2];
+    if (is_array($files) && count($files) > 2) {
+        return $files[2];
+    }
+
     return false;
 }
 
-function language_file_exists() {
+function language_file_exists()
+{
     $file_path = get_files_path('language-file');
     $files = scandir($file_path);
-    if(is_array($files) && count($files) > 2) return true;
+    if (is_array($files) && count($files) > 2) {
+        return true;
+    }
+
     return false;
 }
 
-function get_default_language_code() {
+function get_default_language_code()
+{
     return App::currentLocale();
 }
 
-function get_admin($username) {
-    $admin = Admin::where("username",$username)->first();
+function get_admin($username)
+{
+    $admin = Admin::where('username', $username)->first();
+
     return $admin;
 }
 
-function setPageTitle(string $title) {
+function setPageTitle(string $title)
+{
     $basic_settings = BasicSettingsProvider::get();
-    return $basic_settings->site_name . " | " . $title;
+
+    return $basic_settings->site_name.' | '.$title;
 }
 
-function make_username($first_name,$last_name,$table = "users") {
+function make_username($first_name, $last_name, $table = 'users')
+{
     // Make username Dynamically
-    $generate_name_with_count = "";
-    do{
+    $generate_name_with_count = '';
+    do {
         // Generate username
         $firstName = $first_name;
         $lastName = $last_name;
 
-        if($generate_name_with_count == "") {
-            if(strlen($firstName) >= 6) {
+        if ($generate_name_with_count == '') {
+            if (strlen($firstName) >= 6) {
                 $generate_name = filter_string_lower($firstName);
-            }else {
-                $modfy_last_name = explode(' ',$lastName);
+            } else {
+                $modfy_last_name = explode(' ', $lastName);
                 $lastName = filter_string_lower($modfy_last_name[0]);
                 $firstName = filter_string_lower($firstName);
-                $generate_name = $firstName . $lastName;
-                if(strlen($generate_name) < 6) {
+                $generate_name = $firstName.$lastName;
+                if (strlen($generate_name) < 6) {
                     $firstName = filter_string_lower($firstName);
                     $lastName = filter_string_lower($lastName);
-                    $generate_name = $firstName . $lastName;
+                    $generate_name = $firstName.$lastName;
 
-                    if(strlen($generate_name) < 6) {
+                    if (strlen($generate_name) < 6) {
                         $getCurrentLen = strlen($generate_name);
                         $dueChar = 6 - $getCurrentLen;
                         $generate_due_char = strtolower(generate_random_string($dueChar));
-                        $generate_name = $generate_name . $generate_due_char;
+                        $generate_name = $generate_name.$generate_due_char;
                     }
                 }
             }
-        }else {
+        } else {
             $generate_name = $generate_name_with_count;
         }
 
         // Find User is already exists or not
-        $chekUser = DB::table($table)->where('username',$generate_name)->first();
+        $chekUser = DB::table($table)->where('username', $generate_name)->first();
 
-        if($chekUser == null) {
+        if ($chekUser == null) {
             $loop = false;
-        }else {
+        } else {
             $generate_name_with_count = $generate_name;
 
             $split_string = array_reverse(str_split($generate_name_with_count));
-            $username_string_part = "";
-            $last_numeric_values = "";
+            $username_string_part = '';
+            $last_numeric_values = '';
             $numeric_close = false;
 
-            foreach($split_string as $character) {
-                if($numeric_close == false) {
-                    if(is_numeric($character)) {
+            foreach ($split_string as $character) {
+                if ($numeric_close == false) {
+                    if (is_numeric($character)) {
                         $last_numeric_values .= $character;
-                    }else {
+                    } else {
                         $numeric_close = true;
                     }
                 }
-                if($numeric_close == true) {
+                if ($numeric_close == true) {
                     $username_string_part .= $character;
                 }
             }
 
-            if($last_numeric_values == "") { // If has no number in username string;
+            if ($last_numeric_values == '') { // If has no number in username string;
                 $last_numeric_values = 1;
             }
 
             $username_string_part = strrev($username_string_part); // usernaem back to reverse;
             $last_numeric_values = strrev($last_numeric_values); // last number back to reverse;
-            $generate_name_with_count = $username_string_part . ($last_numeric_values + 1);
+            $generate_name_with_count = $username_string_part.($last_numeric_values + 1);
             $loop = true;
         }
-    }while($loop);
+    } while ($loop);
 
     return $generate_name;
 }
 
-function filter_string_lower($string) {
-    $username = preg_replace('/ /i','',$string);
+function filter_string_lower($string)
+{
+    $username = preg_replace('/ /i', '', $string);
     $username = preg_replace('/[^A-Za-z0-9\-]/', '', $username);
     $username = strtolower($username);
+
     return $username;
 }
 
@@ -1231,6 +1306,7 @@ function generate_random_string($length = 12)
     for ($i = 0; $i < $length; $i++) {
         $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
+
     return $randomString;
 }
 
@@ -1242,6 +1318,7 @@ function generate_random_number($length = 12)
     for ($i = 0; $i < $length; $i++) {
         $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
+
     return $randomString;
 }
 
@@ -1253,85 +1330,91 @@ function generate_random_string_number($length = 12)
     for ($i = 0; $i < $length; $i++) {
         $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
+
     return $randomString;
 }
 
-function generate_unique_string($table,$column,$length = 10) {
-    do{
-       $generate_rand_string = generate_random_string_number($length);
-       $unique = DB::table($table)->where($column,$generate_rand_string)->exists();
-       $loop = false;
-       if($unique) {
-        $loop = true;
-       }
-       $unique_string = $generate_rand_string;
-    }while($loop);
+function generate_unique_string($table, $column, $length = 10)
+{
+    do {
+        $generate_rand_string = generate_random_string_number($length);
+        $unique = DB::table($table)->where($column, $generate_rand_string)->exists();
+        $loop = false;
+        if ($unique) {
+            $loop = true;
+        }
+        $unique_string = $generate_rand_string;
+    } while ($loop);
+
     return $unique_string;
 }
-function generateTrxString($table,$column,$prefix = '',$length = 8) {
-    do{
-       $generate_number = generate_random_number($length);
-       $generate_number = $prefix.''.$generate_number;
-       $unique = DB::table($table)->where($column,$generate_number)->exists();
-       $loop = false;
-       if($unique) {
-        $loop = true;
-       }
-       $unique_number = $generate_number;
-    }while($loop);
+function generateTrxString($table, $column, $prefix = '', $length = 8)
+{
+    do {
+        $generate_number = generate_random_number($length);
+        $generate_number = $prefix.''.$generate_number;
+        $unique = DB::table($table)->where($column, $generate_number)->exists();
+        $loop = false;
+        if ($unique) {
+            $loop = true;
+        }
+        $unique_number = $generate_number;
+    } while ($loop);
 
     return $unique_number;
 }
-function generate_unique_number($table,$column,$length = 14) {
-    do{
-       $generate_rand_string = generate_random_number($length);
-       $unique = DB::table($table)->where($column,$generate_rand_string)->exists();
-       $loop = false;
-       if($unique) {
-        $loop = true;
-       }
-       $unique_string = $generate_rand_string;
-    }while($loop);
+function generate_unique_number($table, $column, $length = 14)
+{
+    do {
+        $generate_rand_string = generate_random_number($length);
+        $unique = DB::table($table)->where($column, $generate_rand_string)->exists();
+        $loop = false;
+        if ($unique) {
+            $loop = true;
+        }
+        $unique_string = $generate_rand_string;
+    } while ($loop);
 
     return $unique_string;
 }
-function upload_file($file,$destination_path,$old_file = null) {
-    if(File::isFile($file)) {
+function upload_file($file, $destination_path, $old_file = null)
+{
+    if (File::isFile($file)) {
         $save_path = get_files_path($destination_path);
         $file_extension = $file->getClientOriginalExtension();
         $file_type = File::mimeType($file);
         $file_size = File::size($file);
         $file_original_name = $file->getClientOriginalName();
 
-        $file_base_name = explode(".",$file_original_name);
+        $file_base_name = explode('.', $file_original_name);
         array_pop($file_base_name);
-        $file_base_name = implode("-",$file_base_name);
+        $file_base_name = implode('-', $file_base_name);
 
-        $file_name = Str::uuid() . "." . $file_extension;
+        $file_name = Str::uuid().'.'.$file_extension;
 
-        $file_public_link   = $save_path . "/" . $file_name;
-        $file_asset_link    = files_asset_path($destination_path) . "/" . $file_name;
+        $file_public_link = $save_path.'/'.$file_name;
+        $file_asset_link = files_asset_path($destination_path).'/'.$file_name;
 
         $file_info = [
-            'name'                  => $file_name,
-            'type'                  => $file_type,
-            'extension'             => $file_extension,
-            'size'                  => $file_size,
-            'file_link'             => $file_asset_link,
-            'dev_path'              => $file_public_link,
-            'original_name'         => $file_original_name,
-            'original_base_name'    => $file_base_name,
+            'name' => $file_name,
+            'type' => $file_type,
+            'extension' => $file_extension,
+            'size' => $file_size,
+            'file_link' => $file_asset_link,
+            'dev_path' => $file_public_link,
+            'original_name' => $file_original_name,
+            'original_base_name' => $file_base_name,
         ];
 
-        try{
+        try {
 
-            if($old_file) {
-                $old_file_link = $save_path . "/" . $old_file;
+            if ($old_file) {
+                $old_file_link = $save_path.'/'.$old_file;
                 delete_file($old_file_link);
             }
 
-            File::move($file,$file_public_link);
-        }catch(Exception $e) {
+            File::move($file, $file_public_link);
+        } catch (Exception $e) {
             return false;
         }
 
@@ -1343,8 +1426,8 @@ function upload_file($file,$destination_path,$old_file = null) {
 
 function delete_files($files_link)
 {
-    if(is_array($files_link)) {
-        foreach($files_link as $item) {
+    if (is_array($files_link)) {
+        foreach ($files_link as $item) {
             if (File::exists($item)) {
                 try {
                     File::delete($item);
@@ -1356,167 +1439,212 @@ function delete_files($files_link)
     }
 }
 
-function support_ticket_const() {
+function support_ticket_const()
+{
     return SupportTicketConst::class;
 }
 
-function get_percentage_from_two_number($total,$available,$result_type = "int") {
-    if(is_numeric($total) && is_numeric($available)) {
+function get_percentage_from_two_number($total, $available, $result_type = 'int')
+{
+    if (is_numeric($total) && is_numeric($available)) {
         $one_percent = $total / 100;
         $result = 0;
-        if($one_percent > 0) $result = $available / $one_percent;
-        if($result_type == "int") return (int) ceil($result);
-        return number_format($result, 2, ".", ",");
+        if ($one_percent > 0) {
+            $result = $available / $one_percent;
+        }
+        if ($result_type == 'int') {
+            return (int) ceil($result);
+        }
+
+        return number_format($result, 2, '.', ',');
     }
 }
 
-function remove_speacial_char($string) {
-    return preg_replace("/[^A-Za-z0-9]/","",$string);
+function remove_speacial_char($string)
+{
+    return preg_replace('/[^A-Za-z0-9]/', '', $string);
 }
 
-function check_email($string) {
-    if(filter_var($string,FILTER_VALIDATE_EMAIL)) {
+function check_email($string)
+{
+    if (filter_var($string, FILTER_VALIDATE_EMAIL)) {
         return true;
     }
+
     return false;
 }
 
-function generate_random_code($length = 6) {
+function generate_random_code($length = 6)
+{
     $numbers = '123456789';
     $numbersLength = strlen($numbers);
     $randNumber = '';
     for ($i = 0; $i < $length; $i++) {
         $randNumber .= $numbers[rand(0, $numbersLength - 1)];
     }
+
     return $randNumber;
 }
 
-function mailVerificationTemplate($user) {
+function mailVerificationTemplate($user)
+{
     $data = [
-        'user_id'       => $user->id,
-        'code'          => generate_random_code(),
-        'token'         => generate_unique_string("user_authorizations","token",200),
-        'created_at'    => now(),
+        'user_id' => $user->id,
+        'code' => generate_random_code(),
+        'token' => generate_unique_string('user_authorizations', 'token', 200),
+        'created_at' => now(),
     ];
 
     DB::beginTransaction();
-    try{
-        UserAuthorization::where("user_id",$user->id)->delete();
-        DB::table("user_authorizations")->insert($data);
-        try{
+    try {
+        UserAuthorization::where('user_id', $user->id)->delete();
+        DB::table('user_authorizations')->insert($data);
+        try {
             $user->notify(new SendAuthorizationCode((object) $data));
-        }catch(Exception $e){}
+        } catch (Exception $e) {
+        }
 
         DB::commit();
-    }catch(Exception $e) {
+    } catch (Exception $e) {
         DB::rollBack();
+
         return back()->with(['error' => ['Something went wrong! Please try again']]);
     }
 
-    return redirect()->route('user.authorize.mail',$data['token'])->with(['warning' => ['Please verify your mail address. Check your mail inbox to get verification code']]);
+    return redirect()->route('user.authorize.mail', $data['token'])->with(['warning' => ['Please verify your mail address. Check your mail inbox to get verification code']]);
 }
 
-function extension_const() {
+function extension_const()
+{
     return ExtensionConst::class;
 }
 
-function global_const() {
+function global_const()
+{
     return GlobalConst::class;
 }
 
-function imageExtenstions() {
-    return ['png','jpg','jpeg','svg','webp','gif'];
+function imageExtenstions()
+{
+    return ['png', 'jpg', 'jpeg', 'svg', 'webp', 'gif'];
 }
 
-function its_image(string $string) {
-    if(!is_string($string)) return false;
-    $extension = explode(".",$string);
+function its_image(string $string)
+{
+    if (! is_string($string)) {
+        return false;
+    }
+    $extension = explode('.', $string);
     $extension = strtolower(end($extension));
-    if(in_array($extension,imageExtenstions())) return true;
+    if (in_array($extension, imageExtenstions())) {
+        return true;
+    }
+
     return false;
 }
 
-function get_file_link($path_source, $name = null) {
-    if($name == null) return false;
+function get_file_link($path_source, $name = null)
+{
+    if ($name == null) {
+        return false;
+    }
     $path = files_asset_path($path_source);
-    $link = $path . "/" . $name;
-    $dev_link = get_files_path($path_source) . "/" . $name;
-    if(is_file($dev_link)) return $link;
+    $link = $path.'/'.$name;
+    $dev_link = get_files_path($path_source).'/'.$name;
+    if (is_file($dev_link)) {
+        return $link;
+    }
+
     return false;
 }
 
-function get_file_basename_ext_from_link(string $link) {
+function get_file_basename_ext_from_link(string $link)
+{
     $link = $link;
-    $file_name = explode("/",$link);
+    $file_name = explode('/', $link);
     $file_name = end($file_name);
-    $file_base = explode(".",$file_name);
+    $file_base = explode('.', $file_name);
     $extension = end($file_base);
     array_pop($file_base);
-    $file_base = implode(".",$file_base);
+    $file_base = implode('.', $file_base);
+
     return (object) ['base_name' => $file_base, 'extension' => $extension];
 }
 
-function get_auth_guard() {
-    if(auth()->guard("web")->check()) {
-        return "web";
-    }else if(auth()->guard("admin")->check()) {
-        return "admin";
-    }else if(auth()->guard("api")->check()) {
-        return "api";
+function get_auth_guard()
+{
+    if (auth()->guard('web')->check()) {
+        return 'web';
+    } elseif (auth()->guard('admin')->check()) {
+        return 'admin';
+    } elseif (auth()->guard('api')->check()) {
+        return 'api';
     }
-    return "";
+
+    return '';
 }
 
-function remove_special_char($string,$replace_string = "") {
-    return preg_replace("/[^A-Za-z0-9]/",$replace_string,$string);
+function remove_special_char($string, $replace_string = '')
+{
+    return preg_replace('/[^A-Za-z0-9]/', $replace_string, $string);
 }
 
-function payment_gateway_const() {
+function payment_gateway_const()
+{
     return PaymentGatewayConst::class;
 }
 
-
-function files_asset_path_basename($slug) {
-    return "public/" . files_path($slug)->path;
+function files_asset_path_basename($slug)
+{
+    return 'public/'.files_path($slug)->path;
 }
 
-function get_only_numeric_data($string) {
-    return preg_replace("/[^0-9]/","",$string);
+function get_only_numeric_data($string)
+{
+    return preg_replace('/[^0-9]/', '', $string);
 }
 
-function get_api_languages(){
-    $lang = Language::get()->map(function($data,$index){
-        if(file_exists(base_path('lang/') . $data->code . '.json') == false) return false;
-        $json = json_decode(file_get_contents(base_path('lang/') . $data->code . '.json'),true);
+function get_api_languages()
+{
+    $lang = Language::get()->map(function ($data, $index) {
+        if (file_exists(base_path('lang/').$data->code.'.json') == false) {
+            return false;
+        }
+        $json = json_decode(file_get_contents(base_path('lang/').$data->code.'.json'), true);
         $lan_key_values = [];
-        if($json != null) {
-            foreach($json as $lan_key=>$item) {
+        if ($json != null) {
+            foreach ($json as $lan_key => $item) {
                 $lan_key_original = $lan_key;
-                if(Str::startsWith($lan_key_original, "appL")) $lan_key_values[$lan_key] = $item;
+                if (Str::startsWith($lan_key_original, 'appL')) {
+                    $lan_key_values[$lan_key] = $item;
+                }
             }
         }
+
         return [
-            'name'                  => $data->name,
-            'code'                  => $data->code,
-            'status'                => $data->status,
-            'dir'                   => $data->dir ?? "ltr",
-            'translate_key_values'  =>$lan_key_values,
+            'name' => $data->name,
+            'code' => $data->code,
+            'status' => $data->status,
+            'dir' => $data->dir ?? 'ltr',
+            'translate_key_values' => $lan_key_values,
         ];
-    })->reject(function($value) {
+    })->reject(function ($value) {
         return $value == false;
     });
+
     return $lang;
 }
-
 
 /**
  * Get Full URL Path
  */
-function get_full_url_host(){
+function get_full_url_host()
+{
     $base_url = url('/');
     $parse_base_url = parse_url($base_url);
-    $path = $parse_base_url['path'] ?? "";
-    $full_url_host = $parse_base_url['host'] . '' . $path;
+    $path = $parse_base_url['path'] ?? '';
+    $full_url_host = $parse_base_url['host'].''.$path;
+
     return $full_url_host;
 }
 
@@ -1529,254 +1657,274 @@ function menuActive($routeName, $type = null)
                 return $class;
             }
         }
-    }elseif (request()->routeIs($routeName)) {
+    } elseif (request()->routeIs($routeName)) {
         return $class;
     }
 }
 
-
 // Googele 2FA
-function generate_google_2fa_auth_qr() {
-    $google2FA = new \PragmaRX\Google2FA\Google2FA();
+function generate_google_2fa_auth_qr()
+{
+    $google2FA = new \PragmaRX\Google2FA\Google2FA;
     $secret_key = $google2FA->generateSecretKey();
     $user = auth()->user();
-    if($user->two_factor_secret) {
+    if ($user->two_factor_secret) {
         $site_url = App::make('url')->to('/');
-        $generate_text = $google2FA->getQRCodeUrl($site_url,$user->username,$user->two_factor_secret);
-    }else {
+        $generate_text = $google2FA->getQRCodeUrl($site_url, $user->username, $user->two_factor_secret);
+    } else {
         $site_url = App::make('url')->to('/');
-        $generate_text = $google2FA->getQRCodeUrl($site_url,$user->username,$secret_key);
+        $generate_text = $google2FA->getQRCodeUrl($site_url, $user->username, $secret_key);
         $user->update([
             'two_factor_secret' => $secret_key,
         ]);
     }
     $qr_image = 'https://qrcode.tec-it.com/API/QRCode?data='.$generate_text;
+
     return $qr_image;
 }
-function google_two_factor_verification_user_template($user) {
+function google_two_factor_verification_user_template($user)
+{
     return redirect()->route('user.authorize.google.2fa')->with(['error' => ['Please verify two factor authentication']]);
 }
-function google_2fa_verify($secret_key,$code) {
-    $google2FA = new \PragmaRX\Google2FA\Google2FA();
+function google_2fa_verify($secret_key, $code)
+{
+    $google2FA = new \PragmaRX\Google2FA\Google2FA;
 
-    if($google2FA->verifyKey($secret_key, $code,0) == false) {
-        if(request()->expectsJson()) return false;
+    if ($google2FA->verifyKey($secret_key, $code, 0) == false) {
+        if (request()->expectsJson()) {
+            return false;
+        }
         throw ValidationException::withMessages([
-            'code'       => "Invalid authentication code",
+            'code' => 'Invalid authentication code',
         ]);
+
         return false;
     }
+
     return true;
 }
 
-
-if(!function_exists('dateFormat')){
-    function dateFormat($format, $date){
+if (! function_exists('dateFormat')) {
+    function dateFormat($format, $date)
+    {
         return date($format, strtotime($date));
     }
 }
 
-
 function get_user_notifications()
 {
     $notifications = UserNotification::auth()->latest('id')->take(4)->get();
+
     return $notifications;
 }
-
 
 function verificationCodeCodeCheck(Request $request)
 {
     $basic_settings = BasicSettingsProvider::get();
-    if(!$basic_settings->email_notification) return true;
+    if (! $basic_settings->email_notification) {
+        return true;
+    }
     $code = implode($request->code);
     $otp_exp_sec = BasicSettingsProvider::get()->otp_exp_seconds ?? GlobalConst::DEFAULT_TOKEN_EXP_SEC;
-    $auth_column = UserAuthorization::where('user_id', Auth::id())->where("code",$code)->first();
-    if(!$auth_column) return back()->with(['error' => ['Invalid Verification Code!']]);
-    if($auth_column->created_at->addSeconds($otp_exp_sec) < now()) return back()->with(['error' => ['Session expired. Please try again!']]);
+    $auth_column = UserAuthorization::where('user_id', Auth::id())->where('code', $code)->first();
+    if (! $auth_column) {
+        return back()->with(['error' => ['Invalid Verification Code!']]);
+    }
+    if ($auth_column->created_at->addSeconds($otp_exp_sec) < now()) {
+        return back()->with(['error' => ['Session expired. Please try again!']]);
+    }
 }
 
+function transactionDailyAndMonthlyLimitCheck($charge_calculation, $fees_and_charge, $type)
+{
 
-function transactionDailyAndMonthlyLimitCheck($charge_calculation, $fees_and_charge,$type){
+    if ($type == PaymentGatewayConst::TYPE_OWN_BANK_TRANSFER) {
+        $user_daily_total_transactions = Transaction::where('user_id', auth()->user()->id)->OwnBankTransfer()->today()->get()->sum('request_amount');
 
-    if($type == PaymentGatewayConst::TYPE_OWN_BANK_TRANSFER){
-        $user_daily_total_transactions = Transaction::where('user_id',auth()->user()->id)->OwnBankTransfer()->today()->get()->sum('request_amount');
+        $user_monthly_total_transactions = Transaction::where('user_id', auth()->user()->id)->OwnBankTransfer()->whereBetween('created_at', [now()->firstOfMonth(), now()->lastOfMonth()])->get()->sum('request_amount');
 
-        $user_monthly_total_transactions = Transaction::where('user_id',auth()->user()->id)->OwnBankTransfer()->whereBetween('created_at',[now()->firstOfMonth(),now()->lastOfMonth()])->get()->sum('request_amount');
+    } else {
+        $user_daily_total_transactions = Transaction::where('user_id', auth()->user()->id)->OtherBankTransfer()->today()->get()->sum('request_amount');
 
-    }else{
-        $user_daily_total_transactions = Transaction::where('user_id',auth()->user()->id)->OtherBankTransfer()->today()->get()->sum('request_amount');
-
-        $user_monthly_total_transactions = Transaction::where('user_id',auth()->user()->id)->OtherBankTransfer()->whereBetween('created_at',[now()->firstOfMonth(),now()->lastOfMonth()])->get()->sum('request_amount');
+        $user_monthly_total_transactions = Transaction::where('user_id', auth()->user()->id)->OtherBankTransfer()->whereBetween('created_at', [now()->firstOfMonth(), now()->lastOfMonth()])->get()->sum('request_amount');
     }
-
-
 
     // Check Daily Transaction Limit
     $default_currency = CurrencyProvider::default();
 
-
-    if(($user_daily_total_transactions + $charge_calculation['request_amount']) > $fees_and_charge->daily_limit) {
-        return back()->with(['warning' => ['Your daily transaction limit is over. You can transaction maximum ' . get_amount($fees_and_charge->daily_limit,$default_currency->code) . '. You already completed ' . get_amount($user_daily_total_transactions,$default_currency->code) . ' equal money.']]);
+    if (($user_daily_total_transactions + $charge_calculation['request_amount']) > $fees_and_charge->daily_limit) {
+        return back()->with(['warning' => ['Your daily transaction limit is over. You can transaction maximum '.get_amount($fees_and_charge->daily_limit, $default_currency->code).'. You already completed '.get_amount($user_daily_total_transactions, $default_currency->code).' equal money.']]);
     }
 
     // Check Monthly Transaction Limit
 
-
-    if(($user_monthly_total_transactions + $charge_calculation['request_amount']) > $fees_and_charge->monthly_limit) {
-        return back()->with(['warning' => ['Your monthly transaction limit is over. You can transaction maximum ' . get_amount($fees_and_charge->monthly_limit,$default_currency->code) . '. You already completed ' . get_amount($user_monthly_total_transactions,$default_currency->code) . ' equal money.']]);
+    if (($user_monthly_total_transactions + $charge_calculation['request_amount']) > $fees_and_charge->monthly_limit) {
+        return back()->with(['warning' => ['Your monthly transaction limit is over. You can transaction maximum '.get_amount($fees_and_charge->monthly_limit, $default_currency->code).'. You already completed '.get_amount($user_monthly_total_transactions, $default_currency->code).' equal money.']]);
     }
 }
 
-function authWalletBalance(){
-    if(auth()->guard('web')->check()){
-        $wallet         = UserWallet::auth()->first();
-        return number_format($wallet->balance,2);
+function authWalletBalance()
+{
+    if (auth()->guard('web')->check()) {
+        $wallet = UserWallet::auth()->first();
+
+        return number_format($wallet->balance, 2);
     }
 }
 
 function getAmount($amount, $length = 8)
 {
     $amount = round($amount, $length);
+
     return $amount + 0;
 }
 
-function user_notification_data_save($user_id,$type,$title,$transaction_id,$amount,$gateway,$currency,$message){
+function user_notification_data_save($user_id, $type, $title, $transaction_id, $amount, $gateway, $currency, $message)
+{
     UserNotification::create([
-        'user_id'       => $user_id,
-        'transaction_id'=> $transaction_id,
-        'type'          => $type,
-        'message'       => [
-            'title'     => $title,
-            'gateway'   => $gateway,
-            'currency'  => $currency,
-            'amount'    => floatval($amount),
-            'message'   => $message
-        ]
+        'user_id' => $user_id,
+        'transaction_id' => $transaction_id,
+        'type' => $type,
+        'message' => [
+            'title' => $title,
+            'gateway' => $gateway,
+            'currency' => $currency,
+            'amount' => floatval($amount),
+            'message' => $message,
+        ],
     ]);
 }
 
-
-function userGuard() {
-    if(auth()->guard('web')->check()){
+function userGuard()
+{
+    if (auth()->guard('web')->check()) {
 
         $user = auth()->guard('web')->user();
         $userType = 'USER';
-        $guard = "web";
-    } else if(auth()->guard('api')->check()){
+        $guard = 'web';
+    } elseif (auth()->guard('api')->check()) {
         $user = auth()->guard('api')->user();
         $userType = 'USER';
-        $guard = "api";
-    }else if(auth()->guard('admin')->check()){
+        $guard = 'api';
+    } elseif (auth()->guard('admin')->check()) {
         $user = auth()->guard('admin')->user();
         $userType = 'ADMIN';
-        $guard = "admin";
+        $guard = 'admin';
     }
 
     return [
-        'user'=>$user,
-        'type'=> $userType,
-        'guard'=>$guard
+        'user' => $user,
+        'type' => $userType,
+        'guard' => $guard,
     ];
 }
 
-if (!function_exists('formatNumberInKNotation')) {
-    function formatNumberInKNotation (Int $number, Int $decimals = 1) : String {
-        # Define the unit size and supported units.
+if (! function_exists('formatNumberInKNotation')) {
+    function formatNumberInKNotation(int $number, int $decimals = 1): string
+    {
+        // Define the unit size and supported units.
         $unitSize = 1000;
-        $units = ["", "K", "M", "B", "T"];
+        $units = ['', 'K', 'M', 'B', 'T'];
 
-        # Calculate the number of units as the logarithm of the absolute value with the
-        # unit size as base.
+        // Calculate the number of units as the logarithm of the absolute value with the
+        // unit size as base.
         $unitsCount = ($number === 0) ? 0 : floor(log(abs($number), $unitSize));
 
-        # Decide the unit to be used based on the counter.
+        // Decide the unit to be used based on the counter.
         $unit = $units[min($unitsCount, count($units) - 1)];
 
-        # Divide the value by unit size in the power of the counter and round it to keep
-        # at most the given number of decimal digits.
+        // Divide the value by unit size in the power of the counter and round it to keep
+        // at most the given number of decimal digits.
         $value = round($number / pow($unitSize, $unitsCount), $decimals);
 
-        # Assemble and return the string.
-        return $value . $unit;
+        // Assemble and return the string.
+        return $value.$unit;
     }
 }
-if (!function_exists('formatNotation')) {
-    function formatNotation (Int $number, Int $decimals = 1) : String {
-        # Define the unit size and supported units.
+if (! function_exists('formatNotation')) {
+    function formatNotation(int $number, int $decimals = 1): string
+    {
+        // Define the unit size and supported units.
         $unitSize = 1000;
-        $units = ["", "K", "M", "B", "T"];
+        $units = ['', 'K', 'M', 'B', 'T'];
 
-        # Calculate the number of units as the logarithm of the absolute value with the
-        # unit size as base.
+        // Calculate the number of units as the logarithm of the absolute value with the
+        // unit size as base.
         $unitsCount = ($number === 0) ? 0 : floor(log(abs($number), $unitSize));
 
-        # Decide the unit to be used based on the counter.
+        // Decide the unit to be used based on the counter.
         $unit = $units[min($unitsCount, count($units) - 1)];
 
-        # Assemble and return the string.
+        // Assemble and return the string.
         return $unit;
     }
 }
-if (!function_exists('formatNumber')) {
-    function formatNumber (Int $number, Int $decimals = 1) : String {
-        # Define the unit size and supported units.
+if (! function_exists('formatNumber')) {
+    function formatNumber(int $number, int $decimals = 1): string
+    {
+        // Define the unit size and supported units.
         $unitSize = 1000;
-        $units = ["", "K", "M", "B", "T"];
+        $units = ['', 'K', 'M', 'B', 'T'];
 
-        # Calculate the number of units as the logarithm of the absolute value with the
-        # unit size as base.
+        // Calculate the number of units as the logarithm of the absolute value with the
+        // unit size as base.
         $unitsCount = ($number === 0) ? 0 : floor(log(abs($number), $unitSize));
 
-
-        # Divide the value by unit size in the power of the counter and round it to keep
-        # at most the given number of decimal digits.
+        // Divide the value by unit size in the power of the counter and round it to keep
+        // at most the given number of decimal digits.
         $value = round($number / pow($unitSize, $unitsCount), $decimals);
 
-        # Assemble and return the string.
+        // Assemble and return the string.
         return $value;
     }
 }
 
 function get_files_public_path($slug)
 {
-    $files_path = files_path($slug)->path ?? "";
-    return "public/" . $files_path;
+    $files_path = files_path($slug)->path ?? '';
+
+    return 'public/'.$files_path;
 }
 
-function mailVerificationTemplateApi($user) {
+function mailVerificationTemplateApi($user)
+{
     $basic_settings = BasicSettingsProvider::get();
 
     $data = [
-        'user_id'       => $user->id,
-        'code'          => generate_random_code(),
-        'token'         => generate_unique_string("user_authorizations","token",200),
-        'created_at'    => now(),
+        'user_id' => $user->id,
+        'code' => generate_random_code(),
+        'token' => generate_unique_string('user_authorizations', 'token', 200),
+        'created_at' => now(),
     ];
 
     DB::beginTransaction();
-    try{
-        if( $basic_settings->email_notification == true){
-            try{
+    try {
+        if ($basic_settings->email_notification == true) {
+            try {
 
                 $user->notify(new SendAuthorizationCode((object) $data));
-            }catch(Exception $e) {}
+            } catch (Exception $e) {
+            }
         }
-        UserAuthorization::where("user_id",$user->id)->delete();
-        DB::table("user_authorizations")->insert($data);
+        UserAuthorization::where('user_id', $user->id)->delete();
+        DB::table('user_authorizations')->insert($data);
         DB::commit();
-    }catch(Exception $e) {
+    } catch (Exception $e) {
         DB::rollBack();
-        return Response::error(['Something went worng! Please try again.'],[],400);
+
+        return Response::error(['Something went worng! Please try again.'], [], 400);
     }
-    return Response::error(['Email verification is required'],[],400);
+
+    return Response::error(['Email verification is required'], [], 400);
 
 }
 
-function activeTemplate() {
+function activeTemplate()
+{
     return '';
 }
 
-if (!function_exists('mail_otp_box')) {
+if (! function_exists('mail_otp_box')) {
     /**
      * Build a styled, email-safe OTP code box (individual digit cells).
      */
@@ -1786,18 +1934,19 @@ if (!function_exists('mail_otp_box')) {
         $chars = preg_split('//u', $code, -1, PREG_SPLIT_NO_EMPTY);
         $cells = '';
         foreach ($chars as $ch) {
-            $cells .= '<td class="otp-cell" style="width:42px;height:54px;background:#ffffff;border:1px solid #dbe3ff;border-radius:10px;color:#0b1f4d;font-size:26px;font-weight:800;text-align:center;vertical-align:middle;box-shadow:0 4px 10px rgba(59,91,219,0.10);">' . e($ch) . '</td>';
+            $cells .= '<td class="otp-cell" style="width:42px;height:54px;background:#ffffff;border:1px solid #dbe3ff;border-radius:10px;color:#0b1f4d;font-size:26px;font-weight:800;text-align:center;vertical-align:middle;box-shadow:0 4px 10px rgba(59,91,219,0.10);">'.e($ch).'</td>';
         }
         $html = '<div style="margin:26px 0;text-align:center;font-family:Arial,Helvetica,sans-serif;">'
-            . '<p style="margin:0 0 14px;font-size:13px;letter-spacing:.5px;text-transform:uppercase;color:#64748b;font-weight:700;">' . e($label) . '</p>'
-            . '<div style="display:inline-block;padding:18px 20px;background:#f1f5ff;border:1px dashed #b9c6ff;border-radius:14px;">'
-            . '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;border-collapse:separate;border-spacing:8px;"><tr>' . $cells . '</tr></table>'
-            . '</div></div>';
+            .'<p style="margin:0 0 14px;font-size:13px;letter-spacing:.5px;text-transform:uppercase;color:#64748b;font-weight:700;">'.e($label).'</p>'
+            .'<div style="display:inline-block;padding:18px 20px;background:#f1f5ff;border:1px dashed #b9c6ff;border-radius:14px;">'
+            .'<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;border-collapse:separate;border-spacing:8px;"><tr>'.$cells.'</tr></table>'
+            .'</div></div>';
+
         return new \Illuminate\Support\HtmlString($html);
     }
 }
 
-if (!function_exists('generateCVV')) {
+if (! function_exists('generateCVV')) {
     /**
      * Generate a fresh, cryptographically-random 3-digit CVV (000-999, zero-padded).
      *
@@ -1810,7 +1959,7 @@ if (!function_exists('generateCVV')) {
     }
 }
 
-if (!function_exists('encryptCvv')) {
+if (! function_exists('encryptCvv')) {
     /**
      * Encrypt a CVV for storage at rest (uses the application cipher / APP_KEY).
      */
@@ -1820,7 +1969,7 @@ if (!function_exists('encryptCvv')) {
     }
 }
 
-if (!function_exists('decryptCvv')) {
+if (! function_exists('decryptCvv')) {
     /**
      * Decrypt a stored CVV. Falls back to the raw value for legacy plaintext rows
      * that were created before encryption was introduced.
@@ -1836,4 +1985,52 @@ if (!function_exists('decryptCvv')) {
             return (string) $value;
         }
     }
+}
+
+/**
+ * Get available crypto coins for deposits/withdrawals.
+ * Merges global CryptoWallet records with the static config.
+ * Optionally pass a User to include user-specific addresses.
+ */
+function get_crypto_coins($user = null)
+{
+    $coins = config('crypto_deposit.coins', []);
+    try {
+        $query = \App\Models\CryptoWallet::active()->whereNull('user_id');
+        $globalWallets = $query->get();
+        foreach ($globalWallets as $w) {
+            $key = strtolower(preg_replace('/[^a-z0-9_]/', '', $w->symbol.'_'.($w->network ?? 'main')));
+            $coins[$key] = [
+                'coin' => $w->symbol,
+                'name' => $w->coin_name,
+                'network' => $w->network ?? 'Mainnet',
+                'address' => $w->wallet_address,
+                'symbol' => $w->logo ? '' : substr($w->symbol, 0, 1),
+                'color' => $w->color ?? '#1D4ED8',
+                'badge' => $w->network,
+                'logo' => $w->logo,
+                'logo_image' => $w->logo_image,
+            ];
+        }
+        if ($user) {
+            $userWallets = \App\Models\CryptoWallet::active()->where('user_id', $user->id)->get();
+            foreach ($userWallets as $w) {
+                $key = strtolower(preg_replace('/[^a-z0-9_]/', '', $w->symbol.'_'.($w->network ?? 'main')));
+                $coins[$key] = [
+                    'coin' => $w->symbol,
+                    'name' => $w->coin_name,
+                    'network' => $w->network ?? 'Mainnet',
+                    'address' => $w->wallet_address,
+                    'symbol' => $w->logo ? '' : substr($w->symbol, 0, 1),
+                    'color' => $w->color ?? '#1D4ED8',
+                    'badge' => $w->network,
+                    'logo' => $w->logo,
+                    'logo_image' => $w->logo_image,
+                ];
+            }
+        }
+    } catch (\Exception $e) {
+    }
+
+    return $coins;
 }
