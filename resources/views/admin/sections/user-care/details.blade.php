@@ -320,6 +320,15 @@
                             'permission'    => "admin.users.details.update",
                         ])
                     </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 form-group">
+                        @include('admin.components.form.switcher', [
+                            'label'     => __('Own Bank Transfer'),
+                            'value'     => old('own_bank_transfer_blocked', $user->own_bank_transfer_blocked),
+                            'name'      => "own_bank_transfer_blocked",
+                            'options'   => [__('Blocked') => 1, __('Allowed') => 0],
+                            'permission'    => "admin.users.details.update",
+                        ])
+                    </div>
                     <div class="col-xl-6 col-lg-6 form-group">
                         @include('admin.components.form.input',[
                             'label'         => __('Virtual Card Max Amount'),

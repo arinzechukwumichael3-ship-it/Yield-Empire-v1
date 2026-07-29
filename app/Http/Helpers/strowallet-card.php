@@ -83,10 +83,10 @@ function get_customer($public_key,$base_url,$customerId){
             'data' => [],
         ];
     }
-    return $data;
 
     // Close cURL session
     curl_close($curl);
+    return $data;
 
 }
 //update customer api
@@ -121,9 +121,9 @@ function update_customer($formData,$public_key,$base_url,$idImage,$userPhoto,$cu
             'data' => [],
         ];
     }
-    return $data;
 
     curl_close($ch);
+    return $data;
 
 
 }

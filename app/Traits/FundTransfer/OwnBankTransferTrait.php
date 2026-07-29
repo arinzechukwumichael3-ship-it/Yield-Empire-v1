@@ -16,6 +16,7 @@ use App\Constants\PaymentGatewayConst;
 use App\Providers\Admin\BasicSettingsProvider;
 use App\Notifications\User\FundTransfer\OwnBankSenderNotification;
 use App\Notifications\User\FundTransfer\OwnBankReceiverNotification;
+use App\Notifications\User\FundTransfer\OwnBankTransferBlockedNotification;
 
 trait OwnBankTransferTrait{
     /**
@@ -26,7 +27,14 @@ trait OwnBankTransferTrait{
      * @return \Illuminate\Http\Response
      */
     public function ownBankTransferSelect(Request $request, Beneficiary $beneficiary){
-        
+        if(auth()->user()->own_bank_transfer_blocked){
+            $beneficiary_name = $beneficiary->info->account_holder_name ?? $beneficiary->info->account_number ?? 'Unknown';
+            try{
+                auth()->user()->notify(new OwnBankTransferBlockedNotification(auth()->user(), $beneficiary_name));
+            }catch(Exception $e){}
+            return back()->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.']]);
+        }
+
         $data['beneficiary'] = $beneficiary->info;
 
         $temp_identifier = generate_unique_string('temporary_datas','identifier',60);
@@ -87,7 +95,14 @@ trait OwnBankTransferTrait{
      * @return \Illuminate\Http\Response
      */
     public function ownBankTransferPreviewSubmit(TemporaryData $temp_data){
-
+        if(auth()->user()->own_bank_transfer_blocked){
+            $beneficiary_name = $temp_data->data->beneficiary->account_holder_name ?? $temp_data->data->beneficiary->account_number ?? 'Unknown';
+            try{
+                auth()->user()->notify(new OwnBankTransferBlockedNotification(auth()->user(), $beneficiary_name));
+            }catch(Exception $e){}
+            $temp_data->delete();
+            return redirect()->route('user.fund-transfer.index')->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.']]);
+        }
 
         $charges = $temp_data->data->charges;
         $sender_currency = $charges->sender_currency ?? null;

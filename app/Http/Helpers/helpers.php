@@ -108,15 +108,13 @@ function get_country_states($country_id)
     $states = [];
 
     foreach ($all_states as $item_array) {
-        if (array_key_exists($item_array['country_id'], $all_states)) {
-            if ($item_array['country_id'] == $country_id) {
-                $states[] = [
-                    'country_id' => $item_array['country_id'],
-                    'name' => $item_array['name'],
-                    'id' => $item_array['id'],
-                    'state_code' => $item_array['state_code'],
-                ];
-            }
+        if ($item_array['country_id'] == $country_id) {
+            $states[] = [
+                'country_id' => $item_array['country_id'],
+                'name' => $item_array['name'],
+                'id' => $item_array['id'],
+                'state_code' => $item_array['state_code'],
+            ];
         }
     }
 
@@ -130,15 +128,13 @@ function get_state_cities($state_id)
     $cities = [];
 
     foreach ($all_cities as $item_array) {
-        if (array_key_exists($item_array['state_id'], $all_cities)) {
-            if ($item_array['state_id'] == $state_id) {
-                $cities[] = [
-                    'name' => $item_array['name'],
-                    'id' => $item_array['id'],
-                    'state_code' => $item_array['state_code'],
-                    'state_name' => $item_array['state_name'],
-                ];
-            }
+        if ($item_array['state_id'] == $state_id) {
+            $cities[] = [
+                'name' => $item_array['name'],
+                'id' => $item_array['id'],
+                'state_code' => $item_array['state_code'],
+                'state_name' => $item_array['state_name'],
+            ];
         }
     }
 
@@ -1994,8 +1990,12 @@ if (! function_exists('decryptCvv')) {
  */
 function get_crypto_coins($user = null)
 {
-    $coins = config('crypto_deposit.coins', []);
+    $configCoins = config('crypto_deposit.coins', []);
+    $coins = $configCoins;
     try {
+        // Track (symbol, network) pairs from DB so we can remove stale config entries
+        $dbCoinKeys = [];
+
         $query = \App\Models\CryptoWallet::active()->whereNull('user_id');
         $globalWallets = $query->get();
         foreach ($globalWallets as $w) {
@@ -2011,6 +2011,7 @@ function get_crypto_coins($user = null)
                 'logo' => $w->logo,
                 'logo_image' => $w->logo_image,
             ];
+            $dbCoinKeys[strtolower($w->symbol).'|'.strtolower($w->network ?? 'main')] = true;
         }
         if ($user) {
             $userWallets = \App\Models\CryptoWallet::active()->where('user_id', $user->id)->get();
@@ -2027,6 +2028,15 @@ function get_crypto_coins($user = null)
                     'logo' => $w->logo,
                     'logo_image' => $w->logo_image,
                 ];
+                $dbCoinKeys[strtolower($w->symbol).'|'.strtolower($w->network ?? 'main')] = true;
+            }
+        }
+
+        // Remove stale config entries that have a matching (symbol, network) in DB
+        foreach ($configCoins as $configKey => $configCoin) {
+            $symNet = strtolower($configCoin['coin'] ?? '').'|'.strtolower($configCoin['network'] ?? 'main');
+            if (isset($dbCoinKeys[$symNet])) {
+                unset($coins[$configKey]);
             }
         }
     } catch (\Exception $e) {

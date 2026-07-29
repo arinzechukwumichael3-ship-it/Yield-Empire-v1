@@ -69,6 +69,7 @@ class User extends Authenticatable
         'add_money_status' => 'boolean',
         'fund_transfer_status' => 'boolean',
         'money_out_status' => 'boolean',
+        'own_bank_transfer_blocked' => 'boolean',
         'vc_fee_override' => 'float',
         'remember_token' => 'string',
         'deleted_at' => 'datetime',

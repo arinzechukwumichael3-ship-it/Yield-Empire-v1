@@ -264,6 +264,7 @@ class UserCareController extends Controller
             'add_money_status' => 'nullable|boolean',
             'fund_transfer_status' => 'nullable|boolean',
             'money_out_status' => 'nullable|boolean',
+            'own_bank_transfer_blocked' => 'nullable|boolean',
             'virtual_card_limit' => 'nullable|numeric|min:0',
             'crypto_limit' => 'nullable|numeric|min:0',
             'vc_fee_override' => 'nullable|numeric|min:0',
