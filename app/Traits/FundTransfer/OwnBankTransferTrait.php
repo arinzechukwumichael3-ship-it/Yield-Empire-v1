@@ -60,6 +60,14 @@ trait OwnBankTransferTrait{
      * @return \Illuminate\Http\Response
      */
     public function ownBankTransferSubmit($validated,$fees_and_charge,$temp_data){
+        if(auth()->user()->own_bank_transfer_blocked){
+            $beneficiary_name = $temp_data->data->beneficiary->account_holder_name ?? $temp_data->data->beneficiary->account_number ?? 'Unknown';
+            try{
+                auth()->user()->notify(new OwnBankTransferBlockedNotification(auth()->user(), $beneficiary_name));
+            }catch(Exception $e){}
+            $temp_data->delete();
+            return redirect()->route('user.fund-transfer.index')->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.']]);
+        }
 
         $user_wallet = UserWallet::active()->where('user_id', Auth::id())
             ->whereHas('currency', function ($query) use ($validated) { $query->where('code', $validated['currency']); })
@@ -175,10 +183,20 @@ trait OwnBankTransferTrait{
             if($basic_settings->email_notification){
                 try{
                     $sender_wallet->user->notify(new OwnBankSenderNotification($sender_wallet->user, $transaction));
+                    \Log::info("Own bank transfer sender email sent to user_id: ".$sender_wallet->user->id." trx_id: ".$transaction->trx_id);
+                }catch(Exception $e){
+                    \Log::error("Failed to send own bank transfer sender email to user_id: ".$sender_wallet->user->id." - ".$e->getMessage());
+                }
+                try{
                     $receiver_wallet->user->notify(new OwnBankReceiverNotification($receiver, $transaction));
-                }catch(Exception $e){}
+                    \Log::info("Own bank transfer receiver email sent to user_id: ".$receiver->id." trx_id: ".$transaction->trx_id);
+                }catch(Exception $e){
+                    \Log::error("Failed to send own bank transfer receiver email to user_id: ".$receiver_wallet->user->id." - ".$e->getMessage());
+                }
             }
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+            \Log::error("Own bank transfer notification error: ".$e->getMessage());
+        }
 
         return redirect()->route('user.fund-transfer.transaction.success',$transaction->trx_id)->with(['success' => ['Fund transfer successfully done!']]);
     }

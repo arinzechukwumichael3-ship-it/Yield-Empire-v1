@@ -132,11 +132,13 @@ trait OtherBankTransferTrait{
             if($basic_settings->email_notification){
                 try{
                     $sender_wallet->user->notify(new OtherBankSenderNotification($sender_wallet->user, $transaction));
-                }catch(Exception $e){}
-                
+                    \Log::info("Other bank transfer sender email sent to user_id: ".$sender_wallet->user->id." trx_id: ".$transaction->trx_id);
+                }catch(Exception $e){
+                    \Log::error("Failed to send other bank transfer sender email to user_id: ".$sender_wallet->user->id." - ".$e->getMessage());
+                }
             }
         } catch (Exception $e) {
-
+            \Log::error("Other bank transfer notification error: ".$e->getMessage());
         }
 
         return redirect()->route('user.fund-transfer.transaction.success',$transaction->trx_id)->with(['success' => ['Fund transfer successfully done!']]);
