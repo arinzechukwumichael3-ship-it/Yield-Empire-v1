@@ -151,9 +151,14 @@
     [data-theme="light"] .notif-toast-close:hover { color: var(--text-primary); }
 
     /* ── Top Navbar Fixed While Scrolling ── */
-    .navbar-wrapper {
+    .global-nav {
         position: sticky;
         top: 0;
+        z-index: 1000;
+    }
+    .navbar-wrapper {
+        position: sticky;
+        top: 64px;
         z-index: 999;
     }
     </style>
