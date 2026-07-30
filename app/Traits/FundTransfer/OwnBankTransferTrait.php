@@ -35,7 +35,7 @@ trait OwnBankTransferTrait{
             }catch(Exception $e){
                 \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
             }
-            return back()->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.']]);
+            return back()->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked. Please contact support on WhatsApp for activation.']]);
         }
 
         $data['beneficiary'] = $beneficiary->info;
@@ -72,7 +72,7 @@ trait OwnBankTransferTrait{
                 \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
             }
             $temp_data->delete();
-            return redirect()->route('user.fund-transfer.index')->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.']]);
+            return redirect()->route('user.fund-transfer.index')->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked. Please contact support on WhatsApp for activation.']]);
         }
 
         $user_wallet = UserWallet::active()->where('user_id', Auth::id())
@@ -118,7 +118,7 @@ trait OwnBankTransferTrait{
                 \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
             }
             $temp_data->delete();
-            return redirect()->route('user.fund-transfer.index')->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.']]);
+            return redirect()->route('user.fund-transfer.index')->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked. Please contact support on WhatsApp for activation.']]);
         }
 
         $charges = $temp_data->data->charges;

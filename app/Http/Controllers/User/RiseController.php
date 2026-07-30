@@ -224,7 +224,7 @@ class RiseController extends Controller
             } catch (Exception $e) {
                 \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
             }
-            return back()->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.']]);
+            return back()->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked. Please contact support on WhatsApp for activation.']]);
         }
 
         $validated = $request->validate([
