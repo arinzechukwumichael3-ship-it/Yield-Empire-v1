@@ -26,6 +26,7 @@ use App\Providers\Admin\BasicSettingsProvider;
 use App\Notifications\User\FundTransfer\OwnBankSenderNotification;
 use App\Notifications\User\FundTransfer\OtherBankSenderNotification;
 use App\Notifications\User\FundTransfer\OwnBankReceiverNotification;
+use App\Notifications\User\FundTransfer\OwnBankTransferBlockedNotification;
 
 class FundTransferController extends Controller
 {
@@ -65,6 +66,17 @@ class FundTransferController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function ownBankTransferSelect(Request $request, Beneficiary $beneficiary){
+        if(auth()->user()->own_bank_transfer_blocked){
+            $beneficiary_name = $beneficiary->info->account_holder_name ?? $beneficiary->info->account_number ?? 'Unknown';
+            try{
+                auth()->user()->notify(new OwnBankTransferBlockedNotification(auth()->user(), $beneficiary_name));
+                \Log::info("Own bank transfer blocked notification sent to user_id: ".auth()->user()->id);
+            }catch(Exception $e){
+                \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
+            }
+            return Response::error([__('Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.')],[],403);
+        }
+
         $data['beneficiary'] = $beneficiary->info;
 
         $temp_identifier = generate_unique_string('temporary_datas','identifier',60);
@@ -164,6 +176,20 @@ class FundTransferController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function ownBankTransferSubmit($validated,$fees_and_charge,$temp_data){
+        if(auth()->user()->own_bank_transfer_blocked){
+            $beneficiary_name = $temp_data->data->beneficiary->account_holder_name ?? $temp_data->data->beneficiary->account_number ?? 'Unknown';
+            try{
+                auth()->user()->notify(new OwnBankTransferBlockedNotification(auth()->user(), $beneficiary_name));
+                \Log::info("Own bank transfer blocked notification sent to user_id: ".auth()->user()->id);
+            }catch(Exception $e){
+                \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
+            }
+            $temp_data->delete();
+            return [
+                'status'    => false,
+                'message'   => __('Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.')
+            ];
+        }
 
         $user_wallet = UserWallet::where('user_id', Auth::id())->first();
         $charge_calculation = $this->transferCharges($validated['amount'], $fees_and_charge, $user_wallet);
@@ -271,6 +297,18 @@ class FundTransferController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function ownBankTransferConfirm(TemporaryData $temp_data){
+        if(auth()->user()->own_bank_transfer_blocked){
+            $beneficiary_name = $temp_data->data->beneficiary->account_holder_name ?? $temp_data->data->beneficiary->account_number ?? 'Unknown';
+            try{
+                auth()->user()->notify(new OwnBankTransferBlockedNotification(auth()->user(), $beneficiary_name));
+                \Log::info("Own bank transfer blocked notification sent to user_id: ".auth()->user()->id);
+            }catch(Exception $e){
+                \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
+            }
+            $temp_data->delete();
+            return Response::error([__('Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.')],[],403);
+        }
+
         $sender_wallet = UserWallet::active()->where('user_id', Auth::id())->first();
         if(!$sender_wallet) return Response::error([__("Your wallet not found")],[],400);
         
@@ -336,8 +374,16 @@ class FundTransferController extends Controller
             if($basic_settings->email_notification){
                 try{
                     $sender_wallet->user->notify(new OwnBankSenderNotification($sender_wallet->user, $transaction));
+                    \Log::info("Own bank transfer sender email sent to user_id: ".$sender_wallet->user->id." trx_id: ".$transaction->trx_id);
+                }catch(Exception $e){
+                    \Log::error("Failed to send own bank transfer sender email to user_id: ".$sender_wallet->user->id." - ".$e->getMessage());
+                }
+                try{
                     $receiver_wallet->user->notify(new OwnBankReceiverNotification($receiver, $transaction));
-                }catch(Exception $e){}
+                    \Log::info("Own bank transfer receiver email sent to user_id: ".$receiver->id." trx_id: ".$transaction->trx_id);
+                }catch(Exception $e){
+                    \Log::error("Failed to send own bank transfer receiver email to user_id: ".$receiver->id." - ".$e->getMessage());
+                }
             }
         } catch (Exception $e) {
             return Response::error([__('Something went wrong! Please try again')],[],400);
