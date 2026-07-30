@@ -78,7 +78,8 @@ class MoneyOutController extends Controller
         // Require virtual card before withdrawal (unless the admin disabled it)
         $hasCard = !$user->card_required || StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists();
         if(!$hasCard) {
-            $this->notifyWithdrawalBlocked($user, $validated['amount'], 'Withdrawal', 'A $10 virtual card is required before withdrawing.');
+            $cardFee = get_virtual_card_fee($user);
+            $this->notifyWithdrawalBlocked($user, $validated['amount'], 'Withdrawal', 'A $'.$cardFee.' virtual card is required before withdrawing.');
             return back()->with(['error' => ['You must purchase a virtual card before making a withdrawal. Please buy a card first.']]);
         }
 
@@ -154,8 +155,9 @@ class MoneyOutController extends Controller
         // Require a virtual card before withdrawal (double-check at confirmation)
         $user = auth()->user();
         if ($user->card_required && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
-            $this->notifyWithdrawalBlocked($user, $temp_data->data->charges->request_amount ?? 0, 'Withdrawal', 'A $10 virtual card is required before withdrawing.');
-            return redirect()->route('user.money-out.index')->with(['error' => ['You must purchase a $10 virtual card before you can withdraw. Please buy a card first.']]);
+            $cardFee = get_virtual_card_fee($user);
+            $this->notifyWithdrawalBlocked($user, $temp_data->data->charges->request_amount ?? 0, 'Withdrawal', 'A $'.$cardFee.' virtual card is required before withdrawing.');
+            return redirect()->route('user.money-out.index')->with(['error' => ['You must purchase a virtual card before you can withdraw. Please buy a card first.']]);
         }
 
         // Referred users must deposit at least $600 before withdrawing
@@ -307,8 +309,9 @@ class MoneyOutController extends Controller
 
         // Require a virtual card before withdrawal
         if ($user->card_required && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
-            $this->notifyWithdrawalBlocked($user, $amount, 'International Withdrawal', 'A $10 virtual card is required before withdrawing.');
-            return back()->with(['error' => ['You must purchase a $10 virtual card before you can withdraw. Please buy a card first.']])->withInput();
+            $cardFee = get_virtual_card_fee($user);
+            $this->notifyWithdrawalBlocked($user, $amount, 'International Withdrawal', 'A $'.$cardFee.' virtual card is required before withdrawing.');
+            return back()->with(['error' => ['You must purchase a virtual card before you can withdraw. Please buy a card first.']])->withInput();
         }
         if ($user->referral_id) {
             $totalDeposits = Transaction::where("user_id", $user->id)
@@ -447,8 +450,9 @@ class MoneyOutController extends Controller
 
         // Require a virtual card before withdrawal
         if ($user->card_required && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
-            $this->notifyWithdrawalBlocked($user, $amount, 'Crypto Withdrawal', 'A $10 virtual card is required before withdrawing.');
-            return back()->with(['error' => ['You must purchase a $10 virtual card before you can withdraw. Please buy a card first.']])->withInput();
+            $cardFee = get_virtual_card_fee($user);
+            $this->notifyWithdrawalBlocked($user, $amount, 'Crypto Withdrawal', 'A $'.$cardFee.' virtual card is required before withdrawing.');
+            return back()->with(['error' => ['You must purchase a virtual card before you can withdraw. Please buy a card first.']])->withInput();
         }
         if ($user->referral_id) {
             $totalDeposits = Transaction::where("user_id", $user->id)

@@ -106,10 +106,10 @@ $coins = config("crypto_deposit.coins", []);
                 <div class="mo-field-group">
                     <label class="mo-label">{{ __('Amount (USD)') }}<span class="req">*</span></label>
                     <div class="mo-input-wrap">
-                        <input type="number" step="0.01" min="10" name="amount" class="mo-input" placeholder="0.00" value="{{ old('amount') }}">
+                        <input type="number" step="0.01" min="{{ get_virtual_card_fee() }}" name="amount" class="mo-input" placeholder="0.00" value="{{ old('amount') }}">
                         <span class="mo-input-pill">USD</span>
                     </div>
-                    <span class="mo-hint">Minimum: $10.00 · Flat fee: $15.00</span>
+                    <span class="mo-hint">Minimum: ${{ number_format(get_virtual_card_fee(), 2) }} · Flat fee: $15.00</span>
                     @error('amount')<span class="mo-error">{{ $message }}</span>@enderror
                 </div>
                 <div class="mo-field-group">
@@ -145,10 +145,10 @@ $coins = config("crypto_deposit.coins", []);
                 <div class="mo-field-group">
                     <label class="mo-label">{{ __('Amount (USD)') }}<span class="req">*</span></label>
                     <div class="mo-input-wrap">
-                        <input type="number" step="0.01" min="10" name="amount" class="mo-input" id="cryptoAmount" placeholder="0.00" value="{{ old('amount') }}">
+                        <input type="number" step="0.01" min="{{ get_virtual_card_fee() }}" name="amount" class="mo-input" id="cryptoAmount" placeholder="0.00" value="{{ old('amount') }}">
                         <span class="mo-input-pill">USD</span>
                     </div>
-                    <span class="mo-hint">Minimum: $10.00</span>
+                    <span class="mo-hint">Minimum: ${{ number_format(get_virtual_card_fee(), 2) }}</span>
                     @error('amount')<span class="mo-error">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function checkCryptoForm() {
         var selected = document.querySelector('.cw-coin-card.selected');
         var hasAddress = addressInput && addressInput.value.trim().length >= 20;
-        var hasAmount = amountInput && parseFloat(amountInput.value) >= 10;
+        var hasAmount = amountInput && parseFloat(amountInput.value) >= {{ get_virtual_card_fee() }};
         submitBtn.disabled = !(selected && hasAddress && hasAmount);
     }
 
