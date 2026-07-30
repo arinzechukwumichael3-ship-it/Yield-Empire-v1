@@ -355,7 +355,7 @@
                         @include('admin.components.form.input',[
                             'label'         => __('Virtual Card Purchase Fee'),
                             'name'          => "vc_fee_override",
-                            'value'         => old('vc_fee_override',$user->vc_fee_override ?? 10),
+                            'value'         => old('vc_fee_override',$user->vc_fee_override ?? get_virtual_card_fee()),
                             'type'          => "number",
                             'placeholder'   => __("10"),
                             'required'      => false,

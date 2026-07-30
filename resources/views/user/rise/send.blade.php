@@ -400,7 +400,7 @@ if (obAmount) {
 // ── Other bank: require a $10 virtual card before sending ──
 window.__hasVirtualCard = {{ $hasVirtualCard ? 'true' : 'false' }};
 window.__virtualCardUrl = "{{ $virtualCardUrl }}";
-window.__cardFee = {{ optional(auth()->user())->vc_fee_override ?? 10 }};
+window.__cardFee = {{ get_virtual_card_fee() }};
 var obForm = document.getElementById('tab-other') ? document.getElementById('tab-other').querySelector('form') : null;
 if (obForm) {
     obForm.addEventListener('submit', function(e) {

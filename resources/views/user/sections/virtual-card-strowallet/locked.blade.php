@@ -18,7 +18,7 @@
 
 @php
     $cryptoEnabled = optional(auth()->user())->crypto_status;
-    $cardFee = optional(auth()->user())->vc_fee_override ?? 10;
+    $cardFee = get_virtual_card_fee();
 @endphp
 @section('content')
 <div class="vc-locked">

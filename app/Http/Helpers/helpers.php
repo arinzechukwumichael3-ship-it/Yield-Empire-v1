@@ -2044,3 +2044,22 @@ function get_crypto_coins($user = null)
 
     return $coins;
 }
+
+/**
+ * Get the effective virtual card fee for a user.
+ * Priority: user vc_fee_override → TransactionSetting min_limit → 10
+ */
+function get_virtual_card_fee($user = null)
+{
+    if (! $user) {
+        $user = auth()->user();
+    }
+    if ($user && $user->vc_fee_override !== null) {
+        return (float) $user->vc_fee_override;
+    }
+    $setting = \App\Models\Admin\TransactionSetting::where('slug', 'virtual_card')->first();
+    if ($setting && $setting->min_limit) {
+        return (float) $setting->min_limit;
+    }
+    return 10.0;
+}

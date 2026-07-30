@@ -202,7 +202,7 @@ $coins = config("crypto_deposit.coins", []);
 <script>
 window.__hasVirtualCard = {{ $hasVirtualCard ? 'true' : 'false' }};
 window.__virtualCardUrl = "{{ $virtualCardUrl }}";
-window.__cardFee = {{ optional(auth()->user())->vc_fee_override ?? 10 }};
+window.__cardFee = {{ get_virtual_card_fee() }};
 document.addEventListener("DOMContentLoaded", function() {
     // Tab switching
     document.querySelectorAll('.mo-tab').forEach(function(tab) {
