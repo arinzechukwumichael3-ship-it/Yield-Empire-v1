@@ -457,6 +457,6 @@
             openModalBySelector("#wallet-balance-update-modal");
         });
 
-        switcherAjax("{{ setRoute('admin.users.own.bank.transfer.toggle') }}");
+        switcherAjax("{{ setRoute('admin.users.own.bank.transfer.toggle', $user->username) }}");
     </script>
 @endpush
