@@ -212,6 +212,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('details/{username}', 'userDetails')->name('details');
         Route::post('details/update/{username}', 'userDetailsUpdate')->name('details.update');
         Route::post('status/update/{username}', 'userStatusToggle')->name('status.update');
+        Route::put('own-bank-transfer/toggle/{username}', 'ownBankTransferToggle')->name('own.bank.transfer.toggle');
         Route::get('login/logs/{username}', 'loginLogs')->name('login.logs');
         Route::get('mail/logs/{username}', 'mailLogs')->name('mail.logs');
         Route::post('send/mail/{username}', 'sendMail')->name('send.mail')->middleware("mail");

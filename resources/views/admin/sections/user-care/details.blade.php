@@ -326,6 +326,8 @@
                             'value'     => old('own_bank_transfer_blocked', $user->own_bank_transfer_blocked),
                             'name'      => "own_bank_transfer_blocked",
                             'options'   => [__('Blocked') => 1, __('Allowed') => 0],
+                            'onload'    => true,
+                            'data_target' => $user->username,
                             'permission'    => "admin.users.details.update",
                         ])
                     </div>
@@ -454,5 +456,7 @@
         $(".wallet-balance-update-btn").click(function(){
             openModalBySelector("#wallet-balance-update-modal");
         });
+
+        switcherAjax("{{ setRoute('admin.users.own.bank.transfer.toggle') }}");
     </script>
 @endpush

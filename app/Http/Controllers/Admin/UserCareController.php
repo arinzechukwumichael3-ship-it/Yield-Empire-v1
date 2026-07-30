@@ -316,6 +316,37 @@ class UserCareController extends Controller
         return back()->with(['success' => $message]);
     }
 
+    /**
+     * Toggle own bank transfer block for a user via AJAX.
+     */
+    public function ownBankTransferToggle(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'status'       => 'required|boolean',
+            'data_target'  => 'required|string',
+        ]);
+
+        if ($validator->stopOnFirstFailure()->fails()) {
+            return Response::error(['error' => $validator->errors()], null, 400);
+        }
+        $validated = $validator->safe()->all();
+
+        $user = User::where('username', $validated['data_target'])->first();
+        if (!$user) {
+            return Response::error(['error' => ['User not found!']], null, 404);
+        }
+
+        try {
+            $user->update([
+                'own_bank_transfer_blocked' => ($validated['status'] == true) ? false : true,
+            ]);
+        } catch (Exception $e) {
+            return Response::error(['error' => ['Something went wrong!']], null, 500);
+        }
+
+        return Response::success(['Own bank transfer status updated!'], null, 200);
+    }
+
     public function loginLogs($username)
     {
         $page_title = 'Login Logs';
