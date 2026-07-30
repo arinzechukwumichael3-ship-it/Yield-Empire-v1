@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Constants\PaymentGatewayConst;
 use App\Constants\GlobalConst;
+use App\Notifications\User\FundTransfer\OwnBankTransferBlockedNotification;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -215,6 +216,17 @@ class RiseController extends Controller
 
     private function processInternalTransfer(Request $request)
     {
+        if (auth()->user()->own_bank_transfer_blocked) {
+            $recipient_name = $request->input('account', 'Unknown');
+            try {
+                auth()->user()->notify(new OwnBankTransferBlockedNotification(auth()->user(), $recipient_name));
+                \Log::info("Own bank transfer blocked notification sent to user_id: ".auth()->user()->id);
+            } catch (Exception $e) {
+                \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
+            }
+            return back()->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.']]);
+        }
+
         $validated = $request->validate([
             'account'     => 'required|string|max:255',
             'amount'      => 'required|numeric|min:0.01',
