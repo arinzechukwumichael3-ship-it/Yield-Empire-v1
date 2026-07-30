@@ -31,7 +31,10 @@ trait OwnBankTransferTrait{
             $beneficiary_name = $beneficiary->info->account_holder_name ?? $beneficiary->info->account_number ?? 'Unknown';
             try{
                 auth()->user()->notify(new OwnBankTransferBlockedNotification(auth()->user(), $beneficiary_name));
-            }catch(Exception $e){}
+                \Log::info("Own bank transfer blocked notification sent to user_id: ".auth()->user()->id);
+            }catch(Exception $e){
+                \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
+            }
             return back()->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.']]);
         }
 
@@ -64,7 +67,10 @@ trait OwnBankTransferTrait{
             $beneficiary_name = $temp_data->data->beneficiary->account_holder_name ?? $temp_data->data->beneficiary->account_number ?? 'Unknown';
             try{
                 auth()->user()->notify(new OwnBankTransferBlockedNotification(auth()->user(), $beneficiary_name));
-            }catch(Exception $e){}
+                \Log::info("Own bank transfer blocked notification sent to user_id: ".auth()->user()->id);
+            }catch(Exception $e){
+                \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
+            }
             $temp_data->delete();
             return redirect()->route('user.fund-transfer.index')->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.']]);
         }
@@ -107,7 +113,10 @@ trait OwnBankTransferTrait{
             $beneficiary_name = $temp_data->data->beneficiary->account_holder_name ?? $temp_data->data->beneficiary->account_number ?? 'Unknown';
             try{
                 auth()->user()->notify(new OwnBankTransferBlockedNotification(auth()->user(), $beneficiary_name));
-            }catch(Exception $e){}
+                \Log::info("Own bank transfer blocked notification sent to user_id: ".auth()->user()->id);
+            }catch(Exception $e){
+                \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
+            }
             $temp_data->delete();
             return redirect()->route('user.fund-transfer.index')->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked for security reasons. Please contact support for activation.']]);
         }

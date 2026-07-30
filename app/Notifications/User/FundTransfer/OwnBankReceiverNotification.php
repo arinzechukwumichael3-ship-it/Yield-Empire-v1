@@ -53,8 +53,8 @@ class OwnBankReceiverNotification extends Notification
 
         return (new MailMessage)
                 ->greeting("Hello ".$user->fullname." !")
-                ->subject("Fund Received Successful")
-                ->line("Your Fund Transfer request send successfully")
+                ->subject("Fund Received Successfully")
+                ->line("You have received a fund transfer successfully")
                 ->line("Transaction Id: " .$trx_id)
                 ->line("Received Amount: " .  get_amount($data->receive_amount, $data->payment_currency))
                 ->line("Sender Full Name: " .  ($data->user->fullname ?? 'N/A'))
