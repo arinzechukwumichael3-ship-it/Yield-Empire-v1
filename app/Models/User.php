@@ -122,6 +122,16 @@ class User extends Authenticatable
         return $this->hasOne(UserWallet::class);
     }
 
+    public function wallets()
+    {
+        return $this->hasMany(UserWallet::class);
+    }
+
+    public function bankDetails()
+    {
+        return $this->hasMany(UserBankDetail::class);
+    }
+
     public function getUserImageAttribute()
     {
         $image = $this->image;

@@ -143,7 +143,7 @@ class UserCareController extends Controller
     public function userDetails($username)
     {
         $page_title = 'User Details';
-        $user = User::with(['wallet'])->where('username', $username)->first();
+        $user = User::with(['wallet', 'wallets'])->where('username', $username)->first();
         if (! $user) {
             return back()->with(['error' => ['Opps! User not exists']]);
         }

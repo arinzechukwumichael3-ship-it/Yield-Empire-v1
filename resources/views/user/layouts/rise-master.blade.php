@@ -152,14 +152,26 @@
 
     /* ── Top Navbar Fixed While Scrolling ── */
     .global-nav {
-        position: sticky;
+        position: fixed;
         top: 0;
+        left: 0;
+        right: 0;
         z-index: 1000;
     }
     .navbar-wrapper {
-        position: sticky;
+        position: fixed;
         top: 64px;
+        left: 0;
+        right: 0;
         z-index: 999;
+    }
+    .rise-app {
+        padding-top: 64px;
+    }
+    @media (min-width: 992px) {
+        .rise-app {
+            padding-top: 128px;
+        }
     }
     </style>
 

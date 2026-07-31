@@ -202,6 +202,7 @@ class UserController extends Controller
                 User::where('email', $email)->update(['status' => true, 'email_verified' => true, 'email_verified_at' => Carbon::now()]);
                 try {
                     Mail::to($email)->send(new UserConfirmMail($userDetails->first_name, $userDetails->email));
+                    $userDetails->notify(new \App\Notifications\WelcomeEmail($userDetails));
                 } catch (\Exception $ex) {
                     info($ex);
                 }

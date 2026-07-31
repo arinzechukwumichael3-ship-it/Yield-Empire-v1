@@ -29,7 +29,11 @@
                             <div class="left">
                                 <h6 class="title">{{ __("Current Balance") }}</h6>
                                 <div class="user-info">
-                                    <h2 class="user-count">{{ get_amount($user->wallet->balance ?? '',get_default_currency_code()) }}</h2>
+                                    <h2 class="user-count">
+                                    @foreach($user->wallets ?? collect([]) as $w)
+                                        <span>{{ $w->currency->code }}: {{ get_amount($w->balance, $w->currency->code) }}</span>@if(!$loop->last) &nbsp;|&nbsp; @endif
+                                    @endforeach
+                                </h2>
                                 </div>
                             </div>
                         </div>
@@ -68,6 +72,41 @@
                         </div>
                     </div>
                 </div>
+                @if($user->bankDetails->count() > 0)
+                <div class="col-xxxl-12 col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-15">
+                    <div class="custom-card">
+                        <div class="card-header"><h6 class="title">{{ __("Bank Details") }}</h6></div>
+                        <div class="card-body" style="padding:0;">
+                            <div style="overflow-x:auto;">
+                                <table class="data-table" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ __("Recipient") }}</th>
+                                            <th>{{ __("Bank") }}</th>
+                                            <th>{{ __("Account / IBAN") }}</th>
+                                            <th>{{ __("Country") }}</th>
+                                            <th>{{ __("SWIFT / BIC") }}</th>
+                                            <th>{{ __("Status") }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($user->bankDetails as $bd)
+                                        <tr>
+                                            <td>{{ $bd->recipient_name }}</td>
+                                            <td>{{ $bd->bank_name }}</td>
+                                            <td style="font-family:monospace;">{{ $bd->account_number_iban }}</td>
+                                            <td>{{ $bd->country }}</td>
+                                            <td>{{ $bd->swift_bic ?? '—' }}</td>
+                                            <td><span style="padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600;background:{{ $bd->status ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)' }};color:{{ $bd->status ? '#22C55E' : '#EF4444' }};">{{ $bd->status ? 'Active' : 'Inactive' }}</span></td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -397,7 +436,9 @@
                             <label for="wallet">{{ __("User Wallet") }}<span>*</span></label>
                             <select name="wallet" id="wallet" class="form--control select2-auto-tokenize">
                                 <option disabled selected>{{ __("Select User Wallet") }}</option>
-                                    <option value="{{ $user->wallet->id ?? '' }}">{{ $user->wallet->currency->code ?? '' }}</option>
+                                @foreach($user->wallets ?? collect([]) as $w)
+                                    <option value="{{ $w->id }}">{{ $w->currency->code }} ({{ $w->currency->name }})</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-xl-12 col-lg-12 form-group">

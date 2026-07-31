@@ -50,12 +50,15 @@ class CustomServiceProvider extends ServiceProvider
     {
         try{
             $view_share = [];
-            $view_share['basic_settings']               = BasicSettings::first();
-            $view_share['default_currency']             = Currency::default();
+            $view_share['basic_settings']               = BasicSettings::first() ?? BasicSettingsProvider::fallbackSettings();
+            $view_share['default_currency']             = Currency::default() ?? new \stdClass();
+            $view_share['default_currency_code']        = Currency::default()->code ?? 'USD';
+            $view_share['default_currency_symbol']      = Currency::default()->symbol ?? '$';
+            $view_share['default_currency_rate']        = Currency::default()->rate ?? 1;
             $view_share['__languages']                  = Language::get();
             $view_share['all_user_count']               = User::count();
             $view_share['email_verified_user_count']    = User::where('email_verified', '=', \DB::raw('true'))->count();
-            $view_share['kyc_verified_user_count']      = User::where('kyc_verified', '=', GlobalConst::VERIFIED)->count();
+            $view_share['kyc_verified_user_count']      = User::whereRaw('kyc_verified::int = ?', [GlobalConst::VERIFIED])->count();
             $view_share['__extensions']                 = Extension::get();
             $view_share['pending_ticket_count']         = UserSupportTicket::pending()->get()->count();
             $view_share['__website_sections']           = SiteSections::get();

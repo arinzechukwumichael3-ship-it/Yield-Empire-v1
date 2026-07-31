@@ -292,16 +292,17 @@ class MoneyOutController extends Controller
      */
     public function internationalSubmit(Request $request)
     {
+        $cardFee   = get_virtual_card_fee();
         $validated = $request->validate([
             'recipient_name' => 'required|string|max:255',
             'bank_name'      => 'required|string|max:255',
             'account_number' => 'required|string|max:255',
             'swift_code'     => 'required|string|max:50',
             'country'        => 'required|string|max:100',
-            'amount'         => 'required|numeric|min:10',
+            'amount'         => 'required|numeric|min:' . $cardFee,
             'rail'           => 'nullable|string|in:swift,sepa,ach',
         ], [
-            'amount.min' => 'Minimum withdrawal is $10.00',
+            'amount.min' => 'Minimum withdrawal is $' . number_format($cardFee, 2),
         ]);
 
         $user  = auth()->user();
@@ -424,14 +425,15 @@ class MoneyOutController extends Controller
     {
         $coins      = config("crypto_deposit.coins", []);
         $validKeys  = implode(",", array_keys($coins));
+        $cardFee    = get_virtual_card_fee();
 
         $validated = $request->validate([
             'coin_key'       => "required|string|in:" . $validKeys,
             'wallet_address' => 'required|string|max:255',
-            'amount'         => 'required|numeric|min:10',
+            'amount'         => 'required|numeric|min:' . $cardFee,
         ], [
             'coin_key.in'    => 'Please select a valid cryptocurrency',
-            'amount.min'     => 'Minimum withdrawal is $10.00',
+            'amount.min'     => 'Minimum withdrawal is $' . number_format($cardFee, 2),
         ]);
 
         $coinKey = $validated['coin_key'];

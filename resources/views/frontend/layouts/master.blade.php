@@ -33,7 +33,7 @@
         $current_url = URL::current();
     @endphp
     @if($current_url == setRoute('frontend.index'))
-        <title>{{ __($basic_settings->site_name) ?? ''}}  - {{ __($basic_settings->site_title) ?? "" }}</title>
+        <title>{{ __($basic_settings->site_name ?? '') }}  - {{ __($basic_settings->site_title ?? "") }}</title>
     @else
         <title>{{$basic_settings->site_name ?? ''}} - {{ $page_title ?? '' }}</title>
     @endif

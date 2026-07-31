@@ -25,6 +25,20 @@
 
     @include('partials.header-asset')
     @stack("css")
+
+    <style>
+        /* Fixed navbar across all user panel pages */
+        .global-nav {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .body-wrapper {
+            padding-top: 64px;
+        }
+    </style>
 </head>
 <body>
 

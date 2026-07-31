@@ -2,7 +2,6 @@
 
 namespace App\Providers\Admin;
 
-
 class BasicSettingsProvider {
 
     public $setting;
@@ -12,16 +11,48 @@ class BasicSettingsProvider {
         $this->setting = $settings;
     }
 
-
     public function set($settings) {
         return $this->setting = $settings;
     }
     
     public function getData() {
-        return $this->setting;
+        $setting = $this->setting;
+        // Treat an empty stdClass (view-share fallback) the same as null.
+        if ($setting instanceof \stdClass && ! get_object_vars($setting)) {
+            $setting = null;
+        }
+        if ($setting) {
+            return $setting;
+        }
+        return self::fallbackSettings();
+    }
+
+    /**
+     * Object with every settings column pre-set to null so
+     * `$basic_settings->foo` never throws "Undefined property" when the
+     * basic_settings table is empty (e.g. tests, fresh installs).
+     */
+    public static function fallbackSettings() {
+        $fallback = new \stdClass();
+        foreach (self::FALLBACK_KEYS as $key) {
+            $fallback->{$key} = null;
+        }
+        return $fallback;
     }
 
     public static function get() {
         return app(BasicSettingsProvider::class)->getData();
     }
+
+    private const FALLBACK_KEYS = [
+        'id', 'site_name', 'site_title', 'base_color', 'secondary_color',
+        'otp_exp_seconds', 'timezone', 'user_registration', 'secure_password',
+        'agree_policy', 'force_ssl', 'email_verification', 'sms_verification',
+        'email_notification', 'push_notification', 'kyc_verification',
+        'site_logo_dark', 'site_logo', 'site_fav_dark', 'site_fav',
+        'preloader_image', 'mail_config', 'mail_activity',
+        'push_notification_config', 'push_notification_activity',
+        'broadcast_config', 'broadcast_activity', 'sms_config', 'sms_activity',
+        'web_version', 'admin_version', 'created_at', 'updated_at',
+    ];
 }

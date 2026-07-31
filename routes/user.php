@@ -251,6 +251,7 @@ Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guar
         Route::get("invest","invest")->name("invest");
         Route::get("wallet","wallet")->name("wallet");
         Route::get("feed","feed")->name("feed");
+        Route::get("feed/data","feedData")->name("feed.data");
         Route::get("feed/{slug}","articleDetail")->name("feed.detail");
         Route::get("account","account")->name("account");
         Route::get("refer","refer")->name("refer");
@@ -258,6 +259,14 @@ Route::controller(MoneyOutController::class)->middleware(['kyc.verification.guar
         Route::post("send/submit","sendSubmit")->name("send.submit");
         Route::get("withdraw/crypto","cryptoWithdraw")->name("withdraw.crypto")->middleware('deposit.gate:withdrawal');
     });
+
+    Route::controller(\App\Http\Controllers\User\BankDetailsController::class)->prefix("bank-details")->name("bank.details.")->group(function(){
+            Route::get("/","index")->name("index");
+            Route::post("store","store")->name("store");
+            Route::put("update/{id}","update")->name("update");
+            Route::delete("destroy/{id}","destroy")->name("destroy");
+            Route::put("toggle/{id}","toggleStatus")->name("toggle");
+        });
 
     // User Notifications
     Route::prefix("notifications")->name("notifications.")->controller(\App\Http\Controllers\User\NotificationController::class)->group(function(){

@@ -170,9 +170,43 @@
     {{-- ====== TAB 1: Internal EnzoBank Transfer ====== --}}
     <div class="send-tab-content active" id="tab-internal">
         <div class="am-card">
+            {{-- Bank details summary --}}
+            @php $bankDetails = auth()->user()->bankDetails->where('status', 1); @endphp
+            @if($bankDetails->count() > 0)
+            <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:10px;padding:12px 16px;margin-bottom:16px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                    <span style="font-size:16px;">🏦</span>
+                    <strong style="font-size:14px;color:var(--text-primary,#fff);">{{ __('Bank Details') }}</strong>
+                    <a href="{{ route('user.bank.details.index') }}" style="margin-left:auto;font-size:12px;color:#3B82F6;text-decoration:none;">Edit</a>
+                </div>
+                @foreach($bankDetails as $bd)
+                <div style="font-size:13px;color:var(--text-secondary,#94A3B8);line-height:1.6;">
+                    <strong style="color:var(--text-primary,#fff);">{{ $bd->recipient_name }}</strong> — {{ $bd->bank_name }}<br>
+                    {{ $bd->account_number_iban }} @if($bd->country) · {{ $bd->country }} @endif @if($bd->swift_bic) · SWIFT: {{ $bd->swift_bic }} @endif
+                </div>
+                @endforeach
+            </div>
+            @else
+            <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:12px 16px;margin-bottom:16px;text-align:center;">
+                <span style="font-size:14px;color:#EF4444;font-weight:600;">⚠️ Bank details required</span>
+                <p style="margin:4px 0 0;font-size:12px;color:var(--text-muted,#64748B);">You must add your bank details before sending money to another EnzoBank account.</p>
+                <a href="{{ route('user.bank.details.index') }}" style="display:inline-block;margin-top:8px;padding:8px 18px;border-radius:8px;background:#3B82F6;color:#fff;font-size:13px;font-weight:600;text-decoration:none;">Add Bank Details</a>
+            </div>
+            @endif
             <form method="POST" action="{{ route('user.rise.send.submit') }}">
                 @csrf
                 <input type="hidden" name="type" value="internal">
+                <div class="send-field-group">
+                    <label class="send-label">{{ __('Send From Wallet') }}</label>
+                    <div class="send-input-wrap">
+                        <select name="wallet_id" id="internalWallet" class="send-input" style="appearance:auto;">
+                            <option value="" disabled selected>{{ __("Select Wallet") }}</option>
+                            @foreach(auth()->user()->wallets as $w)
+                                <option value="{{ $w->id }}" data-currency="{{ $w->currency->code }}">{{ $w->currency->code }} — {{ $w->currency->name }} ({{ $w->currency->symbol }}{{ number_format($w->balance, 2) }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 <div class="send-field-group">
                     <label class="send-label">{{ __('Recipient Account / Username') }}</label>
                     <div class="send-input-wrap">
@@ -192,10 +226,10 @@
                 </div>
 
                 <div class="send-field-group">
-                    <label class="send-label">{{ __('Amount (USD)') }}</label>
+                    <label class="send-label" id="internalAmountLabel">{{ __('Amount') }} (USD)</label>
                     <div class="send-input-wrap">
                         <input type="number" step="0.01" min="0.01" class="send-input" name="amount" id="internalAmount" placeholder="0.00">
-                        <span class="send-input-pill">USD</span>
+                        <span class="send-input-pill" id="internalCurrencyPill">USD</span>
                     </div>
                 </div>
 
@@ -353,12 +387,29 @@ if (lookupInput) {
 
 // ── Internal amount calculation ──
 var internalAmount = document.getElementById('internalAmount');
+var internalCurrencyPill = document.getElementById('internalCurrencyPill');
+var internalAmountLabel = document.getElementById('internalAmountLabel');
+function updateInternalCurrency() {
+    var sel = document.getElementById('internalWallet');
+    if (!sel || !sel.value) return;
+    var opt = sel.selectedOptions[0];
+    var currency = opt.dataset.currency || 'USD';
+    if (internalCurrencyPill) internalCurrencyPill.textContent = currency;
+    if (internalAmountLabel) internalAmountLabel.textContent = '{{ __("Amount") }} (' + currency + ')';
+}
 if (internalAmount) {
     internalAmount.addEventListener('input', function() {
         var amt = parseFloat(this.value) || 0;
-        document.getElementById('internalTotal').textContent = '$' + amt.toFixed(2);
-        document.getElementById('internalRecipientGets').textContent = '$' + amt.toFixed(2);
+        var pill = internalCurrencyPill ? internalCurrencyPill.textContent : 'USD';
+        document.getElementById('internalTotal').textContent = pill + ' ' + amt.toFixed(2);
+        document.getElementById('internalRecipientGets').textContent = pill + ' ' + amt.toFixed(2);
     });
+}
+var internalWallet = document.getElementById('internalWallet');
+if (internalWallet) {
+    internalWallet.addEventListener('change', updateInternalCurrency);
+    // Initialize on load
+    updateInternalCurrency();
 }
 
 // ── Tab switching ──

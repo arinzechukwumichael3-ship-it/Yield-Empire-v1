@@ -20,6 +20,7 @@ use App\Notifications\User\FundTransfer\OwnBankTransferBlockedNotification;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 use App\Notifications\User\TransactionNotification;
 use App\Providers\Admin\BasicSettingsProvider;
 
@@ -117,7 +118,41 @@ class RiseController extends Controller
 
         $categories = AnnouncementCategory::all();
 
-        return view('user.rise.feed', compact('page_title', 'articles', 'categories'));
+        // Build carousel data (plain arrays for JSON serialization)
+        $carouselSlides = $articles->map(function ($a) {
+            return [
+                'id'          => $a->slug,
+                'category'    => $a->category->name ?? 'General',
+                'title'       => $a->title ?? 'Untitled',
+                'description' => strip_tags($a->data->description ?? ''),
+                'imageUrl'    => $a->data->thumb_url ?? '',
+            ];
+        })->values();
+
+        return view('user.rise.feed', compact('page_title', 'articles', 'categories', 'carouselSlides'));
+    }
+
+    public function feedData()
+    {
+        $articles = $this->getStaticArticles()->map(function ($a) {
+            return [
+                'title' => $a->title,
+                'slug' => $a->slug,
+                'excerpt' => Str::limit(strip_tags($a->data->description ?? ''), 120),
+                'category' => $a->category->name ?? 'General',
+                'date' => \Carbon\Carbon::parse($a->created_at)->format('jS M, Y'),
+                'thumb_gradient' => $a->data->thumb_gradient ?? 'linear-gradient(135deg, #2563EB, #1D4ED8)',
+                'thumb_icon' => $a->data->thumb_icon ?? 'default',
+                'thumb_url' => $a->data->thumb_url ?? null,
+                'created_at' => $a->created_at->toISOString(),
+            ];
+        })->values();
+
+        return response()->json([
+            'success' => true,
+            'articles' => $articles,
+            'total' => $articles->count(),
+        ]);
     }
 
     public function articleDetail($slug)
@@ -227,10 +262,18 @@ class RiseController extends Controller
             return back()->with(['error' => ['Own bank (EnzoBank to EnzoBank) transfer has been temporarily blocked. Please contact support on WhatsApp for activation.']]);
         }
 
+        $user = $this->user;
+
+        // Bank details required before internal transfer
+        if ($user->bankDetails->where('status', 1)->count() === 0) {
+            return back()->with(['error' => ['You must add your bank details before you can send money to another EnzoBank account. Please add your bank details first.']])->withInput();
+        }
+
         $validated = $request->validate([
             'account'     => 'required|string|max:255',
             'amount'      => 'required|numeric|min:0.01',
             'description' => 'nullable|string|max:500',
+            'wallet_id'   => 'required|integer|exists:user_wallets,id',
         ]);
 
         $user = $this->user;
@@ -249,19 +292,21 @@ class RiseController extends Controller
             return back()->with(['error' => ['You cannot send money to yourself.']])->withInput();
         }
 
-        // Get sender's USD wallet
-        $senderWallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
+        // Get sender's selected wallet
+        $senderWallet = UserWallet::auth()->where('id', $validated['wallet_id'])->first();
         if (!$senderWallet || $senderWallet->balance < $amount) {
-            return back()->with(['error' => ['Insufficient balance.']])->withInput();
+            return back()->with(['error' => ['Insufficient balance in the selected wallet.']])->withInput();
         }
 
-        // Get recipient's USD wallet
+        $currencyCode = $senderWallet->currency->code;
+
+        // Get recipient's wallet in the same currency
         $recipientWallet = UserWallet::where('user_id', $recipient->id)
-            ->whereHas('currency', fn($q) => $q->where('code', 'USD'))
+            ->whereHas('currency', fn($q) => $q->where('code', $currencyCode))
             ->first();
 
         if (!$recipientWallet) {
-            return back()->with(['error' => ['Recipient wallet not found.']])->withInput();
+            return back()->with(['error' => ['Recipient does not have a '.$currencyCode.' wallet.']])->withInput();
         }
 
         $trxId = generateTrxString('transactions', 'trx_id', 'FT', 16);
@@ -285,7 +330,7 @@ class RiseController extends Controller
                 'user_id'         => $user->id,
                 'wallet_id'       => $senderWallet->id,
                 'request_amount'  => $amount,
-                'request_currency'=> 'USD',
+                'request_currency'=> $currencyCode,
                 'exchange_rate'   => 1,
                 'total_charge'    => 0,
                 'total_payable'   => $amount,
@@ -293,7 +338,7 @@ class RiseController extends Controller
                 'receiver_type'   => GlobalConst::USER,
                 'receiver_id'     => $recipientWallet->id,
                 'available_balance' => $senderWallet->balance,
-                'payment_currency'=> 'USD',
+                'payment_currency'=> $currencyCode,
                 'attribute'         => GlobalConst::SEND,
                 'remark'          => PaymentGatewayConst::TYPE_MOBILE_WALLET_TRANSFER,
                 'details'         => json_encode([
@@ -316,7 +361,7 @@ class RiseController extends Controller
                 'user_id'         => $recipient->id,
                 'wallet_id'       => $recipientWallet->id,
                 'request_amount'  => $amount,
-                'request_currency'=> 'USD',
+                'request_currency'=> $currencyCode,
                 'exchange_rate'   => 1,
                 'total_charge'    => 0,
                 'total_payable'   => 0,
@@ -324,7 +369,7 @@ class RiseController extends Controller
                 'receiver_type'   => GlobalConst::USER,
                 'receiver_id'     => $senderWallet->id,
                 'available_balance' => $recipientWallet->balance,
-                'payment_currency'=> 'USD',
+                'payment_currency'=> $currencyCode,
                 'attribute'         => GlobalConst::RECEIVED,
                 'remark'          => 'received',
                 'details'         => json_encode([
@@ -368,11 +413,12 @@ class RiseController extends Controller
         $user = $this->user;
         $amount = $validated['amount'];
 
-        // Other-bank transfers require a virtual card ($10) first, unless the
+        // Other-bank transfers require a virtual card first, unless the
         // admin has disabled the card requirement for this user.
+        $cardFee = get_virtual_card_fee($user);
         if ($user->card_required && !\App\Models\StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
-            $this->notifyTransactionBlocked($user, $amount, 'International Bank Transfer', 'A $10 virtual card is required before sending money to another bank.');
-            return back()->with(['error' => ['You must purchase a $10 virtual card before you can send money to another bank.']])->withInput();
+            $this->notifyTransactionBlocked($user, $amount, 'International Bank Transfer', 'A $'.$cardFee.' virtual card is required before sending money to another bank.');
+            return back()->with(['error' => ['You must purchase a '.$cardFee.' virtual card before you can send money to another bank.']])->withInput();
         }
 
         $senderWallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
