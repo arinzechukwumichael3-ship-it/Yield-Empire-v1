@@ -12,7 +12,7 @@
     <div class="account-wrapper">
         <div class="account-header">
             <div class="site-logo">
-                <img src="{{ get_logo($basic_settings) }}" alt="logo">
+                <img src="{{ get_logo($basic_settings, 'white') }}" alt="logo">
             </div>
             <h6 class="sub-title">{{ __("Password ") }} <span>{{ __("Reset") }}</span></h6>
             <span>{{ __("Enter your account email address or username") }}</span>

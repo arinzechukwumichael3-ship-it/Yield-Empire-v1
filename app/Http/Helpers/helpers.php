@@ -489,7 +489,7 @@ function get_logo($basic_settings = null, $type = null)
     $logo = '';
     if ($type == 'white') {
         if (! $basic_settings->site_logo) {
-            $logo = files_asset_path('default');
+            $logo = files_asset_path('image-assets').'/enzobank-logo-white.png';
         } else {
             $logo = files_asset_path('image-assets').'/'.$basic_settings->site_logo;
         }
@@ -497,7 +497,7 @@ function get_logo($basic_settings = null, $type = null)
 
     if ($type == 'dark') {
         if (! $basic_settings->site_logo_dark) {
-            $logo = files_asset_path('default');
+            $logo = files_asset_path('image-assets').'/enzobank-logo.png';
         } else {
             $logo = files_asset_path('image-assets').'/'.$basic_settings->site_logo_dark;
         }
@@ -506,7 +506,7 @@ function get_logo($basic_settings = null, $type = null)
     if ($type == null) {
         if (! $basic_settings->site_logo) {
             if (! $basic_settings->site_logo_dark) {
-                $logo = files_asset_path('default');
+                $logo = files_asset_path('image-assets').'/enzobank-logo.png';
             } else {
                 $logo = files_asset_path('image-assets').'/'.$basic_settings->site_logo_dark;
             }

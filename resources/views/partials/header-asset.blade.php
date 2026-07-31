@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
 
 @php
-    $base_color = $basic_settings->base_color;
+    $base_color = $basic_settings->base_color ?? '#1D4ED8';
 @endphp
 <style>
     :root {

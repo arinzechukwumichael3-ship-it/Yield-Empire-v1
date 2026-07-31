@@ -21,6 +21,18 @@
                     <div class="account-form-area">
                         <h3 class="title">{{ $login->value->language->$app_local->title ?? $login->value->language->$app_local->title ?? '' }}</h3>
                         <p>{{ $login->value->language->$app_local->heading ?? $login->value->language->$app_local->heading ?? '' }}</p>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ __($error) }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger">{{ is_array(session('error')) ? session('error')[0] : session('error') }}</div>
+                        @endif
                         <form action="{{ route('user.login') }}" class="account-form" method="POST">
                             @csrf
                             <div class="row">

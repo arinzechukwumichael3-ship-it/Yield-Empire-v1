@@ -20,6 +20,18 @@
                     <div class="account-form-area account-form">
                         <h3 class="title">{{ $register->value->language->$app_local->title ?? $register->value->language->$default->title ?? '' }}</h3>
                         <p>{{ $register->value->language->$app_local->heading ?? $register->value->language->$default->heading ?? '' }}</p>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ __($error) }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger">{{ is_array(session('error')) ? session('error')[0] : session('error') }}</div>
+                        @endif
                         <div class="account-select-item">
                             <label>{{ __("Account Type") }} <span>*</span></label>
                             <select class="select2-basic select-area py-0 w-100 account-type">
