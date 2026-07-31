@@ -86,6 +86,33 @@ class AuthFlowTest extends TestCase
         $this->assertNull(session('errors'), 'login should not fail for a newly registered account');
     }
 
+    public function test_registration_leads_to_otp_verification_page()
+    {
+        $email = 'authflow-otp@enzobank.org';
+        User::where('email', $email)->delete();
+
+        $this->post(route('user.register.submit'), [
+            'account_type' => 'personal',
+            'firstname' => 'Otp',
+            'lastname' => 'Flow',
+            'email' => $email,
+            'country' => 'United States',
+            'password' => 'otpflow123',
+            'password_confirmation' => 'otpflow123',
+        ])->assertStatus(302);
+
+        // Dashboard is behind the verification guard: an unverified account
+        // must be bounced to the OTP verification page, not the dashboard.
+        $dash = $this->get(route('user.dashboard'));
+        $location = $dash->headers->get('Location') ?? '';
+        $this->assertStringContainsString('/authorize/mail/', $location, 'unverified user should be sent to the OTP page');
+
+        $otp = $this->get($location);
+        $otp->assertStatus(200);
+        $otp->assertSee('Verify your email');
+        $otp->assertSee('/authorize/mail/verify/');
+    }
+
     public function test_admin_login_redirects_to_dashboard()
     {
         $admin = Admin::where('email', 'authflow-admin@enzobank.org')->first()

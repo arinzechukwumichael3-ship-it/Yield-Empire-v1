@@ -32,7 +32,7 @@ class BasicSettingsProvider {
      * `$basic_settings->foo` never throws "Undefined property" when the
      * basic_settings table is empty (e.g. tests, fresh installs).
      * Gate defaults keep a fresh install open: registration allowed,
-     * verification not forced, SSL not forced, notifications muted.
+     * email OTP verification required, SSL not forced, notifications muted.
      */
     public static function fallbackSettings() {
         $fallback = new \stdClass();
@@ -40,7 +40,7 @@ class BasicSettingsProvider {
             $fallback->{$key} = null;
         }
         $fallback->user_registration   = true;
-        $fallback->email_verification  = false;
+        $fallback->email_verification  = true;
         $fallback->sms_verification    = false;
         $fallback->kyc_verification    = false;
         $fallback->secure_password     = false;
