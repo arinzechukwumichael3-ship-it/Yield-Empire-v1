@@ -58,6 +58,34 @@ class AuthFlowTest extends TestCase
         $this->assertTrue($user->wallets()->count() > 0, 'wallets should be created on login');
     }
 
+    public function test_registered_user_can_log_back_in_with_same_password()
+    {
+        $email = 'authflow-roundtrip@enzobank.org';
+        User::where('email', $email)->delete();
+
+        $this->post(route('user.register.submit'), [
+            'account_type' => 'personal',
+            'firstname' => 'Round',
+            'lastname' => 'Trip',
+            'email' => $email,
+            'country' => 'United States',
+            'password' => 'roundtrip123',
+            'password_confirmation' => 'roundtrip123',
+        ])->assertStatus(302);
+
+        auth('web')->logout();
+        $this->assertGuest('web');
+
+        // The same email + password must authenticate after a fresh session
+        $response = $this->post(route('user.login.submit'), [
+            'credentials' => $email,
+            'password' => 'roundtrip123',
+        ]);
+        $response->assertStatus(302);
+        $this->assertAuthenticated('web');
+        $this->assertNull(session('errors'), 'login should not fail for a newly registered account');
+    }
+
     public function test_admin_login_redirects_to_dashboard()
     {
         $admin = Admin::where('email', 'authflow-admin@enzobank.org')->first()
