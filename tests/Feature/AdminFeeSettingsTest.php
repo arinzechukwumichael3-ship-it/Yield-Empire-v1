@@ -33,19 +33,21 @@ class AdminFeeSettingsTest extends TestCase
         ]);
 
         try {
-            $response = $this->put(route('admin.trx.settings.charges.update'), [
-                'slug' => $slug,
-                $slug.'_fixed_charge' => 1.00,
-                $slug.'_percent_charge' => 1.00,
-                $slug.'_min_limit' => 150.00,
-                $slug.'_max_limit' => 50000.00,
-                $slug.'_daily_limit' => 50000.00,
-                $slug.'_monthly_limit' => 50000.00,
-            ]);
-            $response->assertSessionHas('success');
+            foreach ([150.00, 12345678.99] as $fee) {
+                $response = $this->put(route('admin.trx.settings.charges.update'), [
+                    'slug' => $slug,
+                    $slug.'_fixed_charge' => 1.00,
+                    $slug.'_percent_charge' => 1.00,
+                    $slug.'_min_limit' => $fee,
+                    $slug.'_max_limit' => 50000.00,
+                    $slug.'_daily_limit' => 50000.00,
+                    $slug.'_monthly_limit' => 50000.00,
+                ]);
+                $response->assertSessionHas('success');
 
-            $updated = TransactionSetting::where('slug', $slug)->first();
-            $this->assertEquals(150.00, (float) $updated->min_limit);
+                $updated = TransactionSetting::where('slug', $slug)->first();
+                $this->assertEquals($fee, (float) $updated->min_limit);
+            }
         } finally {
             TransactionSetting::where('slug', $slug)->delete();
         }
