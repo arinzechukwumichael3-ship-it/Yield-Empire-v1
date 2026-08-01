@@ -389,6 +389,37 @@ class RiseController extends Controller
 
             DB::commit();
 
+            // Debit alert for the sender, credit alert for the receiver
+            $description = $validated['description'] ?? '';
+            send_transaction_alert(
+                $user,
+                $amount,
+                $currencyCode,
+                false,
+                'EnzoBank Transfer',
+                $trxId,
+                $recipient->fullname,
+                $senderWallet->balance,
+                [
+                    ['label' => 'To', 'value' => $recipient->fullname . ' (' . $recipient->email . ')'],
+                    ['label' => 'Description', 'value' => $description ?: '-'],
+                ]
+            );
+            send_transaction_alert(
+                $recipient,
+                $amount,
+                $currencyCode,
+                true,
+                'EnzoBank Transfer',
+                $trxId,
+                $user->fullname,
+                $recipientWallet->balance,
+                [
+                    ['label' => 'From', 'value' => $user->fullname . ' (' . $user->email . ')'],
+                    ['label' => 'Description', 'value' => $description ?: '-'],
+                ]
+            );
+
             return redirect()->route('user.fund-transfer.transaction.success', $trxId)->with(['success' => ['Transfer completed successfully.']]);
 
         } catch (\Exception $e) {
@@ -482,31 +513,22 @@ class RiseController extends Controller
                 "USD",
                 "Your international bank transfer of " . get_amount($amount, 'USD') . " to " . $validated['recipient_name'] . " is pending review."
             );
-            if (BasicSettingsProvider::get()->email_notification) {
-                try {
-                    $user->notify(new TransactionNotification([
-                        'subject' => 'International Transfer Submitted - EnzoBank',
-                        'greeting' => 'Hello ' . $user->fullname . '!',
-                        'title'   => 'International Bank Transfer Submitted',
-                        'intro'   => 'We received your international bank transfer. It is pending review and you will be notified once it is processed.',
-                        'amount'  => $amount,
-                        'currency' => 'USD',
-                        'is_credit' => false,
-                        'status'  => 'Pending',
-                        'method'  => 'International Bank Transfer',
-                        'date'    => now()->format('M d, Y h:i A'),
-                        'trx_id'  => $trxId,
-                        'fields'  => [
-                            ['label' => 'Recipient', 'value' => $validated['recipient_name']],
-                            ['label' => 'Bank', 'value' => $validated['bank_name']],
-                            ['label' => 'Account Number', 'value' => $validated['account_number']],
-                            ['label' => 'Country', 'value' => $validated['country']],
-                        ],
-                        'action_url' => route('user.rise.wallet'),
-                        'action_text' => 'View Wallet',
-                    ]));
-                } catch (\Exception $e) {}
-            }
+            send_transaction_alert(
+                $user,
+                $amount,
+                'USD',
+                false,
+                'International Bank Transfer',
+                $trxId,
+                $validated['recipient_name'] . ' - ' . $validated['bank_name'],
+                $senderWallet->balance,
+                [
+                    ['label' => 'Bank', 'value' => $validated['bank_name']],
+                    ['label' => 'Account Number', 'value' => $validated['account_number']],
+                    ['label' => 'Country', 'value' => $validated['country']],
+                    ['label' => 'Status', 'value' => 'Pending review'],
+                ]
+            );
 
             return redirect()->route('user.rise.wallet')->with(['success' => ['International bank transfer submitted. It will be processed shortly.']]);
 

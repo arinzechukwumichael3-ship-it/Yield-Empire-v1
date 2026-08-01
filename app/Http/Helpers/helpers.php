@@ -2136,3 +2136,35 @@ function notify_virtual_card_blocked($user, $amount, $method, $currency = 'USD')
 
     return $msg;
 }
+
+/**
+ * Email the user a debit or credit alert after a successful transaction.
+ * Sent unconditionally (regardless of the global email_notification toggle)
+ * so users always know when money left or entered their account.
+ */
+function send_transaction_alert($user, $amount, $currency, $is_credit, $method, $trx_id, $counterparty, $new_balance, $extra_fields = [])
+{
+    try {
+        $user->notify(new \App\Notifications\User\TransactionNotification([
+            'subject'     => ($is_credit ? 'Credit Alert' : 'Debit Alert') . ' - EnzoBank',
+            'greeting'    => 'Hello ' . $user->fullname . '!',
+            'title'       => $is_credit ? 'Money Received' : 'Money Sent',
+            'intro'       => $is_credit
+                ? 'Your EnzoBank account has been credited with ' . get_amount($amount, $currency) . '.'
+                : 'Your EnzoBank account has been debited by ' . get_amount($amount, $currency) . '.',
+            'amount'      => $amount,
+            'currency'    => $currency,
+            'is_credit'   => $is_credit,
+            'status'      => 'Successful',
+            'method'      => $method,
+            'date'        => now()->format('M d, Y h:i A'),
+            'trx_id'      => $trx_id,
+            'fields'      => array_merge([
+                ['label' => 'Counterparty', 'value' => $counterparty],
+                ['label' => 'New Balance', 'value' => get_amount($new_balance, $currency)],
+            ], $extra_fields),
+            'action_url'  => route('user.transactions.index'),
+            'action_text' => 'View Transactions',
+        ]));
+    } catch (\Exception $e) {}
+}

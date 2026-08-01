@@ -22,7 +22,6 @@ use App\Traits\ControlDynamicInputFields;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\PaymentGatewayCurrency;
 use App\Providers\Admin\BasicSettingsProvider;
-use App\Notifications\User\MoneyOutNotification;
 
 class MoneyOutController extends Controller
 {
@@ -295,12 +294,16 @@ class MoneyOutController extends Controller
 
             user_notification_data_save(auth()->user()->id,$type = PaymentGatewayConst::TYPEMONEYOUT,$title = "Money Out",$transaction->id,$amount->request_amount,$gateway = null,$currency = get_default_currency_code(),$message = "Money Out Successful.");
             $this->notification($amount);
-            $basic_settings = BasicSettingsProvider::get();
-            if($basic_settings->email_notification){
-                try{
-                    $wallet->user->notify(new MoneyOutNotification($wallet->user, $transaction));
-                }catch(Exception $e){}
-            }
+            send_transaction_alert(
+                $wallet->user,
+                $amount->request_amount,
+                $wallet->currency->code ?? 'USD',
+                false,
+                'Withdrawal',
+                $trx_id,
+                $gateway_currency->gateway->name ?? 'Withdrawal',
+                $wallet->balance - $amount->total_payable
+            );
             DB::commit();
         }catch(Exception $e) {
             DB::rollBack();

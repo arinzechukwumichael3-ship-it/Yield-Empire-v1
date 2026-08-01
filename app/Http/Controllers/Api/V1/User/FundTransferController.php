@@ -23,9 +23,6 @@ use App\Models\Admin\TransactionSetting;
 use App\Providers\Admin\CurrencyProvider;
 use Illuminate\Support\Facades\Validator;
 use App\Providers\Admin\BasicSettingsProvider;
-use App\Notifications\User\FundTransfer\OwnBankSenderNotification;
-use App\Notifications\User\FundTransfer\OtherBankSenderNotification;
-use App\Notifications\User\FundTransfer\OwnBankReceiverNotification;
 use App\Notifications\User\FundTransfer\OwnBankTransferBlockedNotification;
 
 class FundTransferController extends Controller
@@ -370,23 +367,29 @@ class FundTransferController extends Controller
         try {
             user_notification_data_save($sender_wallet->user->id,$type = PaymentGatewayConst::TYPE_OWN_BANK_TRANSFER,$title = "Fund Transfer",$transaction->id,$charges->request_amount,$gateway = null,$currency = $charges->sender_currency,$message = "Fund Transfer Successful.");
 
-            $basic_settings = BasicSettingsProvider::get();
-            if($basic_settings->email_notification){
-                try{
-                    $sender_wallet->user->notify(new OwnBankSenderNotification($sender_wallet->user, $transaction));
-                    \Log::info("Own bank transfer sender email sent to user_id: ".$sender_wallet->user->id." trx_id: ".$transaction->trx_id);
-                }catch(Exception $e){
-                    \Log::error("Failed to send own bank transfer sender email to user_id: ".$sender_wallet->user->id." - ".$e->getMessage());
-                }
-                try{
-                    $receiver_wallet->user->notify(new OwnBankReceiverNotification($receiver, $transaction));
-                    \Log::info("Own bank transfer receiver email sent to user_id: ".$receiver->id." trx_id: ".$transaction->trx_id);
-                }catch(Exception $e){
-                    \Log::error("Failed to send own bank transfer receiver email to user_id: ".$receiver->id." - ".$e->getMessage());
-                }
-            }
+            // Debit alert for the sender, credit alert for the receiver
+            send_transaction_alert(
+                $sender_wallet->user,
+                $charges->request_amount,
+                $charges->sender_currency,
+                false,
+                'EnzoBank Transfer',
+                $transaction->trx_id,
+                $receiver->fullname,
+                $sender_wallet->balance - $charges->payable
+            );
+            send_transaction_alert(
+                $receiver_wallet->user,
+                $charges->request_amount,
+                $charges->sender_currency,
+                true,
+                'EnzoBank Transfer',
+                $transaction->trx_id,
+                $sender_wallet->user->fullname,
+                $receiver_wallet->balance + $charges->request_amount
+            );
         } catch (Exception $e) {
-            return Response::error([__('Something went wrong! Please try again')],[],400);
+            \Log::error("Own bank transfer notification error: ".$e->getMessage());
         }
 
         return Response::success([__("Fund transfer successfully done!")],[],200);
@@ -540,13 +543,17 @@ class FundTransferController extends Controller
         try {
             user_notification_data_save($sender_wallet->user->id,$type = PaymentGatewayConst::TYPE_OTHER_BANK_TRANSFER,$title = "Fund Transfer",$transaction->id,$charges->request_amount,$gateway = null,$currency = $charges->sender_currency,$message = "Fund Transfer Successful.");
 
-            $basic_settings = BasicSettingsProvider::get();
-            if($basic_settings->email_notification){
-                try{
-                    $sender_wallet->user->notify(new OtherBankSenderNotification($sender_wallet->user, $transaction));
-                }catch(Exception $e){}
-                
-            }
+            $beneficiary = $temp_data->data->beneficiary ?? null;
+            send_transaction_alert(
+                $sender_wallet->user,
+                $charges->request_amount,
+                $charges->sender_currency,
+                false,
+                'International Bank Transfer',
+                $transaction->trx_id,
+                ($beneficiary->account_holder_name ?? 'Other Bank') . ' - ' . ($beneficiary->bank_name ?? ''),
+                $sender_wallet->balance - $charges->payable
+            );
         } catch (Exception $e) {
             return Response::error([__('Something went wrong! Please try again')],[],400);
         }

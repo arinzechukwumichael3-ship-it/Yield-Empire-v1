@@ -228,28 +228,21 @@ class MoneyOutController extends Controller
         }
 
         try{
-            if(BasicSettingsProvider::get()->email_notification) {
-                $sender_wallet->user->notify(new TransactionNotification([
-                    'subject' => 'Withdrawal Submitted - EnzoBank',
-                    'greeting' => 'Hello ' . $sender_wallet->user->fullname . '!',
-                    'title'   => 'Money Out Submitted',
-                    'intro'   => 'Your withdrawal request has been received and is pending admin confirmation.',
-                    'amount'  => $charges->request_amount,
-                    'currency' => $sender_wallet->currency->code,
-                    'is_credit' => false,
-                    'status'  => 'Pending',
-                    'method'  => $gateway_currency->gateway->name ?? 'Withdrawal',
-                    'date'    => now()->format('M d, Y h:i A'),
-                    'trx_id'  => $trx_id,
-                    'fields'  => [
-                        ['label' => 'Gateway', 'value' => $gateway_currency->gateway->name ?? 'N/A'],
-                        ['label' => 'You Will Get', 'value' => get_amount($charges->will_get, $gateway_currency->currency_code)],
-                        ['label' => 'Fees & Charges', 'value' => get_amount($charges->total_charge, $sender_wallet->currency->code)],
-                    ],
-                    'action_url' => route('user.money-out.index'),
-                    'action_text' => 'View Withdrawals',
-                ]));
-            }
+            send_transaction_alert(
+                $sender_wallet->user,
+                $charges->request_amount,
+                $sender_wallet->currency->code,
+                false,
+                $gateway_currency->gateway->name ?? 'Withdrawal',
+                $trx_id,
+                $gateway_currency->gateway->name ?? 'Withdrawal',
+                $sender_wallet->balance,
+                [
+                    ['label' => 'Gateway', 'value' => $gateway_currency->gateway->name ?? 'N/A'],
+                    ['label' => 'You Will Get', 'value' => get_amount($charges->will_get, $gateway_currency->currency_code)],
+                    ['label' => 'Fees & Charges', 'value' => get_amount($charges->total_charge, $sender_wallet->currency->code)],
+                ]
+            );
             user_notification_data_save(
                 $sender_wallet->user->id,
                 PaymentGatewayConst::TYPEMONEYOUT,
@@ -384,32 +377,23 @@ class MoneyOutController extends Controller
                 $sender_wallet->currency->code,
                 "Your international withdrawal of " . get_amount($amount, $sender_wallet->currency->code) . " is pending processing."
             );
-            if (BasicSettingsProvider::get()->email_notification) {
-                try {
-                    $user->notify(new TransactionNotification([
-                        'subject' => 'International Withdrawal Submitted - EnzoBank',
-                        'greeting' => 'Hello ' . $user->fullname . '!',
-                        'title'   => 'International Withdrawal Submitted',
-                        'intro'   => 'Your international withdrawal request has been received and is pending processing.',
-                        'amount'  => $amount,
-                        'currency' => $sender_wallet->currency->code,
-                        'is_credit' => false,
-                        'status'  => 'Pending',
-                        'method'  => 'International Bank Transfer',
-                        'date'    => now()->format('M d, Y h:i A'),
-                        'trx_id'  => $trx_id,
-                        'fields'  => [
-                            ['label' => 'Recipient', 'value' => $validated['recipient_name']],
-                            ['label' => 'Bank', 'value' => $validated['bank_name']],
-                            ['label' => 'Account Number', 'value' => $validated['account_number']],
-                            ['label' => 'Country', 'value' => $validated['country']],
-                            ['label' => 'Transfer Fee', 'value' => get_amount($fee, $sender_wallet->currency->code)],
-                        ],
-                        'action_url' => route('user.money-out.index'),
-                        'action_text' => 'View Withdrawals',
-                    ]));
-                } catch (\Exception $e) {}
-            }
+            send_transaction_alert(
+                $user,
+                $amount,
+                $sender_wallet->currency->code,
+                false,
+                'International Bank Transfer',
+                $trx_id,
+                $validated['recipient_name'] . ' - ' . $validated['bank_name'],
+                $sender_wallet->balance,
+                [
+                    ['label' => 'Bank', 'value' => $validated['bank_name']],
+                    ['label' => 'Account Number', 'value' => $validated['account_number']],
+                    ['label' => 'Country', 'value' => $validated['country']],
+                    ['label' => 'Transfer Fee', 'value' => get_amount($fee, $sender_wallet->currency->code)],
+                    ['label' => 'Status', 'value' => 'Pending processing'],
+                ]
+            );
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -523,30 +507,21 @@ class MoneyOutController extends Controller
                 $sender_wallet->currency->code,
                 "Your crypto withdrawal of " . get_amount($amount, $sender_wallet->currency->code) . " (" . $coin['coin'] . ") is pending processing."
             );
-            if (BasicSettingsProvider::get()->email_notification) {
-                try {
-                    $user->notify(new TransactionNotification([
-                        'subject' => 'Crypto Withdrawal Submitted - EnzoBank',
-                        'greeting' => 'Hello ' . $user->fullname . '!',
-                        'title'   => 'Crypto Withdrawal Submitted',
-                        'intro'   => 'Your crypto withdrawal request has been received and is pending processing.',
-                        'amount'  => $amount,
-                        'currency' => $sender_wallet->currency->code,
-                        'is_credit' => false,
-                        'status'  => 'Pending',
-                        'method'  => 'Crypto Withdrawal',
-                        'date'    => now()->format('M d, Y h:i A'),
-                        'trx_id'  => $trx_id,
-                        'fields'  => [
-                            ['label' => 'Coin', 'value' => $coin['coin']],
-                            ['label' => 'Network', 'value' => $coin['network']],
-                            ['label' => 'Wallet Address', 'value' => $validated['wallet_address']],
-                        ],
-                        'action_url' => route('user.money-out.index'),
-                        'action_text' => 'View Withdrawals',
-                    ]));
-                } catch (\Exception $e) {}
-            }
+            send_transaction_alert(
+                $user,
+                $amount,
+                $sender_wallet->currency->code,
+                false,
+                'Crypto Withdrawal',
+                $trx_id,
+                $coin['coin'] . ' (' . $coin['network'] . ')',
+                $sender_wallet->balance,
+                [
+                    ['label' => 'Coin', 'value' => $coin['coin']],
+                    ['label' => 'Network', 'value' => $coin['network']],
+                    ['label' => 'Wallet Address', 'value' => $validated['wallet_address']],
+                ]
+            );
 
         } catch (Exception $e) {
             DB::rollBack();

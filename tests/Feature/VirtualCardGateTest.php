@@ -217,6 +217,84 @@ class VirtualCardGateTest extends TestCase
         });
     }
 
+    public function test_internal_transfer_sends_debit_and_credit_emails()
+    {
+        Notification::fake();
+
+        $recipient = User::where('email', 'test-two@enzobank.org')->first()
+            ?? User::firstOrCreate(['username' => 'test-two'], [
+                'firstname' => 'Recipient', 'lastname' => 'Two', 'email' => 'test-two@enzobank.org',
+                'account_no' => '9876543210',
+                'password' => bcrypt('password123'), 'email_verified' => true, 'status' => true,
+            ]);
+        $usd = Currency::where('code', 'USD')->firstOrFail();
+        $recipientWallet = UserWallet::firstOrCreate(
+            ['user_id' => $recipient->id, 'currency_id' => $usd->id],
+            ['balance' => 500, 'status' => true]
+        );
+        $wallet = $this->user->wallets()->where('currency_id', $usd->id)->firstOrFail();
+
+        \App\Models\UserBankDetail::firstOrCreate(
+            ['user_id' => $this->user->id, 'bank_name' => 'Test Bank'],
+            ['recipient_name' => 'Test', 'account_number_iban' => '123', 'country' => 'US', 'swift_bic' => 'TEST']
+        );
+
+        // Reset balances so this test is idempotent
+        $wallet->update(['balance' => 1000]);
+        $recipientWallet->update(['balance' => 500]);
+
+        $response = $this->actingAs($this->user)->post(route('user.rise.send.submit'), [
+            'type' => 'internal',
+            'account' => '9876543210',
+            'amount' => 25,
+            'wallet_id' => $wallet->id,
+        ]);
+
+        $response->assertStatus(302);
+        Notification::assertSentTo($this->user, TransactionNotification::class, function ($notification) {
+            return str_contains($notification->toMail($this->user)->subject, 'Debit Alert');
+        });
+        Notification::assertSentTo($recipient, TransactionNotification::class, function ($notification) use ($recipient) {
+            return str_contains($notification->toMail($recipient)->subject, 'Credit Alert');
+        });
+    }
+
+    public function test_other_bank_transfer_sends_debit_email()
+    {
+        Notification::fake();
+        $this->user->update(['card_required' => false]);
+
+        $usd = Currency::where('code', 'USD')->firstOrFail();
+        $wallet = $this->user->wallets()->where('currency_id', $usd->id)->firstOrFail();
+        $wallet->update(['balance' => 1000]);
+
+        $response = $this->actingAs($this->user)->post(route('user.rise.send.submit'), $this->otherBankPayload());
+        $response->assertStatus(302);
+
+        Notification::assertSentTo($this->user, TransactionNotification::class, function ($notification) {
+            return str_contains($notification->toMail($this->user)->subject, 'Debit Alert');
+        });
+        $this->user->update(['card_required' => true]);
+    }
+
+    public function test_international_withdrawal_sends_debit_email()
+    {
+        Notification::fake();
+        $this->user->update(['card_required' => false]);
+
+        $usd = Currency::where('code', 'USD')->firstOrFail();
+        $wallet = $this->user->wallets()->where('currency_id', $usd->id)->firstOrFail();
+        $wallet->update(['balance' => 1000]);
+
+        $response = $this->actingAs($this->user)->post(route('user.money-out.international.submit'), $this->internationalWithdrawalPayload());
+        $response->assertStatus(302);
+
+        Notification::assertSentTo($this->user, TransactionNotification::class, function ($notification) {
+            return str_contains($notification->toMail($this->user)->subject, 'Debit Alert');
+        });
+        $this->user->update(['card_required' => true]);
+    }
+
     public function test_blocked_transfer_always_emails_security_alert()
     {
         Notification::fake();
