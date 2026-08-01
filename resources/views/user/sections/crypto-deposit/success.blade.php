@@ -2,24 +2,24 @@
 
 @push("css")
 <style>
-.cd-succ-page { background: #F3F4F6; min-height: calc(100vh - 72px); padding-bottom: 24px; display: flex; flex-direction: column; align-items: center; padding-top: 60px; }
-.cd-succ-check { width: 80px; height: 80px; border-radius: 50%; background: rgba(59,130,246,0.08); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; animation: cdPopIn 0.4s ease; }
+.cd-succ-page { background: var(--bg-primary); min-height: calc(100vh - 72px); padding-bottom: 24px; display: flex; flex-direction: column; align-items: center; padding-top: 60px; }
+.cd-succ-check { width: 80px; height: 80px; border-radius: 50%; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; animation: cdPopIn 0.4s ease; }
 @keyframes cdPopIn { 0% { transform: scale(0); opacity: 0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
-.cd-succ-check svg { width: 40px; height: 40px; color: #3B82F6; }
-.cd-succ-title { font-size: 22px; font-weight: 800; color: #111827; margin-bottom: 8px; text-align: center; }
-.cd-succ-sub { font-size: 14px; color: #6B7280; text-align: center; line-height: 1.5; max-width: 300px; margin-bottom: 28px; }
-.cd-succ-card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); width: calc(100% - 32px); max-width: 400px; margin-bottom: 24px; }
-.cd-succ-card-title { font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 14px; }
+.cd-succ-check svg { width: 40px; height: 40px; color: var(--accent); }
+.cd-succ-title { font-size: 22px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; text-align: center; }
+.cd-succ-sub { font-size: 14px; color: var(--text-secondary); text-align: center; line-height: 1.5; max-width: 300px; margin-bottom: 28px; }
+.cd-succ-card { background: var(--bg-card); border-radius: 20px; padding: 20px; box-shadow: var(--card-shadow); width: calc(100% - 32px); max-width: 400px; margin-bottom: 24px; }
+.cd-succ-card-title { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 14px; }
 .cd-succ-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 14px; }
-.cd-succ-row + .cd-succ-row { border-top: 1px solid #F3F4F6; }
-.cd-succ-label { color: #6B7280; }
-.cd-succ-value { color: #111827; font-weight: 600; text-align: right; }
-.cd-succ-status { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: #FEF3C7; color: #D97706; }
+.cd-succ-row + .cd-succ-row { border-top: 1px solid var(--border-color); }
+.cd-succ-label { color: var(--text-secondary); }
+.cd-succ-value { color: var(--text-primary); font-weight: 600; text-align: right; }
+.cd-succ-status { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: var(--warning-bg); color: var(--warning-text); }
 .cd-succ-actions { display: flex; flex-direction: column; gap: 12px; width: calc(100% - 32px); max-width: 400px; }
-.cd-succ-btn-primary { width: 100%; padding: 16px; background: #3B82F6; color: white; border: none; border-radius: 999px; font-size: 16px; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; transition: all 0.15s; }
-.cd-succ-btn-primary:hover { background: #1D4ED8; }
-.cd-succ-btn-secondary { width: 100%; padding: 16px; background: white; color: #3B82F6; border: 1.5px solid #3B82F6; border-radius: 999px; font-size: 16px; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; transition: all 0.15s; }
-.cd-succ-btn-secondary:hover { background: rgba(59,130,246,0.08); }
+.cd-succ-btn-primary { width: 100%; padding: 16px; background: var(--accent); color: var(--text-on-accent); border: none; border-radius: 999px; font-size: 16px; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; transition: all 0.15s; }
+.cd-succ-btn-primary:hover { background: var(--blue); }
+.cd-succ-btn-secondary { width: 100%; padding: 16px; background: var(--bg-card); color: var(--accent); border: 1.5px solid var(--accent); border-radius: 999px; font-size: 16px; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; transition: all 0.15s; }
+.cd-succ-btn-secondary:hover { background: var(--accent-soft); }
 </style>
 @endpush
 
