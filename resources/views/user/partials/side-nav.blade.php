@@ -51,6 +51,12 @@
                             <span class="menu-title">{{ __('Withdraw') }}</span>
                         </a>
                     </li>
+                    <li class="sidebar-menu-item {{ menuActive('user.bank.details.index') }}">
+                        <a href="{{ route('user.bank.details.index') }}">
+                            <i class="menu-icon las la-university"></i>
+                            <span class="menu-title">{{ __('Bank Details') }}</span>
+                        </a>
+                    </li>
 
                     <li class="sidebar-menu-item-header">{{ __('Financial Tools') }}</li>
                     <li class="sidebar-menu-item">

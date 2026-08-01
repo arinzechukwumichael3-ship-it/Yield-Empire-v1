@@ -27,14 +27,16 @@ class SendMail extends Notification
     {
         $user = $notifiable;
         $data = $this->data;
+        $whatsapp = support_whatsapp_number($notifiable);
 
         return (new MailMessage)
             ->subject($data->subject)
             ->greeting('Dear ' . $user->fullname . ',')
             ->line(new HtmlString($data->message))
             ->line(new HtmlString('&mdash;'))
-            ->line(new HtmlString('Need assistance? Contact us at <a href="mailto:support@enzobank.org">support@enzobank.org</a> or WhatsApp <a href="https://wa.me/447464483316">+44 7464 483316</a>.'))
-            ->salutation('EnzoBank Support Team');
+            ->line(new HtmlString('Need assistance? Contact us at <a href="mailto:support@enzobank.org">support@enzobank.org</a> or WhatsApp <a href="https://wa.me/' . $whatsapp . '">' . format_whatsapp_display($whatsapp) . '</a>.'))
+            ->salutation('EnzoBank Support Team')
+            ->with(['support_whatsapp' => $whatsapp]);
     }
 
     public function toArray($notifiable)

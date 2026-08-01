@@ -2202,3 +2202,41 @@ function support_whatsapp_link($message = null, $user = null)
     }
     return 'https://wa.me/' . $number . '?text=' . rawurlencode((string) $message);
 }
+
+/**
+ * Human-readable international form of a WhatsApp number, e.g.
+ * format_whatsapp_display('447464483316') => '+44 7464 483316'.
+ */
+function format_whatsapp_display($digits)
+{
+    $digits = preg_replace('/[^0-9]/', '', (string) $digits);
+    if (strlen($digits) === 12 && strpos($digits, '44') === 0) {
+        return '+44 ' . substr($digits, 2, 4) . ' ' . substr($digits, 6);
+    }
+    return '+' . $digits;
+}
+
+/**
+ * Formatted support number for a given user (or the general number when no
+ * per-user override exists), for use in email copy and templates.
+ */
+function support_whatsapp_display($user = null)
+{
+    return format_whatsapp_display(support_whatsapp_number($user));
+}
+
+/**
+ * Link for the floating WhatsApp bubble. When the current user has a
+ * per-user support number it deep-links to that number; otherwise the
+ * branded WhatsApp Business click-to-chat link is kept.
+ */
+function support_whatsapp_widget_link($message = null, $user = null)
+{
+    $user = $user ?: auth()->user();
+
+    if ($user && ! empty($user->support_whatsapp)) {
+        return support_whatsapp_link($message, $user);
+    }
+
+    return 'https://wa.me/message/ZW7EJRXHGL3GG1';
+}

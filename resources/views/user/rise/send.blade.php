@@ -213,6 +213,20 @@
                 </div>
                 <p style="margin:8px 0 0;font-size:11px;color:var(--text-muted,#64748B);">Share these details with other EnzoBank users to receive transfers instantly.</p>
             </div>
+
+            {{-- Bank Details Required Banner --}}
+            @if(auth()->user()->bankDetails->where('status', 1)->count() === 0)
+            <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:12px;">
+                <div style="flex-shrink:0;width:36px;height:36px;border-radius:50%;background:rgba(245,158,11,0.2);display:flex;align-items:center;justify-content:center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <div style="flex:1;min-width:0;">
+                    <strong style="font-size:14px;color:var(--text-primary,#fff);display:block;margin-bottom:4px;">{{ __('Bank Details Required') }}</strong>
+                    <p style="margin:0;font-size:13px;color:var(--text-secondary,#94A3B8);line-height:1.5;">{{ __('To send money to another EnzoBank account, you must first add at least one active external bank detail. This is a security requirement.') }}</p>
+                    <a href="{{ route('user.bank.details.index') }}" style="display:inline-block;margin-top:10px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;background:#F59E0B;color:#fff;text-decoration:none;transition:background 0.15s;">{{ __('Add Bank Details Now') }}</a>
+                </div>
+            </div>
+            @endif
             <form method="POST" action="{{ route('user.rise.send.submit') }}">
                 @csrf
                 <input type="hidden" name="type" value="internal">

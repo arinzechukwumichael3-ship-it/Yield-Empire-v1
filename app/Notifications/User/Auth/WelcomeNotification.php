@@ -58,6 +58,8 @@ class WelcomeNotification extends Notification
                 .'</tr>';
         }
 
+        $whatsapp = support_whatsapp_number($notifiable);
+
         $detailsHtml = '<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;max-width:540px;margin:24px 0;border-collapse:collapse;background:#f8faff;border:1px solid #dbe3ff;border-radius:14px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;">'
             .'<tr><td style="padding:18px 22px;background:#0b1f4d;color:#ffffff;font-size:16px;font-weight:700;">Your EnzoBank International Banking Details</td></tr>'
             .$rowHtml
@@ -72,8 +74,9 @@ class WelcomeNotification extends Notification
             ->line('These are your international banking details. Share them with friends, family or business partners anywhere in the world to receive instant transfers straight into your EnzoBank account.')
             ->line(new HtmlString($detailsHtml))
             ->line('You can now send and receive international transfers, manage virtual cards, and track all your transactions from your secure dashboard.')
-            ->line('Need assistance? Contact us at <a href="mailto:support@enzobank.org">support@enzobank.org</a> or WhatsApp <a href="https://wa.me/447464483316">+44 7464 483316</a>.')
-            ->salutation('EnzoBank Support Team');
+            ->line('Need assistance? Contact us at <a href="mailto:support@enzobank.org">support@enzobank.org</a> or WhatsApp <a href="https://wa.me/' . $whatsapp . '">' . format_whatsapp_display($whatsapp) . '</a>.')
+            ->salutation('EnzoBank Support Team')
+            ->with(['support_whatsapp' => $whatsapp]);
     }
 
     /**

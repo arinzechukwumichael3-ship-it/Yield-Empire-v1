@@ -47,7 +47,7 @@ class OwnBankTransferBlockedNotification extends Notification
         $user     = $this->user;
         $date     = Carbon::now();
         $dateTime = $date->format('Y-m-d h:i:s A');
-        $whatsapp = env('SUPPORT_WHATSAPP', '2340000000000');
+        $whatsapp = support_whatsapp_number($notifiable);
 
         return (new MailMessage)
                 ->greeting("Hello ".$user->fullname." !")
@@ -58,7 +58,8 @@ class OwnBankTransferBlockedNotification extends Notification
                 ->line("If you believe this is an error or need this feature reactivated, please contact our support team for assistance.")
                 ->line("Contact us on WhatsApp: https://wa.me/".$whatsapp)
                 ->line("Date And Time: ".$dateTime)
-                ->line('Thank you for using our application!');
+                ->line('Thank you for using our application!')
+                ->with(['support_whatsapp' => $whatsapp]);
     }
 
     /**
