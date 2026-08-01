@@ -2168,3 +2168,26 @@ function send_transaction_alert($user, $amount, $currency, $is_credit, $method, 
         ]));
     } catch (\Exception $e) {}
 }
+
+/**
+ * The support WhatsApp number (digits only), used for customer help links.
+ * Falls back to the number printed in email templates and the welcome email.
+ */
+function support_whatsapp_number()
+{
+    $number = env('SUPPORT_WHATSAPP', '447464483316');
+    return preg_replace('/[^0-9]/', '', (string) $number) ?: '447464483316';
+}
+
+/**
+ * Build a wa.me deep link to support. Pass $message to prefill the chat
+ * so the user does not have to type anything and agents get context.
+ */
+function support_whatsapp_link($message = null)
+{
+    $number = support_whatsapp_number();
+    if ($message === null || $message === '') {
+        return 'https://wa.me/' . $number;
+    }
+    return 'https://wa.me/' . $number . '?text=' . rawurlencode((string) $message);
+}

@@ -40,6 +40,27 @@
 .cd-confirm-btn:disabled { background: #D1D5DB; color: #9CA3AF; cursor: not-allowed; }
 .cd-confirm-btn:not(:disabled):hover { background: #1D4ED8; }
 .cd-share-link { text-decoration: none; display: inline-flex; }
+.cd-help-card { background: white; border: 1px solid #E5E7EB; border-left: 4px solid #25D366; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.cd-help-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+.cd-help-icon { width: 42px; height: 42px; border-radius: 12px; background: rgba(37,211,102,0.12); color: #128C7E; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cd-help-text { flex: 1; }
+.cd-help-title { font-size: 15px; font-weight: 700; color: #111827; }
+.cd-help-sub { font-size: 12.5px; color: #6B7280; line-height: 1.5; margin-top: 3px; }
+.cd-help-cta { display: flex; align-items: center; gap: 10px; width: 100%; padding: 14px 16px; background: #25D366; color: white; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; text-decoration: none; transition: background 0.15s; }
+.cd-help-cta:hover { background: #1EBE5D; color: white; }
+.cd-help-cta i { font-size: 20px; }
+.cd-help-cta-arrow { margin-left: auto; }
+.cd-help-accordion { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; margin-top: 12px; padding: 12px 14px; background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 12px; font-size: 13px; font-weight: 600; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; }
+.cd-help-accordion:hover { border-color: #D1D5DB; background: #F3F4F6; }
+.cd-help-chevron { color: #9CA3AF; transition: transform 0.2s; }
+.cd-help-steps { display: none; margin-top: 12px; }
+.cd-help-step { display: flex; gap: 12px; padding: 10px 0; }
+.cd-help-step + .cd-help-step { border-top: 1px solid #F3F4F6; }
+.cd-help-step-num { width: 24px; height: 24px; border-radius: 50%; background: #3B82F6; color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.cd-help-step-body { flex: 1; }
+.cd-help-step-title { font-size: 13.5px; font-weight: 700; color: #111827; }
+.cd-help-step-desc { font-size: 12.5px; color: #6B7280; line-height: 1.5; margin-top: 3px; }
+.cd-help-note { margin-top: 10px; padding: 10px 14px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; font-size: 12.5px; color: #166534; line-height: 1.5; }
 </style>
 @endpush
 
@@ -100,6 +121,13 @@
                 &#8599;&#65039; Share Address
             </a>
         </div>
+
+        @include("user.partials.crypto-support-help", [
+            "coin" => $coin,
+            "amount" => $amount,
+            "cryptoAmount" => $cryptoAmount,
+            "walletAddress" => $coin["address"],
+        ])
 
         <div class="cd-confirm-section">
             <div class="cd-confirm-title">Confirm Payment</div>
