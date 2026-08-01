@@ -57,6 +57,18 @@ $coins = config("crypto_deposit.coins", []);
 <div class="am-body">
     <p class="mo-hint" style="margin-bottom:16px;">Choose how you'd like to withdraw. International transfers settle in 1-5 business days; crypto withdrawals are processed after network confirmation.</p>
 
+    @php $cardFee = get_virtual_card_fee(); @endphp
+    @if(!$hasVirtualCard)
+        <div class="mo-warning">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>
+                <strong>Virtual Card Required</strong><br>
+                A virtual card purchase of ${{ number_format($cardFee, 2) }} is required before you can withdraw or send money out of your EnzoBank account.
+                <a href="{{ $virtualCardUrl }}" class="mo-submit-btn" style="display:inline-block;width:auto;padding:8px 18px;font-size:13px;margin-top:8px;text-decoration:none;">Get Virtual Card for ${{ number_format($cardFee, 2) }}</a>
+            </div>
+        </div>
+    @endif
+
     {{-- Tab Toggle --}}
     <div class="mo-tabs" role="tablist">
         <button class="mo-tab active" data-tab="international" role="tab">🌍 International Bank</button>

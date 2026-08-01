@@ -1017,12 +1017,14 @@ function admin_role_const()
 
 function auth_admin_roles()
 {
-    return auth()->guard('admin')->user()->getRolesCollection();
+    $admin = auth()->guard('admin')->user();
+    return $admin ? $admin->getRolesCollection() : [];
 }
 
 function auth_admin_permissions()
 {
-    $auth_admin_roles = Auth::user()->roles;
+    $admin = auth()->guard('admin')->user();
+    $auth_admin_roles = $admin ? $admin->roles : collect();
     $permissions = [];
     foreach ($auth_admin_roles as $item) {
         if ($item->permission != null && $item->permission->hasPermissions != null) {

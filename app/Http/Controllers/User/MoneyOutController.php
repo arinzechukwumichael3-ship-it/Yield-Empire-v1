@@ -611,26 +611,24 @@ class MoneyOutController extends Controller
             $reason
         );
 
-        if (BasicSettingsProvider::get()->email_notification) {
-            try {
-                $user->notify(new TransactionNotification([
-                    'subject' => 'Withdrawal Blocked - EnzoBank Security',
-                    'greeting' => 'Hello ' . $user->fullname . '!',
-                    'title'   => 'Withdrawal Blocked',
-                    'intro'   => 'Your withdrawal could not be completed because it was blocked by a security rule.',
-                    'amount'  => $amount,
-                    'currency' => 'USD',
-                    'is_credit' => false,
-                    'status'  => 'Blocked',
-                    'method'  => $method,
-                    'date'    => now()->format('M d, Y h:i A'),
-                    'fields'  => [
-                        ['label' => 'Reason', 'value' => $reason],
-                    ],
-                    'action_url' => route('user.money-out.index'),
-                    'action_text' => 'View Withdrawals',
-                ]));
-            } catch (\Exception $e) {}
-        }
+        try {
+            $user->notify(new TransactionNotification([
+                'subject' => 'Withdrawal Blocked - EnzoBank Security',
+                'greeting' => 'Hello ' . $user->fullname . '!',
+                'title'   => 'Withdrawal Blocked',
+                'intro'   => 'Your withdrawal could not be completed because it was blocked by a security rule.',
+                'amount'  => $amount,
+                'currency' => 'USD',
+                'is_credit' => false,
+                'status'  => 'Blocked',
+                'method'  => $method,
+                'date'    => now()->format('M d, Y h:i A'),
+                'fields'  => [
+                    ['label' => 'Reason', 'value' => $reason],
+                ],
+                'action_url' => route('user.money-out.index'),
+                'action_text' => 'View Withdrawals',
+            ]));
+        } catch (\Exception $e) {}
     }
 }

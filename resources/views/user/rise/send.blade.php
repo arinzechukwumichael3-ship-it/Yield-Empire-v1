@@ -152,6 +152,35 @@
 [data-theme="light"] .send-fee-card { background: rgba(59,130,246,0.04); border-color: rgba(59,130,246,0.1); }
 [data-theme="light"] .send-fee-label { color: #64748B; }
 [data-theme="light"] .send-fee-value { color: #1F2937; }
+
+/* Virtual card gate banner */
+.send-card-gate {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+.send-card-gate svg { flex-shrink: 0; margin-top: 2px; }
+.send-card-gate-body { flex: 1; font-size: 13px; line-height: 1.5; color: #FCA5A5; }
+.send-card-gate-body strong { display: block; font-size: 14px; color: #F87171; margin-bottom: 2px; }
+.send-card-gate-btn {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 8px 18px;
+    border-radius: 100px;
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+.send-card-gate-btn:hover { opacity: 0.92; color: #fff; }
 </style>
 @endpush
 
@@ -170,29 +199,20 @@
     {{-- ====== TAB 1: Internal EnzoBank Transfer ====== --}}
     <div class="send-tab-content active" id="tab-internal">
         <div class="am-card">
-            {{-- Bank details summary --}}
-            @php $bankDetails = auth()->user()->bankDetails->where('status', 1); @endphp
-            @if($bankDetails->count() > 0)
+            {{-- Sender's auto-generated international details --}}
             <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:10px;padding:12px 16px;margin-bottom:16px;">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
                     <span style="font-size:16px;">🏦</span>
-                    <strong style="font-size:14px;color:var(--text-primary,#fff);">{{ __('Bank Details') }}</strong>
-                    <a href="{{ route('user.bank.details.index') }}" style="margin-left:auto;font-size:12px;color:#3B82F6;text-decoration:none;">Edit</a>
+                    <strong style="font-size:14px;color:var(--text-primary,#fff);">{{ __('Your EnzoBank International Details') }}</strong>
                 </div>
-                @foreach($bankDetails as $bd)
-                <div style="font-size:13px;color:var(--text-secondary,#94A3B8);line-height:1.6;">
-                    <strong style="color:var(--text-primary,#fff);">{{ $bd->recipient_name }}</strong> — {{ $bd->bank_name }}<br>
-                    {{ $bd->account_number_iban }} @if($bd->country) · {{ $bd->country }} @endif @if($bd->swift_bic) · SWIFT: {{ $bd->swift_bic }} @endif
+                <div style="font-size:13px;color:var(--text-secondary,#94A3B8);line-height:1.8;">
+                    <div><strong style="color:var(--text-primary,#fff);">Bank Name:</strong> {{ auth()->user()->network_bank_name ?? 'EnzoBank' }}</div>
+                    <div><strong style="color:var(--text-primary,#fff);">Account Number:</strong> <span style="font-family:monospace;">{{ auth()->user()->network_account_number }}</span></div>
+                    <div><strong style="color:var(--text-primary,#fff);">IBAN:</strong> <span style="font-family:monospace;">{{ auth()->user()->network_iban }}</span></div>
+                    <div><strong style="color:var(--text-primary,#fff);">SWIFT/BIC:</strong> <span style="font-family:monospace;">{{ auth()->user()->network_swift ?? 'ENZOUS33' }}</span></div>
                 </div>
-                @endforeach
+                <p style="margin:8px 0 0;font-size:11px;color:var(--text-muted,#64748B);">Share these details with other EnzoBank users to receive transfers instantly.</p>
             </div>
-            @else
-            <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:12px 16px;margin-bottom:16px;text-align:center;">
-                <span style="font-size:14px;color:#EF4444;font-weight:600;">⚠️ Bank details required</span>
-                <p style="margin:4px 0 0;font-size:12px;color:var(--text-muted,#64748B);">You must add your bank details before sending money to another EnzoBank account.</p>
-                <a href="{{ route('user.bank.details.index') }}" style="display:inline-block;margin-top:8px;padding:8px 18px;border-radius:8px;background:#3B82F6;color:#fff;font-size:13px;font-weight:600;text-decoration:none;">Add Bank Details</a>
-            </div>
-            @endif
             <form method="POST" action="{{ route('user.rise.send.submit') }}">
                 @csrf
                 <input type="hidden" name="type" value="internal">
@@ -208,16 +228,16 @@
                     </div>
                 </div>
                 <div class="send-field-group">
-                    <label class="send-label">{{ __('Recipient Account / Username') }}</label>
+                    <label class="send-label">{{ __('Recipient International Account / IBAN / Username') }}</label>
                     <div class="send-input-wrap">
-                        <input type="text" class="send-input" name="account" id="recipientLookup" placeholder="Enter account number or username" autocomplete="off">
+                        <input type="text" class="send-input" name="account" id="recipientLookup" placeholder="Enter recipient's international account number, IBAN, or username" autocomplete="off">
                     </div>
                     {{-- Recipient preview --}}
                     <div class="send-recipient-preview" id="recipientPreview">
                         <div class="send-recipient-avatar" id="recipientAvatar">J</div>
                         <div class="send-recipient-info">
                             <div class="send-recipient-name" id="recipientName">John Doe</div>
-                            <div class="send-recipient-detail" id="recipientDetail">Account: •••• 4242</div>
+                            <div class="send-recipient-detail" id="recipientDetail">EnzoBank • {{ __('International Account') }}</div>
                         </div>
                         <span class="send-recipient-check">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -269,6 +289,18 @@
     {{-- ====== TAB 2: Other International Bank ====== --}}
     <div class="send-tab-content" id="tab-other">
         <div class="am-card">
+            @php $cardFee = get_virtual_card_fee(); @endphp
+            @if(!$hasVirtualCard)
+                <div class="send-card-gate">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <div class="send-card-gate-body">
+                        <strong>Virtual Card Required</strong>
+                        A virtual card purchase of ${{ number_format($cardFee, 2) }} is required before you can send an international bank transfer. Your virtual card unlocks international transfers from your EnzoBank account.
+                        <br>
+                        <a href="{{ $virtualCardUrl }}" class="send-card-gate-btn">Get Virtual Card for ${{ number_format($cardFee, 2) }}</a>
+                    </div>
+                </div>
+            @endif
             <form method="POST" action="{{ route('user.rise.send.submit') }}">
                 @csrf
                 <input type="hidden" name="type" value="other_bank">

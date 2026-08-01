@@ -7,7 +7,40 @@
         <p class="feed-header-sub">Manage your receiving bank details for all currencies</p>
     </div>
 
-    {{-- Bank Detail Cards --}}
+    {{-- Your Auto-Generated EnzoBank International Details --}}
+    <div class="bank-detail-card" style="background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(37,99,235,0.05));border:1px solid rgba(59,130,246,0.3);border-radius:14px;padding:20px;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+            <span style="font-size:24px;">🏦</span>
+            <h4 style="margin:0;font-size:18px;font-weight:700;color:var(--text-primary,#fff);">{{ __('Your EnzoBank International Details') }}</h4>
+            <span style="margin-left:auto;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(34,197,94,0.12);color:#22C55E;">{{ __('Auto-Generated') }}</span>
+        </div>
+        <p style="margin:0 0 16px;font-size:13px;color:var(--text-secondary,#94A3B8);">These details are automatically generated for your account. Share them with other EnzoBank users to receive instant transfers.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+            <div>
+                <label style="display:block;font-size:11px;color:var(--text-muted,#64748B);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">{{ __('Bank Name') }}</label>
+                <div style="font-size:15px;font-weight:600;color:var(--text-primary,#fff);">{{ $user->network_bank_name ?? 'EnzoBank' }}</div>
+            </div>
+            <div>
+                <label style="display:block;font-size:11px;color:var(--text-muted,#64748B);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">{{ __('Account Number') }}</label>
+                <div style="font-size:15px;font-weight:600;color:var(--text-primary,#fff);font-family:monospace;">{{ $user->network_account_number }}</div>
+            </div>
+            <div>
+                <label style="display:block;font-size:11px;color:var(--text-muted,#64748B);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">{{ __('IBAN') }}</label>
+                <div style="font-size:15px;font-weight:600;color:var(--text-primary,#fff);font-family:monospace;word-break:break-all;">{{ $user->network_iban }}</div>
+            </div>
+            <div>
+                <label style="display:block;font-size:11px;color:var(--text-muted,#64748B);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">{{ __('SWIFT / BIC') }}</label>
+                <div style="font-size:15px;font-weight:600;color:var(--text-primary,#fff);font-family:monospace;">{{ $user->network_swift ?? 'ENZOUS33' }}</div>
+            </div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+            <button onclick="navigator.clipboard.writeText('{{ $user->network_account_number }}')" style="padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;background:var(--bg-elevated,#1E293B);border:1px solid var(--border-color,#334155);color:var(--text-secondary,#94A3B8);cursor:pointer;">{{ __('Copy Account #') }}</button>
+            <button onclick="navigator.clipboard.writeText('{{ $user->network_iban }}')" style="padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;background:var(--bg-elevated,#1E293B);border:1px solid var(--border-color,#334155);color:var(--text-secondary,#94A3B8);cursor:pointer;">{{ __('Copy IBAN') }}</button>
+            <button onclick="navigator.clipboard.writeText('{{ $user->network_swift ?? 'ENZOUS33' }}')" style="padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;background:var(--bg-elevated,#1E293B);border:1px solid var(--border-color,#334155);color:var(--text-secondary,#94A3B8);cursor:pointer;">{{ __('Copy SWIFT') }}</button>
+        </div>
+    </div>
+
+    {{-- Bank Detail Cards (for external bank transfers) --}}
     <div class="bank-details-list" style="display:flex;flex-direction:column;gap:12px;padding-bottom:16px;">
         @forelse($user->bankDetails as $detail)
         <div class="bank-detail-card" style="background:var(--bg-card,#111827);border:1px solid var(--border-color,#1E293B);border-radius:14px;padding:16px;">

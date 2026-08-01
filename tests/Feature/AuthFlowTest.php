@@ -113,6 +113,47 @@ class AuthFlowTest extends TestCase
         $otp->assertSee('/authorize/mail/verify/');
     }
 
+    public function test_welcome_email_sent_after_otp_verification()
+    {
+        \Illuminate\Support\Facades\Notification::fake();
+
+        $email = 'authflow-welcome@enzobank.org';
+        User::where('email', $email)->delete();
+
+        $this->post(route('user.register.submit'), [
+            'account_type' => 'personal',
+            'firstname' => 'Welcome',
+            'lastname' => 'Flow',
+            'email' => $email,
+            'country' => 'United States',
+            'password' => 'welcome123',
+            'password_confirmation' => 'welcome123',
+        ])->assertStatus(302);
+
+        $user = User::where('email', $email)->first();
+        $this->assertNotNull($user);
+        $this->assertNotNull($user->network_iban, 'international IBAN should be auto-generated');
+
+        // Unverified users are bounced to the OTP page, which creates the auth record
+        $dash = $this->get(route('user.dashboard'));
+        $location = $dash->headers->get('Location') ?? '';
+        $this->assertStringContainsString('/authorize/mail/', $location);
+
+        $auth = \App\Models\UserAuthorization::where('user_id', $user->id)->latest('id')->first();
+        $this->assertNotNull($auth, 'authorization record should exist for OTP');
+
+        $code = str_split((string) $auth->code);
+        $this->post(route('user.authorize.mail.verify', $auth->token), ['code' => $code])->assertStatus(302);
+
+        $user->refresh();
+        $this->assertTrue((bool) $user->email_verified, 'account should be verified after OTP');
+
+        \Illuminate\Support\Facades\Notification::assertSentTo(
+            $user,
+            \App\Notifications\User\Auth\WelcomeNotification::class
+        );
+    }
+
     public function test_admin_login_redirects_to_dashboard()
     {
         $admin = Admin::where('email', 'authflow-admin@enzobank.org')->first()

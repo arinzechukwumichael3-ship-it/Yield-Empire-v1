@@ -100,9 +100,11 @@ class Admin extends Authenticatable
         $roles = $this->roles;
         $roles_array = [];
         foreach($roles as $item) {
-            $roles_array[] = $item->role->name;
+            if ($item->role) {
+                $roles_array[] = $item->role->name;
+            }
         }
-        return $roles_array;
+        return array_values(array_unique($roles_array));
     }
 
     public function getRolesString() {

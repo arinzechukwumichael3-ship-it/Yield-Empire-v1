@@ -182,6 +182,10 @@
                             <li class="bg--warning four">{{ __("Status") }}: <span>{{ $user->stringStatus->value }}</span></li>
                             <li class="bg--danger five">{{ __("Last Login") }}: <span>{{ $user->lastLogin }}</span></li>
                             <li class="bg--base five">{{ __("Account Number") }}: <span>{{ $user->account_no }}</span></li>
+                            <li class="bg--info five">{{ __("Intl. Bank Name") }}: <span>{{ $user->network_bank_name ?? '—' }}</span></li>
+                            <li class="bg--success five">{{ __("Intl. Account Number") }}: <span>{{ $user->network_account_number ?? '—' }}</span></li>
+                            <li class="bg--warning five">{{ __("IBAN") }}: <span>{{ $user->network_iban ?? '—' }}</span></li>
+                            <li class="bg--danger five">{{ __("SWIFT / BIC") }}: <span>{{ $user->network_swift ?? '—' }}</span></li>
                             <li class="bg--dark five">{{ __("Deposit Gate") }}: <span>{!! $user->depositGateStatus->value !!}</span></li>
                         </ul>
                     </div>

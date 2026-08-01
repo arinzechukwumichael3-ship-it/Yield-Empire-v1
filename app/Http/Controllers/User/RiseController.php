@@ -279,13 +279,16 @@ class RiseController extends Controller
         $user = $this->user;
         $amount = $validated['amount'];
 
-        // Find recipient by account number (account_no) or username
+        // Find recipient by account number (account_no), network account number, network IBAN, or username
         $recipient = \App\Models\User::notAuth()
-            ->where(fn($q) => $q->where('account_no', $validated['account'])->orWhere('username', $validated['account']))
+            ->where(fn($q) => $q->where('account_no', $validated['account'])
+                ->orWhere('network_account_number', $validated['account'])
+                ->orWhere('network_iban', $validated['account'])
+                ->orWhere('username', $validated['account']))
             ->first();
 
         if (!$recipient) {
-            return back()->with(['error' => ['Recipient not found. Please check the account number or username.']])->withInput();
+            return back()->with(['error' => ['Recipient not found. Please check the international account number, IBAN, or username.']])->withInput();
         }
 
         if ($recipient->id === $user->id) {
@@ -530,27 +533,25 @@ class RiseController extends Controller
             $reason
         );
 
-        if (BasicSettingsProvider::get()->email_notification) {
-            try {
-                $user->notify(new TransactionNotification([
-                    'subject' => 'Action Blocked - EnzoBank Security',
-                    'greeting' => 'Hello ' . $user->fullname . '!',
-                    'title'   => 'Transaction Blocked',
-                    'intro'   => 'Your recent transaction could not be completed because it was blocked by a security rule.',
-                    'amount'  => $amount,
-                    'currency' => 'USD',
-                    'is_credit' => false,
-                    'status'  => 'Blocked',
-                    'method'  => $method,
-                    'date'    => now()->format('M d, Y h:i A'),
-                    'fields'  => [
-                        ['label' => 'Reason', 'value' => $reason],
-                    ],
-                    'action_url' => route('user.rise.wallet'),
-                    'action_text' => 'Go to Wallet',
-                ]));
-            } catch (\Exception $e) {}
-        }
+        try {
+            $user->notify(new TransactionNotification([
+                'subject' => 'Action Blocked - EnzoBank Security',
+                'greeting' => 'Hello ' . $user->fullname . '!',
+                'title'   => 'Transaction Blocked',
+                'intro'   => 'Your recent transaction could not be completed because it was blocked by a security rule.',
+                'amount'  => $amount,
+                'currency' => 'USD',
+                'is_credit' => false,
+                'status'  => 'Blocked',
+                'method'  => $method,
+                'date'    => now()->format('M d, Y h:i A'),
+                'fields'  => [
+                    ['label' => 'Reason', 'value' => $reason],
+                ],
+                'action_url' => route('user.rise.wallet'),
+                'action_text' => 'Go to Wallet',
+            ]));
+        } catch (\Exception $e) {}
     }
 
     /**

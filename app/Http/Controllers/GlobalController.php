@@ -68,9 +68,19 @@ class GlobalController extends Controller
 
         try{
             if(get_auth_guard() == "web") { // that means auth guard is user-User:: Model // A user can\'t make transaction to own
-                $user = User::notAuth()->where('account_no',$validated['text'])->first();
+                $user = User::notAuth()->where(function($q) use ($validated) {
+                    $q->where('account_no', $validated['text'])
+                      ->orWhere('network_account_number', $validated['text'])
+                      ->orWhere('network_iban', $validated['text'])
+                      ->orWhere('username', $validated['text']);
+                })->first();
             }else {
-                $user = User::where('account_no',$validated['text'])->first();
+                $user = User::where(function($q) use ($validated) {
+                    $q->where('account_no', $validated['text'])
+                      ->orWhere('network_account_number', $validated['text'])
+                      ->orWhere('network_iban', $validated['text'])
+                      ->orWhere('username', $validated['text']);
+                })->first();
             }
         }catch(Exception $e) {
             $error = ['error' => ['Something went wrong!. Please try again.']];

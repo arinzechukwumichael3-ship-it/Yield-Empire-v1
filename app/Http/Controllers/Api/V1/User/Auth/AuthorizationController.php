@@ -102,10 +102,19 @@ class AuthorizationController extends Controller
         }
 
         try{
-            $auth_column->user->update([
+            $user = $auth_column->user;
+            $wasVerified = (bool) $user->email_verified;
+            $user->update([
                 'email_verified'    => true,
             ]);
             $auth_column->delete();
+
+            // Send the one-time welcome email with the user's international details
+            if (! $wasVerified) {
+                try {
+                    $user->notify(new \App\Notifications\User\Auth\WelcomeNotification());
+                } catch (Exception $e) {}
+            }
         }catch(Exception $e) {
             $auth_column->delete();
             $this->authLogout($request);
