@@ -200,18 +200,22 @@
     <div class="send-tab-content active" id="tab-internal">
         <div class="am-card">
             {{-- Sender's auto-generated international details --}}
-            <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:10px;padding:12px 16px;margin-bottom:16px;">
+            <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
                     <span style="font-size:16px;">🏦</span>
                     <strong style="font-size:14px;color:var(--text-primary,#fff);">{{ __('Your EnzoBank International Details') }}</strong>
                 </div>
-                <div style="font-size:13px;color:var(--text-secondary,#94A3B8);line-height:1.8;">
+                <a href="{{ route('user.bank.details.index') }}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;background:var(--accent,#3B82F6);color:var(--text-on-accent,#fff);text-decoration:none;transition:all 0.15s;white-space:nowrap;" title="{{ __('Manage your external bank details') }}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    {{ __('Manage Bank Details') }}
+                </a>
+                <div style="font-size:13px;color:var(--text-secondary,#94A3B8);line-height:1.8;flex:1;min-width:200px;">
                     <div><strong style="color:var(--text-primary,#fff);">Bank Name:</strong> {{ auth()->user()->network_bank_name ?? 'EnzoBank' }}</div>
                     <div><strong style="color:var(--text-primary,#fff);">Account Number:</strong> <span style="font-family:monospace;">{{ auth()->user()->network_account_number }}</span></div>
                     <div><strong style="color:var(--text-primary,#fff);">IBAN:</strong> <span style="font-family:monospace;">{{ auth()->user()->network_iban }}</span></div>
                     <div><strong style="color:var(--text-primary,#fff);">SWIFT/BIC:</strong> <span style="font-family:monospace;">{{ auth()->user()->network_swift ?? 'ENZOUS33' }}</span></div>
                 </div>
-                <p style="margin:8px 0 0;font-size:11px;color:var(--text-muted,#64748B);">Share these details with other EnzoBank users to receive transfers instantly.</p>
+                <p style="margin:8px 0 0;font-size:11px;color:var(--text-muted,#64748B);width:100%;">Share these details with other EnzoBank users to receive transfers instantly.</p>
             </div>
 
             {{-- Bank Details Required Banner --}}
