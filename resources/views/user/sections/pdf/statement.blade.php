@@ -109,56 +109,116 @@
 
     /* ── Footer ── */
     .doc-footer {
-        margin-top: 50px;
-        padding-top: 24px;
-        border-top: 2px solid #0B2A5B;
+        margin-top: 60px;
+        padding-top: 28px;
+        border-top: 3px solid #0B2A5B;
+        position: relative;
+    }
+
+    /* Verification bar */
+    .verify-bar {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
-        gap: 40px;
+        align-items: center;
+        padding: 12px 16px;
+        background: #F0F4FA;
+        border: 1px solid #D1D9E8;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        font-size: 10px;
     }
-    .sign-block {
-        flex: 1;
-        text-align: left;
-    }
-    .sign-label { font-size: 9px; color: #6B7280; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
-    .sign-line-block {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        max-width: 300px;
-    }
-    .sign-line { width: 100%; min-width: 250px; border-top: 1px solid #374151; }
-    .sign-name { font-size: 13px; font-weight: 700; color: #111827; margin-top: 4px; }
-    .sign-title { font-size: 10px; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; }
-    .sign-date { font-size: 10px; color: #9CA3AF; margin-top: 8px; }
+    .verify-bar .verify-item { display: flex; align-items: center; gap: 6px; }
+    .verify-bar .verify-label { color: #6B7280; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .verify-bar .verify-value { color: #111827; font-weight: 700; font-family: monospace; }
+    .verify-bar .verify-qr { width: 56px; height: 56px; background: #fff; border: 1px solid #E5E7EB; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
 
-    .bank-stamp {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        text-align: right;
+    /* Signatory section */
+    .signatory-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 28px;
     }
-    .stamp-circle {
-        width: 100px;
-        height: 100px;
-        border: 2px solid #0B2A5B;
+    .signatory-block { padding: 20px; background: #FAFBFD; border: 1px solid #E5E7EB; border-radius: 10px; }
+    .signatory-header { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #6B7280; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+    .signatory-header::before { content: ""; width: 8px; height: 8px; background: #0B2A5B; border-radius: 50%; }
+    .sign-line-wrap { position: relative; min-height: 60px; }
+    .sign-line { width: 100%; max-width: 320px; border-top: 1.5px solid #1F2937; margin-bottom: 10px; }
+    .sign-name { font-size: 14px; font-weight: 700; color: #111827; }
+    .sign-title { font-size: 11px; color: #6B7280; margin-top: 2px; }
+    .sign-dept { font-size: 10px; color: #9CA3AF; margin-top: 2px; }
+    .sign-date { font-size: 10px; color: #9CA3AF; margin-top: 10px; font-family: monospace; }
+
+    /* Bank stamp/seal */
+    .bank-seal-block { text-align: right; }
+    .bank-seal {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 10px;
+        border: 3px solid #0B2A5B;
         border-radius: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin-bottom: 8px;
-        background: #FAFBFD;
+        background: linear-gradient(135deg, #FAFBFD 0%, #F0F4FA 100%);
+        position: relative;
+        box-shadow: 0 4px 12px rgba(11,42,91,0.1);
     }
-    .stamp-text { font-size: 9px; font-weight: 700; color: #0B2A5B; letter-spacing: 0.5px; text-transform: uppercase; text-align: center; line-height: 1.2; }
-    .stamp-date { font-size: 9px; color: #6B7280; margin-top: 4px; }
+    .bank-seal::before {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border: 1px dashed #0B2A5B;
+        border-radius: 50%;
+    }
+    .seal-inner {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+    .seal-bank-name { font-size: 11px; font-weight: 800; color: #0B2A5B; letter-spacing: 0.3px; line-height: 1.2; }
+    .seal-divider { width: 40px; height: 1px; background: #0B2A5B; margin: 6px auto; }
+    .seal-text { font-size: 8px; font-weight: 700; color: #0B2A5B; text-transform: uppercase; letter-spacing: 1px; line-height: 1.3; }
+    .seal-reg { font-size: 7px; color: #6B7280; margin-top: 4px; line-height: 1.2; }
+    .seal-date { font-size: 9px; color: #6B7280; margin-top: 8px; font-family: monospace; }
 
-    .legal { font-size: 9px; color: #9CA3AF; line-height: 1.6; }
-    .legal a { color: #1D4ED8; text-decoration: none; }
+    /* Legal / disclaimer */
+    .legal-block {
+        margin-top: 24px;
+        padding: 16px;
+        background: #F9FAFC;
+        border: 1px solid #E5E7EB;
+        border-radius: 8px;
+        font-size: 8.5px;
+        color: #6B7280;
+        line-height: 1.7;
+    }
+    .legal-block p { margin: 0 0 8px; }
+    .legal-block p:last-child { margin-bottom: 0; }
+    .legal-block strong { color: #374151; }
+    .legal-block a { color: #1D4ED8; text-decoration: none; }
+
+    /* Page footer with page numbers */
+    .page-footer {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 12px;
+        border-top: 1px solid #E5E7EB;
+        font-size: 8px;
+        color: #9CA3AF;
+    }
+    .page-footer .page-info { font-family: monospace; }
 
     .empty-note { text-align: center; color: #9CA3AF; padding: 30px 0; font-style: italic; }
+
+    @media print {
+        .verify-bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .signatory-block { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .bank-seal { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
 </style>
 </head>
 <body>
@@ -321,26 +381,78 @@
 
     <!-- Footer -->
     <div class="doc-footer">
-        <div class="sign-block">
-            <div class="sign-label">{{ __('Authorized Signature') }}</div>
-            <div class="sign-line-block">
-                <div class="sign-line"></div>
-                <div class="sign-name">{{ $user->fullname }}</div>
-                <div class="sign-title">{{ __('Account Holder') }}</div>
-                <div class="sign-date">{{ __('Date') }}: {{ dateFormat('d M Y', now()) }}</div>
+        <!-- Verification bar -->
+        <div class="verify-bar">
+            <div class="verify-item">
+                <span class="verify-label">{{ __('Statement Ref') }}:</span>
+                <span class="verify-value">{{ $stmtId }}</span>
+            </div>
+            <div class="verify-item">
+                <span class="verify-label">{{ __('Generated') }}:</span>
+                <span class="verify-value">{{ dateFormat('d M Y H:i', now()) }}</span>
+            </div>
+            <div class="verify-item">
+                <span class="verify-label">{{ __('Page') }}:</span>
+                <span class="verify-value">1 / 1</span>
+            </div>
+            <div class="verify-qr" title="{{ __('Scan to verify') }}">{{ __('QR') }}</div>
+        </div>
+
+        <!-- Signatory section -->
+        <div class="signatory-section">
+            <!-- Account Holder Signature -->
+            <div class="signatory-block">
+                <div class="signatory-header">{{ __('Account Holder Signature') }}</div>
+                <div class="sign-line-wrap">
+                    <div class="sign-line"></div>
+                    <div class="sign-name">{{ $user->fullname }}</div>
+                    <div class="sign-title">{{ __('Primary Account Holder') }}</div>
+                    <div class="sign-dept">{{ __('Retail Banking Division') }}</div>
+                    <div class="sign-date">{{ __('Date') }}: {{ dateFormat('d M Y', now()) }}</div>
+                </div>
+            </div>
+
+            <!-- Authorized Bank Officer -->
+            <div class="signatory-block">
+                <div class="signatory-header">{{ __('Authorized Bank Officer') }}</div>
+                <div class="sign-line-wrap">
+                    <div class="sign-line"></div>
+                    <div class="sign-name">{{ $basic_settings->site_name }} Operations</div>
+                    <div class="sign-title">{{ __('Digital Banking Services') }}</div>
+                    <div class="sign-dept">{{ __('Compliance & Operations') }}</div>
+                    <div class="sign-date">{{ __('Date') }}: {{ dateFormat('d M Y', now()) }}</div>
+                </div>
             </div>
         </div>
 
-        <div class="bank-stamp">
-            <div class="stamp-circle">
-                <div class="stamp-text">{{ __('OFFICIAL<br>BANK<br>STAMP') }}</div>
+        <!-- Bank Seal -->
+        <div class="bank-seal-block">
+            <div class="bank-seal">
+                <div class="seal-inner">
+                    <div class="seal-bank-name">{{ $basic_settings->site_name }}</div>
+                    <div class="seal-divider"></div>
+                    <div class="seal-text">{{ __('OFFICIAL<br>BANK SEAL') }}</div>
+                </div>
             </div>
-            <div class="stamp-date">{{ __('Generated') }}: {{ dateFormat('d M Y H:i', now()) }}</div>
+            <div class="seal-reg">
+                {{ __('Regulated by') }} {{ $basic_settings->site_name }}<br>
+                {{ __('Member FDIC / FCA Authorized') }}
+            </div>
+            <div class="seal-date">{{ __('Sealed') }}: {{ dateFormat('d M Y H:i', now()) }}</div>
         </div>
 
-        <div class="legal" style="max-width: 320px;">
-            {{ __('This is a computer-generated statement and does not require a physical signature.') }}<br>
-            {{ __('For inquiries, contact') }} <a href="#0">{{ $basic_settings->site_name }}</a>.
+        <!-- Legal disclaimer -->
+        <div class="legal-block">
+            <p><strong>{{ __('Important Notice:') }}</strong> {{ __('This statement is a computer-generated document and is valid without a physical signature. It reflects transactions processed up to the generation date and time.') }}</p>
+            <p>{{ __('For verification of authenticity, scan the QR code above or visit') }} <a href="{{ url('/') }}">{{ $basic_settings->site_name }}</a> {{ __('and use the statement reference') }} <strong>{{ $stmtId }}</strong>.</p>
+            <p>{{ __('Any discrepancies must be reported within 30 days of the statement date in accordance with applicable banking regulations.') }}</p>
+        </div>
+
+        <!-- Page footer -->
+        <div class="page-footer">
+            <span>{{ __('Confidential - For intended recipient only') }}</span>
+            <span class="page-info">{{ __('Page 1 of 1') }}</span>
+            <span>{{ $basic_settings->site_name }} &copy; {{ date('Y') }}</span>
         </div>
     </div>
 </div>
