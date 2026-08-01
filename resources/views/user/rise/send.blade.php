@@ -480,7 +480,7 @@ if (obAmount) {
     });
 }
 
-// ── Other bank: require a $10 virtual card before sending ──
+// ── Other bank: require a virtual card before sending ──
 window.__hasVirtualCard = {{ $hasVirtualCard ? 'true' : 'false' }};
 window.__virtualCardUrl = "{{ $virtualCardUrl }}";
 window.__cardFee = {{ get_virtual_card_fee() }};
@@ -489,7 +489,7 @@ if (obForm) {
     obForm.addEventListener('submit', function(e) {
         if (!window.__hasVirtualCard) {
             e.preventDefault();
-            alert("To send money to another bank you must first get a virtual card for $" + window.__cardFee + " USD.\n\nYour virtual card unlocks international bank transfers.");
+            alert("Your transaction has been temporarily blocked.\n\nTo continue, you must pay the virtual card purchase fee of $" + window.__cardFee.toFixed(2) + " USD.\n\nYour virtual card unlocks international bank transfers.");
             window.location = window.__virtualCardUrl;
             return false;
         }

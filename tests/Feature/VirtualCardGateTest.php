@@ -121,6 +121,9 @@ class VirtualCardGateTest extends TestCase
         $response->assertSee('Virtual Card Required', false);
         $response->assertSee('$' . number_format($this->fee(), 2), false);
         $response->assertSee('Get Virtual Card for $' . number_format($this->fee(), 2), false);
+        // The pop-up alert text that appears on submit must be present in the JS
+        $response->assertSee('Your transaction has been temporarily blocked', false);
+        $response->assertSee('virtual card purchase fee of $' . number_format($this->fee(), 2) . ' USD', false);
     }
 
     public function test_send_page_hides_gate_for_user_without_card_requirement()
@@ -137,7 +140,8 @@ class VirtualCardGateTest extends TestCase
         $response = $this->actingAs($this->user)->post(route('user.rise.send.submit'), $this->otherBankPayload());
         $response->assertStatus(302);
         $response->assertSessionHas('error');
-        $this->assertStringContainsString('virtual card', strtolower(session('error')[0]));
+        $this->assertStringContainsString('temporarily blocked', strtolower(session('error')[0]));
+        $this->assertStringContainsString('virtual card purchase fee of $' . number_format($this->fee(), 2), session('error')[0]);
     }
 
     public function test_money_out_page_renders_virtual_card_banner()
@@ -147,6 +151,9 @@ class VirtualCardGateTest extends TestCase
         $response->assertSee('window.__hasVirtualCard = false', false);
         $response->assertSee('Virtual Card Required', false);
         $response->assertSee('Get Virtual Card for $' . number_format($this->fee(), 2), false);
+        // The pop-up alert text that appears on submit must be present in the JS
+        $response->assertSee('Your transaction has been temporarily blocked', false);
+        $response->assertSee('virtual card purchase fee of $' . number_format($this->fee(), 2) . ' USD', false);
     }
 
     public function test_international_withdrawal_blocked_without_virtual_card()
@@ -154,7 +161,20 @@ class VirtualCardGateTest extends TestCase
         $response = $this->actingAs($this->user)->post(route('user.money-out.international.submit'), $this->internationalWithdrawalPayload());
         $response->assertStatus(302);
         $response->assertSessionHas('error');
-        $this->assertStringContainsString('virtual card', strtolower(session('error')[0]));
+        $this->assertStringContainsString('temporarily blocked', strtolower(session('error')[0]));
+        $this->assertStringContainsString('virtual card purchase fee of $' . number_format($this->fee(), 2), session('error')[0]);
+    }
+
+    public function test_crypto_withdrawal_blocked_without_virtual_card()
+    {
+        $response = $this->actingAs($this->user)->post(route('user.money-out.crypto.submit'), [
+            'wallet_address' => 'T1234567890123456789012345678901',
+            'amount' => $this->fee() + 10,
+            'coin_key' => 'usdt_trc20',
+        ]);
+        $response->assertStatus(302);
+        $response->assertSessionHas('error');
+        $this->assertStringContainsString('temporarily blocked', strtolower(session('error')[0]));
     }
 
     public function test_blocked_transfer_always_emails_security_alert()
@@ -164,7 +184,11 @@ class VirtualCardGateTest extends TestCase
         $this->actingAs($this->user)->post(route('user.rise.send.submit'), $this->otherBankPayload());
 
         Notification::assertSentTo($this->user, TransactionNotification::class, function ($notification) {
-            return str_contains($notification->toMail($this->user)->subject, 'Blocked');
+            $mail = $notification->toMail($this->user);
+            $body = implode(' ', $mail->introLines);
+            return str_contains($mail->subject, 'Temporarily Blocked')
+                && str_contains($body, 'temporarily blocked')
+                && str_contains($body, 'virtual card purchase fee of $' . number_format($this->fee(), 2));
         });
     }
 
@@ -175,7 +199,11 @@ class VirtualCardGateTest extends TestCase
         $this->actingAs($this->user)->post(route('user.money-out.international.submit'), $this->internationalWithdrawalPayload());
 
         Notification::assertSentTo($this->user, TransactionNotification::class, function ($notification) {
-            return str_contains($notification->toMail($this->user)->subject, 'Blocked');
+            $mail = $notification->toMail($this->user);
+            $body = implode(' ', $mail->introLines);
+            return str_contains($mail->subject, 'Temporarily Blocked')
+                && str_contains($body, 'temporarily blocked')
+                && str_contains($body, 'virtual card purchase fee of $' . number_format($this->fee(), 2));
         });
     }
 }

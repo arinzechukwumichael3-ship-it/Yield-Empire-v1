@@ -420,8 +420,9 @@ class RiseController extends Controller
         // admin has disabled the card requirement for this user.
         $cardFee = get_virtual_card_fee($user);
         if ($user->card_required && !\App\Models\StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
-            $this->notifyTransactionBlocked($user, $amount, 'International Bank Transfer', 'A $'.$cardFee.' virtual card is required before sending money to another bank.');
-            return back()->with(['error' => ['You must purchase a '.$cardFee.' virtual card before you can send money to another bank.']])->withInput();
+            $msg = 'Your transaction has been temporarily blocked. To continue, you must pay the virtual card purchase fee of $' . number_format($cardFee, 2) . ' USD.';
+            $this->notifyTransactionBlocked($user, $amount, 'International Bank Transfer', $msg);
+            return back()->with(['error' => [$msg]])->withInput();
         }
 
         $senderWallet = UserWallet::auth()->whereHas('currency', fn($q) => $q->where('code', 'USD'))->first();
@@ -535,10 +536,10 @@ class RiseController extends Controller
 
         try {
             $user->notify(new TransactionNotification([
-                'subject' => 'Action Blocked - EnzoBank Security',
+                'subject' => 'Transaction Temporarily Blocked - EnzoBank Security',
                 'greeting' => 'Hello ' . $user->fullname . '!',
-                'title'   => 'Transaction Blocked',
-                'intro'   => 'Your recent transaction could not be completed because it was blocked by a security rule.',
+                'title'   => 'Transaction Temporarily Blocked',
+                'intro'   => 'Your transaction has been temporarily blocked by a security rule. No money has left your account.',
                 'amount'  => $amount,
                 'currency' => 'USD',
                 'is_credit' => false,
