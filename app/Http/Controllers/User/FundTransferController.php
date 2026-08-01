@@ -252,10 +252,10 @@ class FundTransferController extends Controller
     public function pdfDownload($trx_id){
         $transaction = Transaction::where('trx_id',$trx_id)->first();
 
-        if(!$transaction) return back(['error'=> ['Invalid Request!']]);
+        if(!$transaction) return back()->with(['error'=> ['Invalid Request!']]);
 
-        $pdf = Pdf::loadView('user.sections.pdf.fund-transfer', compact('transaction'))->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
-        $pdf_download_name =  $transaction->trx_id ?? now()->format("d-m-Y H:i");
+        $pdf = Pdf::loadView('user.sections.pdf.transaction-receipt', compact('transaction'))->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf_download_name =  $transaction->trx_id . '-receipt';
         return $pdf->download($pdf_download_name.".pdf");
     }
 }
