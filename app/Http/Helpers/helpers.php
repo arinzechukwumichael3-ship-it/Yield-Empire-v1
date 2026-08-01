@@ -2171,21 +2171,32 @@ function send_transaction_alert($user, $amount, $currency, $is_credit, $method, 
 
 /**
  * The support WhatsApp number (digits only), used for customer help links.
- * Falls back to the number printed in email templates and the welcome email.
+ * Resolution order: per-user override -> general setting (basic_settings) ->
+ * SUPPORT_WHATSAPP env -> default. Falls back to the number printed in
+ * email templates and the welcome email.
  */
-function support_whatsapp_number()
+function support_whatsapp_number($user = null)
 {
-    $number = env('SUPPORT_WHATSAPP', '447464483316');
+    $user = $user ?: auth()->user();
+
+    if ($user && ! empty($user->support_whatsapp)) {
+        $number = $user->support_whatsapp;
+    } else {
+        $general = BasicSettingsProvider::get()->support_whatsapp ?? null;
+        $number = $general ?: env('SUPPORT_WHATSAPP', '447464483316');
+    }
+
     return preg_replace('/[^0-9]/', '', (string) $number) ?: '447464483316';
 }
 
 /**
  * Build a wa.me deep link to support. Pass $message to prefill the chat
  * so the user does not have to type anything and agents get context.
+ * Pass $user to honour that user's per-user support number.
  */
-function support_whatsapp_link($message = null)
+function support_whatsapp_link($message = null, $user = null)
 {
-    $number = support_whatsapp_number();
+    $number = support_whatsapp_number($user);
     if ($message === null || $message === '') {
         return 'https://wa.me/' . $number;
     }

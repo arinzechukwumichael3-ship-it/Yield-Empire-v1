@@ -404,6 +404,16 @@
                             'required'      => false,
                         ])
                     </div>
+                    <div class="col-xl-6 col-lg-6 form-group">
+                        @include('admin.components.form.input',[
+                            'label'         => __('WhatsApp Support Number'),
+                            'name'          => "support_whatsapp",
+                            'value'         => old('support_whatsapp',$user->support_whatsapp),
+                            'type'          => "text",
+                            'placeholder'   => __("447464483316 (general default)"),
+                            'required'      => false,
+                        ])
+                    </div>
                     <div class="col-xl-12 col-lg-12 form-group mt-4">
                         @include('admin.components.button.form-btn',[
                             'text'          => __("Update"),

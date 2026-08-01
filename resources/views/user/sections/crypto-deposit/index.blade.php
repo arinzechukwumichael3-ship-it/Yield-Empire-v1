@@ -97,6 +97,13 @@
             </button>
         </div>
     </form>
+
+    {{-- Deposit help options (bank transfer, crypto help, other methods) --}}
+    <div style="padding: 0 16px;">
+        @include('user.partials.deposit-help-options', ['depositHelpCryptoAnchor' => '#depositForm'])
+    </div>
+
+    <div style="height:24px"></div>
 </div>
 
 @push("script")

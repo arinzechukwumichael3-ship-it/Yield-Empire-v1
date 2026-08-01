@@ -216,9 +216,7 @@ class PushNotificationController extends Controller
         }
 
         $basic_settings = BasicSettings::first();
-        if(!$basic_settings) {
-            return back()->with(['error' => ['Opps! Basic setting not found!']]);
-        }
+        if(!$basic_settings) $basic_settings = new BasicSettings();
 
         try{
             // Update Push notification config

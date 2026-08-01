@@ -78,6 +78,16 @@
                             <option selected disabled>{{ __("Select Timezone") }}</option>
                         </select>
                     </div>
+                    <div class="col-xl-6 col-lg-6 form-group">
+                        @include('admin.components.form.input',[
+                            'label'         => __("General WhatsApp Support Number"),
+                            'type'          => "text",
+                            'class'         => "form--control",
+                            'placeholder'   => __("447464483316 (used when a user has no personal number)"),
+                            'name'          => "support_whatsapp",
+                            'value'         => old('support_whatsapp',$basic_settings->support_whatsapp),
+                        ])
+                    </div>
                 </div>
                 <div class="col-xl-12 col-lg-12">
                     @include('admin.components.button.form-btn',[

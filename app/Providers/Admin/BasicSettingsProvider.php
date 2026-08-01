@@ -66,5 +66,6 @@ class BasicSettingsProvider {
         'push_notification_config', 'push_notification_activity',
         'broadcast_config', 'broadcast_activity', 'sms_config', 'sms_activity',
         'web_version', 'admin_version', 'created_at', 'updated_at',
+        'support_whatsapp',
     ];
 }

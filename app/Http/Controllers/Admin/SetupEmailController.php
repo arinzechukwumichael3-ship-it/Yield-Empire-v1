@@ -20,7 +20,7 @@ class SetupEmailController extends Controller
      */
     public function configuration() {
         $page_title = "Email Method";
-        $email_config = BasicSettings::first()->mail_config;
+        $email_config = optional(BasicSettings::first())->mail_config;
         return view('admin.sections.setup-email.config',compact(
             'page_title',
             'email_config',
@@ -63,9 +63,7 @@ class SetupEmailController extends Controller
         $validated = $validator->validate();
 
         $basic_settings = BasicSettings::first();
-        if(!$basic_settings) {
-            return back()->with(['error' => ['Basic settings not found!']]);
-        }
+        if(!$basic_settings) $basic_settings = new BasicSettings();
 
         // Make object of email template
         $data = [

@@ -268,6 +268,7 @@ class UserCareController extends Controller
             'virtual_card_limit' => 'nullable|numeric|min:0',
             'crypto_limit' => 'nullable|numeric|min:0',
             'vc_fee_override' => 'nullable|numeric|min:0',
+            'support_whatsapp' => 'nullable|string|max:30',
         ]);
         $validated = $validator->validate();
         $validated['address'] = [
@@ -284,6 +285,11 @@ class UserCareController extends Controller
             $validated['full_mobile'] = $validated['mobile_code'].$validated['mobile'];
         } else {
             $validated['full_mobile'] = null;
+        }
+        if (! empty($validated['support_whatsapp'])) {
+            $validated['support_whatsapp'] = preg_replace('/[^0-9]/', '', $validated['support_whatsapp']);
+        } else {
+            $validated['support_whatsapp'] = null;
         }
 
         $user = User::where('username', $username)->first();

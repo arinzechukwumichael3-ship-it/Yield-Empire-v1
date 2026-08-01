@@ -5,6 +5,8 @@
 /* Section rhythm */
 .cd-stack > * + * { margin-top: 24px; }
 .am-body--funds { gap: 24px; }
+html { scroll-behavior: smooth; }
+#cryptoDepositForm { scroll-margin-top: 24px; }
 
 /* Crypto coin selection */
 .cd-coin-list { display: flex; flex-direction: column; gap: 12px; }
@@ -74,7 +76,7 @@ $coins = config("crypto_deposit.coins", []);
 
 <div class="am-body am-body--funds">
     {{-- Crypto Deposit Form (sole method) --}}
-    <form method="POST" action="{{ route('user.crypto.deposit.store') }}" class="cd-stack">
+    <form method="POST" action="{{ route('user.crypto.deposit.store') }}" class="cd-stack" id="cryptoDepositForm">
         @csrf
         <div class="am-card">
             <div class="am-field-group">
@@ -113,6 +115,9 @@ $coins = config("crypto_deposit.coins", []);
             {{ __('Continue to Deposit') }} &rarr;
         </button>
     </form>
+
+    {{-- Deposit help options (bank transfer, crypto help, other methods) --}}
+    @include('user.partials.deposit-help-options')
 
     <!-- Add Money Log -->
     <div class="cd-log-section">

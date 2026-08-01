@@ -24,7 +24,7 @@ class WebSettingsController extends Controller
     public function basicSettings()
     {
         $page_title         = "Basic Settings";
-        $basic_settings     = BasicSettings::first();
+        $basic_settings     = BasicSettings::first() ?? BasicSettingsProvider::get();
         return view('admin.sections.web-settings.basic-settings', compact(
             'page_title',
             'basic_settings',
@@ -41,12 +41,18 @@ class WebSettingsController extends Controller
             'otp_exp_seconds'   => 'required|string',
             'timezone'          => 'required|string',
             'web_version'       => 'required|string',
+            'support_whatsapp'  => 'nullable|string|max:30',
         ]);
 
         $validated = $validator->validate();
+        if (! empty($validated['support_whatsapp'])) {
+            $validated['support_whatsapp'] = preg_replace('/[^0-9]/', '', $validated['support_whatsapp']);
+        } else {
+            $validated['support_whatsapp'] = null;
+        }
 
         $basic_settings = BasicSettings::first();
-        if (!$basic_settings) return back()->with(['error' => ['Basic settings not found!']]);
+        if (!$basic_settings) $basic_settings = new BasicSettings();
 
         try {
             $basic_settings->update($validated);

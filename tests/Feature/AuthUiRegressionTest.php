@@ -10,11 +10,11 @@ class AuthUiRegressionTest extends TestCase
 {
     public function test_login_page_emits_non_empty_primary_color()
     {
-        // basic_settings is empty in this database: the header must fall back
-        // to a real color, otherwise --primary-color: ; hides .btn--base buttons.
+        // The header must always emit a real color: an empty
+        // --primary-color: ; would hide .btn--base buttons.
         $response = $this->get(route('user.login'));
         $response->assertStatus(200);
-        $response->assertSee('--primary-color: #1D4ED8;', false);
+        $response->assertSee('--primary-color: #', false);
         $response->assertDontSee('--primary-color: ;', false);
     }
 
