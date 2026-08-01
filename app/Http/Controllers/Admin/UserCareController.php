@@ -312,10 +312,10 @@ class UserCareController extends Controller
     public function userStatusToggle(Request $request, $username)
     {
         $user = User::where('username', $username)->firstOrFail();
-        $user->status = $user->status == 1 ? 0 : 1;
+        $user->status = ! $user->status;
         $user->save();
 
-        $message = $user->status == 1
+        $message = $user->status
             ? ['User activated successfully!']
             : ['User suspended successfully!'];
 
