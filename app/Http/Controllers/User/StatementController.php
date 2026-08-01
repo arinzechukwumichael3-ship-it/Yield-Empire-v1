@@ -10,6 +10,9 @@ use App\Constants\PaymentGatewayConst;
 use App\Models\UserWallet;
 use App\Providers\Admin\BasicSettingsProvider;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\User\StatementNotification;
 
 class StatementController extends Controller
 {
@@ -127,6 +130,25 @@ class StatementController extends Controller
 
         $basic_settings    = BasicSettingsProvider::get();
         $pdf_download_name = $basic_settings->site_name . '-statement.pdf';
+
+        // Save PDF to storage for email attachment
+        $pdfContent = $pdf->output();
+        $storagePath = 'statements/' . Auth::id() . '/' . $pdf_download_name;
+        Storage::disk('local')->put($storagePath, $pdfContent);
+
+        // Email the statement to the user
+        $periodLabel = $request->from_date && $request->to_date
+            ? $request->from_date . ' to ' . $request->to_date
+            : 'All Time';
+        try {
+            Auth::user()->notify(new StatementNotification(
+                storage_path('app/' . $storagePath),
+                $periodLabel
+            ));
+        } catch (\Exception $e) {
+            // Log but don't fail the download
+            \Log::warning('Failed to email statement: ' . $e->getMessage());
+        }
 
         return $pdf->download($pdf_download_name);
     }

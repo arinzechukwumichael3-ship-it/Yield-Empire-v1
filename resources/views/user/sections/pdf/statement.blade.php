@@ -109,17 +109,53 @@
 
     /* ── Footer ── */
     .doc-footer {
-        margin-top: 40px;
-        padding-top: 16px;
-        border-top: 1px solid #E5E7EB;
+        margin-top: 50px;
+        padding-top: 24px;
+        border-top: 2px solid #0B2A5B;
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: flex-start;
+        gap: 40px;
     }
-    .sign { text-align: left; }
-    .sign-line { width: 200px; border-top: 1px dashed #9CA3AF; margin-bottom: 6px; }
-    .sign-label { font-size: 10px; color: #6B7280; }
-    .legal { font-size: 9px; color: #9CA3AF; text-align: right; max-width: 320px; line-height: 1.6; }
+    .sign-block {
+        flex: 1;
+        text-align: left;
+    }
+    .sign-label { font-size: 9px; color: #6B7280; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+    .sign-line-block {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        max-width: 300px;
+    }
+    .sign-line { width: 100%; min-width: 250px; border-top: 1px solid #374151; }
+    .sign-name { font-size: 13px; font-weight: 700; color: #111827; margin-top: 4px; }
+    .sign-title { font-size: 10px; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; }
+    .sign-date { font-size: 10px; color: #9CA3AF; margin-top: 8px; }
+
+    .bank-stamp {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        text-align: right;
+    }
+    .stamp-circle {
+        width: 100px;
+        height: 100px;
+        border: 2px solid #0B2A5B;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+        background: #FAFBFD;
+    }
+    .stamp-text { font-size: 9px; font-weight: 700; color: #0B2A5B; letter-spacing: 0.5px; text-transform: uppercase; text-align: center; line-height: 1.2; }
+    .stamp-date { font-size: 9px; color: #6B7280; margin-top: 4px; }
+
+    .legal { font-size: 9px; color: #9CA3AF; line-height: 1.6; }
     .legal a { color: #1D4ED8; text-decoration: none; }
 
     .empty-note { text-align: center; color: #9CA3AF; padding: 30px 0; font-style: italic; }
@@ -285,11 +321,24 @@
 
     <!-- Footer -->
     <div class="doc-footer">
-        <div class="sign">
-            <div class="sign-line"></div>
+        <div class="sign-block">
             <div class="sign-label">{{ __('Authorized Signature') }}</div>
+            <div class="sign-line-block">
+                <div class="sign-line"></div>
+                <div class="sign-name">{{ $user->fullname }}</div>
+                <div class="sign-title">{{ __('Account Holder') }}</div>
+                <div class="sign-date">{{ __('Date') }}: {{ dateFormat('d M Y', now()) }}</div>
+            </div>
         </div>
-        <div class="legal">
+
+        <div class="bank-stamp">
+            <div class="stamp-circle">
+                <div class="stamp-text">{{ __('OFFICIAL<br>BANK<br>STAMP') }}</div>
+            </div>
+            <div class="stamp-date">{{ __('Generated') }}: {{ dateFormat('d M Y H:i', now()) }}</div>
+        </div>
+
+        <div class="legal" style="max-width: 320px;">
             {{ __('This is a computer-generated statement and does not require a physical signature.') }}<br>
             {{ __('For inquiries, contact') }} <a href="#0">{{ $basic_settings->site_name }}</a>.
         </div>
