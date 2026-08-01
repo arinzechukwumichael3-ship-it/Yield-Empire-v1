@@ -177,6 +177,46 @@ class VirtualCardGateTest extends TestCase
         $this->assertStringContainsString('temporarily blocked', strtolower(session('error')[0]));
     }
 
+    public function test_user_requires_virtual_card_treats_null_as_required()
+    {
+        $this->user->update(['card_required' => true]);
+        $this->assertTrue(user_requires_virtual_card($this->user));
+
+        // Simulate a row where the flag is missing entirely (NULL / absent
+        // attribute): it must still be treated as required.
+        $missing = $this->user->replicate();
+        unset($missing->card_required);
+        $this->assertTrue(user_requires_virtual_card($missing), 'A missing card_required flag must still require a card');
+
+        $this->user->update(['card_required' => false]);
+        $this->assertFalse(user_requires_virtual_card($this->user));
+
+        $this->user->update(['card_required' => true]);
+    }
+
+    public function test_virtual_card_block_message_names_the_fee()
+    {
+        $msg = virtual_card_block_message(get_virtual_card_fee($this->user));
+        $this->assertStringContainsString('temporarily blocked', strtolower($msg));
+        $this->assertStringContainsString('virtual card purchase fee of $' . number_format($this->fee(), 2), $msg);
+    }
+
+    public function test_notify_virtual_card_blocked_creates_alert_and_email()
+    {
+        Notification::fake();
+
+        $msg = notify_virtual_card_blocked($this->user, 50, 'International Bank Transfer', 'USD');
+
+        $this->assertStringContainsString('temporarily blocked', strtolower($msg));
+        $this->assertDatabaseHas('user_notifications', ['user_id' => $this->user->id]);
+        Notification::assertSentTo($this->user, TransactionNotification::class, function ($notification) use ($msg) {
+            $mail = $notification->toMail($this->user);
+            $body = implode(' ', $mail->introLines);
+            return str_contains($mail->subject, 'Temporarily Blocked')
+                && str_contains($body, $msg);
+        });
+    }
+
     public function test_blocked_transfer_always_emails_security_alert()
     {
         Notification::fake();

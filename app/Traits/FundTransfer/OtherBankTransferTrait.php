@@ -5,6 +5,7 @@ use Exception;
 use App\Models\UserWallet;
 use App\Models\Beneficiary;
 use App\Models\Transaction;
+use App\Models\StrowalletVirtualCard;
 use Illuminate\Http\Request;
 use App\Models\TemporaryData;
 use App\Constants\GlobalConst;
@@ -85,6 +86,14 @@ trait OtherBankTransferTrait{
             ->first();
         if(!$sender_wallet) return back()->with(['error' => ['Your wallet not found']]);
         if($charges->payable > $sender_wallet->balance) return back()->with(['error' => ['Your wallet balance is insufficient']]);
+
+        // Other-bank transfers require a virtual card first, unless the
+        // admin has disabled the card requirement for this user.
+        $user = $sender_wallet->user;
+        if (user_requires_virtual_card($user) && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
+            $msg = notify_virtual_card_blocked($user, $charges->request_amount ?? 0, 'International Bank Transfer', $charges->sender_currency ?? 'USD');
+            return back()->with(['error' => [$msg]]);
+        }
 
         $trx_id = generateTrxString('transactions','trx_id','FT-',14);
         // Make Transaction

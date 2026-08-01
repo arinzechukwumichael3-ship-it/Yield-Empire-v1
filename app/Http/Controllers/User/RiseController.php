@@ -219,7 +219,7 @@ class RiseController extends Controller
         // Treat the card requirement as satisfied when the admin has disabled
         // it for this user, so the UI gate does not block other-bank transfers.
         $hasVirtualCard = $user
-            ? (!$user->card_required || \App\Models\StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists())
+            ? (!user_requires_virtual_card($user) || \App\Models\StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists())
             : false;
         $virtualCardUrl = route('user.strowallet.virtual.card.index');
 
@@ -419,8 +419,8 @@ class RiseController extends Controller
         // Other-bank transfers require a virtual card first, unless the
         // admin has disabled the card requirement for this user.
         $cardFee = get_virtual_card_fee($user);
-        if ($user->card_required && !\App\Models\StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
-            $msg = 'Your transaction has been temporarily blocked. To continue, you must pay the virtual card purchase fee of $' . number_format($cardFee, 2) . ' USD.';
+        if (user_requires_virtual_card($user) && !\App\Models\StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
+            $msg = virtual_card_block_message($cardFee);
             $this->notifyTransactionBlocked($user, $amount, 'International Bank Transfer', $msg);
             return back()->with(['error' => [$msg]])->withInput();
         }

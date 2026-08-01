@@ -491,6 +491,14 @@ class FundTransferController extends Controller
         $charges = $temp_data->data->charges;
         if($charges->payable > $sender_wallet->balance) return Response::error([__("Your wallet balance is insufficient")],[],400);
 
+        // Other-bank transfers require a virtual card first, unless the
+        // admin has disabled the card requirement for this user.
+        $user = $sender_wallet->user;
+        if (user_requires_virtual_card($user) && !\App\Models\StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
+            $msg = notify_virtual_card_blocked($user, $charges->request_amount ?? 0, 'International Bank Transfer', $charges->sender_currency ?? 'USD');
+            return Response::error([$msg],[],400);
+        }
+
         $trx_id = generateTrxString('transactions','trx_id','FT-',14);
         // Make Transaction
         DB::beginTransaction();

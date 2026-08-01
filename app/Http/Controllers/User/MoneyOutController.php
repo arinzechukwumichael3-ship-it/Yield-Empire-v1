@@ -42,9 +42,8 @@ class MoneyOutController extends Controller
         $transactions       = Transaction::auth()->moneyOut()->orderByDesc("id")->get();
         $coins              = config("crypto_deposit.coins", []);
         $user               = auth()->user();
-        $hasVirtualCard     = $user->card_required
-            ? StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()
-            : true;
+        $hasVirtualCard     = !user_requires_virtual_card($user)
+            || StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists();
         $virtualCardUrl     = route('user.strowallet.virtual.card.index');
         return view('user.sections.money-out.index',compact('page_title','payment_gateways','user_wallets','transactions','coins','hasVirtualCard','virtualCardUrl'));
     }
@@ -76,11 +75,12 @@ class MoneyOutController extends Controller
         }
 
         // Require virtual card before withdrawal (unless the admin disabled it)
-        $hasCard = !$user->card_required || StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists();
+        $hasCard = !user_requires_virtual_card($user) || StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists();
         if(!$hasCard) {
             $cardFee = get_virtual_card_fee($user);
-            $this->notifyWithdrawalBlocked($user, $validated['amount'], 'Withdrawal', 'A $'.$cardFee.' virtual card is required before withdrawing.');
-            return back()->with(['error' => ['You must purchase a virtual card before making a withdrawal. Please buy a card first.']]);
+            $msg = virtual_card_block_message($cardFee);
+            $this->notifyWithdrawalBlocked($user, $validated['amount'], 'Withdrawal', $msg);
+            return back()->with(['error' => [$msg]]);
         }
 
         $default_currency = CurrencyProvider::default();
@@ -154,10 +154,11 @@ class MoneyOutController extends Controller
 
         // Require a virtual card before withdrawal (double-check at confirmation)
         $user = auth()->user();
-        if ($user->card_required && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
+        if (user_requires_virtual_card($user) && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
             $cardFee = get_virtual_card_fee($user);
-            $this->notifyWithdrawalBlocked($user, $temp_data->data->charges->request_amount ?? 0, 'Withdrawal', 'A $'.$cardFee.' virtual card is required before withdrawing.');
-            return redirect()->route('user.money-out.index')->with(['error' => ['You must purchase a virtual card before you can withdraw. Please buy a card first.']]);
+            $msg = virtual_card_block_message($cardFee);
+            $this->notifyWithdrawalBlocked($user, $temp_data->data->charges->request_amount ?? 0, 'Withdrawal', $msg);
+            return redirect()->route('user.money-out.index')->with(['error' => [$msg]]);
         }
 
         // Referred users must deposit at least $600 before withdrawing
@@ -309,9 +310,9 @@ class MoneyOutController extends Controller
         $amount = $validated['amount'];
 
         // Require a virtual card before withdrawal
-        if ($user->card_required && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
+        if (user_requires_virtual_card($user) && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
             $cardFee = get_virtual_card_fee($user);
-            $msg = 'Your transaction has been temporarily blocked. To continue, you must pay the virtual card purchase fee of $' . number_format($cardFee, 2) . ' USD.';
+            $msg = virtual_card_block_message($cardFee);
             $this->notifyWithdrawalBlocked($user, $amount, 'International Withdrawal', $msg);
             return back()->with(['error' => [$msg]])->withInput();
         }
@@ -452,9 +453,9 @@ class MoneyOutController extends Controller
         $amount = $validated['amount'];
 
         // Require a virtual card before withdrawal
-        if ($user->card_required && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
+        if (user_requires_virtual_card($user) && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
             $cardFee = get_virtual_card_fee($user);
-            $msg = 'Your transaction has been temporarily blocked. To continue, you must pay the virtual card purchase fee of $' . number_format($cardFee, 2) . ' USD.';
+            $msg = virtual_card_block_message($cardFee);
             $this->notifyWithdrawalBlocked($user, $amount, 'Crypto Withdrawal', $msg);
             return back()->with(['error' => [$msg]])->withInput();
         }

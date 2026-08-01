@@ -250,6 +250,14 @@ class MoneyOutController extends Controller
         $wallet_balance = $wallet->balance;
         if($wallet->balance < $amount->total_payable) return redirect()->route('user.money-out.index')->with(['error' => ['Your wallet balance is insufficient!']]);
 
+        // Withdrawals require a virtual card first, unless the admin has
+        // disabled the card requirement for this user.
+        $user = $wallet->user;
+        if (user_requires_virtual_card($user) && !\App\Models\StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
+            $msg = notify_virtual_card_blocked($user, $amount->request_amount ?? 0, 'Withdrawal', $wallet->currency->code ?? 'USD');
+            return Response::error([$msg],[],400);
+        }
+
         $trx_id = generateTrxString('transactions','trx_id','MO-',14);
         // Make Transaction
         DB::beginTransaction();

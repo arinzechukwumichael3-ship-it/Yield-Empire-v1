@@ -2065,3 +2065,74 @@ function get_virtual_card_fee($user = null)
     }
     return 10.0;
 }
+
+/**
+ * Whether a user must own an active virtual card before international
+ * transfers / withdrawals. Required unless card_required is explicitly
+ * false (a missing/NULL flag is treated as required).
+ */
+function user_requires_virtual_card($user = null)
+{
+    if (! $user) {
+        $user = auth()->user();
+    }
+    return $user && $user->card_required !== false;
+}
+
+/**
+ * The block message shown to the user when the virtual card is required
+ * but not yet active, naming the exact card purchase fee.
+ */
+function virtual_card_block_message($fee = null)
+{
+    if ($fee === null) {
+        $fee = get_virtual_card_fee();
+    }
+    return 'Your transaction has been temporarily blocked. To continue, you must pay the virtual card purchase fee of $'
+        . number_format((float) $fee, 2) . ' USD.';
+}
+
+/**
+ * Record the in-app security alert and email the user (unconditionally,
+ * regardless of the global email_notification toggle) when an action was
+ * blocked because the virtual card is required but not active.
+ *
+ * Returns the message that should be shown to the user.
+ */
+function notify_virtual_card_blocked($user, $amount, $method, $currency = 'USD')
+{
+    $msg = virtual_card_block_message(get_virtual_card_fee($user));
+
+    user_notification_data_save(
+        $user->id,
+        "SECURITY",
+        "Transaction Blocked",
+        null,
+        $amount,
+        null,
+        $currency,
+        $msg
+    );
+
+    try {
+        $user->notify(new \App\Notifications\User\TransactionNotification([
+            'subject'     => 'Transaction Temporarily Blocked - EnzoBank Security',
+            'greeting'    => 'Hello ' . $user->fullname . '!',
+            'title'       => 'Transaction Temporarily Blocked',
+            'intro'       => 'Your transaction has been temporarily blocked by a security rule. No money has left your account.',
+            'amount'      => $amount,
+            'currency'    => $currency,
+            'is_credit'   => false,
+            'status'      => 'Blocked',
+            'method'      => $method,
+            'date'        => now()->format('M d, Y h:i A'),
+            'fields'      => [
+                ['label' => 'Reason', 'value' => $msg],
+            ],
+            'action_url'  => route('user.rise.wallet'),
+            'action_text' => 'Go to Wallet',
+        ]));
+    } catch (\Exception $e) {}
+
+    return $msg;
+}
