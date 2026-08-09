@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>Security PIN — EnzoBank</title>
+<title>Security PIN — YieldEmpire</title>
 <style>html,body{background:#0A0E1A;margin:0;height:100%;}*{margin:0;padding:0;box-sizing:border-box;}</style>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }

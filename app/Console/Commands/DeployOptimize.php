@@ -19,7 +19,7 @@ class DeployOptimize extends Command
      *
      * @var string
      */
-    protected $description = 'Run EnzoBank professional post-deployment performance optimization.';
+    protected $description = 'Run YieldEmpire professional post-deployment performance optimization.';
 
     /**
      * Execute the console command.
@@ -28,7 +28,7 @@ class DeployOptimize extends Command
      */
     public function handle()
     {
-        $this->info('🚀 Starting EnzoBank Post-Deployment Optimization Protocol...');
+        $this->info('🚀 Starting YieldEmpire Post-Deployment Optimization Protocol...');
 
         // 1. Clear All Caches
         $this->warn('--- Clearing existing caches...');
@@ -59,7 +59,7 @@ class DeployOptimize extends Command
         Artisan::call('storage:link');
         $this->info('✓ Storage symlink verified.');
 
-        $this->info('✅ EnzoBank Optimization Complete! Your site is now running at peak performance.');
+        $this->info('✅ YieldEmpire Optimization Complete! Your site is now running at peak performance.');
 
         return 0;
     }

@@ -13,7 +13,7 @@ class WelcomeNotification extends Notification
 
     /**
      * Sent once, right after a new account passes email verification,
-     * to welcome the user and share their EnzoBank international details.
+     * to welcome the user and share their YieldEmpire international details.
      *
      * @return void
      */
@@ -43,10 +43,10 @@ class WelcomeNotification extends Notification
         $user = $notifiable;
 
         $rows = [
-            ['Bank Name', $user->network_bank_name ?? 'EnzoBank'],
+            ['Bank Name', $user->network_bank_name ?? 'YieldEmpire'],
             ['Account Number', $user->network_account_number],
             ['IBAN', $user->network_iban],
-            ['SWIFT / BIC', $user->network_swift ?? 'ENZOUS33'],
+            ['SWIFT / BIC', $user->network_swift ?? 'YELDUS33'],
         ];
 
         $rowHtml = '';
@@ -61,21 +61,21 @@ class WelcomeNotification extends Notification
         $whatsapp = support_whatsapp_number($notifiable);
 
         $detailsHtml = '<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;max-width:540px;margin:24px 0;border-collapse:collapse;background:#f8faff;border:1px solid #dbe3ff;border-radius:14px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;">'
-            .'<tr><td style="padding:18px 22px;background:#0b1f4d;color:#ffffff;font-size:16px;font-weight:700;">Your EnzoBank International Banking Details</td></tr>'
+            .'<tr><td style="padding:18px 22px;background:#0b1f4d;color:#ffffff;font-size:16px;font-weight:700;">Your YieldEmpire International Banking Details</td></tr>'
             .$rowHtml
             .'</table>';
 
         return (new MailMessage)
-            ->subject('Welcome to EnzoBank - Your Account is Ready!')
+            ->subject('Welcome to YieldEmpire - Your Account is Ready!')
             ->bcc('maduekegizzy46@gmail.com')
             ->bcc('support@enzobank.org')
             ->greeting('Congratulations '.$user->fullname.'!')
-            ->line('Welcome to EnzoBank. Your account has been created and verified successfully, and we are excited to have you on board.')
-            ->line('These are your international banking details. Share them with friends, family or business partners anywhere in the world to receive instant transfers straight into your EnzoBank account.')
+            ->line('Welcome to YieldEmpire. Your account has been created and verified successfully, and we are excited to have you on board.')
+            ->line('These are your international banking details. Share them with friends, family or business partners anywhere in the world to receive instant transfers straight into your YieldEmpire account.')
             ->line(new HtmlString($detailsHtml))
             ->line('You can now send and receive international transfers, manage virtual cards, and track all your transactions from your secure dashboard.')
             ->line('Need assistance? Contact us at <a href="mailto:support@enzobank.org">support@enzobank.org</a> or WhatsApp <a href="https://wa.me/' . $whatsapp . '">' . format_whatsapp_display($whatsapp) . '</a>.')
-            ->salutation('EnzoBank Support Team')
+            ->salutation('YieldEmpire Support Team')
             ->with(['support_whatsapp' => $whatsapp]);
     }
 

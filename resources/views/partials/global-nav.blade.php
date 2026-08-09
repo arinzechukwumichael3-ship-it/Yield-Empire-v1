@@ -2,15 +2,15 @@
     $user_notifications = auth()->check() ? get_user_notifications() : collect([]);
     $unread_count = auth()->check() ? (new \App\Models\UserNotification)->where('user_id', auth()->id())->where('is_read', false)->count() : 0;
 @endphp
-<!-- ====== GLOBAL ENZOBANK NAVBAR ====== -->
+<!-- ====== GLOBAL YIELD EMPIRE NAVBAR ====== -->
 <header class="global-nav" id="globalNav">
     <div class="global-nav-inner">
         <!-- Left Section -->
         <div class="global-nav-left">
             <!-- Logo -->
             <a href="{{ auth()->check() ? route('user.rise.home') : route('frontend.index') }}" class="global-logo">
-                <img src="{{ asset('backend/images/web-settings/image-assets/enzobank-logo.png') }}" alt="EnzoBank" class="global-logo-img">
-                <span class="global-logo-text">Enzo<span class="global-logo-accent">Bank</span></span>
+                <img src="{{ asset('backend/images/web-settings/image-assets/yieldempire-logo.png') }}" alt="YieldEmpire" class="global-logo-img">
+                <span class="global-logo-text">Yield<span class="global-logo-accent">Empire</span></span>
             </a>
             <!-- Breadcrumb (App) -->
             @auth

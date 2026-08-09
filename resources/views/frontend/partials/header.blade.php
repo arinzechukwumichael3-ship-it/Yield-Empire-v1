@@ -2,13 +2,13 @@
     $setup_pages = DB::table("setup_pages")->where("status", true)->get();
 @endphp
 
-<!-- ====== NEW ENZOBANK NAVBAR ====== -->
+<!-- ====== NEW YIELD EMPIRE NAVBAR ====== -->
 <header class="enzonav" id="enzonav">
     <div class="enzonav-inner">
         <!-- Logo -->
         <a href="{{ setRoute("frontend.index") }}" class="enzonav-logo">
-            <img src="{{ asset('backend/images/web-settings/image-assets/enzobank-logo.png') }}" alt="EnzoBank" class="enzonav-logo-img">
-            <span class="enzonav-logo-text">Enzo<span class="enzonav-logo-accent">Bank</span></span>
+            <img src="{{ asset('backend/images/web-settings/image-assets/yieldempire-logo.png') }}" alt="YieldEmpire" class="enzonav-logo-img">
+            <span class="enzonav-logo-text">Yield<span class="enzonav-logo-accent">Empire</span></span>
         </a>
 
         <!-- Desktop Nav Links -->

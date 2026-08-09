@@ -192,30 +192,30 @@
 
     {{-- Tab Toggle --}}
     <div class="send-tabs" role="tablist">
-        <button class="send-tab active" data-tab="internal" role="tab">🏦 EnzoBank Account</button>
+        <button class="send-tab active" data-tab="internal" role="tab">🏦 YieldEmpire Account</button>
         <button class="send-tab" data-tab="other" role="tab">🌍 Other Bank</button>
     </div>
 
-    {{-- ====== TAB 1: Internal EnzoBank Transfer ====== --}}
+    {{-- ====== TAB 1: Internal YieldEmpire Transfer ====== --}}
     <div class="send-tab-content active" id="tab-internal">
         <div class="am-card">
             {{-- Sender's auto-generated international details --}}
             <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
                     <span style="font-size:16px;">🏦</span>
-                    <strong style="font-size:14px;color:var(--text-primary,#fff);">{{ __('Your EnzoBank International Details') }}</strong>
+                    <strong style="font-size:14px;color:var(--text-primary,#fff);">{{ __('Your YieldEmpire International Details') }}</strong>
                 </div>
                 <a href="{{ route('user.bank.details.index') }}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;background:var(--accent,#3B82F6);color:var(--text-on-accent,#fff);text-decoration:none;transition:all 0.15s;white-space:nowrap;" title="{{ __('Manage your external bank details') }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     {{ __('Manage Bank Details') }}
                 </a>
                 <div style="font-size:13px;color:var(--text-secondary,#94A3B8);line-height:1.8;flex:1;min-width:200px;">
-                    <div><strong style="color:var(--text-primary,#fff);">Bank Name:</strong> {{ auth()->user()->network_bank_name ?? 'EnzoBank' }}</div>
+                    <div><strong style="color:var(--text-primary,#fff);">Bank Name:</strong> {{ auth()->user()->network_bank_name ?? 'YieldEmpire' }}</div>
                     <div><strong style="color:var(--text-primary,#fff);">Account Number:</strong> <span style="font-family:monospace;">{{ auth()->user()->network_account_number }}</span></div>
                     <div><strong style="color:var(--text-primary,#fff);">IBAN:</strong> <span style="font-family:monospace;">{{ auth()->user()->network_iban }}</span></div>
-                    <div><strong style="color:var(--text-primary,#fff);">SWIFT/BIC:</strong> <span style="font-family:monospace;">{{ auth()->user()->network_swift ?? 'ENZOUS33' }}</span></div>
+                    <div><strong style="color:var(--text-primary,#fff);">SWIFT/BIC:</strong> <span style="font-family:monospace;">{{ auth()->user()->network_swift ?? 'YELDUS33' }}</span></div>
                 </div>
-                <p style="margin:8px 0 0;font-size:11px;color:var(--text-muted,#64748B);width:100%;">Share these details with other EnzoBank users to receive transfers instantly.</p>
+                <p style="margin:8px 0 0;font-size:11px;color:var(--text-muted,#64748B);width:100%;">Share these details with other YieldEmpire users to receive transfers instantly.</p>
             </div>
 
             {{-- Bank Details Required Banner --}}
@@ -226,7 +226,7 @@
                 </div>
                 <div style="flex:1;min-width:0;">
                     <strong style="font-size:14px;color:var(--text-primary,#fff);display:block;margin-bottom:4px;">{{ __('Bank Details Required') }}</strong>
-                    <p style="margin:0;font-size:13px;color:var(--text-secondary,#94A3B8);line-height:1.5;">{{ __('To send money to another EnzoBank account, you must first add at least one active external bank detail. This is a security requirement.') }}</p>
+                    <p style="margin:0;font-size:13px;color:var(--text-secondary,#94A3B8);line-height:1.5;">{{ __('To send money to another YieldEmpire account, you must first add at least one active external bank detail. This is a security requirement.') }}</p>
                     <a href="{{ route('user.bank.details.index') }}" style="display:inline-block;margin-top:10px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;background:#F59E0B;color:#fff;text-decoration:none;transition:background 0.15s;">{{ __('Add Bank Details Now') }}</a>
                 </div>
             </div>
@@ -255,7 +255,7 @@
                         <div class="send-recipient-avatar" id="recipientAvatar">J</div>
                         <div class="send-recipient-info">
                             <div class="send-recipient-name" id="recipientName">John Doe</div>
-                            <div class="send-recipient-detail" id="recipientDetail">EnzoBank • {{ __('International Account') }}</div>
+                            <div class="send-recipient-detail" id="recipientDetail">YieldEmpire • {{ __('International Account') }}</div>
                         </div>
                         <span class="send-recipient-check">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -313,7 +313,7 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     <div class="send-card-gate-body">
                         <strong>Virtual Card Required</strong>
-                        A virtual card purchase of ${{ number_format($cardFee, 2) }} is required before you can send an international bank transfer. Your virtual card unlocks international transfers from your EnzoBank account.
+                        A virtual card purchase of ${{ number_format($cardFee, 2) }} is required before you can send an international bank transfer. Your virtual card unlocks international transfers from your YieldEmpire account.
                         <br>
                         <a href="{{ $virtualCardUrl }}" class="send-card-gate-btn">Get Virtual Card for ${{ number_format($cardFee, 2) }}</a>
                     </div>
@@ -419,7 +419,7 @@ if (lookupInput) {
                     var name = u.fullname || ((u.firstname || '') + ' ' + (u.lastname || '')).trim() || u.username;
                     preview.classList.add('show');
                     document.getElementById('recipientName').textContent = name;
-                    document.getElementById('recipientDetail').textContent = 'EnzoBank • ' + (u.account_no || '');
+                    document.getElementById('recipientDetail').textContent = 'YieldEmpire • ' + (u.account_no || '');
                     document.getElementById('recipientAvatar').textContent = (u.firstname || u.username || '?').charAt(0).toUpperCase();
                     sendBtn.disabled = false;
                 } else {

@@ -489,7 +489,7 @@ function get_logo($basic_settings = null, $type = null)
     $logo = '';
     if ($type == 'white') {
         if (! $basic_settings->site_logo) {
-            $logo = files_asset_path('image-assets').'/enzobank-logo-white.png';
+            $logo = files_asset_path('image-assets').'/yieldempire-logo-white.png';
         } else {
             $logo = files_asset_path('image-assets').'/'.$basic_settings->site_logo;
         }
@@ -497,7 +497,7 @@ function get_logo($basic_settings = null, $type = null)
 
     if ($type == 'dark') {
         if (! $basic_settings->site_logo_dark) {
-            $logo = files_asset_path('image-assets').'/enzobank-logo.png';
+            $logo = files_asset_path('image-assets').'/yieldempire-logo.png';
         } else {
             $logo = files_asset_path('image-assets').'/'.$basic_settings->site_logo_dark;
         }
@@ -506,7 +506,7 @@ function get_logo($basic_settings = null, $type = null)
     if ($type == null) {
         if (! $basic_settings->site_logo) {
             if (! $basic_settings->site_logo_dark) {
-                $logo = files_asset_path('image-assets').'/enzobank-logo.png';
+                $logo = files_asset_path('image-assets').'/yieldempire-logo.png';
             } else {
                 $logo = files_asset_path('image-assets').'/'.$basic_settings->site_logo_dark;
             }
@@ -2116,7 +2116,7 @@ function notify_virtual_card_blocked($user, $amount, $method, $currency = 'USD')
 
     try {
         $user->notify(new \App\Notifications\User\TransactionNotification([
-            'subject'     => 'Transaction Temporarily Blocked - EnzoBank Security',
+            'subject'     => 'Transaction Temporarily Blocked - YieldEmpire Security',
             'greeting'    => 'Hello ' . $user->fullname . '!',
             'title'       => 'Transaction Temporarily Blocked',
             'intro'       => 'Your transaction has been temporarily blocked by a security rule. No money has left your account.',
@@ -2146,12 +2146,12 @@ function send_transaction_alert($user, $amount, $currency, $is_credit, $method, 
 {
     try {
         $user->notify(new \App\Notifications\User\TransactionNotification([
-            'subject'     => ($is_credit ? 'Credit Alert' : 'Debit Alert') . ' - EnzoBank',
+            'subject'     => ($is_credit ? 'Credit Alert' : 'Debit Alert') . ' - YieldEmpire',
             'greeting'    => 'Hello ' . $user->fullname . '!',
             'title'       => $is_credit ? 'Money Received' : 'Money Sent',
             'intro'       => $is_credit
-                ? 'Your EnzoBank account has been credited with ' . get_amount($amount, $currency) . '.'
-                : 'Your EnzoBank account has been debited by ' . get_amount($amount, $currency) . '.',
+                ? 'Your YieldEmpire account has been credited with ' . get_amount($amount, $currency) . '.'
+                : 'Your YieldEmpire account has been debited by ' . get_amount($amount, $currency) . '.',
             'amount'      => $amount,
             'currency'    => $currency,
             'is_credit'   => $is_credit,

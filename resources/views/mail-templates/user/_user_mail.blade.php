@@ -1,4 +1,4 @@
-# {{ $subject ?? 'New Message from EnzoBank' }}
+# {{ $subject ?? 'New Message from YieldEmpire' }}
 
 Hi **{{ $name }}**,
 
@@ -10,4 +10,4 @@ Hi **{{ $name }}**,
 Email: support@enzobank.org  
 WhatsApp: +44 7464 483316
 
-&copy; {{ date('Y') }} EnzoBank. All rights reserved.
+&copy; {{ date('Y') }} YieldEmpire. All rights reserved.

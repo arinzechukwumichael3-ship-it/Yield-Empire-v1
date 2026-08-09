@@ -638,7 +638,7 @@ $totalValue = $holdings->sum(function ($h) {
     <div class="inv-modal-sheet">
         <div class="inv-modal-handle"></div>
         <div class="inv-modal-title">How Investing Works</div>
-        <div class="inv-modal-sub">Everything you need to know to get started with EnzoBank Rise investing</div>
+        <div class="inv-modal-sub">Everything you need to know to get started with YieldEmpire Rise investing</div>
 
         <div class="inv-modal-step">
             <div class="inv-modal-step-num">1</div>
@@ -652,7 +652,7 @@ $totalValue = $holdings->sum(function ($h) {
             <div class="inv-modal-step-num">2</div>
             <div class="inv-modal-step-body">
                 <h4>Fund Your Investment</h4>
-                <p>Transfer funds from your EnzoBank wallet to your investment account. You can start with as little as $10. Add funds anytime to increase your position.</p>
+                <p>Transfer funds from your YieldEmpire wallet to your investment account. You can start with as little as $10. Add funds anytime to increase your position.</p>
             </div>
         </div>
 

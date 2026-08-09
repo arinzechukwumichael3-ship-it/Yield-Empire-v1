@@ -150,7 +150,7 @@
                 <div class="card-top">
                     <div class="card-logo">
                         <span class="logo-circle"></span>
-                        <span>EnzoBank</span>
+                        <span>YieldEmpire</span>
                     </div>
                     <div class="card-chip">
                         <i class="las la-wifi"></i>

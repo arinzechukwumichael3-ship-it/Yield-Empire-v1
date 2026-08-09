@@ -1,59 +1,5 @@
 @extends('user.layouts.rise-master')
 
-@push('css')
-<style>
-.dash-welcome {
-    padding: 0 0 2px;
-    animation: fadeSlideDown 0.6s ease-out;
-}
-.dash-page.dash-home {
-    padding-top: 4px;
-}
-.dash-welcome-greeting {
-    font-size: 14px;
-    color: #64748B;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-}
-.dash-welcome-name {
-    font-size: 26px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #F1F5F9 0%, #3B82F6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
-    animation: shimmer 3s ease-in-out infinite;
-    background-size: 200% 100%;
-}
-.dash-welcome-tagline {
-    font-size: 13px;
-    color: #64748B;
-    margin-top: 2px;
-    font-weight: 400;
-}
-@keyframes fadeSlideDown {
-    0% { opacity: 0; transform: translateY(-12px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-@keyframes shimmer {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-}
-@media (prefers-color-scheme: light) {
-    .dash-welcome-greeting { color: #64748B; }
-    .dash-welcome-name {
-        background: linear-gradient(135deg, #0F172A 0%, #3B82F6 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-    }
-    .dash-welcome-tagline { color: #64748B; }
-}
-</style>
-@endpush
-
 @section('content')
 @php
 $user = auth()->user();
@@ -66,38 +12,64 @@ $gbpBalance = $gbpWallet ? $gbpWallet->balance : 0;
 $eurBalance = $eurWallet ? $eurWallet->balance : 0;
 $balance = $usdBalance;
 $transactions = $transactions ?? collect([]);
+$todayTransactions = $todayTransactions ?? $transactions;
 $accountNo = $user->account_no ?? '0000000000';
+$userInitial = strtoupper(substr($user->firstname ?? $user->username, 0, 1));
+
+/* Net change across today's activity (credit = +, debit = -) */
+$netToday = 0;
+foreach ($todayTransactions as $t) {
+    $isReceived = ($t->attribute ?? '') === 'RECEIVED'
+        || (in_array($t->type ?? '', ['ADD-MONEY', 'TRANSFER-MONEY']) && ($t->receiver_id ?? null) == $user->id);
+    $amt = (float)($t->request_amount ?? 0);
+    $netToday += $isReceived ? $amt : -$amt;
+}
+$pnl = $netToday;
+$pnlPct = $balance > 0 ? ($pnl / $balance) * 100 : 0;
+$pnlIsPos = $pnl >= 0;
 @endphp
 
 <div class="dash-page dash-home">
 
-    <!--===== WELCOME MESSAGE =====-->
-    <div class="dash-welcome">
-        <div class="dash-welcome-greeting">{{ __('Welcome back') }}</div>
-        <div class="dash-welcome-name">{{ $user->fullname ?? $user->username }}</div>
-        <div class="dash-welcome-tagline">{{ __('Your financial hub, at a glance') }}</div>
+    <!--===== TOP HEADER: identity + icon cluster =====-->
+    <div class="yh-head">
+        <div class="yh-head-side">
+            <div class="yh-avatar">
+                @if($user->userImage && !str_contains($user->userImage, 'profile-default'))
+                    <img src="{{ $user->userImage }}" alt="{{ $user->username }}">
+                @else
+                    <span>{{ $userInitial }}</span>
+                @endif
+            </div>
+            <div class="yh-ident">
+                <span class="yh-ident-name">{{ $user->fullname ?? $user->username }}</span>
+                <span class="yh-ident-mask">ACCOUNT ••••{{ substr($accountNo, -4) }}</span>
+            </div>
+        </div>
+        <div class="yh-head-actions">
+            <a href="{{ setRoute('user.profile.index') }}" class="yh-head-btn" aria-label="Settings">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </a>
+            <a href="{{ setRoute('user.rise.account') }}" class="yh-head-btn" aria-label="Menu">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+            </a>
+        </div>
     </div>
 
-    <!--===== BALANCE CARD =====-->
+    <!--===== HERO BALANCE CARD =====-->
     <div class="dash-balance-card">
         <div class="dash-balance-top">
             <div class="dash-balance-currency-tabs">
-                <button class="dash-currency-tab active" data-currency="usd">
-                    <span class="dash-currency-flag">🇺🇸</span> USD
-                </button>
-                <button class="dash-currency-tab" data-currency="eur">
-                    <span class="dash-currency-flag">🇪🇺</span> EUR
-                </button>
-                <button class="dash-currency-tab" data-currency="gbp">
-                    <span class="dash-currency-flag">🇬🇧</span> GBP
-                </button>
+                <button class="dash-currency-tab active" data-currency="usd">USD</button>
+                <button class="dash-currency-tab" data-currency="eur">EUR</button>
+                <button class="dash-currency-tab" data-currency="gbp">GBP</button>
             </div>
             <div class="dash-balance-actions-top">
                 <button class="dash-copy-btn" onclick="copyAccountNo('{{ $accountNo }}', this)" aria-label="Copy account number">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 </button>
                 <button class="dash-eye-btn" id="dashBalanceToggle" aria-label="Toggle balance visibility">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
             </div>
         </div>
@@ -106,16 +78,76 @@ $accountNo = $user->account_no ?? '0000000000';
             <span class="dash-balance-account-no">****{{ substr($accountNo, -4) }}</span>
         </div>
         <div class="dash-balance-amount-row">
-            <span class="dash-balance-label">TOTAL BALANCE</span>
+            <span class="dash-balance-label">Total Assets</span>
             <span class="dash-balance-amount" id="dashBalanceAmount" data-usd="{{ number_format($usdBalance, 2) }}" data-gbp="{{ number_format($gbpBalance, 2) }}" data-eur="{{ number_format($eurBalance, 2) }}">${{ number_format($balance, 2) }}</span>
+        </div>
+        <div class="yh-pnl">
+            <span class="yh-pnl-cap">Today</span>
+            <span class="yh-pnl-badge {{ $pnlIsPos ? 'pos' : 'neg' }}">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="{{ $pnlIsPos ? '23 18 13.5 8.5 8.5 13.5 1 6' : '23 6 13.5 15.5 8.5 10.5 1 18' }}"/><polyline points="{{ $pnlIsPos ? '17 18 23 18 23 12' : '17 6 23 6 23 12' }}"/></svg>
+                {{ $pnlIsPos ? '+' : '-' }}{{ number_format(abs($pnl), 2) }}
+                ({{ $pnlIsPos ? '+' : '' }}{{ number_format($pnlPct, 2) }}%)
+            </span>
+            <span class="yh-pnl-sub">vs total assets</span>
+        </div>
+
+        <!-- Primary + secondary actions -->
+        <div class="yh-cta">
+            <a href="{{ setRoute('user.add.money.index') }}" class="yh-cta-btn yh-cta-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                {{ __('Deposit') }}
+            </a>
+            <a href="{{ setRoute('user.money-out.index') }}" class="yh-cta-btn yh-cta-ghost">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                {{ __('Withdraw') }}
+            </a>
         </div>
     </div>
 
-    <!--===== VIRTUAL CARD PREVIEW =====-->
+    <!--===== QUICK ACTIONS (circular) =====-->
+    <div class="dash-actions-row">
+        <a href="{{ setRoute('user.rise.send') }}" class="dash-action-pill">
+            <div class="dash-action-icon dash-action-icon-yellow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </div>
+            <span class="dash-action-label">Transfer</span>
+        </a>
+        <a href="{{ setRoute('user.investments.offers') }}" class="dash-action-pill">
+            <div class="dash-action-icon dash-action-icon-green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+            </div>
+            <span class="dash-action-label">Invest</span>
+        </a>
+        <a href="{{ setRoute('user.strowallet.virtual.card.index') }}" class="dash-action-pill">
+            <div class="dash-action-icon dash-action-icon-blue">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><line x1="5" y1="15" x2="9" y2="15"/></svg>
+            </div>
+            <span class="dash-action-label">Cards</span>
+        </a>
+        <a href="{{ route('user.loans.index') }}" class="dash-action-pill">
+            <div class="dash-action-icon dash-action-icon-purple">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <span class="dash-action-label">Loans</span>
+        </a>
+    </div>
+
+    <!--===== REFERRAL / EARN BANNER =====-->
+    <div class="dash-referral-banner">
+        <div class="dash-referral-banner-content">
+            <div class="dash-referral-banner-text">
+                <span class="dash-referral-banner-title">Refer & Earn</span>
+                <span class="dash-referral-banner-sub">Get $50 for each friend you invite</span>
+            </div>
+            <a href="{{ route('user.rise.refer') }}" class="dash-referral-banner-btn">Invite</a>
+        </div>
+    </div>
+
+    <!--===== MY CARD PREVIEW =====-->
     <div class="dash-card-preview">
         <div class="dash-card-preview-inner">
             <div class="dash-card-preview-chip">
-                <svg width="32" height="24" viewBox="0 0 40 30" fill="none"><rect x="0.5" y="0.5" width="39" height="29" rx="4.5" fill="#F59E0B" fill-opacity="0.35"/><rect x="3" y="3" width="12" height="9" rx="2" fill="#F59E0B" fill-opacity="0.7"/><rect x="3" y="17" width="12" height="9" rx="2" fill="#F59E0B" fill-opacity="0.7"/><rect x="18" y="3" width="18" height="23" rx="3" fill="#F59E0B" fill-opacity="0.45"/></svg>
+                <svg width="32" height="24" viewBox="0 0 40 30" fill="none"><rect x="0.5" y="0.5" width="39" height="29" rx="4.5" fill="#F5B84C" fill-opacity="0.35"/><rect x="3" y="3" width="12" height="9" rx="2" fill="#F5B84C" fill-opacity="0.7"/><rect x="3" y="17" width="12" height="9" rx="2" fill="#F5B84C" fill-opacity="0.7"/><rect x="18" y="3" width="18" height="23" rx="3" fill="#F5B84C" fill-opacity="0.45"/></svg>
             </div>
             <div class="dash-card-preview-number">**** **** **** 4242</div>
             <div class="dash-card-preview-bottom">
@@ -128,115 +160,81 @@ $accountNo = $user->account_no ?? '0000000000';
                     <span class="dash-card-preview-date">12/28</span>
                 </div>
             </div>
-            <a href="#" class="dash-card-preview-link">
+            <a href="{{ setRoute('user.strowallet.virtual.card.index') }}" class="dash-card-preview-link" aria-label="Manage card">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
             </a>
-        </div>
-    </div>
-
-    <!--===== REFERRAL BANNER =====-->
-    <div class="dash-referral-banner">
-        <div class="dash-referral-banner-content">
-            <div class="dash-referral-banner-text">
-                <span class="dash-referral-banner-title">Refer & Earn</span>
-                <span class="dash-referral-banner-sub">Get $50 for each friend you invite</span>
-            </div>
-            <a href="{{ route('user.rise.refer') }}" class="dash-referral-banner-btn">Invite</a>
-        </div>
-    </div>
-
-    <!--===== ACTION PILLS (Main Services) =====-->
-    <div class="dash-actions-row">
-        <a href="{{ setRoute('user.add.money.index') }}" class="dash-action-pill">
-            <div class="dash-action-icon dash-action-icon-blue">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </div>
-            <span class="dash-action-label">Add Money</span>
-        </a>
-        <a href="{{ route('user.rise.send') }}" class="dash-action-pill">
-            <div class="dash-action-icon dash-action-icon-yellow">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/></svg>
-            </div>
-            <span class="dash-action-label">Transfer</span>
-        </a>
-        <a href="{{ setRoute('user.investments.offers') }}" class="dash-action-pill">
-            <div class="dash-action-icon dash-action-icon-purple">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-            </div>
-            <span class="dash-action-label">Invest</span>
-        </a>
-        <a href="{{ setRoute('user.strowallet.virtual.card.index') }}" class="dash-action-pill">
-            <div class="dash-action-icon dash-action-icon-teal">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><line x1="5" y1="15" x2="9" y2="15"/></svg>
-            </div>
-            <span class="dash-action-label">Cards</span>
-        </a>
-    </div>
-
-    <!--===== ADDITIONAL SERVICES =====-->
-    <div class="dash-services-row">
-        <a href="{{ setRoute('user.money-out.index') }}" class="dash-service-pill">
-            <div class="dash-service-icon dash-service-icon-red">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            </div>
-            <span class="dash-service-label">Withdraw</span>
-        </a>
-        <a href="{{ setRoute('user.loans.index') }}" class="dash-service-pill">
-            <div class="dash-service-icon dash-service-icon-amber">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            </div>
-            <span class="dash-service-label">Loans</span>
-        </a>
-    </div>
-
-    <!--===== STAT CARDS =====-->
-    <div class="dash-stats-row">
-        <div class="dash-stat-card dash-stat-in">
-            <div class="dash-stat-icon-wrap dash-stat-icon-green">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            </div>
-            <div class="dash-stat-info">
-                <span class="dash-stat-label">Money In</span>
-                <span class="dash-stat-value">${{ number_format($transactions->whereIn('type', ['ADD-MONEY', 'TRANSFER-MONEY'])->sum('request_amount'), 2) }}</span>
-            </div>
-        </div>
-        <div class="dash-stat-card dash-stat-out">
-            <div class="dash-stat-icon-wrap dash-stat-icon-red">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
-            </div>
-            <div class="dash-stat-info">
-                <span class="dash-stat-label">Money Out</span>
-                <span class="dash-stat-value">${{ number_format($transactions->whereIn('type', ['MONEY-OUT', 'TRANSFER-MONEY'])->sum('request_amount'), 2) }}</span>
-            </div>
         </div>
     </div>
 
     <!--===== INVEST & GROW =====-->
     <div class="dash-section-header">
         <span class="dash-section-title">Invest & Grow</span>
-        <a href="{{ setRoute('user.rise.invest') }}" class="dash-section-link">See all</a>
+        <a href="{{ setRoute('user.investments.offers') }}" class="dash-section-link">See all</a>
     </div>
     <div class="dash-invest-scroll">
+        @forelse($investment_plans->take(8) as $plan)
+        @php
+            $termMs = is_array($plan->maturities) ? $plan->maturities : [];
+            $termLabel = count($termMs) > 1
+                ? min($termMs) . '-' . max($termMs) . ' months'
+                : ((count($termMs) === 1 && ($termMs[0] ?? 0) > 0) ? $termMs[0] . ' months' : 'Flexible');
+        @endphp
         <div class="dash-invest-card">
-            <div class="dash-invest-badge">★ USD</div>
+            <div class="dash-invest-badge">{{ strtoupper($plan->symbol ?? 'USD') }}</div>
+            <div class="dash-invest-name">{{ $plan->name ?? 'Investment Plan' }}</div>
+            <div class="dash-invest-rate">{{ rtrim(rtrim(number_format((float)($plan->base_yield ?? 0.00), 2), '0'), '.') }}% /yr</div>
+            <div class="dash-invest-duration">{{ $termLabel }}</div>
+            <a href="{{ route('user.invest.new') }}" class="dash-invest-btn">Invest Now</a>
+        </div>
+        @empty
+        <div class="dash-invest-card">
+            <div class="dash-invest-badge">USD</div>
             <div class="dash-invest-name">Growth Plan</div>
             <div class="dash-invest-rate">10% /yr</div>
             <div class="dash-invest-duration">3-12 months</div>
-            <a href="{{ setRoute('user.rise.invest') }}" class="dash-invest-btn">Invest Now</a>
+            <a href="{{ setRoute('user.investments.offers') }}" class="dash-invest-btn">Invest Now</a>
         </div>
-        <div class="dash-invest-card">
-            <div class="dash-invest-badge">★ USD</div>
-            <div class="dash-invest-name">Premium Plus</div>
-            <div class="dash-invest-rate">15% /yr</div>
-            <div class="dash-invest-duration">6-24 months</div>
-            <a href="{{ setRoute('user.rise.invest') }}" class="dash-invest-btn">Invest Now</a>
+        @endforelse
+    </div>
+
+    <!--===== ASSETS / HOLDINGS =====-->
+    <div class="dash-section-header">
+        <span class="dash-section-title">Assets</span>
+        <a href="{{ route('user.rise.wallet') }}" class="dash-section-link">Wallet</a>
+    </div>
+    <div class="yh-assets">
+        <div class="yh-asset">
+            <div class="yh-asset-ico">US</div>
+            <div class="yh-asset-mid">
+                <span class="yh-asset-name">US Dollar</span>
+                <span class="yh-asset-ticker">USD Main Account</span>
+            </div>
+            <div class="yh-asset-right">
+                <span class="yh-asset-val">${{ number_format($usdBalance, 2) }}</span>
+                <span class="yh-asset-chg flat">&mdash;</span>
+            </div>
         </div>
-        <div class="dash-invest-card">
-            <div class="dash-invest-badge">★ GBP</div>
-            <div class="dash-invest-name">Sterling Vault</div>
-            <div class="dash-invest-rate">23% /yr</div>
-            <div class="dash-invest-duration">12 months</div>
-            <a href="{{ setRoute('user.rise.invest') }}" class="dash-invest-btn">Invest Now</a>
+        <div class="yh-asset">
+            <div class="yh-asset-ico eu">EU</div>
+            <div class="yh-asset-mid">
+                <span class="yh-asset-name">Euro</span>
+                <span class="yh-asset-ticker">EUR Account</span>
+            </div>
+            <div class="yh-asset-right">
+                <span class="yh-asset-val">&euro;{{ number_format($eurBalance, 2) }}</span>
+                <span class="yh-asset-chg flat">&mdash;</span>
+            </div>
+        </div>
+        <div class="yh-asset">
+            <div class="yh-asset-ico gbp">GB</div>
+            <div class="yh-asset-mid">
+                <span class="yh-asset-name">Pound Sterling</span>
+                <span class="yh-asset-ticker">GBP Account</span>
+            </div>
+            <div class="yh-asset-right">
+                <span class="yh-asset-val">&pound;{{ number_format($gbpBalance, 2) }}</span>
+                <span class="yh-asset-chg flat">&mdash;</span>
+            </div>
         </div>
     </div>
 
@@ -252,17 +250,13 @@ $accountNo = $user->account_no ?? '0000000000';
             $isReceived = ($tx->attribute ?? '') === 'RECEIVED' || (in_array($tx->type ?? '', ['ADD-MONEY', 'TRANSFER-MONEY']) && ($tx->receiver_id ?? null) == auth()->id());
             $isCredit = $isReceived;
             if ($tx->type === 'MOBILE-WALLET-TRANSFER' && $txDetails) {
-                if ($isReceived) {
-                    $txLabel = 'From: ' . ($txDetails->sender_name ?? 'Someone');
-                } else {
-                    $txLabel = 'To: ' . ($txDetails->receiver_name ?? 'Someone');
-                }
+                $txLabel = $isReceived ? 'From: ' . ($txDetails->sender_name ?? 'Someone') : 'To: ' . ($txDetails->receiver_name ?? 'Someone');
             } else {
                 $txLabel = $tx->type ?? 'Transaction';
             }
         @endphp
         <div class="dash-tx-item">
-            <div class="dash-tx-icon {{ $isCredit ? 'dash-tx-icon-green' : 'dash-tx-icon-red' }}">
+            <div class="dash-tx-icon dash-tx-icon-{{ $isCredit ? 'green' : 'red' }}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="{{ $isCredit ? '23 6 13.5 15.5 8.5 10.5 1 18' : '23 18 13.5 8.5 8.5 13.5 1 6' }}"/>
                 </svg>
@@ -306,8 +300,8 @@ $accountNo = $user->account_no ?? '0000000000';
     var currencySymbols = { usd: '$', eur: '€', gbp: '£' };
     var toggleBtn = document.getElementById('dashBalanceToggle');
     var balanceEl = document.getElementById('dashBalanceAmount');
-    var openEye = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
-    var closedEye = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+    var openEye = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    var closedEye = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
 
     // --- Balance visibility toggle (persisted) ---
     if (toggleBtn && balanceEl) {
@@ -326,7 +320,6 @@ $accountNo = $user->account_no ?? '0000000000';
     // --- Currency tab switching (persisted) ---
     var tabs = document.querySelectorAll('.dash-currency-tab');
     if (tabs.length && balanceEl) {
-        // Restore saved currency on load
         var savedCurrency = localStorage.getItem(STORAGE_KEY_CURRENCY);
         if (savedCurrency) {
             var savedTab = document.querySelector('.dash-currency-tab[data-currency="' + savedCurrency + '"]');
@@ -364,7 +357,7 @@ $accountNo = $user->account_no ?? '0000000000';
         if (navigator.clipboard) {
             navigator.clipboard.writeText(accountNo).then(function() {
                 var orig = btn.innerHTML;
-                btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+                btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
                 setTimeout(function() { btn.innerHTML = orig; }, 1500);
             });
         }
@@ -380,7 +373,7 @@ $accountNo = $user->account_no ?? '0000000000';
         });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.dash-balance-card, .dash-card-preview, .dash-referral-banner, .dash-action-pill, .dash-service-pill, .dash-stat-card, .dash-invest-card, .dash-tx-item, .dash-contact-row, .dash-section-header').forEach(function(el) {
+    document.querySelectorAll('.yh-head, .dash-balance-card, .dash-card-preview, .dash-referral-banner, .dash-action-pill, .dash-invest-card, .yh-assets, .dash-tx-item, .dash-contact-row, .dash-section-header').forEach(function(el) {
         el.classList.add('dash-fade-in');
         observer.observe(el);
     });

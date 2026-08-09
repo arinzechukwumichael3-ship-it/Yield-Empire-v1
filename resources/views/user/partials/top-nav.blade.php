@@ -298,7 +298,7 @@
             }
         });
 
-        // --- EnzoBank Click-to-Copy Logic ---
+        // --- YieldEmpire Click-to-Copy Logic ---
         window.copyAccountNo = async function(customValue = null, element = null) {
             const container = document.querySelector('.account-pill-v2');
             const accountNo = customValue || (container ? container.getAttribute('data-account-number') : '');
@@ -344,7 +344,7 @@
                     }, 2000);
                 }
 
-                showEnzoToast('success', 'Your EnzoBank account number has been copied!');
+                showEnzoToast('success', 'Your YieldEmpire account number has been copied!');
             } catch (err) {
                 showEnzoToast('error', 'Unable to copy. Please try manually.');
             }

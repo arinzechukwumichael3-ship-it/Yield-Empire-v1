@@ -35,7 +35,7 @@ class SendMail extends Notification
             ->line(new HtmlString($data->message))
             ->line(new HtmlString('&mdash;'))
             ->line(new HtmlString('Need assistance? Contact us at <a href="mailto:support@enzobank.org">support@enzobank.org</a> or WhatsApp <a href="https://wa.me/' . $whatsapp . '">' . format_whatsapp_display($whatsapp) . '</a>.'))
-            ->salutation('EnzoBank Support Team')
+            ->salutation('YieldEmpire Support Team')
             ->with(['support_whatsapp' => $whatsapp]);
     }
 

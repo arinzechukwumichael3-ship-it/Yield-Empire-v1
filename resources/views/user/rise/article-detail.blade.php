@@ -65,7 +65,7 @@
 function shareArticle() {
     if (navigator.share) {
         navigator.share({
-            title: '{{ addslashes($article->title ?? "EnzoBank Article") }}',
+            title: '{{ addslashes($article->title ?? "YieldEmpire Article") }}',
             text: '{{ addslashes(Str::limit(strip_tags($article->data->description ?? ""), 120)) }}',
             url: window.location.href,
         });

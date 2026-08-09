@@ -39,12 +39,12 @@
 
             <div class="enzo-hero-right">
                 <div class="virtual-card-wrapper">
-                    <div class="virtual-card" role="img" aria-label="EnzoBank virtual card preview">
+                    <div class="virtual-card" role="img" aria-label="YieldEmpire virtual card preview">
                         <!-- Holographic shimmer overlay -->
                         <div class="card-shimmer"></div>
                         <!-- Card top row -->
                         <div class="enzo-card-top">
-                            <span class="enzo-card-brand">EnzoBank</span>
+                            <span class="enzo-card-brand">YieldEmpire</span>
                             <span class="enzo-card-visa">VISA</span>
                         </div>
                         <!-- Chip SVG -->

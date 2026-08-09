@@ -22,7 +22,7 @@
             </div>
             <div class="enzo-about-image" data-aos="fade-left" data-aos-delay="100">
                 @if($about_image)
-                    <img src="{{ get_image($about_image, 'site-section') }}" alt="{{ __('About EnzoBank') }}">
+                    <img src="{{ get_image($about_image, 'site-section') }}" alt="{{ __('About YieldEmpire') }}">
                 @else
                     <div class="enzo-about-placeholder">
                         <i class="las la-university"></i>

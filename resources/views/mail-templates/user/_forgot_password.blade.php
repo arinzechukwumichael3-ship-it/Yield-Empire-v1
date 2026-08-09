@@ -2,7 +2,7 @@
 
 Hi **{{ $username }}**,
 
-We received a request to reset the password for your EnzoBank account.
+We received a request to reset the password for your YieldEmpire account.
 
 ## Reset Code
 
@@ -18,4 +18,4 @@ This code expires in 15 minutes. If you did not request a password reset, please
 Email: support@enzobank.org  
 WhatsApp: +44 7464 483316
 
-&copy; {{ date('Y') }} EnzoBank. All rights reserved.
+&copy; {{ date('Y') }} YieldEmpire. All rights reserved.

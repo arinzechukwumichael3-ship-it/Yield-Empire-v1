@@ -282,7 +282,7 @@
     // ── Notification System ──
     (function(){
         var recentNotifs = @json($recentNotifs);
-        var notifKey = "enzobank_notif_seen";
+        var notifKey = "yieldempire_notif_seen";
         var stored = localStorage.getItem(notifKey);
         var seenIds = stored ? JSON.parse(stored) : [];
         var newNotifs = recentNotifs.filter(function(n) { return seenIds.indexOf(n.id) === -1; });

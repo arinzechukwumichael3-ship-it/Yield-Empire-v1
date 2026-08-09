@@ -4,7 +4,7 @@
     $walletAddress = $walletAddress ?? ($coin['address'] ?? '');
     $usdAmount = isset($amount) ? number_format((float) $amount, 2) : '';
     $cryptoAmount = $cryptoAmount ?? $usdAmount;
-    $supportMessage = 'Hello EnzoBank Support, I need help with my crypto deposit.' . PHP_EOL . PHP_EOL
+    $supportMessage = 'Hello YieldEmpire Support, I need help with my crypto deposit.' . PHP_EOL . PHP_EOL
         . 'Deposit details:' . PHP_EOL
         . ($usdAmount !== '' ? '• Amount: $' . $usdAmount . ' USD' . PHP_EOL : '')
         . ($coinName !== '' ? '• Coin: ' . $coinName . ($coinNetwork !== '' ? ' (' . $coinNetwork . ')' : '') . PHP_EOL : '')

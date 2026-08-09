@@ -112,7 +112,7 @@
 @if($transaction)
 <div id="receiptArea">
     <div class="rcpt-header">
-        <img src="{{ get_logo() }}" alt="EnzoBank">
+        <img src="{{ get_logo() }}" alt="YieldEmpire">
         <h3>{{ __('Transfer Receipt') }}</h3>
     </div>
 
@@ -178,7 +178,7 @@
     </div>
 
     <div class="rcpt-footer">
-        {{ __('For inquiries, contact us at') }} {{ $basic->site_name ?? 'EnzoBank' }}<br>
+        {{ __('For inquiries, contact us at') }} {{ $basic->site_name ?? 'YieldEmpire' }}<br>
         {{ __('Thank you for banking with us.') }}
     </div>
 </div>
@@ -207,7 +207,7 @@ function downloadImage() {
         logging: false
     }).then(function(canvas) {
         var link = document.createElement('a');
-        link.download = 'EnzoBank_Receipt_{{ $trx_id }}.png';
+        link.download = 'YieldEmpire_Receipt_{{ $trx_id }}.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
         showToast('Receipt image downloaded');
@@ -217,7 +217,7 @@ function downloadImage() {
 }
 
 function shareWhatsApp() {
-    var text = '🏦 *EnzoBank Transfer Receipt*%0A';
+    var text = '🏦 *YieldEmpire Transfer Receipt*%0A';
     text += '📄 ID: {{ $transaction->trx_id }}%0A';
     text += '💰 Amount: {{ get_amount($transaction->request_amount, $transaction->request_currency) }}%0A';
     text += '📅 Date: {{ dateFormat("d F Y", $transaction->created_at) }}%0A';

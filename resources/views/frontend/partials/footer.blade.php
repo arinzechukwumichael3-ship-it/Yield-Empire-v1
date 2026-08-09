@@ -1,4 +1,4 @@
-<!-- ====== ENZOBANK FOOTER ====== -->
+<!-- ====== YIELD EMPIRE FOOTER ====== -->
 <footer class="enzo-footer" id="footer">
     <div class="enzo-container">
         <!-- Newsletter -->
@@ -14,7 +14,7 @@
             <!-- Column 1: Brand -->
             <div class="enzo-footer-col enzo-footer-brand">
                 <a href="{{ setRoute("frontend.index") }}" class="enzo-footer-logo">
-                    <img src="{{ asset('backend/images/web-settings/image-assets/enzobank-logo.png') }}" alt="EnzoBank" class="enzo-footer-logo-img">
+                    <img src="{{ asset('backend/images/web-settings/image-assets/yieldempire-logo.png') }}" alt="YieldEmpire" class="enzo-footer-logo-img">
                 </a>
                 <p class="enzo-footer-desc">The future of digital banking. Secure, fast, and accessible from anywhere in the world.</p>
                 <div class="enzo-footer-social">
@@ -95,11 +95,11 @@
         </div>
 
         <div class="enzo-footer-regulatory">
-            <p><strong>Regulatory Disclosure:</strong> EnzoBank is a financial technology company headquartered in New York, USA. Banking services are provided through our regulated partner financial institutions. EnzoBank is registered as a Money Services Business (MSB) with FinCEN and complies with all applicable US federal and state banking regulations. Deposit accounts are FDIC insured up to $250,000 through our partner banks. EnzoBank is licensed and regulated in the United States.</p>
+            <p><strong>Regulatory Disclosure:</strong> YieldEmpire is a financial technology company headquartered in New York, USA. Banking services are provided through our regulated partner financial institutions. YieldEmpire is registered as a Money Services Business (MSB) with FinCEN and complies with all applicable US federal and state banking regulations. Deposit accounts are FDIC insured up to $250,000 through our partner banks. YieldEmpire is licensed and regulated in the United States.</p>
         </div>
 
         <div class="enzo-footer-bottom">
-            <span class="enzo-footer-copy">&copy; {{ date("Y") }} EnzoBank. All rights reserved.</span>
+            <span class="enzo-footer-copy">&copy; {{ date("Y") }} YieldEmpire. All rights reserved.</span>
             <div class="enzo-footer-legal">
                 <a href="#">Privacy</a>
                 <a href="#">Terms</a>

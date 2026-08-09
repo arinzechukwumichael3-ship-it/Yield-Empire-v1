@@ -43,7 +43,7 @@
                     <div class="enzo-testimonial-stars">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
-                    <p class="enzo-testimonial-text">"EnzoBank makes managing my business finances effortless. The instant transfers and virtual cards have transformed how I pay suppliers and manage cash flow."</p>
+                    <p class="enzo-testimonial-text">"YieldEmpire makes managing my business finances effortless. The instant transfers and virtual cards have transformed how I pay suppliers and manage cash flow."</p>
                     <div class="enzo-testimonial-author">
                         <div class="enzo-testimonial-avatar-placeholder"><i class="las la-user"></i></div>
                         <div>
@@ -56,7 +56,7 @@
                     <div class="enzo-testimonial-stars">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
-                    <p class="enzo-testimonial-text">"I save 10% of every freelance payment into my EnzoBank goal savings. The interest rates are better than anything I got from traditional banks, and I can withdraw anytime without penalties."</p>
+                    <p class="enzo-testimonial-text">"I save 10% of every freelance payment into my YieldEmpire goal savings. The interest rates are better than anything I got from traditional banks, and I can withdraw anytime without penalties."</p>
                     <div class="enzo-testimonial-author">
                         <div class="enzo-testimonial-avatar-placeholder"><i class="las la-user"></i></div>
                         <div>
@@ -69,7 +69,7 @@
                     <div class="enzo-testimonial-stars">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
-                    <p class="enzo-testimonial-text">"I was initially skeptical about digital-only banks, but EnzoBank exceeded all my expectations. Their support team resolved an issue within minutes, and the debit card arrived in 2 days."</p>
+                    <p class="enzo-testimonial-text">"I was initially skeptical about digital-only banks, but YieldEmpire exceeded all my expectations. Their support team resolved an issue within minutes, and the debit card arrived in 2 days."</p>
                     <div class="enzo-testimonial-author">
                         <div class="enzo-testimonial-avatar-placeholder"><i class="las la-user"></i></div>
                         <div>

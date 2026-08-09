@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>Log In — EnzoBank</title>
+<title>Log In — YieldEmpire</title>
 <style>html,body{background:#0A0E1A;margin:0;height:100%;}*{margin:0;padding:0;box-sizing:border-box;}</style>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -185,7 +185,7 @@ html, body { height:100%; width:100%; overflow:hidden; font-family:-apple-system
 <div class="login-screen">
   <div class="login-container">
     <div class="top-bar">
-      <img src="{{ asset('backend/images/web-settings/image-assets/enzobank-logo.png') }}" alt="EnzoBank" class="app-logo">
+      <img src="{{ asset('backend/images/web-settings/image-assets/yieldempire-logo.png') }}" alt="YieldEmpire" class="app-logo">
     </div>
 
     <div class="welcome-section">
@@ -290,7 +290,7 @@ html, body { height:100%; width:100%; overflow:hidden; font-family:-apple-system
 
       hideLoader();
       if (response.ok && data.success) {
-        localStorage.setItem('enzobank_user', JSON.stringify(data.user || {}));
+        localStorage.setItem('yieldempire_user', JSON.stringify(data.user || {}));
         window.location.href = data.redirect || '/app/pin';
       } else {
         const msg = data.errors?.credentials?.[0] || data.message?.error?.[0] || data.message || 'Invalid credentials. Please try again.';

@@ -2,9 +2,9 @@
 
 Hi **{{ $name }}**,
 
-Your email address **{{ $email }}** has been successfully confirmed on your EnzoBank account.
+Your email address **{{ $email }}** has been successfully confirmed on your YieldEmpire account.
 
-You now have full access to all EnzoBank features including:
+You now have full access to all YieldEmpire features including:
 
 - Virtual Cards
 - International Transfers
@@ -19,4 +19,4 @@ If you did not authorize this change, please contact our support team immediatel
 Email: support@enzobank.org  
 WhatsApp: +44 7464 483316
 
-&copy; {{ date('Y') }} EnzoBank. All rights reserved.
+&copy; {{ date('Y') }} YieldEmpire. All rights reserved.

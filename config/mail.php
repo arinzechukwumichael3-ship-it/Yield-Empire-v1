@@ -104,7 +104,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => 'Enzobank',
+        'name' => 'YieldEmpire',
     ],
 
     /*

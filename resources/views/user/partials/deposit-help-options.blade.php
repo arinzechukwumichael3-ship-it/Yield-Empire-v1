@@ -60,9 +60,9 @@
 @endpush
 
 @php
-$depositHelpIbanMessage = 'Hello EnzoBank Support, I would like to deposit funds into my account using an international bank transfer (IBAN/SWIFT) from my bank. Please share the required wire details and instructions.';
-$depositHelpWalletMessage = 'Hello EnzoBank Support, I don\'t have a crypto wallet and I\'m not sure how to send crypto. Could you please guide me step by step?';
-$depositHelpOtherMessage = 'Hello EnzoBank Support, I have a question about deposits. Could you help me?';
+$depositHelpIbanMessage = 'Hello YieldEmpire Support, I would like to deposit funds into my account using an international bank transfer (IBAN/SWIFT) from my bank. Please share the required wire details and instructions.';
+$depositHelpWalletMessage = 'Hello YieldEmpire Support, I don\'t have a crypto wallet and I\'m not sure how to send crypto. Could you please guide me step by step?';
+$depositHelpOtherMessage = 'Hello YieldEmpire Support, I have a question about deposits. Could you help me?';
 $depositHelpCryptoAnchor = $depositHelpCryptoAnchor ?? '#cryptoDepositForm';
 @endphp
 

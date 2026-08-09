@@ -208,7 +208,7 @@
     <div style="display:flex;flex-direction:column;gap:10px;">
         <div style="display:flex;align-items:flex-start;gap:10px;">
             <span class="pin-tip-number">1</span>
-            <span class="pin-tip-text">{{ __('Never share your PIN with anyone, including EnzoBank staff.') }}</span>
+            <span class="pin-tip-text">{{ __('Never share your PIN with anyone, including YieldEmpire staff.') }}</span>
         </div>
         <div style="display:flex;align-items:flex-start;gap:10px;">
             <span class="pin-tip-number">2</span>

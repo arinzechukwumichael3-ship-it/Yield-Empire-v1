@@ -27,7 +27,7 @@
             <table align="center" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 auto;">
               <tr>
                 <td style="width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,0.18);color:#fff;font-weight:800;font-size:22px;text-align:center;vertical-align:middle;font-family:Arial;">E</td>
-                <td style="color:#fff;font-weight:800;font-size:24px;letter-spacing:.5px;padding-left:12px;font-family:-apple-system,Segoe UI,Roboto,Arial;">EnzoBank</td>
+                <td style="color:#fff;font-weight:800;font-size:24px;letter-spacing:.5px;padding-left:12px;font-family:-apple-system,Segoe UI,Roboto,Arial;">YieldEmpire</td>
               </tr>
             </table>
           </td>
@@ -45,13 +45,13 @@
               </tr>
             </table>
             <p style="margin:22px 0 0; color:#94a3b8; font-size:13px; line-height:1.6;">If you did not request this change, you can safely ignore this email. Your password will remain unchanged.</p>
-            <p style="margin:18px 0 0; color:#94a3b8; font-size:12px; line-height:1.6;">Thanks,<br>The EnzoBank Security Team</p>
+            <p style="margin:18px 0 0; color:#94a3b8; font-size:12px; line-height:1.6;">Thanks,<br>The YieldEmpire Security Team</p>
           </td>
         </tr>
         <tr>
           <td align="center" style="padding:22px 10px 8px;">
-            <p style="margin:0 0 8px; font-size:13px; color:#64748b; font-weight:600;">EnzoBank &middot; Secure digital banking</p>
-            <p style="margin:0; font-size:11px; color:#aab2c2; line-height:1.6;">&copy; {{ date('Y') }} EnzoBank. All rights reserved.</p>
+            <p style="margin:0 0 8px; font-size:13px; color:#64748b; font-weight:600;">YieldEmpire &middot; Secure digital banking</p>
+            <p style="margin:0; font-size:11px; color:#aab2c2; line-height:1.6;">&copy; {{ date('Y') }} YieldEmpire. All rights reserved.</p>
           </td>
         </tr>
       </table>

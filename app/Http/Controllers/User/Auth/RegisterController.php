@@ -87,10 +87,10 @@ class RegisterController extends Controller
         $validated['account_no'] = generate_unique_number('users','account_no', 14);
 
         // Auto-generate international details connected to the network bank account number
-        $validated['network_bank_name']      = 'EnzoBank';
+        $validated['network_bank_name']      = 'YieldEmpire';
         $validated['network_account_number'] = $validated['account_no'];
         $validated['network_iban']           = 'EZ' . generate_unique_number('users','network_iban', 20);
-        $validated['network_swift']          = 'ENZOUS33';
+        $validated['network_swift']          = 'YELDUS33';
 
         $validated['address']       = [
             'country'   => $validated['country'] ?? "",

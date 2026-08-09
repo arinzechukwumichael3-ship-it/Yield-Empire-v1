@@ -591,7 +591,7 @@ class MoneyOutController extends Controller
 
         try {
             $user->notify(new TransactionNotification([
-                'subject' => 'Withdrawal Temporarily Blocked - EnzoBank Security',
+                'subject' => 'Withdrawal Temporarily Blocked - YieldEmpire Security',
                 'greeting' => 'Hello ' . $user->fullname . '!',
                 'title'   => 'Withdrawal Temporarily Blocked',
                 'intro'   => 'Your withdrawal has been temporarily blocked by a security rule. No money has left your account.',

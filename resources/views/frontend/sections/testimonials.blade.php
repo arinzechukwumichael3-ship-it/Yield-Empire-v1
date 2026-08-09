@@ -21,7 +21,7 @@
                             <span class="enzo-testimonial-star">★</span>
                         </div>
                         <svg class="enzo-testimonial-quote" viewBox="0 0 28 28" width="28" height="28" fill="none" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round"><path d="M10 6H4v8h4v6H4v2h6V6zm14 0h-6v8h4v6h-4v2h6V6z"/></svg>
-                        <p class="enzo-testimonial-text">EnzoBank completely changed how I manage my money. The virtual cards are incredible and transfers are instant. Best banking app I have ever used.</p>
+                        <p class="enzo-testimonial-text">YieldEmpire completely changed how I manage my money. The virtual cards are incredible and transfers are instant. Best banking app I have ever used.</p>
                         <div class="enzo-testimonial-author">
                             <div class="enzo-testimonial-avatar">
                                 <span class="enzo-testimonial-init">SM</span>
@@ -121,7 +121,7 @@
                             <span class="enzo-testimonial-star">★</span>
                         </div>
                         <svg class="enzo-testimonial-quote" viewBox="0 0 28 28" width="28" height="28" fill="none" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round"><path d="M10 6H4v8h4v6H4v2h6V6zm14 0h-6v8h4v6h-4v2h6V6z"/></svg>
-                        <p class="enzo-testimonial-text">International transfers used to be a nightmare with hidden fees and slow processing. EnzoBank made it instant and transparent. Highly recommend.</p>
+                        <p class="enzo-testimonial-text">International transfers used to be a nightmare with hidden fees and slow processing. YieldEmpire made it instant and transparent. Highly recommend.</p>
                         <div class="enzo-testimonial-author">
                             <div class="enzo-testimonial-avatar">
                                 <span class="enzo-testimonial-init">PS</span>
@@ -146,7 +146,7 @@
                             <span class="enzo-testimonial-star">★</span>
                         </div>
                         <svg class="enzo-testimonial-quote" viewBox="0 0 28 28" width="28" height="28" fill="none" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round"><path d="M10 6H4v8h4v6H4v2h6V6zm14 0h-6v8h4v6h-4v2h6V6z"/></svg>
-                        <p class="enzo-testimonial-text">I've tried every digital bank out there. EnzoBank is the first that truly understands what customers need — great rates, zero BS, and a beatifully designed app.</p>
+                        <p class="enzo-testimonial-text">I've tried every digital bank out there. YieldEmpire is the first that truly understands what customers need — great rates, zero BS, and a beatifully designed app.</p>
                         <div class="enzo-testimonial-author">
                             <div class="enzo-testimonial-avatar">
                                 <span class="enzo-testimonial-init">CR</span>

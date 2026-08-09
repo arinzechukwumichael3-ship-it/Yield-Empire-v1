@@ -20,10 +20,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="{{ $basic_settings->site_name ?? 'EnzoBank' }} - {{ $basic_settings->site_title ?? 'Secure USA Digital Banking Platform' }}">
-    <meta name="keywords" content="EnzoBank, USA Digital Bank, Online Banking, Virtual Cards, FDIC Insured, US Financial Services">
-    <meta name="author" content="EnzoBank"/>
-    <meta name="application-name" content="EnzoBank">
+    <meta name="description" content="{{ $basic_settings->site_name ?? 'YieldEmpire' }} - {{ $basic_settings->site_title ?? 'Secure USA Digital Banking Platform' }}">
+    <meta name="keywords" content="YieldEmpire, USA Digital Bank, Online Banking, Virtual Cards, FDIC Insured, US Financial Services">
+    <meta name="author" content="YieldEmpire"/>
+    <meta name="application-name" content="YieldEmpire">
     <meta name="geo.region" content="US-NY">
     <meta name="geo.placename" content="New York">
     <meta name="theme-color" content="#0A0E1A">
@@ -56,11 +56,11 @@
     {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "EnzoBank",
-        "alternateName": "EnzoBank Financial Services",
+        "name": "YieldEmpire",
+        "alternateName": "YieldEmpire Financial Services",
         "url": "{{ config('app.url') }}",
-        "logo": "{{ asset('backend/images/web-settings/image-assets/enzobank-logo.png') }}",
-        "description": "EnzoBank is a US-based financial technology company providing secure digital banking services.",
+        "logo": "{{ asset('backend/images/web-settings/image-assets/yieldempire-logo.png') }}",
+        "description": "YieldEmpire is a US-based financial technology company providing secure digital banking services.",
         "foundingDate": "2012",
         "address": {
             "@type": "PostalAddress",
@@ -78,9 +78,9 @@
             "availableLanguage": ["English"]
         },
         "sameAs": [
-            "https://x.com/enzobank",
-            "https://www.linkedin.com/company/enzobank",
-            "https://www.facebook.com/enzobank"
+            "https://x.com/yieldempire",
+            "https://www.linkedin.com/company/yieldempire",
+            "https://www.facebook.com/yieldempire"
         ]
     }
     </script>
@@ -88,12 +88,12 @@
     {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "EnzoBank",
+        "name": "YieldEmpire",
         "url": "{{ config('app.url') }}",
         "description": "Secure USA digital banking platform offering virtual cards, global payments, and smart investments.",
         "about": {
             "@type": "FinancialService",
-            "feesAndCommissionsSpecification": "https://enzobank.org/fees",
+            "feesAndCommissionsSpecification": "https://yieldempire.org/fees",
             "areaServed": {
                 "@type": "Country",
                 "name": "United States"
@@ -105,8 +105,8 @@
     {
         "@context": "https://schema.org",
         "@type": "FinancialService",
-        "name": "EnzoBank",
-        "image": "{{ asset('frontend/images/logo.png') }}",
+        "name": "YieldEmpire",
+        "image": "{{ asset('backend/images/web-settings/image-assets/yieldempire-logo.png') }}",
         "@id": "{{ config('app.url') }}",
         "url": "{{ config('app.url') }}",
         "telephone": "+44-7464-483316",

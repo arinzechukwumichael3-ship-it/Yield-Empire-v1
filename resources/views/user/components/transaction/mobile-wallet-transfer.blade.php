@@ -3,7 +3,7 @@
     $precesion = 2;
     $details = $transaction->details;
     $senderName = $details->sender_name ?? ($transaction->user->fullname ?? "N/A");
-    $senderBank = $details->sender_bank ?? "EnzoBank";
+    $senderBank = $details->sender_bank ?? "YieldEmpire";
     $receiverName = $details->receiver_name ?? "N/A";
 @endphp
 <div class="dashboard-list-wrapper">
@@ -66,7 +66,7 @@
                         </div>
                     </div>
                     <div class="preview-list-right">
-                        <span>{{ __("EnzoBank Internal") }}</span>
+                        <span>{{ __("YieldEmpire Internal") }}</span>
                     </div>
                 </div>
                 <div class="preview-list-item">

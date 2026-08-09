@@ -6,7 +6,7 @@
                 <div class="enzo-showcase-card-stack">
                     <div class="enzo-showcase-card enzo-showcase-card-back">
                         <div class="enzo-card-top">
-                            <span class="enzo-card-brand">EnzoBank</span>
+                            <span class="enzo-card-brand">YieldEmpire</span>
                             <span class="enzo-card-visa">VISA</span>
                         </div>
                         <div class="enzo-card-chip">
@@ -31,7 +31,7 @@
                     </div>
                     <div class="enzo-showcase-card enzo-showcase-card-front">
                         <div class="enzo-card-top">
-                            <span class="enzo-card-brand">EnzoBank</span>
+                            <span class="enzo-card-brand">YieldEmpire</span>
                             <span class="enzo-card-visa">VISA</span>
                         </div>
                         <div class="enzo-card-chip">

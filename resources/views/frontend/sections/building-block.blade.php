@@ -20,7 +20,7 @@
                 </div>
                 <div class="build-reveal" data-delay="300">
                     <p class="enzo-building-desc">
-                        EnzoBank's headquarters stand as a symbol of our commitment to financial excellence. 
+                        YieldEmpire's headquarters stand as a symbol of our commitment to financial excellence. 
                         From this building, we power digital banking for over 2 million customers across 
                         the United States and beyond — combining cutting-edge technology with the stability 
                         of a regulated financial institution.
@@ -54,7 +54,7 @@
                         <!-- The image -->
                         <div class="build-image-wrapper">
                             <img src="{{ asset('frontend/images/bank-building-block.jpg') }}" 
-                                 alt="EnzoBank Headquarters" 
+                                 alt="YieldEmpire Headquarters" 
                                  class="enzo-building-img"
                                  loading="lazy">
                         </div>

@@ -344,7 +344,7 @@
 
 @push("script")
 <script>
-// EnzoBank Feed Carousel + List — inline, no deps
+// YieldEmpire Feed Carousel + List — inline, no deps
 (function(){
   var allSlides = {!! json_encode($carouselSlides) !!};
   if (!allSlides || !allSlides.length) {

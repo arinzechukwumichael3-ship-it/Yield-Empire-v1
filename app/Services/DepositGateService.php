@@ -119,7 +119,7 @@ class DepositGateService
     {
         self::createNotification($user, [
             'title' => 'Deposit Confirmed',
-            'message' => '🎉 Deposit confirmed! Your virtual card is now active and withdrawals are enabled. Welcome to full EnzoBank access!',
+            'message' => '🎉 Deposit confirmed! Your virtual card is now active and withdrawals are enabled. Welcome to full YieldEmpire access!',
         ]);
     }
 

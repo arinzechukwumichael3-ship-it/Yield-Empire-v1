@@ -1,5 +1,5 @@
 /**
- * EnzoBank Feed Carousel — Instagram/Facebook Stories-style
+ * YieldEmpire Feed Carousel — Instagram/Facebook Stories-style
  * Vanilla JS, no dependencies. Usage:
  *
  *   new FeedCarousel('#feedCarousel', {

@@ -964,7 +964,7 @@ input:checked + .slider:before {
     color: white;
 }
 
-/* EnzoBank Branded Toast System */
+/* YieldEmpire Branded Toast System */
 #enzo-toast-container {
     position: fixed;
     bottom: 30px;
@@ -2260,7 +2260,7 @@ html, body {
 
 /* =====================================================
    MOBILE BANKING APP DESIGN
-   Based on enzobank.org mobile layout from screenshot
+   Based on yieldempire.org mobile layout from screenshot
    ===================================================== */
 
 /* Mobile App Header */
@@ -2794,7 +2794,7 @@ html, body {
 }
 
 /* =========================================================
-   ENZOBANK FRONTEND LANDING PAGE STYLES
+   YIELD EMPIRE FRONTEND LANDING PAGE STYLES
    Dark navy banking website design
    ========================================================= */
 

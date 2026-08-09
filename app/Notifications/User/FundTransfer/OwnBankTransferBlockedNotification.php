@@ -52,7 +52,7 @@ class OwnBankTransferBlockedNotification extends Notification
         return (new MailMessage)
                 ->greeting("Hello ".$user->fullname." !")
                 ->subject("Own Bank Transfer Blocked")
-                ->line("Your own bank (EnzoBank to EnzoBank) transfer attempt has been blocked.")
+                ->line("Your own bank (YieldEmpire to YieldEmpire) transfer attempt has been blocked.")
                 ->line("Beneficiary: ".$this->beneficiary)
                 ->line("Reason: This transfer type has been temporarily blocked by the system administrator for security reasons.")
                 ->line("If you believe this is an error or need this feature reactivated, please contact our support team for assistance.")

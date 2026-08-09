@@ -41,6 +41,13 @@
     --info: #1D4ED8;
     --info-bg: rgba(59,130,246,0.10);
 
+    --gold: #B45309;
+    --gold-soft: rgba(245,158,11,0.14);
+    --profit: #059669;
+    --profit-bg: rgba(16,185,129,0.12);
+    --loss: #DC2626;
+    --loss-bg: rgba(239,68,68,0.12);
+
     --overlay: rgba(15,23,42,0.40);
     --scrollbar: #CBD5E1;
     --font-sans: "Inter", system-ui, sans-serif;
@@ -457,7 +464,7 @@ html { scroll-behavior: smooth; }
 }
 @media (max-width: 480px) { .enzo-hero-title-line { font-size: 30px; } .enzo-stats-grid { grid-template-columns: 1fr 1fr; gap: 24px; } .enzo-rails-inner { gap: 12px; } .enzo-rails-track { gap: 16px; padding-left: 16px; } .enzo-rails-logos { padding: 0 8px; } .enzo-rails-logo { height: 18px; } .enzo-rails-text { height: 20px; padding: 0 8px; font-size: 10px; } }
 /* ============================================
-   ENZOBANK THEME — Additional Sections
+   YIELD EMPIRE THEME — Additional Sections
    Floating Card, Testimonials, Card Showcase,
    Newsletter, Particles, Animations
    ============================================ */
@@ -2761,6 +2768,8 @@ html { scroll-behavior: smooth; }
 [data-theme="light"] .dash-action-icon-purple { background: rgba(139,92,246,0.12); }
 .dash-action-icon-teal { background: rgba(20,184,166,0.15); color: #14B8A6; }
 [data-theme="light"] .dash-action-icon-teal { background: rgba(20,184,166,0.12); }
+.dash-action-icon-green { background: rgba(34,197,94,0.15); color: #4ADE80; }
+[data-theme="light"] .dash-action-icon-green { background: rgba(34,197,94,0.12); color: #16A34A; }
 .dash-action-label {
     font-size: 12px;
     font-weight: 600;
@@ -3818,3 +3827,310 @@ html { scroll-behavior: smooth; }
     #features.enzo-section { padding-top: 16px; }
     .enzo-section-header { margin-bottom: 24px; }
 }
+/* ==============================================================
+   YIELD-EMPIRE DASHBOARD - "Dark Trading Platform" REDESIGN
+   Final cascade layer. Purpose-driven, data-dense, high-contrast.
+   ============================================================== */
+
+/* ---------- Dark tokens -> true near-black, trading grade ---------- */
+[data-theme="dark"] {
+    --bg-primary: #0A0A0A;
+    --bg-secondary: #0F0F12;
+    --bg-card: #141417;
+    --bg-elevated: #19191F;
+    --border-color: #24242B;
+    --border-strong: #30303A;
+    --card-shadow: 0 2px 10px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.02);
+    --shadow-strong: 0 18px 48px rgba(0,0,0,0.7);
+    --accent: #3B82F6;
+    --accent-soft: rgba(59,130,246,0.14);
+    --gradient: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+    --gold: #F5B84C;
+    --gold-soft: rgba(245,184,76,0.15);
+    --profit: #4ADE80;
+    --profit-bg: rgba(34,197,94,0.14);
+    --loss: #F87171;
+    --loss-bg: rgba(239,68,68,0.14);
+    --text-primary: #F8FAFC;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --input-bg: #121216;
+    --input-border: #24242B;
+    --placeholder: #52525B;
+}
+[data-theme="dark"] body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* ---------- App shell ---------- */
+.rise-app { padding-bottom: 132px; }
+
+/* ---------- Dashboard page rhythm ---------- */
+.dash-page { gap: 18px; }
+
+/* ---------- Top header: avatar + masked id (left), icon cluster (right) ---------- */
+.yh-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 6px;
+}
+.yh-head-side { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.yh-avatar {
+    width: 44px; height: 44px; border-radius: 14px; flex-shrink: 0; overflow: hidden;
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 17px; font-weight: 800;
+    box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+}
+.yh-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.yh-ident { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.yh-ident-name {
+    font-size: 15px; font-weight: 700; color: var(--text-primary);
+    letter-spacing: .2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.yh-ident-mask {
+    font-size: 10px; font-weight: 600; color: var(--text-muted);
+    letter-spacing: 1.4px; text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+}
+.yh-head-actions { display: flex; align-items: center; gap: 8px; }
+.yh-head-btn {
+    width: 40px; height: 40px; border-radius: 13px;
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; position: relative; transition: transform .15s, color .15s;
+    -webkit-tap-highlight-color: transparent;
+}
+.yh-head-btn:hover { color: var(--text-primary); }
+.yh-head-btn:active { transform: scale(0.92); }
+.yh-head-badge {
+    position: absolute; top: -4px; right: -4px; min-width: 16px; height: 16px;
+    border-radius: 50%; background: #EF4444; color: #fff; font-size: 9px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; padding: 0 4px;
+    border: 2px solid var(--bg-primary);
+}
+
+/* ---------- Hero balance card ---------- */
+.dash-balance-card {
+    border-radius: 22px; padding: 22px 20px 18px;
+    border: 1px solid var(--border-color);
+    background: radial-gradient(120% 160% at 100% 0%, rgba(59,130,246,0.18) 0%, rgba(10,10,10,0) 55%), var(--bg-card);
+    box-shadow: var(--card-shadow);
+}
+[data-theme="dark"] .dash-balance-card {
+    background: radial-gradient(120% 160% at 100% 0%, rgba(59,130,246,0.18) 0%, rgba(10,10,10,0) 55%), var(--bg-card);
+}
+.dash-balance-currency-tabs {
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border-color);
+}
+[data-theme="dark"] .dash-currency-tab.active {
+    background: var(--accent); color: #fff;
+    box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+}
+.dash-currency-tab { letter-spacing: .3px; font-size: 11px; }
+.dash-copy-btn, .dash-eye-btn {
+    background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary);
+}
+.dash-balance-account-label, .dash-balance-label {
+    font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; font-weight: 600;
+    color: var(--text-muted);
+}
+.dash-balance-account-no { letter-spacing: 1.2px; font-weight: 600; color: var(--text-secondary); }
+.dash-balance-amount {
+    font-size: 38px; font-weight: 800; letter-spacing: -0.8px; line-height: 1.05;
+    font-variant-numeric: tabular-nums;
+}
+.dash-balance-amount.dash-balance-hidden { filter: blur(14px); }
+
+/* ---------- Today's P&L ---------- */
+.yh-pnl { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.yh-pnl-cap { font-size: 11px; color: var(--text-muted); letter-spacing: .8px; text-transform: uppercase; font-weight: 600; }
+.yh-pnl-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 700; border-radius: 100px; padding: 3px 10px;
+    font-variant-numeric: tabular-nums;
+}
+.yh-pnl-badge.pos { color: var(--profit); background: var(--profit-bg); }
+.yh-pnl-badge.neg { color: var(--loss); background: var(--loss-bg); }
+.yh-pnl-sub { font-size: 11px; color: var(--text-muted); }
+
+/* ---------- Primary CTA ---------- */
+.yh-cta { display: flex; gap: 10px; margin-top: 16px; }
+.yh-cta-btn {
+    flex: 1; height: 52px; border-radius: 15px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 14px; font-weight: 700; letter-spacing: .3px;
+    -webkit-tap-highlight-color: transparent; transition: transform .15s, box-shadow .15s;
+}
+.yh-cta-primary {
+    background: linear-gradient(135deg, #3B82F6, #2563EB); color: #fff;
+    box-shadow: 0 10px 26px rgba(59,130,246,0.4);
+}
+.yh-cta-primary:active { transform: scale(0.98); }
+.yh-cta-ghost {
+    background: var(--bg-card); color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+.yh-cta-ghost:active { transform: scale(0.98); }
+
+/* ---------- Quick actions: 4 circular + labelled ---------- */
+.dash-actions-row { margin-top: 4px; }
+.dash-action-pill { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 2px 0; }
+.dash-action-icon {
+    width: 54px; height: 54px; border-radius: 50%;
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .15s, border-color .15s;
+}
+.dash-action-pill:hover .dash-action-icon { transform: translateY(-2px); border-color: rgba(59,130,246,0.5); }
+.dash-action-label {
+    font-size: 10px; font-weight: 600; color: var(--text-secondary);
+    letter-spacing: .8px; text-transform: uppercase; text-align: center;
+}
+
+/* ---------- Referral / earn banner ---------- */
+.dash-referral-banner {
+    border-radius: 18px; border: 1px solid rgba(245,184,76,0.2);
+    background: linear-gradient(120deg, rgba(245,184,76,0.10), rgba(59,130,246,0.08));
+    padding: 16px;
+}
+.dash-referral-banner-title { font-size: 14px; font-weight: 800; color: var(--text-primary); }
+.dash-referral-banner-sub { font-size: 12px; color: var(--text-secondary); }
+.dash-referral-banner-btn {
+    background: var(--gold); color: #1A1206; font-weight: 800; font-size: 13px;
+    border-radius: 100px; padding: 9px 22px;
+}
+
+/* ---------- Section headers: tracked, uppercase ---------- */
+.dash-section-title {
+    font-size: 13px; font-weight: 700; color: var(--text-secondary);
+    letter-spacing: 1.6px; text-transform: uppercase;
+}
+.dash-section-link { font-size: 12px; font-weight: 600; color: var(--accent); }
+
+/* ---------- Invest & Grow cards ---------- */
+.dash-invest-card {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: 18px; padding: 16px; min-width: 158px;
+    display: flex; flex-direction: column; gap: 5px;
+    box-shadow: var(--card-shadow);
+}
+.dash-invest-badge {
+    align-self: flex-start; font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    color: var(--gold); background: var(--gold-soft);
+    border-radius: 100px; padding: 3px 10px;
+}
+.dash-invest-name { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.dash-invest-rate { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--profit); font-variant-numeric: tabular-nums; }
+.dash-invest-duration { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+.dash-invest-btn {
+    margin-top: 10px; text-align: center;
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 12px;
+    border-radius: 100px; padding: 9px 0;
+}
+
+/* ---------- "My Card" preview ---------- */
+.dash-card-preview-inner {
+    background: linear-gradient(135deg, #1B1B22, #101014);
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+}
+.dash-card-preview-number {
+    font-size: 18px; font-weight: 600; letter-spacing: 2px; color: #F8FAFC;
+    font-variant-numeric: tabular-nums;
+}
+.dash-card-preview-label { color: #9CA3AF; }
+
+/* ---------- Assets / holdings list ---------- */
+.yh-assets {
+    display: flex; flex-direction: column;
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: 18px; padding: 6px 16px; box-shadow: var(--card-shadow);
+}
+.yh-asset { display: flex; align-items: center; gap: 12px; padding: 13px 0; min-width: 0; }
+.yh-asset + .yh-asset { border-top: 1px solid var(--border-color); }
+.yh-asset-ico {
+    width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+    background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.22);
+    color: #7FA9F7; font-size: 12px; font-weight: 800; letter-spacing: 0.5px;
+    display: flex; align-items: center; justify-content: center;
+}
+.yh-asset-ico.eu  { background: rgba(245,184,76,0.12);  border-color: rgba(245,184,76,0.24); color: var(--gold); }
+.yh-asset-ico.gbp { background: rgba(34,197,94,0.12);   border-color: rgba(34,197,94,0.24);  color: var(--profit); }
+.yh-asset-mid { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.yh-asset-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.yh-asset-ticker { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 1.4px; text-transform: uppercase; }
+.yh-asset-right { text-align: right; display: flex; flex-direction: column; gap: 3px; }
+.yh-asset-val { font-size: 15px; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.yh-asset-chg { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.yh-asset-chg.up   { color: var(--profit); }
+.yh-asset-chg.down { color: var(--loss); }
+.yh-asset-chg.flat { color: var(--text-muted); }
+
+/* ---------- Recent activity ---------- */
+.dash-tx-list { display: flex; flex-direction: column; }
+.dash-tx-item { padding: 12px 2px; }
+.dash-tx-item + .dash-tx-item { border-top: 1px solid var(--border-color); }
+.dash-tx-icon {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+}
+.dash-tx-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.dash-tx-date { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+.dash-tx-amount { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Contact row ---------- */
+.dash-contact-row {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: 18px; padding: 16px;
+}
+.dash-contact-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.dash-contact-sub { font-size: 11px; color: var(--text-muted); }
+
+/* ---------- Bottom navigation: 5 icon + label ---------- */
+.glass-nav { bottom: 14px; z-index: 100; }
+.glass-nav-inner {
+    height: 68px; padding: 8px 6px; gap: 0; border-radius: 24px;
+    background: rgba(14, 14, 17, 0.92);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.07);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+.glass-nav-group { flex: 1; display: flex; align-items: stretch; justify-content: space-evenly; gap: 2px; min-width: 0; }
+.glass-nav-item {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; width: auto; height: 52px; flex: 1; max-width: 72px;
+    padding: 5px 2px; border-radius: 14px;
+    color: var(--text-muted);
+}
+.glass-nav-item svg { width: 21px; height: 21px; }
+.glass-nav-label {
+    font-size: 9px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+    color: inherit; line-height: 1; white-space: nowrap;
+}
+.glass-nav-item.active {
+    background: var(--accent-soft); color: var(--accent);
+}
+.glass-nav-item.active .glass-nav-icon { stroke: var(--accent); }
+.glass-nav-center { display: none; }
+.glass-nav-avatar-img, .glass-nav-initial { width: 24px; height: 24px; border-radius: 50%; }
+
+/* ---------- Light-mode counterparts for the new blocks ---------- */
+[data-theme="light"] .dash-balance-card {
+    background: radial-gradient(120% 160% at 100% 0%, rgba(59,130,246,0.10) 0%, rgba(255,255,255,0) 55%), var(--bg-card);
+}
+[data-theme="light"] .dash-currency-tab.active { background: var(--accent); color: #fff; }
+[data-theme="light"] .dash-copy-btn, [data-theme="light"] .dash-eye-btn {
+    background: #fff; border-color: #E2E8F0; color: #475569;
+}
+[data-theme="light"] .glass-nav-inner {
+    background: rgba(255,255,255,0.9); border-color: rgba(15,23,42,0.08);
+    box-shadow: 0 10px 34px rgba(15,23,42,0.16);
+}
+[data-theme="light"] .dash-card-preview-inner {
+    background: linear-gradient(135deg, #F1F5F9, #E2E8F0);
+}
+[data-theme="light"] .dash-card-preview-number { color: #0F172A; }
+[data-theme="light"] .dash-card-preview-label { color: #475569; }
+[data-theme="light"] .dash-referral-banner-btn { background: #F59E0B; color: #fff; }

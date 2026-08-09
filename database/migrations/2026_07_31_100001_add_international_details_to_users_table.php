@@ -9,7 +9,7 @@ class AddInternationalDetailsToUsersTable extends Migration
 {
     /**
      * Auto-generated international details for every user, linked to their
-     * network bank account number. These are what another EnzoBank user
+     * network bank account number. These are what another YieldEmpire user
      * needs in order to send money to this account.
      */
     public function up()
@@ -32,10 +32,10 @@ class AddInternationalDetailsToUsersTable extends Migration
             $existingIbans[] = $iban;
 
             DB::table('users')->where('id', $user->id)->update([
-                'network_bank_name'      => 'EnzoBank',
+                'network_bank_name'      => 'YieldEmpire',
                 'network_account_number' => $user->account_no,
                 'network_iban'           => $iban,
-                'network_swift'          => 'ENZOUS33',
+                'network_swift'          => 'YELDUS33',
             ]);
         }
 

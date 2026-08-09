@@ -1,8 +1,8 @@
-# Welcome to EnzoBank
+# Welcome to YieldEmpire
 
 Hi **{{ $name }}**,
 
-Thank you for choosing EnzoBank for your digital banking needs. Your account has been successfully created and is now ready to use.
+Thank you for choosing YieldEmpire for your digital banking needs. Your account has been successfully created and is now ready to use.
 
 ## Your Verification Code
 
@@ -18,4 +18,4 @@ This code expires in 15 minutes. If you did not create this account, please cont
 Email: support@enzobank.org  
 WhatsApp: +44 7464 483316
 
-&copy; {{ date('Y') }} EnzoBank. All rights reserved.
+&copy; {{ date('Y') }} YieldEmpire. All rights reserved.

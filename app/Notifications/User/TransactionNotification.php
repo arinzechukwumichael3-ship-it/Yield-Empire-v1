@@ -33,7 +33,7 @@ class TransactionNotification extends Notification
         $d = $this->data;
 
         $mail = (new MailMessage)
-            ->subject($d['subject'] ?? 'Transaction Update - EnzoBank')
+            ->subject($d['subject'] ?? 'Transaction Update - YieldEmpire')
             ->greeting($d['greeting'] ?? ('Hello ' . $notifiable->fullname . '!'))
             ->line(new HtmlString(
                 '<strong style="font-size:18px;color:#0b1f4d;display:block;margin-bottom:6px;">'
@@ -84,7 +84,7 @@ class TransactionNotification extends Notification
             $mail->action($d['action_text'] ?? 'View Transaction', $d['action_url']);
         }
 
-        $mail->line('Thank you for banking with EnzoBank.');
+        $mail->line('Thank you for banking with YieldEmpire.');
 
         return $mail;
     }

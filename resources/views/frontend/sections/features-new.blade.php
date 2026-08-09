@@ -29,7 +29,7 @@
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
                 </div>
                 <h3 class="enzo-feature-title">Smart Investments</h3>
-                <p class="enzo-feature-desc">AI-powered portfolios. Stocks, ETFs, crypto — all from your EnzoBank dashboard.</p>
+                <p class="enzo-feature-desc">AI-powered portfolios. Stocks, ETFs, crypto — all from your YieldEmpire dashboard.</p>
             </div>
 
             <div class="enzo-feature-card animate-on-scroll" style="transition-delay:240ms">

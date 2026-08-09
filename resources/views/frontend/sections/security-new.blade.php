@@ -41,7 +41,7 @@
                             <p>Real-time detection and prevention systems</p>
                         </div>
                     </div>
-                    <p class="enzo-security-fdic">FDIC insurance up to $250,000 provided through our partner banks. EnzoBank is a regulated Money Services Business (MSB).</p>
+                    <p class="enzo-security-fdic">FDIC insurance up to $250,000 provided through our partner banks. YieldEmpire is a regulated Money Services Business (MSB).</p>
                 </div>
             </div>
             <div class="enzo-security-right animate-on-scroll" style="transition-delay:200ms">

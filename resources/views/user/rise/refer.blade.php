@@ -19,7 +19,7 @@ $referralLink = url('/register/' . $user->username);
         <div style="position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;border-radius:50%;background:rgba(34,197,94,0.08);"></div>
         <div style="position:relative;z-index:1;">
             <div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:4px;">{{ __('Share & Start Earning') }}</div>
-            <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5;">{{ __('Invite your friends to join EnzoBank. You earn $50 for each friend who signs up and deposits $600 or more.') }}</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5;">{{ __('Invite your friends to join YieldEmpire. You earn $50 for each friend who signs up and deposits $600 or more.') }}</div>
         </div>
     </div>
 
@@ -175,14 +175,14 @@ function copyRefLink() {
 
 function shareRefLink() {
     var link = document.getElementById('referLinkInput').value;
-    var text = "{{ __('Join EnzoBank and earn rewards! Sign up using my referral link:') }} " + link;
+    var text = "{{ __('Join YieldEmpire and earn rewards! Sign up using my referral link:') }} " + link;
     var url = 'https://wa.me/?text=' + encodeURIComponent(text);
     window.open(url, '_blank');
 }
 
 function shareRefSMS() {
     var link = document.getElementById('referLinkInput').value;
-    var text = "{{ __('Join EnzoBank and earn rewards! Sign up using my referral link:') }} " + link;
+    var text = "{{ __('Join YieldEmpire and earn rewards! Sign up using my referral link:') }} " + link;
     window.open('sms:?body=' + encodeURIComponent(text), '_blank');
 }
 </script>

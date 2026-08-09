@@ -26,9 +26,9 @@ class WelcomeEmail extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Welcome to EnzoBank, Your Account Details')
+            ->subject('Welcome to YieldEmpire, Your Account Details')
             ->greeting('Hello ' . $notifiable->fullname . ',')
-            ->line('Welcome to EnzoBank! Your account has been successfully verified.')
+            ->line('Welcome to YieldEmpire! Your account has been successfully verified.')
             ->line('Below are your account details for receiving money in any currency:')
             ->line('')
             ->line('Recipient Full Name: ' . ($this->user->bankDetails->first()->recipient_name ?? $notifiable->fullname))
@@ -39,7 +39,7 @@ class WelcomeEmail extends Notification
             ->line('')
             ->line('You can manage your bank details anytime from your dashboard.')
             ->line('')
-            ->line('Thank you for choosing EnzoBank.')
+            ->line('Thank you for choosing YieldEmpire.')
             ->action('Go to Dashboard', url('/user/rise/home'))
             ->line('If you did not create this account, please contact support immediately.');
     }
