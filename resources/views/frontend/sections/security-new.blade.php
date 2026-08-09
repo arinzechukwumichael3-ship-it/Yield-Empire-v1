@@ -41,7 +41,7 @@
                             <p>Real-time detection and prevention systems</p>
                         </div>
                     </div>
-                    <p class="enzo-security-fdic">We protect your funds and data with 256-bit AES encryption, multi-factor authentication, and deposit accounts held with established financial institutions. Review our Terms of Service for full details.</p>
+                    <p class="enzo-security-note">We protect your funds and data with 256-bit AES encryption, multi-factor authentication, and 24/7 fraud monitoring. Review our Terms of Service for full details.</p>
                 </div>
             </div>
             <div class="enzo-security-right animate-on-scroll" style="transition-delay:200ms">

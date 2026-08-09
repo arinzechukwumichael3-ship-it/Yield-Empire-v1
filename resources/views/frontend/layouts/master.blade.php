@@ -60,28 +60,13 @@
         "alternateName": "YieldEmpire Financial Services",
         "url": "{{ config('app.url') }}",
         "logo": "{{ asset('backend/images/web-settings/image-assets/yieldempire-logo.png') }}",
-        "description": "YieldEmpire is a US-based financial technology company providing secure digital banking services.",
-        "foundingDate": "2012",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "123 Financial Plaza, Suite 400",
-            "addressLocality": "New York",
-            "addressRegion": "NY",
-            "postalCode": "10001",
-            "addressCountry": "US"
-        },
+        "description": "YieldEmpire is a financial technology platform for secure digital banking and investments.",
         "contactPoint": {
             "@type": "ContactPoint",
             "telephone": "+44-7464-483316",
             "contactType": "customer service",
-            "areaServed": "US",
             "availableLanguage": ["English"]
-        },
-        "sameAs": [
-            "https://x.com/yieldempire",
-            "https://www.linkedin.com/company/yieldempire",
-            "https://www.facebook.com/yieldempire"
-        ]
+        }
     }
     </script>
     <script type="application/ld+json">
@@ -90,15 +75,7 @@
         "@type": "WebSite",
         "name": "YieldEmpire",
         "url": "{{ config('app.url') }}",
-        "description": "Secure USA digital banking platform offering virtual cards, global payments, and smart investments.",
-        "about": {
-            "@type": "FinancialService",
-            "feesAndCommissionsSpecification": "https://yieldempire.org/fees",
-            "areaServed": {
-                "@type": "Country",
-                "name": "United States"
-            }
-        }
+        "description": "Secure digital banking platform offering virtual cards, global payments, and smart investments."
     }
     </script>
     <script type="application/ld+json">
@@ -110,29 +87,7 @@
         "@id": "{{ config('app.url') }}",
         "url": "{{ config('app.url') }}",
         "telephone": "+44-7464-483316",
-        "priceRange": "$$",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "123 Financial Plaza, Suite 400",
-            "addressLocality": "New York",
-            "addressRegion": "NY",
-            "postalCode": "10001",
-            "addressCountry": "US"
-        },
-        "openingHoursSpecification": [
-            {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
-                "opens": "09:00",
-                "closes": "18:00"
-            }
-        ],
-        "areaServed": [
-            {
-                "@type": "Country",
-                "name": "United States"
-            }
-        ]
+        "priceRange": "$$"
     }
     </script>
 </head>

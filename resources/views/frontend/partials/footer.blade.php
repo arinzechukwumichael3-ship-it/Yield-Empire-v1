@@ -54,7 +54,6 @@
                     <li><a href="{{ setRoute("frontend.useful.links", "privacy-policy") }}">Privacy Policy</a></li>
                     <li><a href="{{ setRoute("frontend.useful.links", "terms-of-service") }}">Terms of Service</a></li>
                     <li><a href="#">Cookie Policy</a></li>
-                    <li><a href="#">GDPR Compliance</a></li>
                 </ul>
             </div>
 
@@ -81,21 +80,8 @@
             </div>
         </div>
 
-        <div class="enzo-footer-divider"></div>
-
-        <div class="enzo-footer-address-row">
-            <div class="enzo-footer-address-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>123 Financial Plaza, Suite 400, New York, NY 10001, USA</span>
-            </div>
-            <div class="enzo-footer-address-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                <span>+44 7464 483316</span>
-            </div>
-        </div>
-
         <div class="enzo-footer-regulatory">
-            <p><strong>Risk Disclosure:</strong> YieldEmpire is a financial technology platform. Deposits are held with established financial institutions and protected with 256-bit AES encryption, multi-factor authentication, and 24/7 fraud monitoring. Investments carry risk, including possible loss of principal. Returns are not guaranteed. Please read our Terms of Service and Privacy Policy before using the platform.</p>
+            <p><strong>Risk Disclosure:</strong> YieldEmpire is a financial technology platform. Your funds are protected with 256-bit AES encryption, multi-factor authentication, and 24/7 fraud monitoring. Investments carry risk, including possible loss of principal. Returns are not guaranteed. Please read our Terms of Service and Privacy Policy before using the platform.</p>
         </div>
 
         <div class="enzo-footer-bottom">

@@ -245,8 +245,8 @@
 .enzo-security-item-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(59,130,246,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .enzo-security-item strong { display: block; font-size: 15px; color: var(--text-primary); margin-bottom: 2px; }
 .enzo-security-item p { font-size: 13px; color: var(--text-secondary); margin: 0; }
-.enzo-security-fdic { font-size: 12px; color: #6B7280; line-height: 1.6; margin: 0; padding: 8px 14px; background: rgba(59,130,246,0.05); border-radius: 8px; border: 1px solid rgba(59,130,246,0.1); }
-[data-theme="light"] .enzo-security-fdic { color: #64748B; background: rgba(59,130,246,0.03); border-color: rgba(59,130,246,0.08); }
+.enzo-security-note { font-size: 12px; color: #6B7280; line-height: 1.6; margin: 0; padding: 8px 14px; background: rgba(59,130,246,0.05); border-radius: 8px; border: 1px solid rgba(59,130,246,0.1); }
+[data-theme="light"] .enzo-security-note { color: #64748B; background: rgba(59,130,246,0.03); border-color: rgba(59,130,246,0.08); }
 .enzo-security-right { display: flex; justify-content: center; }
 .enzo-security-graphic { width: 100%; max-width: 380px; }
 .enzo-security-card {

@@ -5,7 +5,7 @@
     $data      = App\Models\Admin\SiteSections::getData($slug)->first();
 
     $title   = $data->value->language->$app_local->title ?? $data->value->language->$default->title ?? 'What Our Customers Say';
-    $heading = $data->value->language->$app_local->heading ?? $data->value->language->$default->heading ?? 'Trusted by Millions';
+    $heading = $data->value->language->$app_local->heading ?? $data->value->language->$default->heading ?? 'Join Our Growing Community';
     $items   = $data->value->items ?? [];
 @endphp
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
