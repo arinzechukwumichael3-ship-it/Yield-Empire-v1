@@ -8,6 +8,8 @@ use App\Models\Transaction;
 use App\Models\Portfolio;
 use App\Models\PortfolioHolding;
 use App\Models\InvestmentAsset;
+use App\Models\InvestmentPlan;
+use App\Models\UserInvestment;
 use App\Models\Frontend\AnnouncementCategory;
 use App\Models\Admin\Currency;
 use App\Models\Admin\SiteSections;
@@ -78,8 +80,11 @@ class RiseController extends Controller
             ->orderByDesc('id')
             ->get();
 
-        $investment_plans = InvestmentAsset::all();
+        $investment_plans = InvestmentPlan::active()->orderBy('min_amount')->get();
         $portfolio = Portfolio::auth()->first();
+
+        // Invested capital = committed amounts in the real investment flow.
+        $investedAmount = UserInvestment::auth()->whereIn('status', ['active', 'pending', 'completed'])->sum('amount');
 
         $sections = SiteSections::get();
 
@@ -88,7 +93,7 @@ class RiseController extends Controller
 
         return view('user.rise.home', compact(
             'page_title', 'user', 'wallet', 'usd_wallet', 'gbp_wallet', 'eur_wallet',
-            'transactions', 'todayTransactions', 'investment_plans', 'portfolio', 'banner', 'testimonials'
+            'transactions', 'todayTransactions', 'investment_plans', 'portfolio', 'investedAmount', 'banner', 'testimonials'
         ));
     }
 

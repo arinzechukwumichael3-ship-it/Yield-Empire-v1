@@ -8,53 +8,35 @@
         </div>
 
         <div class="plans-grid">
-            <div class="plans-card animate-on-scroll" style="transition-delay:0ms">
-                <div class="plans-card-top">
-                    <span class="plans-card-badge">START</span>
-                    <span class="plans-card-symbol">$</span>
+            @forelse($plans ?? collect([]) as $i => $plan)
+                @php
+                    $min = (float)$plan->min_amount;
+                    $max = $plan->max_amount !== null ? (float)$plan->max_amount : null;
+                    $range = '$' . number_format($min, $min === floor($min) ? 0 : 2) . ($max ? ' – $' . number_format($max, $max === floor($max) ? 0 : 2) : '+');
+                    $termMonths = $plan->duration_days % 30 === 0 ? $plan->duration_days / 30 : null;
+                @endphp
+                <x-plan-card variant="home" :plan="$plan"
+                    badge="{{ strtoupper(explode(' ', trim($plan->name))[0] ?? 'PLAN') }}"
+                    :badge-gold="$i === 1"
+                    :featured="$i === 1"
+                    :flag="$i === 1 ? 'MOST POPULAR' : null"
+                    name="{{ $plan->name }}"
+                    rate="{{ rtrim(rtrim(number_format((float)$plan->roi_percent, 2), '0'), '.') }}"
+                    delay="{{ $i * 120 }}ms"
+                    :features="[
+                        'Range: ' . $range,
+                        'Term: ' . ($termMonths ? $termMonths . ' month' . ($termMonths > 1 ? 's' : '') : $plan->duration_days . ' days'),
+                        'Flat ' . rtrim(rtrim(number_format((float)$plan->roi_percent, 2), '0'), '.') . '% ROI on maturity',
+                    ]"
+                    href="{{ setRoute('user.invest.new') }}" />
+            @empty
+                <div class="plans-empty">
+                    <span class="plans-empty-title">Plans are being finalized</span>
+                    <span class="plans-empty-sub">New offerings will appear here shortly.</span>
                 </div>
-                <h3 class="plans-card-name">Starter</h3>
-                <div class="plans-card-rate">6% <span class="plans-card-rate-unit">APY / yr</span></div>
-                <ul class="plans-card-features">
-                    <li><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>Term: 3&ndash;6 months, flexible exit</li>
-                    <li><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>Min deposit $100</li>
-                    <li><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>Daily yield accrual</li>
-                </ul>
-                <a href="{{ setRoute("user.invest.new") }}" class="plans-card-btn">Invest Now</a>
-            </div>
-
-            <div class="plans-card plans-card-featured animate-on-scroll" style="transition-delay:120ms">
-                <span class="plans-card-flag">MOST POPULAR</span>
-                <div class="plans-card-top">
-                    <span class="plans-card-badge plans-card-badge-gold">GROW</span>
-                    <span class="plans-card-symbol">$</span>
-                </div>
-                <h3 class="plans-card-name">Growth</h3>
-                <div class="plans-card-rate">10% <span class="plans-card-rate-unit">APY / yr</span></div>
-                <ul class="plans-card-features">
-                    <li><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#F5B84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>Term: 12 months</li>
-                    <li><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#F5B84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>Min deposit $1,000</li>
-                    <li><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#F5B84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>Weekly yield payouts</li>
-                </ul>
-                <a href="{{ setRoute("user.invest.new") }}" class="plans-card-btn plans-card-btn-gold">Invest Now</a>
-            </div>
-
-            <div class="plans-card animate-on-scroll" style="transition-delay:240ms">
-                <div class="plans-card-top">
-                    <span class="plans-card-badge">ADVANCE</span>
-                    <span class="plans-card-symbol">$</span>
-                </div>
-                <h3 class="plans-card-name">Advance</h3>
-                <div class="plans-card-rate">14% <span class="plans-card-rate-unit">APY / yr</span></div>
-                <ul class="plans-card-features">
-                    <li><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>Term: 24 months</li>
-                    <li><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>Min deposit $5,000</li>
-                    <li><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>Priority support</li>
-                </ul>
-                <a href="{{ setRoute("user.invest.new") }}" class="plans-card-btn">Invest Now</a>
-            </div>
+            @endforelse
         </div>
 
-        <p class="plans-disclaimer">Shown rates are illustrative and vary by live plan. Yield is paid in-app and updated in real time.</p>
+        <p class="plans-disclaimer">Rates and terms shown reflect the current live plans. Yield is paid on maturity and updated in real time.</p>
     </div>
 </section>

@@ -10,6 +10,7 @@ use App\Models\Frontend\Subscribe;
 use App\Http\Controllers\Controller;
 use App\Models\Frontend\Announcement;
 use App\Models\Frontend\ContactRequest;
+use App\Models\InvestmentPlan;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Frontend\AnnouncementCategory;
@@ -24,7 +25,8 @@ class IndexController extends Controller
      */
     public function index(BasicSettingsProvider $basic_settings)
     {
-        return view('frontend.index');
+        $plans = InvestmentPlan::active()->orderBy('min_amount')->limit(3)->get();
+        return view('frontend.index', compact('plans'));
     }
     /**
      * Method for view about page

@@ -2832,6 +2832,14 @@ html { scroll-behavior: smooth; }
     background: var(--bg-card, #111827);
     border: 1px solid var(--border-color, #1E293B);
 }
+.dash-stat-link {
+    text-decoration: none;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.dash-stat-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59,130,246,0.45);
+}
 .dash-stat-icon-wrap {
     width: 40px;
     height: 40px;
@@ -2850,9 +2858,11 @@ html { scroll-behavior: smooth; }
     min-width: 0;
 }
 .dash-stat-label {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted, #64748B);
-    font-weight: 500;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 .dash-stat-value {
     font-size: 18px;
@@ -2928,6 +2938,12 @@ html { scroll-behavior: smooth; }
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+.dash-invest-rate .dash-invest-rate-unit {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted, #64748B);
+    -webkit-text-fill-color: var(--text-muted, #64748B);
 }
 .dash-invest-duration {
     font-size: 12px;
@@ -4263,6 +4279,26 @@ html { scroll-behavior: smooth; }
     box-shadow: 0 8px 24px rgba(245,184,76,0.3);
 }
 .plans-card-btn-gold:hover { box-shadow: 0 12px 30px rgba(245,184,76,0.4); }
+.plans-empty {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 56px 24px;
+    border-radius: 16px;
+    background: var(--bg-card, #111827);
+    border: 1px solid var(--border-color, #1E293B);
+}
+.plans-empty-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary, #FFFFFF);
+}
+.plans-empty-sub {
+    font-size: 13px;
+    color: var(--text-muted, #64748B);
+}
 .plans-disclaimer {
     margin: 32px 0 0;
     text-align: center;

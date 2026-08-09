@@ -27,6 +27,14 @@ foreach ($todayTransactions as $t) {
 $pnl = $netToday;
 $pnlPct = $balance > 0 ? ($pnl / $balance) * 100 : 0;
 $pnlIsPos = $pnl >= 0;
+
+/* Invested = adjustable from controller (real investment flow); fall back to holdings market value */
+$invested = isset($investedAmount) ? (float)$investedAmount : 0;
+if ($invested <= 0 && $portfolio && $portfolio->holdings) {
+    $invested = $portfolio->holdings->sum(function ($h) {
+        return (float)($h->quantity ?? 0) * (float)($h->asset->current_price ?? 0);
+    });
+}
 @endphp
 
 <div class="dash-page dash-home">
@@ -104,6 +112,28 @@ $pnlIsPos = $pnl >= 0;
         </div>
     </div>
 
+    <!--===== STAT ROW: AVAILABLE / INVESTED =====-->
+    <div class="dash-stats-row">
+        <a href="{{ route('user.rise.wallet') }}" class="dash-stat-card dash-stat-link" aria-label="Available balance">
+            <div class="dash-stat-icon-wrap dash-stat-icon-green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+            </div>
+            <div class="dash-stat-info">
+                <span class="dash-stat-label">Available balance</span>
+                <span class="dash-stat-value">${{ number_format($usdBalance, 2) }}</span>
+            </div>
+        </a>
+        <a href="{{ setRoute('user.investments.offers') }}" class="dash-stat-card dash-stat-link" aria-label="Invested">
+            <div class="dash-stat-icon-wrap dash-stat-icon-red">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div class="dash-stat-info">
+                <span class="dash-stat-label">Invested</span>
+                <span class="dash-stat-value">${{ number_format($invested, 2) }}</span>
+            </div>
+        </a>
+    </div>
+
     <!--===== QUICK ACTIONS (circular) =====-->
     <div class="dash-actions-row">
         <a href="{{ setRoute('user.rise.send') }}" class="dash-action-pill">
@@ -173,26 +203,14 @@ $pnlIsPos = $pnl >= 0;
     </div>
     <div class="dash-invest-scroll">
         @forelse($investment_plans->take(8) as $plan)
-        @php
-            $termMs = is_array($plan->maturities) ? $plan->maturities : [];
-            $termLabel = count($termMs) > 1
-                ? min($termMs) . '-' . max($termMs) . ' months'
-                : ((count($termMs) === 1 && ($termMs[0] ?? 0) > 0) ? $termMs[0] . ' months' : 'Flexible');
-        @endphp
-        <div class="dash-invest-card">
-            <div class="dash-invest-badge">{{ strtoupper($plan->symbol ?? 'USD') }}</div>
-            <div class="dash-invest-name">{{ $plan->name ?? 'Investment Plan' }}</div>
-            <div class="dash-invest-rate">{{ rtrim(rtrim(number_format((float)($plan->base_yield ?? 0.00), 2), '0'), '.') }}% /yr</div>
-            <div class="dash-invest-duration">{{ $termLabel }}</div>
-            <a href="{{ route('user.invest.new') }}" class="dash-invest-btn">Invest Now</a>
-        </div>
+        <x-plan-card :plan="$plan" variant="compact" href="{{ route('user.invest.new') }}" />
         @empty
         <div class="dash-invest-card">
-            <div class="dash-invest-badge">USD</div>
-            <div class="dash-invest-name">Growth Plan</div>
-            <div class="dash-invest-rate">10% /yr</div>
-            <div class="dash-invest-duration">3-12 months</div>
-            <a href="{{ setRoute('user.investments.offers') }}" class="dash-invest-btn">Invest Now</a>
+            <div class="dash-invest-badge">PLAN</div>
+            <div class="dash-invest-name">No active plans</div>
+            <div class="dash-invest-rate">New offers soon</div>
+            <div class="dash-invest-duration">Check back shortly</div>
+            <a href="{{ setRoute('user.investments.offers') }}" class="dash-invest-btn">{{ __('Invest Now') }}</a>
         </div>
         @endforelse
     </div>
