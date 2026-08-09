@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://enzobank.org/sitemap.xml
+Sitemap: https://yieldempire.org/sitemap.xml
