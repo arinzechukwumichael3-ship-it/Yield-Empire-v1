@@ -23,7 +23,7 @@
             <!-- Trust Badge -->
             <div class="enzo-trust-badge" data-aos="fade-down">
                 <span class="badge-dot"></span>
-                {{ __('TRUSTED BY 2M+ CUSTOMERS WORLDWIDE') }}
+                {{ __('SECURE DIGITAL BANKING & INVESTMENTS') }}
             </div>
 
             <!-- Headline -->
@@ -49,23 +49,23 @@
             <!-- Stats Grid -->
             <div class="enzo-stats-grid" data-aos="fade-up" data-aos-delay="400">
                 <div class="enzo-stat">
-                    <div class="enzo-stat-value">2M+</div>
-                    <div class="enzo-stat-label">{{ __('Happy Customers') }}</div>
-                </div>
-                <div class="enzo-stat-divider"></div>
-                <div class="enzo-stat">
-                    <div class="enzo-stat-value">$50B+</div>
-                    <div class="enzo-stat-label">{{ __('Assets Managed') }}</div>
-                </div>
-                <div class="enzo-stat-divider"></div>
-                <div class="enzo-stat">
-                    <div class="enzo-stat-value">99.9%</div>
-                    <div class="enzo-stat-label">{{ __('Uptime Guarantee') }}</div>
-                </div>
-                <div class="enzo-stat-divider"></div>
-                <div class="enzo-stat">
                     <div class="enzo-stat-value">24/7</div>
                     <div class="enzo-stat-label">{{ __('Customer Support') }}</div>
+                </div>
+                <div class="enzo-stat-divider"></div>
+                <div class="enzo-stat">
+                    <div class="enzo-stat-value">AES-256</div>
+                    <div class="enzo-stat-label">{{ __('Encryption') }}</div>
+                </div>
+                <div class="enzo-stat-divider"></div>
+                <div class="enzo-stat">
+                    <div class="enzo-stat-value">Real-Time</div>
+                    <div class="enzo-stat-label">{{ __('Yield Tracking') }}</div>
+                </div>
+                <div class="enzo-stat-divider"></div>
+                <div class="enzo-stat">
+                    <div class="enzo-stat-value">Multi-Currency</div>
+                    <div class="enzo-stat-label">{{ __('Wallets') }}</div>
                 </div>
             </div>
         </div>

@@ -11,9 +11,9 @@
     </div>
     <div class="enzo-container">
         <div class="enzo-cta-content scroll-fade">
-            <h2 class="enzo-cta-title">Ready to Transform Your Banking Experience?</h2>
-            <p class="enzo-cta-stat">Join 2,000,000+ people already banking smarter</p>
-            <p class="enzo-cta-text">Join millions of satisfied customers across the United States and worldwide. Open your free account today and discover the future of US-regulated banking.</p>
+            <h2 class="enzo-cta-title">Ready to Start Growing Your Wealth?</h2>
+            <p class="enzo-cta-stat">Open your account in minutes &mdash; no paperwork</p>
+            <p class="enzo-cta-text">Join a platform built on transparency and security. Fund your account, choose a plan, and watch your yield grow in real time.</p>
             <a href="{{ setRoute("user.register") }}" class="enzo-btn enzo-btn-cta">Open Free Account &rarr;</a>
         </div>
     </div>

@@ -69,14 +69,14 @@
                 </ul>
             </div>
 
-            <!-- Column 5: Regulatory -->
+            <!-- Column 5: Security -->
             <div class="enzo-footer-col">
-                <h4 class="enzo-footer-heading">Regulation</h4>
+                <h4 class="enzo-footer-heading">Security</h4>
                 <ul class="enzo-footer-links">
-                    <li><a href="#">FDIC Insurance</a></li>
-                    <li><a href="#">FinCEN Registration</a></li>
-                    <li><a href="#">State Licenses</a></li>
-                    <li><a href="#">Compliance</a></li>
+                    <li><a href="#">256-bit Encryption</a></li>
+                    <li><a href="#">Multi-Factor Authentication</a></li>
+                    <li><a href="#">Data Protection</a></li>
+                    <li><a href="#">Transparent Terms</a></li>
                 </ul>
             </div>
         </div>
@@ -95,7 +95,7 @@
         </div>
 
         <div class="enzo-footer-regulatory">
-            <p><strong>Regulatory Disclosure:</strong> YieldEmpire is a financial technology company headquartered in New York, USA. Banking services are provided through our regulated partner financial institutions. YieldEmpire is registered as a Money Services Business (MSB) with FinCEN and complies with all applicable US federal and state banking regulations. Deposit accounts are FDIC insured up to $250,000 through our partner banks. YieldEmpire is licensed and regulated in the United States.</p>
+            <p><strong>Risk Disclosure:</strong> YieldEmpire is a financial technology platform. Deposits are held with established financial institutions and protected with 256-bit AES encryption, multi-factor authentication, and 24/7 fraud monitoring. Investments carry risk, including possible loss of principal. Returns are not guaranteed. Please read our Terms of Service and Privacy Policy before using the platform.</p>
         </div>
 
         <div class="enzo-footer-bottom">

@@ -12,27 +12,26 @@
             <div class="enzo-hero-left">
                 <div class="enzo-hero-badge">
                     <span class="enzo-hero-badge-dot"></span>
-                    TRUSTED BY 2M+ CUSTOMERS WORLDWIDE
+                    SECURE DIGITAL BANKING &amp; INVESTMENTS
                 </div>
 
                 <h1 class="enzo-hero-title">
-                    <span class="enzo-hero-title-line">Banking</span>
-                    <span class="enzo-hero-title-line">Reimagined</span>
-                    <span class="enzo-hero-title-line">for the <span class="enzo-hero-title-grad">Digital Age</span></span>
+                    <span class="enzo-hero-title-line">Grow your</span>
+                    <span class="enzo-hero-title-line">wealth with</span>
+                    <span class="enzo-hero-title-line"><span class="enzo-hero-title-grad">predictable returns</span></span>
                 </h1>
 
                 <p class="enzo-hero-sub">
-                    Experience secure, US-regulated digital banking with competitive rates, innovative tools, and 24/7 support. Your financial future starts here.
+                    A transparent investment platform built for steady growth. Fund your account, choose a plan, and track your yield in real time.
                 </p>
 
                 <div class="enzo-hero-actions">
-                    <a href="{{ setRoute("user.register") }}" class="enzo-btn enzo-btn-primary enzo-btn-glow">
+                    <a href="{{ setRoute('user.register') }}" class="enzo-btn enzo-btn-primary enzo-btn-glow">
                         Get Started
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9 4 13 8 9 12"/></svg>
                     </a>
-                    <a href="#features" class="enzo-btn enzo-btn-secondary">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 13 8 6 13 6 3"/></svg>
-                        Watch Demo
+                    <a href="{{ setRoute('user.login') }}" class="enzo-btn enzo-btn-secondary">
+                        Log In
                     </a>
                 </div>
             </div>
@@ -83,23 +82,23 @@
 
         <div class="enzo-hero-stats">
             <div class="enzo-hero-stat">
-                <span class="enzo-hero-stat-num">2M+</span>
-                <span class="enzo-hero-stat-label">Happy Customers</span>
-            </div>
-            <div class="enzo-hero-stat-divider"></div>
-            <div class="enzo-hero-stat">
-                <span class="enzo-hero-stat-num">$50B+</span>
-                <span class="enzo-hero-stat-label">Assets Managed</span>
-            </div>
-            <div class="enzo-hero-stat-divider"></div>
-            <div class="enzo-hero-stat">
-                <span class="enzo-hero-stat-num">99.9%</span>
-                <span class="enzo-hero-stat-label">Uptime</span>
-            </div>
-            <div class="enzo-hero-stat-divider"></div>
-            <div class="enzo-hero-stat">
                 <span class="enzo-hero-stat-num">24/7</span>
                 <span class="enzo-hero-stat-label">Support</span>
+            </div>
+            <div class="enzo-hero-stat-divider"></div>
+            <div class="enzo-hero-stat">
+                <span class="enzo-hero-stat-num">AES-256</span>
+                <span class="enzo-hero-stat-label">Encryption</span>
+            </div>
+            <div class="enzo-hero-stat-divider"></div>
+            <div class="enzo-hero-stat">
+                <span class="enzo-hero-stat-num">Real-Time</span>
+                <span class="enzo-hero-stat-label">Yield Tracking</span>
+            </div>
+            <div class="enzo-hero-stat-divider"></div>
+            <div class="enzo-hero-stat">
+                <span class="enzo-hero-stat-num">Multi-Currency</span>
+                <span class="enzo-hero-stat-label">Wallets</span>
             </div>
         </div>
     </div>

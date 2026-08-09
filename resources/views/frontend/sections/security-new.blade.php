@@ -5,9 +5,9 @@
             <div class="enzo-security-left animate-on-scroll">
                 <div class="enzo-security-badges">
                     <span class="enzo-security-badge"><span class="enzo-security-badge-dot"></span> 256-bit AES</span>
-                    <span class="enzo-security-badge"><span class="enzo-security-badge-dot"></span> PCI DSS</span>
-                    <span class="enzo-security-badge"><span class="enzo-security-badge-dot"></span> SOC 2</span>
-                    <span class="enzo-security-badge"><span class="enzo-security-badge-dot"></span> FDIC</span>
+                    <span class="enzo-security-badge"><span class="enzo-security-badge-dot"></span> Multi-Factor Auth</span>
+                    <span class="enzo-security-badge"><span class="enzo-security-badge-dot"></span> Encrypted Storage</span>
+                    <span class="enzo-security-badge"><span class="enzo-security-badge-dot"></span> Transparent Terms</span>
                 </div>
                 <span class="enzo-badge">SECURITY</span>
                 <h2 class="enzo-section-title" style="text-align:left">Bank-Grade Security <span class="enzo-text-grad">You Can Trust</span></h2>
@@ -41,7 +41,7 @@
                             <p>Real-time detection and prevention systems</p>
                         </div>
                     </div>
-                    <p class="enzo-security-fdic">FDIC insurance up to $250,000 provided through our partner banks. YieldEmpire is a regulated Money Services Business (MSB).</p>
+                    <p class="enzo-security-fdic">We protect your funds and data with 256-bit AES encryption, multi-factor authentication, and deposit accounts held with established financial institutions. Review our Terms of Service for full details.</p>
                 </div>
             </div>
             <div class="enzo-security-right animate-on-scroll" style="transition-delay:200ms">
@@ -75,7 +75,7 @@
 
                         <div class="enzo-sec-badge-row">
                             <span class="enzo-sec-badge"><span class="enzo-sec-badge-dot"></span> AES-256</span>
-                            <span class="enzo-sec-badge"><span class="enzo-sec-badge-dot"></span> FDIC INSURED</span>
+                            <span class="enzo-sec-badge"><span class="enzo-sec-badge-dot"></span> 2FA ENABLED</span>
                         </div>
 
                         <div class="enzo-sec-sub">Bank-grade encryption, verified in real time</div>

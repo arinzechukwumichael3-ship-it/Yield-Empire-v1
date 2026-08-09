@@ -435,8 +435,8 @@
                 </div>
             </div>
             <div class="seal-reg">
-                {{ __('Regulated by') }} {{ $basic_settings->site_name }}<br>
-                {{ __('Member FDIC / FCA Authorized') }}
+                {{ __('Issued by') }} {{ $basic_settings->site_name }}<br>
+                {{ __('Verified & Authorized') }}
             </div>
             <div class="seal-date">{{ __('Sealed') }}: {{ dateFormat('d M Y H:i', now()) }}</div>
         </div>

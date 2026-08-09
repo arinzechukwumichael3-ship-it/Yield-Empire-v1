@@ -20,25 +20,23 @@
                 </div>
                 <div class="build-reveal" data-delay="300">
                     <p class="enzo-building-desc">
-                        YieldEmpire's headquarters stand as a symbol of our commitment to financial excellence. 
-                        From this building, we power digital banking for over 2 million customers across 
-                        the United States and beyond — combining cutting-edge technology with the stability 
-                        of a regulated financial institution.
+                        YieldEmpire is built on a foundation of security, transparency, and financial excellence. 
+                        Our platform combines modern technology with disciplined risk management to keep your funds safe.
                     </p>
                 </div>
                 <div class="build-reveal" data-delay="450">
                     <div class="enzo-building-stats">
                         <div class="enzo-building-stat">
-                            <span class="enzo-building-stat-num">$50B+</span>
-                            <span class="enzo-building-stat-label">Assets Managed</span>
+                            <span class="enzo-building-stat-num">AES-256</span>
+                            <span class="enzo-building-stat-label">Encryption Standard</span>
                         </div>
                         <div class="enzo-building-stat">
-                            <span class="enzo-building-stat-num">99.9%</span>
-                            <span class="enzo-building-stat-label">Uptime SLA</span>
+                            <span class="enzo-building-stat-num">24/7</span>
+                            <span class="enzo-building-stat-label">Support &amp; Monitoring</span>
                         </div>
                         <div class="enzo-building-stat">
-                            <span class="enzo-building-stat-num">150+</span>
-                            <span class="enzo-building-stat-label">Countries</span>
+                            <span class="enzo-building-stat-num">2FA</span>
+                            <span class="enzo-building-stat-label">Account Protection</span>
                         </div>
                     </div>
                 </div>
@@ -65,7 +63,7 @@
                 <!-- Floating badges with independent reveals -->
                 <div class="build-badge build-badge-1 build-reveal" data-delay="600">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    <span>FDIC Insured</span>
+                    <span>Secure &amp; Encrypted</span>
                 </div>
                 <div class="build-badge build-badge-2 build-reveal" data-delay="750">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>

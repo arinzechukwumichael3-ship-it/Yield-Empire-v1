@@ -10,17 +10,17 @@
                 <svg class="glass-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                 <span class="glass-nav-label">Invest</span>
             </a>
-            <a href="{{ route("user.rise.feed") }}" class="glass-nav-item {{ request()->routeIs(["user.rise.feed", "user.transactions.*", "user.rise.send", "user.rise.withdraw.crypto"]) ? "active" : "" }}" aria-label="Activity">
+            <a href="{{ route("user.rise.feed") }}" class="glass-nav-item {{ request()->routeIs(["user.rise.feed", "user.transactions.*", "user.rise.send", "user.rise.withdraw.crypto"]) ? "active" : "" }}" aria-label="Portfolio">
                 <svg class="glass-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                <span class="glass-nav-label">Activity</span>
+                <span class="glass-nav-label">Portfolio</span>
             </a>
             <a href="{{ setRoute("user.investments.offers") }}" class="glass-nav-item {{ request()->routeIs(["user.investments.*", "user.invest.*"]) ? "active" : "" }}" aria-label="Earn">
                 <svg class="glass-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 <span class="glass-nav-label">Earn</span>
             </a>
-            <a href="{{ route("user.rise.wallet") }}" class="glass-nav-item {{ request()->routeIs(["user.rise.wallet"]) ? "active" : "" }}" aria-label="Assets">
+            <a href="{{ route("user.rise.wallet") }}" class="glass-nav-item {{ request()->routeIs(["user.rise.wallet"]) ? "active" : "" }}" aria-label="Wallet">
                 <svg class="glass-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
-                <span class="glass-nav-label">Assets</span>
+                <span class="glass-nav-label">Wallet</span>
             </a>
         </div>
     </div>

@@ -20,8 +20,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="{{ $basic_settings->site_name ?? 'YieldEmpire' }} - {{ $basic_settings->site_title ?? 'Secure USA Digital Banking Platform' }}">
-    <meta name="keywords" content="YieldEmpire, USA Digital Bank, Online Banking, Virtual Cards, FDIC Insured, US Financial Services">
+    <meta name="description" content="{{ $basic_settings->site_name ?? 'YieldEmpire' }} - {{ $basic_settings->site_title ?? 'Secure Digital Banking & Investment Platform' }}">
+    <meta name="keywords" content="YieldEmpire, Digital Banking, Online Banking, Virtual Cards, Investment Platform, US Financial Services">
     <meta name="author" content="YieldEmpire"/>
     <meta name="application-name" content="YieldEmpire">
     <meta name="geo.region" content="US-NY">

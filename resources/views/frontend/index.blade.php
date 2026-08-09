@@ -14,6 +14,7 @@ body { background: var(--bg-primary, #0A0E1A); font-family: "Inter", system-ui, 
     @include("frontend.sections.features-new")
     @include("frontend.sections.stats-section")
     @include("frontend.sections.how-it-works")
+    @include("frontend.sections.investment-plans")
     @include("frontend.sections.building-block")
     @include("frontend.sections.card-showcase")
     @include("frontend.sections.testimonials")

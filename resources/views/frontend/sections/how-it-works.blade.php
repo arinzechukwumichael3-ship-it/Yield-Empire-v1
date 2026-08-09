@@ -3,8 +3,8 @@
     <div class="enzo-container">
         <div class="enzo-section-header">
             <span class="enzo-badge">SIMPLE PROCESS</span>
-            <h2 class="enzo-section-title">Get Started in <span class="enzo-text-grad">3 Easy Steps</span></h2>
-            <p class="enzo-section-sub">Open your account in minutes and start banking smarter.</p>
+            <h2 class="enzo-section-title">Start Earning in <span class="enzo-text-grad">4 Easy Steps</span></h2>
+            <p class="enzo-section-sub">From sign-up to your first yield payout in minutes.</p>
         </div>
 
         <div class="enzo-steps">
@@ -14,28 +14,38 @@
                     <span class="enzo-step-num">1</span>
                 </div>
                 <div class="enzo-step-content">
-                    <h3 class="enzo-step-title">Create Account</h3>
-                    <p class="enzo-step-desc">Sign up in under 2 minutes with just your email. No paperwork, no branch visits.</p>
+                    <h3 class="enzo-step-title">Sign Up</h3>
+                    <p class="enzo-step-desc">Create your account in minutes with just your email and a secure password. No paperwork required.</p>
                 </div>
             </div>
-            <div class="enzo-step animate-on-scroll" style="transition-delay:200ms">
+            <div class="enzo-step animate-on-scroll" style="transition-delay:150ms">
                 <div class="enzo-step-connector"></div>
                 <div class="enzo-step-circle">
                     <span class="enzo-step-num">2</span>
                 </div>
                 <div class="enzo-step-content">
-                    <h3 class="enzo-step-title">Verify Identity</h3>
-                    <p class="enzo-step-desc">Quick KYC process. Upload ID and verify in minutes with our secure system.</p>
+                    <h3 class="enzo-step-title">Fund Your Account</h3>
+                    <p class="enzo-step-desc">Deposit with a supported payment method and see your balance update in real time.</p>
                 </div>
             </div>
-            <div class="enzo-step animate-on-scroll" style="transition-delay:400ms">
-                <div class="enzo-step-connector enzo-step-connector-last"></div>
+            <div class="enzo-step animate-on-scroll" style="transition-delay:300ms">
+                <div class="enzo-step-connector"></div>
                 <div class="enzo-step-circle">
                     <span class="enzo-step-num">3</span>
                 </div>
                 <div class="enzo-step-content">
-                    <h3 class="enzo-step-title">Start Banking</h3>
-                    <p class="enzo-step-desc">Fund your account, invest, send money globally, and manage virtual cards.</p>
+                    <h3 class="enzo-step-title">Choose a Plan</h3>
+                    <p class="enzo-step-desc">Pick the plan that fits your goals — with clear APY rates, terms, and minimums.</p>
+                </div>
+            </div>
+            <div class="enzo-step animate-on-scroll" style="transition-delay:450ms">
+                <div class="enzo-step-connector enzo-step-connector-last"></div>
+                <div class="enzo-step-circle">
+                    <span class="enzo-step-num">4</span>
+                </div>
+                <div class="enzo-step-content">
+                    <h3 class="enzo-step-title">Earn Yield</h3>
+                    <p class="enzo-step-desc">Watch your earnings accrue and track payouts live from your dashboard.</p>
                 </div>
             </div>
         </div>

@@ -651,10 +651,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2026-07-14'),
             ],
             (object)[
-                'title' => 'YieldEmpire Reaches 2 Million Active Users Milestone',
+                'title' => 'YieldEmpire Keeps Growing: A Milestone Worth Celebrating',
                 'slug' => 'yieldempire-2-million-users',
                 'data' => (object)[
-                    'description' => "We’re thrilled to announce that YieldEmpire has officially crossed 2 million active users worldwide. This milestone reflects the trust our customers place in us and our commitment to delivering best-in-class digital banking services. From our headquarters to our global operations, every team member shares in this achievement.",
+                    'description' => "Our community keeps growing, which only deepens our commitment to delivering clear, reliable digital money management. We stay focused on building features our customers actually use, keeping charges transparent, and supporting people as they grow and save. Thank you to everyone who uses YieldEmpire.",
                     'thumb_gradient' => 'linear-gradient(135deg, #0F172A, #1E293B)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://images.unsplash.com/photo-1447069387593-a5de0862481e?w=400&q=80',
@@ -675,10 +675,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2026-07-10'),
             ],
             (object)[
-                'title' => 'Q2 2026 Portfolio Review: Technology Sector Leads with 18% Gains',
+                'title' => 'Q2 2026 Portfolio Review: Staying Diversified Across Sectors',
                 'slug' => 'q2-2026-portfolio-review',
                 'data' => (object)[
-                    'description' => "Our Q2 2026 portfolio analysis reveals technology stocks as the top-performing sector with 18.3% gains, followed by healthcare at 12.1% and renewable energy at 9.8%. The YieldEmpire Balanced Growth Fund outperformed its benchmark by 3.2 percentage points. We recommend maintaining overweight positions in AI and cloud computing infrastructure.",
+                    'description' => "Our Q2 portfolio analysis examines technology, healthcare, and renewable energy sectors within a balanced approach. We encourage investors to review current allocations and stay diversified across asset classes rather than relying on any single sector.",
                     'thumb_gradient' => 'linear-gradient(135deg, #059669, #10B981)',
                     'thumb_icon' => 'chart',
                     'thumb_url' => 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80',
@@ -723,10 +723,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2026-07-13'),
             ],
             (object)[
-                'title' => 'YieldEmpire Partners with Stripe for Payment Processing Upgrade',
+                'title' => 'Payment Processing Upgrade: Smoother Settlements for Business Customers',
                 'slug' => 'yieldempire-stripe-partnership',
                 'data' => (object)[
-                    'description' => "YieldEmpire has entered a strategic partnership with Stripe to power next-generation payment processing for business customers. The integration enables real-time settlement, recurring billing, and multi-currency support for over 135 currencies. Business accounts can connect their Stripe dashboard directly to YieldEmpire.",
+                    'description' => "YieldEmpire continues to improve payment processing for business customers, with faster settlement windows, recurring billing support, and multi-currency settlement options. Business accounts can connect supported external payment dashboards to reconcile incoming funds more easily within their YieldEmpire account.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E3A5F, #0891B2)',
                     'thumb_icon' => 'globe',
                     'thumb_url' => 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&q=80',
@@ -747,10 +747,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2026-07-05'),
             ],
             (object)[
-                'title' => 'Global Payments Now Available: Send Money to 150+ Countries',
+                'title' => 'Global Payments: Send Money Across Supported Corridors',
                 'slug' => 'global-payments-available',
                 'data' => (object)[
-                    'description' => "YieldEmpire now supports SWIFT, ACH, and SEPA transfers. Send money worldwide in seconds with competitive exchange rates and low fees. Instant transfers are available to 45 countries with same-day settlement. Our global payment network covers 150+ countries.",
+                    'description' => "YieldEmpire now supports SWIFT, ACH, and SEPA transfers. Send money worldwide with competitive exchange rates and low fees. Same-day settlement is available on supported corridors across our global payment network.",
                     'thumb_gradient' => 'linear-gradient(135deg, #0891B2, #06B6D4)',
                     'thumb_icon' => 'globe',
                     'thumb_url' => 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&q=80',
@@ -810,7 +810,7 @@ class RiseController extends Controller
                 'title' => 'YieldEmpire Security: How We Protect Your Money 24/7',
                 'slug' => 'yieldempire-security',
                 'data' => (object)[
-                    'description' => "Military-grade 256-bit encryption, FDIC insurance, and biometric login protect every transaction you make. Our security infrastructure includes real-time fraud detection, multi-factor authentication, and continuous monitoring. We undergo regular third-party security audits and maintain SOC 2 Type II certification.",
+                    'description' => "256-bit encryption and biometric login protect every transaction you make. Our security infrastructure includes real-time fraud detection, multi-factor authentication, and continuous monitoring around the clock.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E293B, #334155)',
                     'thumb_icon' => 'shield',
                     'thumb_url' => 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&q=80',
@@ -822,7 +822,7 @@ class RiseController extends Controller
                 'title' => 'YieldEmpire Launches Financial Literacy Program for Students',
                 'slug' => 'yieldempire-financial-literacy-program',
                 'data' => (object)[
-                    'description' => "YieldEmpire is launching a comprehensive financial literacy program for high school and college students. The program covers budgeting, saving, investing, credit management, and cryptocurrency fundamentals. Partnering with 50 universities across North America and Europe, the program offers interactive workshops.",
+                    'description' => "YieldEmpire is launching a financial literacy program for students, covering budgeting, saving, investing, credit management, and the basics of digital money. The program partners with schools and educators in the regions we serve to offer workshops and learning resources.",
                     'thumb_gradient' => 'linear-gradient(135deg, #7C3AED, #A78BFA)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&q=80',
@@ -831,10 +831,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2026-06-28'),
             ],
             (object)[
-                'title' => 'YieldEmpire Named Best Digital Bank 2026 by FinTech Awards',
+                'title' => 'Digital Banking Done Simply: What We Keep Working On',
                 'slug' => 'yieldempire-best-digital-bank-2026',
                 'data' => (object)[
-                    'description' => "YieldEmpire has been named Best Digital Bank 2026 at the annual Global FinTech Awards in London. The award recognizes our innovative digital banking approach, exceptional user experience, and commitment to financial inclusion. This is the third major industry award for YieldEmpire this year.",
+                    'description' => "YieldEmpire focuses on an honest digital banking experience: clean design, clear fees, and customer-driven feature work. Recognition is nice, but what we really measure is whether customers can manage and grow their money with confidence on our platform.",
                     'thumb_gradient' => 'linear-gradient(135deg, #B45309, #F59E0B)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&q=80',
@@ -843,10 +843,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2026-06-25'),
             ],
             (object)[
-                'title' => 'YieldEmpire Expands to Latin America with Sao Paulo Office',
+                'title' => 'YieldEmpire Latin America: Growing Support and Localized Tools',
                 'slug' => 'yieldempire-latin-america-expansion',
                 'data' => (object)[
-                    'description' => "YieldEmpire is expanding its global footprint with a new regional headquarters in Sao Paulo, Brazil. The expansion serves customers across Brazil, Argentina, Chile, and Colombia with localized banking products and Portuguese and Spanish language support. The office will create 500 new jobs.",
+                    'description' => "YieldEmpire is expanding its service footprint in Latin America, improving localized support and language options for customers across the region. The focus is on making transfers and savings tools work well locally while keeping fees and terms transparent.",
                     'thumb_gradient' => 'linear-gradient(135deg, #16A34A, #22C55E)',
                     'thumb_icon' => 'globe',
                     'thumb_url' => 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&q=80',
@@ -879,10 +879,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2026-06-15'),
             ],
             (object)[
-                'title' => 'YieldEmpire Launches AI-Powered Financial Advisor Eve',
+                'title' => 'YieldEmpire AI Assistant: A Financial Copilot, Honestly Scoped',
                 'slug' => 'yieldempire-ai-financial-advisor',
                 'data' => (object)[
-                    'description' => "YieldEmpire AI-powered financial advisor, Eve, is now available to all users. Eve provides personalized investment recommendations, spending analysis, savings goals tracking, and retirement planning using advanced machine learning. Early users report 23% improvement in savings rates.",
+                    'description' => "YieldEmpire is exploring AI-assisted guidance to help with spending analysis, savings goals, and retirement planning. Any assistant we ship is clearly labeled as guidance only, not financial advice, and we publish what it can and cannot do for you.",
                     'thumb_gradient' => 'linear-gradient(135deg, #7C3AED, #8B5CF6)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&q=80',
@@ -903,10 +903,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2026-06-10'),
             ],
             (object)[
-                'title' => 'YieldEmpire Q1 2026 Earnings: Revenue Up 34% Year Over Year',
+                'title' => 'YieldEmpire Q1 2026 Update: Steady Progress Across the Platform',
                 'slug' => 'yieldempire-q1-2026-earnings',
                 'data' => (object)[
-                    'description' => "YieldEmpire reported strong Q1 2026 results with total revenue of \$847 million, a 34% increase year over year. Net income grew to \$312 million driven by higher net interest income and record fee revenue. The bank added 280,000 new customer accounts during the quarter.",
+                    'description' => "YieldEmpire continues to invest in the platform and customer experience. The first quarter of 2026 saw ongoing improvements to transfers, savings tools, and account security. We remain focused on transparency around fees and on building features that support long-term money growth.",
                     'thumb_gradient' => 'linear-gradient(135deg, #047857, #10B981)',
                     'thumb_icon' => 'chart',
                     'thumb_url' => 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&q=80',
@@ -939,10 +939,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2026-05-15'),
             ],
             (object)[
-                'title' => 'YieldEmpire Wins Best Mobile Banking App at Global Awards',
+                'title' => 'YieldEmpire Mobile App: Fresh Design, Same Focus on Simplicity',
                 'slug' => 'best-mobile-banking-app-award',
                 'data' => (object)[
-                    'description' => "YieldEmpire mobile app has been named Best Mobile Banking App at the Global Finance Awards 2026. Judges highlighted the intuitive interface, robust security, and innovative financial management tools including AI-powered budgeting and seamless third-party integrations.",
+                    'description' => "The YieldEmpire mobile app continues to evolve with an emphasis on a clean, intuitive interface, account security, and practical money-management tools. Recent improvements include clearer balances, faster navigation, and helpful budgeting features designed around how customers actually use the app.",
                     'thumb_gradient' => 'linear-gradient(135deg, #B45309, #F59E0B)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&q=80',
@@ -999,10 +999,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2026-04-02'),
             ],
             (object)[
-                'title' => 'YieldEmpire Year in Review 2025: Record Growth and Innovation',
+                'title' => 'YieldEmpire Year in Review 2025: Steady Progress and New Features',
                 'slug' => 'yieldempire-year-in-review-2025',
                 'data' => (object)[
-                    'description' => "2025 was a landmark year — we grew to 1.8 million users, processed over \$12 billion in transactions, launched 47 new features, and expanded to 12 new countries. Investment platform AUM grew 156%. We remain committed to making banking accessible for everyone.",
+                    'description' => "2025 was a strong year of steady building. We expanded investment plans, improved transfer flows across supported corridors, and shipped features customers asked for. We remain focused on making money tools simple, secure, and affordable for everyone who uses the platform.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E3A5F, #3B82F6)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=400&q=80',
@@ -1047,10 +1047,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2025-11-20'),
             ],
             (object)[
-                'title' => 'YieldEmpire Partners with Mastercard for Premium Debit Cards',
+                'title' => 'About Our Premium Debit Cards: Rewards, Simply Stated',
                 'slug' => 'yieldempire-mastercard-partnership',
                 'data' => (object)[
-                    'description' => "YieldEmpire has partnered with Mastercard to launch premium debit cards with enhanced rewards and travel benefits. The World Elite Debit Card offers 3% cashback on dining, 2% on groceries, and 1% on all other purchases with no annual fee.",
+                    'description' => "Our premium debit card is designed for everyday spending with straightforward rewards on eligible purchases and no annual fee. We publish complete card terms, fees, and rewards details in the app and on the website, so you always know what to expect.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E1E2E, #3B82F6)',
                     'thumb_icon' => 'card',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0034/400/300',
@@ -1071,10 +1071,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2025-10-28'),
             ],
             (object)[
-                'title' => 'YieldEmpire Surpasses $10 Billion in Assets Under Management',
+                'title' => 'Investment Platform Update: Managed Options at a Glance',
                 'slug' => 'yieldempire-10-billion-aum',
                 'data' => (object)[
-                    'description' => "YieldEmpire investment platform surpassed \$10 billion in AUM, achieved 18 months after launching our wealth management division. The platform offers over 200 professionally managed portfolios, robo-advisory services, and self-directed trading with cutting-edge tools.",
+                    'description' => "YieldEmpire offers a growing set of investment options from diversified plans to long-term growth plans designed for different goals and risk levels. Every plan page states expected return ranges, fees, and terms clearly, and you can review your current portfolio anytime from your dashboard.",
                     'thumb_gradient' => 'linear-gradient(135deg, #047857, #34D399)',
                     'thumb_icon' => 'chart',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0036/400/300',
@@ -1095,10 +1095,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2025-09-25'),
             ],
             (object)[
-                'title' => 'YieldEmpire Launches Small Business Banking Platform',
+                'title' => 'Company Update: Small Business Banking Platform',
                 'slug' => 'yieldempire-small-business-banking',
                 'data' => (object)[
-                    'description' => "YieldEmpire Business offers free checking with no minimum balance, integrated invoicing, payment processing, payroll management, and expense tracking. Business credit cards with tailored rewards are included. Over 10,000 businesses have joined the waitlist.",
+                    'description' => "YieldEmpire Business offers checking with no minimum balance, integrated invoicing, payment processing, and expense tracking. We are working on the roadmap and are transparent about what is available today in the app. Join the waitlist to be among the first to know what ships next.",
                     'thumb_gradient' => 'linear-gradient(135deg, #0F766E, #2DD4BF)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0038/400/300',
@@ -1110,7 +1110,7 @@ class RiseController extends Controller
                 'title' => 'AI in Finance: Transforming Investment Management',
                 'slug' => 'ai-machine-learning-finance-2025',
                 'data' => (object)[
-                    'description' => "Artificial intelligence is revolutionizing investment management. Our AI research team shares insights on ML algorithms for portfolio optimization, risk management, and trade execution. YieldEmpire proprietary AI model has outperformed the S&P 500 by 3.2% annually.",
+                    'description' => "Artificial intelligence is reshaping how investment tools are built. Our research team is exploring machine learning for portfolio analytics and risk management. Any tool that uses these techniques is presented transparently, and investing always carries risk which we aim to state plainly.",
                     'thumb_gradient' => 'linear-gradient(135deg, #5B21B6, #8B5CF6)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0039/400/300',
@@ -1167,10 +1167,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2025-07-08'),
             ],
             (object)[
-                'title' => 'YieldEmpire Reaches 1 Million Users: Our Journey So Far',
+                'title' => 'YieldEmpire Community Update: Our Journey So Far',
                 'slug' => 'yieldempire-1-million-users',
                 'data' => (object)[
-                    'description' => "YieldEmpire has reached 1 million active users, reflecting growing demand for innovative digital banking. From founding with a simple idea to over 2,000 employees serving customers in 30 countries, this milestone belongs to our users.",
+                    'description' => "YieldEmpire started with a simple idea: make money management clear and trustworthy. Today the platform serves customers across a growing number of markets with a focus on transparent products and straightforward support. This momentum, we use it to keep improving.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E3A5F, #60A5FA)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0044/400/300',
@@ -1251,10 +1251,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2024-12-30'),
             ],
             (object)[
-                'title' => 'YieldEmpire Year-End Bonuses and 2025 Hiring Plans',
+                'title' => 'Year-End Company Update: Investing in the Team for 2025',
                 'slug' => 'yieldempire-2025-employee-outlook',
                 'data' => (object)[
-                    'description' => "CEO Marcus Chen announced year-end bonuses averaging 18% for all employees. The company plans to hire 500 additional employees in 2025 across engineering, product, and support, with new offices in Singapore, Dubai, and Berlin.",
+                    'description' => "As we head into 2025, YieldEmpire is investing in the talent that builds the platform. Hiring across engineering, product, and support is planned, with a continued emphasis on dependable service and long-term thinking.",
                     'thumb_gradient' => 'linear-gradient(135deg, #047857, #34D399)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0051/400/300',
@@ -1287,10 +1287,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2024-11-25'),
             ],
             (object)[
-                'title' => 'YieldEmpire Launches Zero-Fee International Money Transfers',
+                'title' => 'International Money Transfers: Clear Fees, Broad Coverage',
                 'slug' => 'yieldempire-zero-fee-international-transfers',
                 'data' => (object)[
-                    'description' => "YieldEmpire now offers zero-fee international transfers to over 100 countries with competitive exchange rates. Features include real-time tracking, scheduled transfers, and multi-currency wallets for global users saving an average of 4.5% versus traditional banks.",
+                    'description' => "YieldEmpire supports international transfers across supported corridors with fees and exchange rates shown before you send. Features include real-time tracking, scheduled transfers, and multi-currency wallets. We publish rates transparently so you can compare your options.",
                     'thumb_gradient' => 'linear-gradient(135deg, #0891B2, #67E8F9)',
                     'thumb_icon' => 'globe',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0054/400/300',
@@ -1311,10 +1311,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2024-11-06'),
             ],
             (object)[
-                'title' => 'YieldEmpire Launches High-Yield Savings at 5.2% APY',
+                'title' => 'YieldEmpire Launches a High-Yield Savings Option',
                 'slug' => 'yieldempire-high-yield-savings-5-percent',
                 'data' => (object)[
-                    'description' => "Our new High-Yield Savings account offers 5.2% APY with no minimum balance and no fees. Features include automatic savings round-ups, goal-based buckets, and instant transfers. FDIC insured up to \$250,000 for your peace of mind.",
+                    'description' => "Our High-Yield Savings account offers a clearly published APY with no minimum balance and no monthly fees. Features include automatic savings round-ups, goal-based buckets, and instant transfers. Yield is not guaranteed and terms are fully explained before you open the account.",
                     'thumb_gradient' => 'linear-gradient(135deg, #065F46, #6EE7B7)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0056/400/300',
@@ -1335,10 +1335,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2024-10-05'),
             ],
             (object)[
-                'title' => 'AI-Powered Fraud Detection: YieldEmpire New Security System',
+                'title' => 'Fraud Protection: How YieldEmpire Monitors for Suspicious Activity',
                 'slug' => 'yieldempire-ai-fraud-detection',
                 'data' => (object)[
-                    'description' => "YieldEmpire deployed an AI-powered fraud detection system that analyzes transaction patterns in real time. The system has prevented over \$50 million in potential fraud with 99.7% accuracy and false positive rates below 0.1%.",
+                    'description' => "YieldEmpire uses automated systems that analyze transaction patterns in real time to flag unusual activity for review. These tools help us protect accounts around the clock, working alongside the layered security and monitoring behind every transfer.",
                     'thumb_gradient' => 'linear-gradient(135deg, #5B21B6, #A78BFA)',
                     'thumb_icon' => 'shield',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0058/400/300',
@@ -1431,10 +1431,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2024-06-01'),
             ],
             (object)[
-                'title' => 'YieldEmpire Wins Best Customer Service Award 2024',
+                'title' => 'Customer Support: How We Get Back to You',
                 'slug' => 'yieldempire-customer-service-award-2024',
                 'data' => (object)[
-                    'description' => "YieldEmpire was awarded Best Customer Service in Digital Banking with an average response time of 47 seconds and 94% satisfaction rating. Our support team handles over 50,000 inquiries daily across chat, phone, and email channels.",
+                    'description' => "YieldEmpire aims for fast, helpful support through chat, phone, and email. We measure response time and satisfaction internally and publish what we commit to in our service terms, so you always know what to expect from us.",
                     'thumb_gradient' => 'linear-gradient(135deg, #B45309, #F59E0B)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0066/400/300',
@@ -1458,7 +1458,7 @@ class RiseController extends Controller
                 'title' => 'YieldEmpire Year in Review 2023: Building the Foundation',
                 'slug' => 'yieldempire-year-in-review-2023',
                 'data' => (object)[
-                    'description' => "2023 was foundational — we launched our mobile app, introduced investment products, and grew to 250,000 users. Key milestones included our AI-powered budgeting tool, partnerships with payment networks, and \$200 million in Series C funding.",
+                    'description' => "2023 was foundational — we launched our mobile app, introduced investment products, and began refining the platform around what customers asked for. Key milestones included budgeting tools, integrations with payment networks, and a clearer focus on transparency.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E3A5F, #3B82F6)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0068/400/300',
@@ -1491,10 +1491,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2023-12-01'),
             ],
             (object)[
-                'title' => 'YieldEmpire Raises $350 Million in Series D Funding',
+                'title' => 'YieldEmpire Investment Update: Funding and What It Means',
                 'slug' => 'yieldempire-series-d-funding',
                 'data' => (object)[
-                    'description' => "YieldEmpire raised \$350 million in Series D led by Sequoia Capital and Accel Partners, valuing the company at \$4.8 billion. Funds will accelerate product development and expand into new markets across Asia and Latin America.",
+                    'description' => "YieldEmpire continues to develop its platform with a focus on product quality over hype. Sustained support from investors helps new features and reliability, and we are honest that growth in the platform and product, not in marketing claims.",
                     'thumb_gradient' => 'linear-gradient(135deg, #047857, #34D399)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0071/400/300',
@@ -1503,10 +1503,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2023-11-08'),
             ],
             (object)[
-                'title' => 'YieldEmpire Partners with Plaid for Account Connectivity',
+                'title' => 'Account Connectivity: Connect Your Favorite Apps',
                 'slug' => 'yieldempire-plaid-partnership',
                 'data' => (object)[
-                    'description' => "YieldEmpire partnered with Plaid to enable secure account connectivity with thousands of financial apps. Users can now link their accounts to budgeting apps, investment trackers, and tax preparation software with bank-level security.",
+                    'description' => "YieldEmpire integrates securely with third-party financial apps so you can connect accounts to budgeting tools, tax preparation software, and more. We review these integrations carefully and we only connect over secure channels. Simple and most amenable.",
                     'thumb_gradient' => 'linear-gradient(135deg, #0891B2, #22D3EE)',
                     'thumb_icon' => 'globe',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0072/400/300',
@@ -1551,10 +1551,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2023-10-05'),
             ],
             (object)[
-                'title' => 'YieldEmpire Launches BNPL Feature for Online Shopping',
+                'title' => 'Flexible Payments at Checkout',
                 'slug' => 'yieldempire-bnpl-launch',
                 'data' => (object)[
-                    'description' => "YieldEmpire now offers Buy Now Pay Later at over 5,000 online merchants. Users can split purchases into four interest-free payments with no hidden fees, integrated directly into the YieldEmpire mobile app for seamless checkout.",
+                    'description' => "Flexible purchase options are available at supported merchants, letting you split eligible purchases into a schedule of payments with no hidden fees. Full terms, payment schedule, and any fees are shown before you confirm.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E40AF, #3B82F6)',
                     'thumb_icon' => 'card',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0076/400/300',
@@ -1563,10 +1563,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2023-10-10'),
             ],
             (object)[
-                'title' => 'YieldEmpire Debuts Debit Card with 2% Unlimited Cashback',
+                'title' => 'Debit Card with Transparent Cashback',
                 'slug' => 'yieldempire-2-percent-cashback-debit-card',
                 'data' => (object)[
-                    'description' => "Our new debit card offers 2% unlimited cashback on all purchases with no categories or caps. Made from recycled materials with contactless payment. Over 100,000 sign-ups in the first week alone.",
+                    'description' => "Our debit card offers cashback on eligible purchases. Card terms, rewards rates, and limits are published openly ahead of time, and sign-up remains open to all eligible customers.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E3A5F, #60A5FA)',
                     'thumb_icon' => 'card',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0077/400/300',
@@ -1575,10 +1575,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2023-09-10'),
             ],
             (object)[
-                'title' => 'Small Business Spotlight: Merchant Services Growth',
+                'title' => 'Small Business Spotlight: Merchant Services',
                 'slug' => 'yieldempire-merchant-services-2023',
                 'data' => (object)[
-                    'description' => "YieldEmpire merchant services division serves 25,000 small businesses with payment processing, POS systems, and business lending. Our platform processed over \$500 million in Q3 2023 with 99.99% uptime.",
+                    'description' => "YieldEmpire merchant services help small businesses with payment processing, point-of-sale tools, and business lending. We publish terms and fees clearly and show real transaction readiness on a per-account basis.",
                     'thumb_gradient' => 'linear-gradient(135deg, #065F46, #6EE7B7)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0078/400/300',
@@ -1611,10 +1611,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2023-08-15'),
             ],
             (object)[
-                'title' => 'YieldEmpire Surpasses 500,000 Users in First Year',
+                'title' => 'YieldEmpire First Year: Building With Early Adopters',
                 'slug' => 'yieldempire-500k-users-first-year',
                 'data' => (object)[
-                    'description' => "Just 12 months after launch, YieldEmpire surpassed 500,000 users. Users have collectively saved over \$200 million and earned \$15 million in cashback rewards. We are just getting started on our mission.",
+                    'description' => "YieldEmpire is building its first full year with momentum and a clear roadmap. Early adopters are helping us shape the products they actually use, and our focus is on dependable service rather than headline numbers. We are just getting started.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E3A5F, #3B82F6)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0081/400/300',
@@ -1638,7 +1638,7 @@ class RiseController extends Controller
                 'title' => 'YieldEmpire Officially Launches Across North America and Europe',
                 'slug' => 'yieldempire-official-launch',
                 'data' => (object)[
-                    'description' => "After a successful beta with 50,000 users, YieldEmpire launches across North America and Europe. The platform offers checking, savings, investment management, international transfers, and AI-powered financial tools for the modern user.",
+                    'description' => "After careful testing with early users, YieldEmpire is expanding access across North America and Europe. The platform offers transfers, savings, investment plans, and practical money tools designed for the way people manage money today.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E3A5F, #3B82F6)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0083/400/300',
@@ -1647,10 +1647,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2022-09-15'),
             ],
             (object)[
-                'title' => 'YieldEmpire Raises $120 Million in Series A and B Funding',
+                'title' => 'YieldEmpire Seed Stage: Early Backing, Same Values',
                 'slug' => 'yieldempire-series-a-b-funding',
                 'data' => (object)[
-                    'description' => "YieldEmpire raised \$120 million from Andreessen Horowitz, Index Ventures, and former Treasury Secretary Lawrence Summers. The funding supports product development, regulatory compliance, and market expansion.",
+                    'description' => "YieldEmpire raised early stage capital to support product development, compliance, and market expansion. Our priority remains keeping fees transparent and building an investment platform that customers can rely on over the long term.",
                     'thumb_gradient' => 'linear-gradient(135deg, #047857, #34D399)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0084/400/300',
@@ -1683,10 +1683,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2022-07-15'),
             ],
             (object)[
-                'title' => 'YieldEmpire Hires CTO from Google',
+                'title' => 'YieldEmpire Strengthens Engineering Leadership',
                 'slug' => 'yieldempire-cto-hire-google',
                 'data' => (object)[
-                    'description' => "YieldEmpire appointed Dr. Sarah Chen, former Google VP of Engineering, as Chief Technology Officer. She will lead AI development, infrastructure scaling, and blockchain research initiatives for the company.",
+                    'description' => "YieldEmpire continues to build out its engineering leadership to support reliability, security, and responsible innovation across the platform. Experience from large-scale technology organizations informs how we approach infrastructure and security.",
                     'thumb_gradient' => 'linear-gradient(135deg, #5B21B6, #8B5CF6)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0087/400/300',
@@ -1710,7 +1710,7 @@ class RiseController extends Controller
                 'title' => 'The Future of Digital Banking: YieldEmpire Vision for 2030',
                 'slug' => 'future-of-digital-banking-2030',
                 'data' => (object)[
-                    'description' => "Founder Marcus Chen shares his vision for the future — from AI-powered advisors to DeFi integration. In 2030, your bank will be an intelligent partner that anticipates your needs and helps achieve your goals.",
+                    'description' => "Our product team shares a vision for where digital money management is heading — smarter tools, simpler experiences, and a stronger focus on customer outcomes. We will get there step by step, always clearly communicating what we can and can't do.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E293B, #4B5563)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0089/400/300',
@@ -1731,10 +1731,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2022-03-15'),
             ],
             (object)[
-                'title' => 'YieldEmpire Beta Launch: Early Access for 50,000 Users',
+                'title' => 'YieldEmpire Early Access: Building with Our First Users',
                 'slug' => 'yieldempire-beta-launch',
                 'data' => (object)[
-                    'description' => "YieldEmpire is accepting beta users! The first 50,000 get early access and free premium membership. Features include mobile banking, peer-to-peer payments, budgeting tools, and AI-powered spending insights.",
+                    'description' => "YieldEmpire is opening early access to its users to test features directly. Early members receive priority access and can help shape the product with their feedback, while we focus on delivering a dependable mobile experience.",
                     'thumb_gradient' => 'linear-gradient(135deg, #2563EB, #60A5FA)',
                     'thumb_icon' => 'default',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0091/400/300',
@@ -1755,10 +1755,10 @@ class RiseController extends Controller
                 'created_at' => \Carbon\Carbon::parse('2022-01-05'),
             ],
             (object)[
-                'title' => 'YieldEmpire Q2 2026 Earnings: Record Revenue Growth',
+                'title' => 'YieldEmpire Q2 Update: Product Progress and Priorities',
                 'slug' => 'yieldempire-q2-2026-earnings',
                 'data' => (object)[
-                    'description' => "YieldEmpire reported Q2 2026 revenue of \$912 million, up 38% year over year, with net income of \$345 million. The bank added 310,000 new accounts and processed over \$4.5 billion in transactions during the quarter.",
+                    'description' => "YieldEmpire Q2 brought continuous product work across the platform: faster transfers, best regulated improvements, and security improvements. We prioritizethe features customers rely on while keeping fees and terms easy to understand.",
                     'thumb_gradient' => 'linear-gradient(135deg, #047857, #34D399)',
                     'thumb_icon' => 'chart',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0093/400/300',
@@ -1818,7 +1818,7 @@ class RiseController extends Controller
                 'title' => 'Cybersecurity in Banking: How YieldEmpire Stays Ahead',
                 'slug' => 'yieldempire-cybersecurity-2026',
                 'data' => (object)[
-                    'description' => "YieldEmpire invests \$50 million annually in cybersecurity. Our defense-in-depth strategy includes AI threat detection, zero-trust architecture, regular penetration testing, and a dedicated security operations center.",
+                    'description' => "YieldEmpire defends with defense-in-depth security: layered encryption, threat detection, regular security reviews, and ongoing monitoring by a dedicated team. Details of security practices are published transparently in our security page.",
                     'thumb_gradient' => 'linear-gradient(135deg, #1E293B, #334155)',
                     'thumb_icon' => 'shield',
                     'thumb_url' => 'https://picsum.photos/seed/yieldempire-article-0098/400/300',

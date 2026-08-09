@@ -3,7 +3,7 @@
     <div class="enzo-container">
         <div class="enzo-section-header animate-on-scroll">
             <span class="enzo-badge">TESTIMONIALS</span>
-            <h2 class="enzo-section-title">Trusted by <span class="enzo-text-grad">2M+ Customers</span></h2>
+            <h2 class="enzo-section-title">What Our <span class="enzo-text-grad">Investors Say</span></h2>
             <p class="enzo-section-sub">Hear from our global community of satisfied users.</p>
         </div>
 
