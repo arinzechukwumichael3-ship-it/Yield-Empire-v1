@@ -31,10 +31,13 @@ if [ ! -f .env ]; then
   cp .env.example .env
 fi
 # Point at the LIVE Supabase project pooler; wallet-safe quoted password.
+# The database password must be provided via SUPABASE_DB_PASSWORD (never hardcoded).
+: "${SUPABASE_DB_PASSWORD:?Set SUPABASE_DB_PASSWORD to the Supabase DB password before running setup.sh}"
 python3 - <<'PY'
-import re, pathlib
+import os, re, pathlib
 p = pathlib.Path('.env')
 txt = p.read_text()
+db_password = "'" + os.environ['SUPABASE_DB_PASSWORD'] + "'"
 for k, v in {
   'APP_NAME': '"YieldEmpire"',
   'APP_ENV': '"production"',
@@ -46,7 +49,7 @@ for k, v in {
   'DB_PORT': '"6543"',
   'DB_DATABASE': '"postgres"',
   'DB_USERNAME': '"postgres.psegntoetyywntszrsat"',
-  'DB_PASSWORD': "'Madueke468$'",
+  'DB_PASSWORD': db_password,
 }.items():
     if re.search(rf'^{re.escape(k)}=', txt, re.M):
         txt = re.sub(rf'^{re.escape(k)}=.*$', f'{k}={v}', txt, flags=re.M)
