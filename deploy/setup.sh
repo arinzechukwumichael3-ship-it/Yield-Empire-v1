@@ -80,6 +80,7 @@ docker exec yieldempire-app php artisan package:discover || true
 docker exec yieldempire-app php artisan config:cache || true
 docker exec yieldempire-app php artisan view:cache || true
 docker exec yieldempire-app php artisan migrate --force || true
+docker exec yieldempire-app php artisan passport:keys --force || true
 docker exec yieldempire-app php artisan storage:link || true
 docker exec yieldempire-app php artisan optimize:clear || true
 
