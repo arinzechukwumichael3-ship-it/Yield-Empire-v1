@@ -7,7 +7,7 @@
                 <span class="glass-nav-label">Home</span>
             </a>
             <a href="{{ route("user.rise.invest") }}" class="glass-nav-item {{ request()->routeIs(["user.rise.invest", "user.portfolios.*"]) ? "active" : "" }}" aria-label="Invest">
-                <svg class="glass-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <svg class="glass-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                 <span class="glass-nav-label">Invest</span>
             </a>
             <a href="{{ route("user.rise.feed") }}" class="glass-nav-item {{ request()->routeIs(["user.rise.feed", "user.transactions.*", "user.rise.send", "user.rise.withdraw.crypto"]) ? "active" : "" }}" aria-label="Activity">
