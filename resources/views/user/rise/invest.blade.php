@@ -32,9 +32,6 @@
     stroke-dashoffset: 188.5;
     transition: stroke-dashoffset 1s ease-out;
 }
-.inv-ring-fg.green { stroke: var(--success); }
-.inv-ring-fg.orange { stroke: #F59E0B; }
-.inv-ring-fg.purple { stroke: #8B5CF6; }
 .inv-ring-center {
     position: absolute;
     inset: 0;
@@ -61,13 +58,46 @@
     height: 100%;
     border-radius: 3px;
     width: 0;
+    background: var(--accent);
     transition: width 1s ease-out;
 }
-.inv-progress-fill.blue { background: var(--accent); }
-.inv-progress-fill.green { background: var(--success); }
-.inv-progress-fill.orange { background: #F59E0B; }
-.inv-progress-fill.purple { background: #8B5CF6; }
-.inv-progress-fill.red { background: var(--danger); }
+
+/* Split-bar (accent vs neutral) */
+.inv-split-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: #2a2a2e;
+    overflow: hidden;
+}
+.inv-split-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--accent);
+    width: 0;
+    transition: width 1s ease-out;
+}
+
+/* Performance radar — signature chart */
+.inv-radar-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 18px 16px 20px;
+    margin-bottom: 16px;
+}
+.inv-radar-card .inv-section-title { align-self: flex-start; }
+.inv-radar svg { display: block; margin: 4px auto 0; }
+.inv-radar-metric { margin-top: 2px; display: flex; flex-direction: column; gap: 2px; }
+.inv-radar-value {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.05;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+}
+.inv-radar-sub { font-size: 12px; color: var(--text-muted); max-width: 260px; }
 
 /* Status badges */
 .inv-badge {
@@ -190,7 +220,7 @@
     transition: background 0.15s;
     text-decoration: none;
 }
-.inv-plan-btn:active { background: #2563EB; }
+.inv-plan-btn:active { background: #2f6bff; }
 
 /* Donut chart */
 .inv-donut {
@@ -273,11 +303,12 @@
     text-decoration: none;
     transition: background 0.15s;
 }
-.inv-cta:active { background: #2563EB; }
+.inv-cta:active { background: #2f6bff; }
 
 /* Earn banner */
 .inv-earn-banner {
-    background: linear-gradient(135deg, #1E3A5F, #1E40AF);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 16px 18px;
     display: flex;
@@ -406,7 +437,7 @@
     cursor: pointer;
     margin-top: 8px;
 }
-.inv-modal-close:active { background: #2563EB; }
+.inv-modal-close:active { background: #2f6bff; }
 
 /* Light mode */
 [data-theme="light"] {
@@ -461,11 +492,12 @@ $totalValue = $holdings->sum(function ($h) {
 
 <div class="io-body" style="padding-bottom:100px;">
 
-    {{-- ===== STATS ROW (animated rings + progress bars) ===== --}}
+    {{-- ===== STATS ROW (animated rings) ===== --}}
+    @if($totalPlans > 0)
     <div class="inv-stats" id="invStats">
         <div class="inv-stat-card inv-card" style="animation-delay:0.05s;">
             <div class="inv-ring" id="ringActive">
-                <svg viewBox="0 0 72 72"><circle class="inv-ring-bg" cx="36" cy="36" r="30"/><circle class="inv-ring-fg green" cx="36" cy="36" r="30" data-pct="{{ $totalPlans > 0 ? round(($activePlans/$totalPlans)*100) : 0 }}"/></svg>
+                <svg viewBox="0 0 72 72"><circle class="inv-ring-bg" cx="36" cy="36" r="30"/><circle class="inv-ring-fg" cx="36" cy="36" r="30" data-pct="{{ $totalPlans > 0 ? round(($activePlans/$totalPlans)*100) : 0 }}"/></svg>
                 <div class="inv-ring-center"><span class="inv-ring-center-value" data-target="{{ $activePlans }}">{{ $activePlans }}</span><span class="inv-ring-label">Active</span></div>
             </div>
             <span class="inv-stat-label">Win Rate</span>
@@ -479,17 +511,88 @@ $totalValue = $holdings->sum(function ($h) {
         </div>
         <div class="inv-stat-card inv-card" style="animation-delay:0.15s;">
             <div class="inv-ring" id="ringPlans">
-                <svg viewBox="0 0 72 72"><circle class="inv-ring-bg" cx="36" cy="36" r="30"/><circle class="inv-ring-fg orange" cx="36" cy="36" r="30" data-pct="{{ min($totalPlans * 10, 100) }}"/></svg>
+                <svg viewBox="0 0 72 72"><circle class="inv-ring-bg" cx="36" cy="36" r="30"/><circle class="inv-ring-fg" cx="36" cy="36" r="30" data-pct="{{ min($totalPlans * 10, 100) }}"/></svg>
                 <div class="inv-ring-center"><span class="inv-ring-center-value" data-target="{{ $totalPlans }}">{{ $totalPlans }}</span><span class="inv-ring-label">Plans</span></div>
             </div>
             <span class="inv-stat-label">Available</span>
         </div>
         <div class="inv-stat-card inv-card" style="animation-delay:0.20s;">
             <div class="inv-ring" id="ringValue">
-                <svg viewBox="0 0 72 72"><circle class="inv-ring-bg" cx="36" cy="36" r="30"/><circle class="inv-ring-fg purple" cx="36" cy="36" r="30" data-pct="{{ $totalValue > 0 ? min(round(($totalValue/10000)*100), 100) : 0 }}"/></svg>
-                <div class="inv-ring-center"><span class="inv-ring-center-value" data-target="{{ $totalValue > 0 ? 'K' : 0 }}">{{ $totalValue > 0 ? number_format($totalValue/1000,1).'K' : '0' }}</span><span class="inv-ring-label">Value</span></div>
+                <svg viewBox="0 0 72 72"><circle class="inv-ring-bg" cx="36" cy="36" r="30"/><circle class="inv-ring-fg" cx="36" cy="36" r="30" data-pct="{{ $totalValue > 0 ? min(round(($totalValue/10000)*100), 100) : 0 }}"/></svg>
+                <div class="inv-ring-center"><span class="inv-ring-center-value" data-target="{{ $totalValue > 0 ? 'K' : 0 }}">{{ $totalValue > 0 ? number_format($totalValue/1000,1).'K' : '—' }}</span><span class="inv-ring-label">Value</span></div>
             </div>
             <span class="inv-stat-label">Portfolio</span>
+        </div>
+    </div>
+    @else
+    <div class="inv-empty inv-card" style="animation-delay:0.05s;margin-bottom:16px;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5"/><path d="M12 12v10"/></svg>
+        <span class="inv-empty-title">No balance data available</span>
+        <span class="inv-empty-sub">Start investing to see equity and balance history</span>
+        <a href="{{ route('user.invest.new') }}" class="inv-plan-btn" style="margin-top:12px;">{{ __('Fund your account') }}</a>
+    </div>
+    @endif
+
+    {{-- ===== PERFORMANCE RADAR (signature chart) ===== --}}
+    @php
+        $radarPts = [
+            min(round(($activePlans / max($totalPlans, 1)) * 100), 100),
+            min(round($avgYield * 8), 100),
+            min(max($totalPlans * 12, 4), 100),
+            $totalValue > 0 ? min(round(($totalValue / 10000) * 100), 100) : 8,
+            min(round(($assets->where('status', true)->avg('base_yield') ?? 0) * 6), 100),
+        ];
+        $radarPoly = '';
+        for ($i = 0; $i < 5; $i++) {
+            $a = deg2rad(-90 + $i * 72);
+            $r = 42 + ($radarPts[$i] / 100) * 48;
+            $x = round(120 + $r * cos($a), 1);
+            $y = round(120 + $r * sin($a), 1);
+            $radarPoly .= ($i ? ' ' : '') . $x . ',' . $y;
+        }
+        $radarGrid = '';
+        for ($g = 1; $g <= 4; $g++) {
+            $pts = '';
+            for ($i = 0; $i < 5; $i++) {
+                $a = deg2rad(-90 + $i * 72);
+                $r = 42 + ($g / 4) * 48;
+                $x = round(120 + $r * cos($a), 1);
+                $y = round(120 + $r * sin($a), 1);
+                $pts .= ($i ? ' ' : '') . $x . ',' . $y;
+            }
+            $radarGrid .= '<polygon points="' . $pts . '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>';
+        }
+        $radarAxes = '';
+        for ($i = 0; $i < 5; $i++) {
+            $a = deg2rad(-90 + $i * 72);
+            $x = round(120 + 90 * cos($a), 1);
+            $y = round(120 + 90 * sin($a), 1);
+            $radarAxes .= '<line x1="120" y1="120" x2="' . $x . '" y2="' . $y . '" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>';
+        }
+        $radarLabels = ['Active', 'Yield', 'Plans', 'Value', 'Open'];
+    @endphp
+    <div class="inv-card inv-radar-card" style="animation-delay:0.24s;">
+        <div class="inv-section-title">Performance Radar</div>
+        <div class="inv-radar">
+            <svg width="240" height="240" viewBox="0 0 240 240">
+                {!! $radarAxes !!}
+                {!! $radarGrid !!}
+                <polygon points="{{ $radarPoly }}" fill="rgba(47,107,255,0.16)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>
+                @foreach($radarLabels as $i => $lbl)
+                    @php
+                        $a = deg2rad(-90 + $i * 72);
+                        $lx = round(120 + 104 * cos($a), 1);
+                        $ly = round(120 + 104 * sin($a), 1);
+                        $anc = $i == 0 ? 'middle' : ($lx > 120 ? 'start' : 'end');
+                    @endphp
+                    <text x="{{ $lx }}" y="{{ $ly }}" text-anchor="{{ $anc }}" dominant-baseline="middle" fill="var(--text-muted)" font-size="10" font-weight="600" letter-spacing="0.5">{{ $lbl }}</text>
+                @endforeach
+            </svg>
+        </div>
+        <div class="inv-radar-metric">
+            <span class="inv-stat-label">Portfolio value</span>
+            <span class="inv-radar-value">{{ $totalValue > 0 ? '$' . number_format($totalValue, 0) : '—' }}</span>
+            <span class="inv-radar-sub">{{ $totalValue > 0 ? $assets->count() . ' funds • ' . $activePlans . ' active' : 'No portfolio yet — fund your account to start investing' }}</span>
         </div>
     </div>
 
@@ -505,43 +608,43 @@ $totalValue = $holdings->sum(function ($h) {
         <a href="javascript:void(0)" onclick="document.getElementById('invModal').classList.add('open')" class="inv-earn-btn">Learn More</a>
     </div>
 
-    {{-- ===== PROGRESS BARS (comparative stats) ===== --}}
+    {{-- ===== FUND PERFORMANCE — split-bar (accent vs neutral) ===== --}}
+    @if($totalPlans > 0)
+    @php
+        $fundTypes = [
+            ['name' => 'Fixed Income',   'type' => 'Bonds'],
+            ['name' => 'Growth Fund',    'type' => 'Stocks'],
+            ['name' => 'Premium Plus',   'type' => 'Real Estate'],
+            ['name' => 'Sterling Vault', 'type' => 'Crypto'],
+        ];
+    @endphp
     <div class="inv-card" style="animation-delay:0.30s;margin-bottom:16px;">
         <div class="inv-section-title">
             Fund Performance
             <span class="inv-badge passed"><span class="inv-badge-dot"></span> On Track</span>
         </div>
-        <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+            @foreach($fundTypes as $fd)
+            @php
+                $cnt = $assets->where('asset_type', $fd['type'])->count();
+                $pct = $totalPlans > 0 ? round(($cnt / $totalPlans) * 100) : 0;
+                $rem = 100 - $pct;
+            @endphp
             <div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-bottom:4px;">
-                    <span>Fixed Income</span>
-                    <span>85%</span>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:12px;margin-bottom:5px;">
+                    <span style="color:var(--accent);font-weight:800;">{{ $pct }}%</span>
+                    <span style="color:var(--text-secondary);">{{ $rem }}%</span>
                 </div>
-                <div class="inv-progress"><div class="inv-progress-fill blue" data-target="85"></div></div>
-            </div>
-            <div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-bottom:4px;">
-                    <span>Growth Fund</span>
-                    <span>62%</span>
+                <div class="inv-split-bar"><div class="inv-split-fill" data-target="{{ $pct }}"></div></div>
+                <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:5px;">
+                    <span style="color:var(--text-primary);font-weight:600;">{{ $fd['name'] }}</span>
+                    <span style="color:var(--text-muted);">{{ $cnt }} {{ Str::plural('plan', $cnt) }}</span>
                 </div>
-                <div class="inv-progress"><div class="inv-progress-fill green" data-target="62"></div></div>
             </div>
-            <div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-bottom:4px;">
-                    <span>Premium Plus</span>
-                    <span>41%</span>
-                </div>
-                <div class="inv-progress"><div class="inv-progress-fill orange" data-target="41"></div></div>
-            </div>
-            <div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-bottom:4px;">
-                    <span>Sterling Vault</span>
-                    <span>28%</span>
-                </div>
-                <div class="inv-progress"><div class="inv-progress-fill purple" data-target="28"></div></div>
-            </div>
+            @endforeach
         </div>
     </div>
+    @endif
 
     {{-- ===== FILTERS ===== --}}
     <div class="inv-filters inv-card" style="animation-delay:0.35s;padding:0;border:none;background:none;">
@@ -609,21 +712,21 @@ $totalValue = $holdings->sum(function ($h) {
             <div class="inv-donut" id="donutChart">
                 <svg viewBox="0 0 100 100">
                     <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:var(--accent);" data-pct="45"/>
-                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:var(--success);transform:rotate(162deg);transform-origin:50% 50%;" data-pct="30"/>
-                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:#F59E0B;transform:rotate(270deg);transform-origin:50% 50%;" data-pct="25"/>
+                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:#2a2a2e;transform:rotate(162deg);transform-origin:50% 50%;" data-pct="30"/>
+                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:#2a2a2e;transform:rotate(270deg);transform-origin:50% 50%;" data-pct="25"/>
                 </svg>
                 <div class="inv-donut-center">
-                    <span class="inv-donut-value">${{ number_format($totalValue, 0) }}</span>
+                    <span class="inv-donut-value">{{ $totalValue > 0 ? '$' . number_format($totalValue, 0) : '—' }}</span>
                     <span class="inv-donut-label">Total</span>
                 </div>
             </div>
             <div class="inv-legend">
                 @foreach($holdings->take(4) as $h)
                 <div class="inv-legend-item">
-                    <span class="inv-legend-dot" style="background:{{ $loop->index == 0 ? 'var(--accent)' : ($loop->index == 1 ? 'var(--success)' : ($loop->index == 2 ? '#F59E0B' : '#8B5CF6')) }};"></span>
+                    <span class="inv-legend-dot" style="background:{{ $loop->index == 0 ? 'var(--accent)' : '#2a2a2e' }};"></span>
                     <span style="flex:1;">{{ $h->asset->name ?? $h->asset_type ?? 'Asset' }}</span>
                     <span style="font-weight:600;color:var(--text-primary);">{{ $h->allocation_percent ?? 0 }}%</span>
-                    <div class="inv-legend-bar"><div class="inv-legend-fill" style="background:{{ $loop->index == 0 ? 'var(--accent)' : ($loop->index == 1 ? 'var(--success)' : ($loop->index == 2 ? '#F59E0B' : '#8B5CF6')) }};" data-target="{{ $h->allocation_percent ?? 0 }}"></div></div>
+                    <div class="inv-legend-bar"><div class="inv-legend-fill" style="background:{{ $loop->index == 0 ? 'var(--accent)' : '#2a2a2e' }};" data-target="{{ $h->allocation_percent ?? 0 }}"></div></div>
                 </div>
                 @endforeach
             </div>
@@ -718,7 +821,7 @@ $totalValue = $holdings->sum(function ($h) {
 
     // ===== ANIMATE PROGRESS BARS =====
     function animateBars() {
-        document.querySelectorAll('.inv-progress-fill').forEach(function(bar) {
+        document.querySelectorAll('.inv-progress-fill, .inv-split-fill').forEach(function(bar) {
             var target = parseFloat(bar.getAttribute('data-target')) || 0;
             bar.style.width = target + '%';
         });
@@ -774,7 +877,7 @@ $totalValue = $holdings->sum(function ($h) {
             if (entry.isIntersecting && !observed.has(entry.target)) {
                 observed.add(entry.target);
                 // Re-trigger bars within this section
-                entry.target.querySelectorAll('.inv-progress-fill, .inv-legend-fill').forEach(function(bar) {
+                entry.target.querySelectorAll('.inv-progress-fill, .inv-split-fill, .inv-legend-fill').forEach(function(bar) {
                     var target = parseFloat(bar.getAttribute('data-target')) || 0;
                     bar.style.width = target + '%';
                 });
@@ -783,7 +886,7 @@ $totalValue = $holdings->sum(function ($h) {
         });
     }, { threshold: 0.3 });
 
-    document.querySelectorAll('.inv-progress, .inv-legend').forEach(function(el) {
+    document.querySelectorAll('.inv-progress, .inv-split-bar, .inv-legend').forEach(function(el) {
         observer.observe(el);
     });
 

@@ -30,8 +30,8 @@
     color: var(--text-secondary, #94A3B8);
     transition: all 0.15s ease;
 }
-.fcar-tab:hover { border-color: #3B82F6; color: #3B82F6; }
-.fcar-tab.active { background: #3B82F6; color: #fff; border-color: #3B82F6; }
+.fcar-tab:hover { border-color: var(--accent); color: var(--accent); }
+.fcar-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 /* Stage — fixed height card */
 .fcar-stage { position: relative; }
@@ -102,7 +102,7 @@
     display: block;
     height: 100%;
     width: 0%;
-    background: #3B82F6;
+    background: var(--accent);
     border-radius: 0 0 0 16px;
     transition: none;
 }
@@ -125,7 +125,7 @@
     align-self: flex-start;
     padding: 3px 12px;
     border-radius: 999px;
-    background: #3B82F6;
+    background: var(--accent);
     color: #fff;
     font-size: 11px;
     font-weight: 700;
@@ -185,12 +185,12 @@
     max-width: 10px;
     min-height: 10px;
     max-height: 10px;
-    background: #3B82F6;
+    background: var(--accent);
     flex-shrink: 0;
 }
 [data-theme="light"] .fcar-dot { background: rgba(0,0,0,0.18); }
 [data-theme="light"] .fcar-dot:hover { background: rgba(0,0,0,0.35); }
-[data-theme="light"] .fcar-dot.active { background: #3B82F6; }
+[data-theme="light"] .fcar-dot.active { background: var(--accent); }
 
 /* Nav buttons */
 .fcar-nav {
@@ -311,8 +311,8 @@
 .fl-cat {
     padding: 1px 8px;
     border-radius: 6px;
-    background: rgba(59,130,246,0.10);
-    color: #3B82F6;
+    background: rgba(47,107,255,0.10);
+    color: var(--accent);
     font-weight: 600;
 }
 .fl-date {
@@ -322,7 +322,7 @@
 /* Light mode */
 [data-theme="light"] .fcar-viewport { background: var(--bg-elevated, #f1f5f9); }
 [data-theme="light"] .fcar-tab { border-color: var(--border-color, #e2e8f0); color: var(--text-secondary, #64748b); }
-[data-theme="light"] .fcar-tab:hover { border-color: #3B82F6; color: #3B82F6; }
+[data-theme="light"] .fcar-tab:hover { border-color: var(--accent); color: var(--accent); }
 [data-theme="light"] .fcar-nav { background: rgba(0,0,0,0.25); }
 [data-theme="light"] .fcar-nav:hover { background: rgba(0,0,0,0.4); }
 [data-theme="light"] .fl-card { background: var(--bg-card); border-color: var(--border-color); }

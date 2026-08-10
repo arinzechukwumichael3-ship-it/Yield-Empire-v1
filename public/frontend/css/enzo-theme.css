@@ -14,11 +14,11 @@
     --card-shadow: 0 2px 10px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.02);
     --shadow-strong: 0 18px 48px rgba(0,0,0,0.70);
 
-    --blue: #2563EB;
+    --blue: #2f6bff;
     --cyan: #38BDF8;
-    --accent: #2563EB;
-    --accent-soft: rgba(37,99,235,0.16);
-    --gradient: linear-gradient(135deg, #2563EB 0%, #2563EB 100%);
+    --accent: #2f6bff;
+    --accent-soft: rgba(47,107,255,0.16);
+    --gradient: linear-gradient(135deg, #2f6bff 0%, #2f6bff 100%);
 
     --text-primary: #F8FAFC;
     --text-secondary: #A1A1AA;
@@ -38,8 +38,8 @@
     --warning: #FBBF24;
     --warning-text: #FCD34D;
     --warning-bg: rgba(245,158,11,0.16);
-    --info: #2563EB;
-    --info-bg: rgba(37,99,235,0.16);
+    --info: #2f6bff;
+    --info-bg: rgba(47,107,255,0.16);
 
     --gold: #F5B84C;
     --gold-soft: rgba(245,184,76,0.15);
@@ -1377,11 +1377,11 @@ html { scroll-behavior: smooth; }
   --card-shadow: 0 2px 10px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.02);
   --shadow-strong: 0 18px 48px rgba(0,0,0,0.70);
 
-  --blue: #2563EB;
+  --blue: #2f6bff;
   --cyan: #38BDF8;
-  --accent: #2563EB;
-  --accent-soft: rgba(37,99,235,0.16);
-  --gradient: linear-gradient(135deg, #2563EB 0%, #2563EB 100%);
+  --accent: #2f6bff;
+  --accent-soft: rgba(47,107,255,0.16);
+  --gradient: linear-gradient(135deg, #2f6bff 0%, #2f6bff 100%);
 
   --text-primary: #F8FAFC;
   --text-secondary: #A1A1AA;
@@ -1401,8 +1401,8 @@ html { scroll-behavior: smooth; }
   --warning: #FBBF24;
   --warning-text: #FCD34D;
   --warning-bg: rgba(245,158,11,0.16);
-  --info: #2563EB;
-  --info-bg: rgba(37,99,235,0.16);
+  --info: #2f6bff;
+  --info-bg: rgba(47,107,255,0.16);
 
   --overlay: rgba(0,0,0,0.60);
   --scrollbar: #30303A;
@@ -2758,18 +2758,20 @@ html { scroll-behavior: smooth; }
 .dash-action-pill:hover .dash-action-icon {
     transform: scale(1.08);
 }
-.dash-action-icon-blue { background: rgba(37,99,235,0.15); color: #2563EB; }
-.dash-action-icon-yellow { background: rgba(234,179,8,0.15); color: #EAB308; }
-.dash-action-icon-red { background: rgba(239,68,68,0.15); color: #DC2626; }
-.dash-action-icon-purple { background: rgba(139,92,246,0.15); color: #8B5CF6; }
-[data-theme="light"] .dash-action-icon-blue { background: rgba(37,99,235,0.12); }
-[data-theme="light"] .dash-action-icon-yellow { background: rgba(234,179,8,0.12); }
-[data-theme="light"] .dash-action-icon-red { background: rgba(239,68,68,0.12); }
-[data-theme="light"] .dash-action-icon-purple { background: rgba(139,92,246,0.12); }
-.dash-action-icon-teal { background: rgba(20,184,166,0.15); color: #14B8A6; }
-[data-theme="light"] .dash-action-icon-teal { background: rgba(20,184,166,0.12); }
-.dash-action-icon-green { background: rgba(22,163,74,0.15); color: #4ADE80; }
-[data-theme="light"] .dash-action-icon-green { background: rgba(22,163,74,0.12); color: #16A34A; }
+.dash-action-icon-accent,
+.dash-action-icon-blue { background: var(--accent-soft); color: var(--accent); }
+.dash-action-icon-neutral,
+.dash-action-icon-yellow,
+.dash-action-icon-red,
+.dash-action-icon-purple,
+.dash-action-icon-teal,
+.dash-action-icon-green { background: #2a2a2e; color: #C9C9CE; }
+[data-theme="light"] .dash-action-icon-blue { background: rgba(47,107,255,0.12); }
+[data-theme="light"] .dash-action-icon-yellow,
+[data-theme="light"] .dash-action-icon-red,
+[data-theme="light"] .dash-action-icon-purple,
+[data-theme="light"] .dash-action-icon-teal,
+[data-theme="light"] .dash-action-icon-green { background: #E4E4E7; color: #52525B; }
 .dash-action-label {
     font-size: 12px;
     font-weight: 600;
@@ -2809,8 +2811,8 @@ html { scroll-behavior: smooth; }
     justify-content: center;
     flex-shrink: 0;
 }
-.dash-service-icon-red { background: rgba(239,68,68,0.15); color: #DC2626; }
-.dash-service-icon-amber { background: rgba(245,158,11,0.15); color: #F59E0B; }
+.dash-service-icon-red,
+.dash-service-icon-amber { background: #2a2a2e; color: #C9C9CE; }
 .dash-service-label {
     font-size: 13px;
     font-weight: 600;
@@ -2849,8 +2851,13 @@ html { scroll-behavior: smooth; }
     justify-content: center;
     flex-shrink: 0;
 }
-.dash-stat-icon-green { background: rgba(22,163,74,0.15); color: #16A34A; }
-.dash-stat-icon-red { background: rgba(239,68,68,0.15); color: #DC2626; }
+.dash-stat-icon-accent { background: var(--accent-soft); color: var(--accent); }
+.dash-stat-icon-green,
+.dash-stat-icon-red,
+.dash-stat-icon-neutral { background: #2a2a2e; color: #C9C9CE; }
+[data-theme="light"] .dash-stat-icon-green,
+[data-theme="light"] .dash-stat-icon-red,
+[data-theme="light"] .dash-stat-icon-neutral { background: #E4E4E7; color: #52525B; }
 .dash-stat-info {
     display: flex;
     flex-direction: column;
@@ -2885,7 +2892,7 @@ html { scroll-behavior: smooth; }
 .dash-section-link {
     font-size: 13px;
     font-weight: 600;
-    color: #2563EB;
+    color: var(--accent);
     text-decoration: none;
 }
 
@@ -2919,11 +2926,11 @@ html { scroll-behavior: smooth; }
 .dash-invest-badge {
     display: inline-block;
     padding: 2px 8px;
-    background: rgba(37,99,235,0.15);
+    background: #2a2a2e;
     border-radius: 6px;
     font-size: 10px;
     font-weight: 700;
-    color: #2563EB;
+    color: #9CA3AF;
     align-self: flex-start;
 }
 .dash-invest-name {
@@ -2934,10 +2941,7 @@ html { scroll-behavior: smooth; }
 .dash-invest-rate {
     font-size: 20px;
     font-weight: 800;
-    background: linear-gradient(135deg, #2563EB, #8B5CF6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--accent);
 }
 .dash-invest-rate .dash-invest-rate-unit {
     font-size: 11px;
@@ -2954,7 +2958,7 @@ html { scroll-behavior: smooth; }
     align-items: center;
     justify-content: center;
     padding: 8px 16px;
-    background: linear-gradient(135deg, #2563EB, #2563EB);
+    background: var(--accent);
     color: #fff;
     font-size: 12px;
     font-weight: 600;
@@ -3041,22 +3045,23 @@ html { scroll-behavior: smooth; }
     text-decoration: none;
     transition: background 0.15s ease;
 }
-.dash-contact-row:hover { background: rgba(37,99,235,0.06); }
+.dash-contact-row:hover { background: rgba(47,107,255,0.06); }
 
 /* VIRTUAL CARD PREVIEW WIDGET */
 .dash-card-preview {
     margin-top: 16px;
     border-radius: 20px;
-    background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 40%, #2563EB 100%);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     padding: 20px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(37,99,235,0.3);
+    box-shadow: var(--card-shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .dash-card-preview:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(37,99,235,0.4);
+    box-shadow: var(--shadow-strong);
 }
 .dash-card-preview::before {
     content: '';
@@ -3205,8 +3210,8 @@ html { scroll-behavior: smooth; }
     width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: rgba(37,99,235,0.12);
-    color: #2563EB;
+    background: var(--accent-soft);
+    color: var(--accent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3858,9 +3863,9 @@ html { scroll-behavior: smooth; }
     --border-strong: #30303A;
     --card-shadow: 0 2px 10px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.02);
     --shadow-strong: 0 18px 48px rgba(0,0,0,0.7);
-    --accent: #2563EB;
-    --accent-soft: rgba(37,99,235,0.14);
-    --gradient: linear-gradient(135deg, #2563EB 0%, #2563EB 100%);
+    --accent: #2f6bff;
+    --accent-soft: rgba(47,107,255,0.14);
+    --gradient: linear-gradient(135deg, #2f6bff 0%, #2f6bff 100%);
     --gold: #F5B84C;
     --gold-soft: rgba(245,184,76,0.15);
     --profit: #16A34A;
@@ -3881,6 +3886,53 @@ html { scroll-behavior: smooth; }
 
 /* ---------- App shell ---------- */
 .rise-app { padding-bottom: 132px; }
+/* Extra scroll clearance so lists (e.g. "Your Wallets") never sit under the bottom nav */
+.am-body { padding-bottom: 128px; }
+html { scroll-padding-bottom: 140px; }
+
+/* ---------- WhatsApp support widget: compact, dismissible, above the nav ---------- */
+.whatsapp-widget {
+    position: fixed;
+    right: 16px;
+    bottom: 132px;
+    z-index: 95;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    filter: none;
+}
+.whatsapp-widget .whatsapp-btn {
+    background: #101014;
+    border: 1px solid var(--border-strong);
+    color: #F8FAFC !important;
+    border-radius: 50px;
+    padding: 10px 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.whatsapp-widget .whatsapp-btn:hover { background: #19191F; transform: none; }
+.whatsapp-widget .whatsapp-icon { width: 28px; height: 28px; border-radius: 50%; background: #2a2a2e; display: flex; align-items: center; justify-content: center; position: relative; }
+.whatsapp-widget .whatsapp-icon i { font-size: 16px; color: #F8FAFC; line-height: 1; }
+.whatsapp-widget .whatsapp-text { font-size: 12px; font-weight: 600; color: #D4D4D8; }
+.whatsapp-widget .online-dot {
+    position: absolute; top: -1px; right: -1px; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--success); border: 2px solid #101014;
+}
+.wa-dismiss {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #2a2a2e; border: 1px solid var(--border-strong); color: #A1A1AA;
+    font-size: 12px; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s;
+}
+.wa-dismiss:hover { background: var(--accent); color: #fff; }
+@media (max-width: 480px) {
+    .whatsapp-widget { bottom: 126px !important; right: 12px !important; }
+    .whatsapp-widget .whatsapp-btn { padding: 9px 12px; }
+    .whatsapp-widget .whatsapp-text { display: none; }
+}
 
 /* ---------- Dashboard page rhythm ---------- */
 .dash-page { gap: 18px; }
@@ -3930,18 +3982,18 @@ html { scroll-behavior: smooth; }
 .dash-balance-card {
     border-radius: 22px; padding: 22px 20px 18px;
     border: 1px solid var(--border-color);
-    background: radial-gradient(120% 160% at 100% 0%, rgba(37,99,235,0.18) 0%, rgba(10,10,10,0) 55%), var(--bg-card);
+    background: var(--bg-card);
     box-shadow: var(--card-shadow);
 }
 [data-theme="dark"] .dash-balance-card {
-    background: radial-gradient(120% 160% at 100% 0%, rgba(37,99,235,0.18) 0%, rgba(10,10,10,0) 55%), var(--bg-card);
+    background: var(--bg-card);
 }
 .dash-balance-currency-tabs {
     background: rgba(255,255,255,0.06); border: 1px solid var(--border-color);
 }
 [data-theme="dark"] .dash-currency-tab.active {
     background: var(--accent); color: #fff;
-    box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+    box-shadow: 0 4px 14px rgba(47,107,255,0.35);
 }
 .dash-currency-tab { letter-spacing: .3px; font-size: 11px; }
 .dash-copy-btn, .dash-eye-btn {
@@ -3979,13 +4031,13 @@ html { scroll-behavior: smooth; }
     -webkit-tap-highlight-color: transparent; transition: transform .15s, box-shadow .15s;
 }
 .yh-cta-primary {
-    background: linear-gradient(135deg, #2563EB, #2563EB); color: #fff;
-    box-shadow: 0 10px 26px rgba(37,99,235,0.4);
+    background: var(--accent); color: #fff;
+    box-shadow: 0 10px 26px rgba(47,107,255,0.35);
 }
 .yh-cta-primary:active { transform: scale(0.98); }
 .yh-cta-ghost {
-    background: var(--bg-card); color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    background: #2a2a2e; color: #F8FAFC;
+    border: 1px solid #3a3a42;
 }
 .yh-cta-ghost:active { transform: scale(0.98); }
 
@@ -4007,14 +4059,14 @@ html { scroll-behavior: smooth; }
 
 /* ---------- Referral / earn banner ---------- */
 .dash-referral-banner {
-    border-radius: 18px; border: 1px solid rgba(245,184,76,0.2);
-    background: linear-gradient(120deg, rgba(245,184,76,0.10), rgba(37,99,235,0.08));
+    border-radius: 18px; border: 1px solid rgba(47,107,255,0.24);
+    background: linear-gradient(120deg, rgba(47,107,255,0.12), rgba(47,107,255,0.04));
     padding: 16px;
 }
 .dash-referral-banner-title { font-size: 14px; font-weight: 800; color: var(--text-primary); }
 .dash-referral-banner-sub { font-size: 12px; color: var(--text-secondary); }
 .dash-referral-banner-btn {
-    background: var(--gold); color: #1A1206; font-weight: 800; font-size: 13px;
+    background: var(--accent); color: #fff; font-weight: 800; font-size: 13px;
     border-radius: 100px; padding: 9px 22px;
 }
 
@@ -4034,11 +4086,11 @@ html { scroll-behavior: smooth; }
 }
 .dash-invest-badge {
     align-self: flex-start; font-size: 10px; font-weight: 700; letter-spacing: 1px;
-    color: var(--gold); background: var(--gold-soft);
+    color: #9CA3AF; background: #2a2a2e;
     border-radius: 100px; padding: 3px 10px;
 }
 .dash-invest-name { font-size: 15px; font-weight: 700; color: var(--text-primary); }
-.dash-invest-rate { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--profit); font-variant-numeric: tabular-nums; }
+.dash-invest-rate { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--accent); font-variant-numeric: tabular-nums; }
 .dash-invest-duration { font-size: 11px; color: var(--text-muted); font-weight: 500; }
 .dash-invest-btn {
     margin-top: 10px; text-align: center;
@@ -4048,7 +4100,7 @@ html { scroll-behavior: smooth; }
 
 /* ---------- "My Card" preview ---------- */
 .dash-card-preview-inner {
-    background: linear-gradient(135deg, #1B1B22, #101014);
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 18px;
 }
@@ -4068,12 +4120,12 @@ html { scroll-behavior: smooth; }
 .yh-asset + .yh-asset { border-top: 1px solid var(--border-color); }
 .yh-asset-ico {
     width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
-    background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.22);
-    color: #7FA9F7; font-size: 12px; font-weight: 800; letter-spacing: 0.5px;
+    background: var(--accent-soft); border: 1px solid rgba(47,107,255,0.22);
+    color: #8FB3FF; font-size: 12px; font-weight: 800; letter-spacing: 0.5px;
     display: flex; align-items: center; justify-content: center;
 }
-.yh-asset-ico.eu  { background: rgba(245,184,76,0.12);  border-color: rgba(245,184,76,0.24); color: var(--gold); }
-.yh-asset-ico.gbp { background: rgba(22,163,74,0.12);   border-color: rgba(22,163,74,0.24);  color: var(--profit); }
+.yh-asset-ico.eu,
+.yh-asset-ico.gbp { background: var(--accent-soft); border-color: rgba(47,107,255,0.22); color: #8FB3FF; }
 .yh-asset-mid { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .yh-asset-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
 .yh-asset-ticker { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 1.4px; text-transform: uppercase; }
@@ -4134,7 +4186,7 @@ html { scroll-behavior: smooth; }
 
 /* ---------- Light-mode counterparts for the new blocks ---------- */
 [data-theme="light"] .dash-balance-card {
-    background: radial-gradient(120% 160% at 100% 0%, rgba(37,99,235,0.10) 0%, rgba(255,255,255,0) 55%), var(--bg-card);
+    background: var(--bg-card);
 }
 [data-theme="light"] .dash-currency-tab.active { background: var(--accent); color: #fff; }
 [data-theme="light"] .dash-copy-btn, [data-theme="light"] .dash-eye-btn {
@@ -4145,11 +4197,12 @@ html { scroll-behavior: smooth; }
     box-shadow: 0 10px 34px rgba(15,23,42,0.16);
 }
 [data-theme="light"] .dash-card-preview-inner {
-    background: linear-gradient(135deg, #F1F5F9, #E2E8F0);
+    background: #fff;
+    border-color: #E2E8F0;
 }
 [data-theme="light"] .dash-card-preview-number { color: #0F172A; }
 [data-theme="light"] .dash-card-preview-label { color: #475569; }
-[data-theme="light"] .dash-referral-banner-btn { background: #F59E0B; color: #fff; }
+[data-theme="light"] .dash-referral-banner-btn { background: var(--accent); color: #fff; }
 /* ==================================================================
    INVESTMENT PLANS  (landing section)
    Uses the same dark tokens as the dashboard (.dash-* layer).

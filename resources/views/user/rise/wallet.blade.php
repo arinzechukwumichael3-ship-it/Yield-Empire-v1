@@ -24,9 +24,10 @@
 .wl-hero {
     border-radius: 20px;
     padding: 22px 22px 24px;
-    background: linear-gradient(135deg, #0B1F4D, #1E4FCC);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     color: #fff;
-    box-shadow: 0 14px 34px rgba(11,31,77,0.38);
+    box-shadow: var(--card-shadow);
     position: relative;
     overflow: hidden;
 }
@@ -36,7 +37,7 @@
     right: -40px; top: -40px;
     width: 160px; height: 160px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.08);
+    background: var(--accent-soft);
 }
 .wl-hero-top {
     display: flex;
@@ -64,7 +65,7 @@
     cursor: pointer;
     transition: all 0.15s;
 }
-.wl-curr.active { background: #fff; color: #1D4ED8; }
+.wl-curr.active { background: #fff; color: var(--accent); }
 .wl-eye {
     width: 36px; height: 36px;
     border-radius: 50%;
@@ -123,10 +124,10 @@
     display: flex; align-items: center; justify-content: center;
     color: #fff;
 }
-.wl-action-icon.add { background: #059669; }
-.wl-action-icon.send { background: #3B82F6; }
-.wl-action-icon.out { background: #DC2626; }
-.wl-action-icon.stmt { background: #7C3AED; }
+.wl-action-icon.add { background: var(--accent); }
+.wl-action-icon.send,
+.wl-action-icon.out,
+.wl-action-icon.stmt { background: #2a2a2e; color: #C9C9CE; }
 .wl-action span { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
 
 /* ── Section ── */

@@ -115,7 +115,7 @@ if ($invested <= 0 && $portfolio && $portfolio->holdings) {
     <!--===== STAT ROW: AVAILABLE / INVESTED =====-->
     <div class="dash-stats-row">
         <a href="{{ route('user.rise.wallet') }}" class="dash-stat-card dash-stat-link" aria-label="Available balance">
-            <div class="dash-stat-icon-wrap dash-stat-icon-green">
+            <div class="dash-stat-icon-wrap dash-stat-icon-accent">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
             </div>
             <div class="dash-stat-info">
@@ -124,7 +124,7 @@ if ($invested <= 0 && $portfolio && $portfolio->holdings) {
             </div>
         </a>
         <a href="{{ setRoute('user.investments.offers') }}" class="dash-stat-card dash-stat-link" aria-label="Invested">
-            <div class="dash-stat-icon-wrap dash-stat-icon-red">
+            <div class="dash-stat-icon-wrap dash-stat-icon-neutral">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             </div>
             <div class="dash-stat-info">
@@ -137,25 +137,25 @@ if ($invested <= 0 && $portfolio && $portfolio->holdings) {
     <!--===== QUICK ACTIONS (circular) =====-->
     <div class="dash-actions-row">
         <a href="{{ setRoute('user.rise.send') }}" class="dash-action-pill">
-            <div class="dash-action-icon dash-action-icon-yellow">
+            <div class="dash-action-icon dash-action-icon-accent">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </div>
             <span class="dash-action-label">Transfer</span>
         </a>
         <a href="{{ setRoute('user.investments.offers') }}" class="dash-action-pill">
-            <div class="dash-action-icon dash-action-icon-green">
+            <div class="dash-action-icon dash-action-icon-neutral">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
             </div>
             <span class="dash-action-label">Invest</span>
         </a>
         <a href="{{ setRoute('user.strowallet.virtual.card.index') }}" class="dash-action-pill">
-            <div class="dash-action-icon dash-action-icon-blue">
+            <div class="dash-action-icon dash-action-icon-neutral">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><line x1="5" y1="15" x2="9" y2="15"/></svg>
             </div>
             <span class="dash-action-label">Cards</span>
         </a>
         <a href="{{ route('user.loans.index') }}" class="dash-action-pill">
-            <div class="dash-action-icon dash-action-icon-purple">
+            <div class="dash-action-icon dash-action-icon-neutral">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
             <span class="dash-action-label">Loans</span>
@@ -177,7 +177,7 @@ if ($invested <= 0 && $portfolio && $portfolio->holdings) {
     <div class="dash-card-preview">
         <div class="dash-card-preview-inner">
             <div class="dash-card-preview-chip">
-                <svg width="32" height="24" viewBox="0 0 40 30" fill="none"><rect x="0.5" y="0.5" width="39" height="29" rx="4.5" fill="#F5B84C" fill-opacity="0.35"/><rect x="3" y="3" width="12" height="9" rx="2" fill="#F5B84C" fill-opacity="0.7"/><rect x="3" y="17" width="12" height="9" rx="2" fill="#F5B84C" fill-opacity="0.7"/><rect x="18" y="3" width="18" height="23" rx="3" fill="#F5B84C" fill-opacity="0.45"/></svg>
+                <svg width="32" height="24" viewBox="0 0 40 30" fill="none"><rect x="0.5" y="0.5" width="39" height="29" rx="4.5" fill="#2f6bff" fill-opacity="0.35"/><rect x="3" y="3" width="12" height="9" rx="2" fill="#2f6bff" fill-opacity="0.7"/><rect x="3" y="17" width="12" height="9" rx="2" fill="#2f6bff" fill-opacity="0.7"/><rect x="18" y="3" width="18" height="23" rx="3" fill="#2f6bff" fill-opacity="0.45"/></svg>
             </div>
             <div class="dash-card-preview-number">**** **** **** 4242</div>
             <div class="dash-card-preview-bottom">

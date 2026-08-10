@@ -54,9 +54,9 @@ $user = auth()->user();
         @php $referralLink = url('/register/' . auth()->user()->username); @endphp
         <div style="display:flex;gap:8px;margin-bottom:12px;">
             <input type="text" id="referralLinkInput" value="{{ $referralLink }}" readonly style="flex:1;padding:12px 14px;border:1px solid var(--border-color);border-radius:10px;font-size:13px;background: var(--input-bg);color: var(--text-primary);outline:none;">
-            <button onclick="copyReferralLink()" style="padding:12px 18px;background:#3B82F6;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">{{ __('Copy') }}</button>
+            <button onclick="copyReferralLink()" style="padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">{{ __('Copy') }}</button>
         </div>
-        <a href="{{ route('user.rise.refer') }}" style="font-size:13px;color:#3B82F6;text-decoration:none;font-weight:500;">{{ __('View full referral details →') }}</a>
+        <a href="{{ route('user.rise.refer') }}" style="font-size:13px;color:var(--accent);text-decoration:none;font-weight:500;">{{ __('View full referral details →') }}</a>
         <script>
         function copyReferralLink() {
             var input = document.getElementById('referralLinkInput');
@@ -200,12 +200,12 @@ $user = auth()->user();
     <div class="ps-card">
         <form method="POST" action="{{ route('user.logout') }}" style="display:contents;">
             @csrf
-            <button type="submit" class="ps-card-title" style="display:flex;align-items:center;gap:12px;padding:10px 0;color:#EF4444;text-decoration:none;background:none;border:none;width:100%;cursor:pointer;">
-                <div class="ps-info-icon" style="background:rgba(239,68,68,0.1);color:#EF4444;">
+            <button type="submit" class="ps-card-title" style="display:flex;align-items:center;gap:12px;padding:10px 0;color:var(--text-secondary);text-decoration:none;background:none;border:none;width:100%;cursor:pointer;">
+                <div class="ps-info-icon" style="background:var(--bg-secondary);color:var(--text-secondary);">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 </div>
                 <span style="flex:1;font-size:14px;font-weight:500;">{{ __('Logout') }}</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
         </form>
     </div>

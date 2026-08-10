@@ -25,7 +25,7 @@
     -webkit-tap-highlight-color: transparent;
 }
 .send-tab.active {
-    background: #3B82F6;
+    background: var(--accent);
     color: #fff;
 }
 .send-tab-content { display: none; }
@@ -49,7 +49,7 @@
     transition: border-color 0.15s;
     background: #1E293B;
 }
-.send-input-wrap:focus-within { border-color: #3B82F6; }
+.send-input-wrap:focus-within { border-color: var(--accent); }
 .send-input {
     flex: 1;
     border: none;
@@ -77,8 +77,8 @@
 /* Recipient preview */
 .send-recipient-preview {
     display: none;
-    background: rgba(59,130,246,0.08);
-    border: 1px solid rgba(59,130,246,0.2);
+    background: rgba(47,107,255,0.08);
+    border: 1px solid rgba(47,107,255,0.2);
     border-radius: 12px;
     padding: 14px 16px;
     margin-top: 12px;
@@ -90,7 +90,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #3B82F6;
+    background: var(--accent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -106,8 +106,8 @@
 
 /* Fee/Info cards */
 .send-fee-card {
-    background: rgba(59,130,246,0.06);
-    border: 1px solid rgba(59,130,246,0.12);
+    background: rgba(47,107,255,0.06);
+    border: 1px solid rgba(47,107,255,0.12);
     border-radius: 12px;
     padding: 14px 16px;
     margin-bottom: 16px;
@@ -121,7 +121,7 @@
 }
 .send-fee-label { color: #94A3B8; }
 .send-fee-value { color: #fff; font-weight: 600; }
-.send-fee-divider { height: 1px; background: rgba(59,130,246,0.1); margin: 8px 0; }
+.send-fee-divider { height: 1px; background: rgba(47,107,255,0.1); margin: 8px 0; }
 
 /* Submit buttons */
 .send-btn {
@@ -131,7 +131,7 @@
     font-size: 16px;
     font-weight: 700;
     border: none;
-    background: linear-gradient(135deg, #3B82F6, #2563EB);
+    background: var(--accent);
     color: #fff;
     cursor: pointer;
     transition: opacity 0.15s, transform 0.15s;
@@ -144,12 +144,12 @@
 /* Light mode */
 [data-theme="light"] .send-tabs { background: #E2E8F0; }
 [data-theme="light"] .send-tab { color: #64748B; }
-[data-theme="light"] .send-tab.active { background: #3B82F6; color: #fff; }
+[data-theme="light"] .send-tab.active { background: var(--accent); color: #fff; }
 [data-theme="light"] .send-input-wrap { background: #fff; border-color: #D1D5DB; }
 [data-theme="light"] .send-input { color: #1F2937; }
 [data-theme="light"] .send-input::placeholder { color: #9CA3AF; }
 [data-theme="light"] .send-input-pill { color: #64748B; background: rgba(0,0,0,0.03); }
-[data-theme="light"] .send-fee-card { background: rgba(59,130,246,0.04); border-color: rgba(59,130,246,0.1); }
+[data-theme="light"] .send-fee-card { background: rgba(47,107,255,0.04); border-color: rgba(47,107,255,0.1); }
 [data-theme="light"] .send-fee-label { color: #64748B; }
 [data-theme="light"] .send-fee-value { color: #1F2937; }
 
@@ -172,7 +172,7 @@
     margin-top: 8px;
     padding: 8px 18px;
     border-radius: 100px;
-    background: linear-gradient(135deg, #3B82F6, #2563EB);
+    background: var(--accent);
     color: #fff;
     font-size: 13px;
     font-weight: 700;
@@ -200,12 +200,12 @@
     <div class="send-tab-content active" id="tab-internal">
         <div class="am-card">
             {{-- Sender's auto-generated international details --}}
-            <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+            <div style="background:rgba(47,107,255,0.06);border:1px solid rgba(47,107,255,0.15);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
                     <span style="font-size:16px;">🏦</span>
                     <strong style="font-size:14px;color:var(--text-primary,#fff);">{{ __('Your YieldEmpire International Details') }}</strong>
                 </div>
-                <a href="{{ route('user.bank.details.index') }}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;background:var(--accent,#3B82F6);color:var(--text-on-accent,#fff);text-decoration:none;transition:all 0.15s;white-space:nowrap;" title="{{ __('Manage your external bank details') }}">
+                <a href="{{ route('user.bank.details.index') }}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;background:var(--accent);color:var(--text-on-accent,#fff);text-decoration:none;transition:all 0.15s;white-space:nowrap;" title="{{ __('Manage your external bank details') }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     {{ __('Manage Bank Details') }}
                 </a>
@@ -227,7 +227,7 @@
                 <div style="flex:1;min-width:0;">
                     <strong style="font-size:14px;color:var(--text-primary,#fff);display:block;margin-bottom:4px;">{{ __('Bank Details Required') }}</strong>
                     <p style="margin:0;font-size:13px;color:var(--text-secondary,#94A3B8);line-height:1.5;">{{ __('To send money to another YieldEmpire account, you must first add at least one active external bank detail. This is a security requirement.') }}</p>
-                    <a href="{{ route('user.bank.details.index') }}" style="display:inline-block;margin-top:10px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;background:#F59E0B;color:#fff;text-decoration:none;transition:background 0.15s;">{{ __('Add Bank Details Now') }}</a>
+                    <a href="{{ route('user.bank.details.index') }}" style="display:inline-block;margin-top:10px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;background:var(--accent);color:#fff;text-decoration:none;transition:background 0.15s;">{{ __('Add Bank Details Now') }}</a>
                 </div>
             </div>
             @endif

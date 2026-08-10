@@ -60,8 +60,11 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 
-<!-- WhatsApp Floating Widget -->
-<div class="whatsapp-widget" data-aos="zoom-in" data-aos-delay="500" style="bottom: 90px">
+<!-- WhatsApp Floating Widget (dismissible, compact) -->
+<div class="whatsapp-widget" id="waWidget" data-aos="zoom-in" data-aos-delay="500">
+    <button type="button" class="wa-dismiss" id="waDismiss" aria-label="Hide chat widget" title="Hide">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
     <a href="https://wa.me/message/ZW7EJRXHGL3GG1" target="_blank" class="whatsapp-btn" rel="noopener noreferrer" aria-label="Contact Support on WhatsApp">
         <div class="whatsapp-icon">
             <i class="lab la-whatsapp"></i>
@@ -72,6 +75,26 @@
         </div>
     </a>
 </div>
+<script>
+(function(){
+    var widget = document.getElementById('waWidget');
+    var dismiss = document.getElementById('waDismiss');
+    if (!widget || !dismiss) return;
+    try {
+        if (localStorage.getItem('wa_widget_hidden') === '1') {
+            widget.style.display = 'none';
+            return;
+        }
+    } catch (e) {}
+    dismiss.addEventListener('click', function(){
+        widget.style.transition = 'opacity .25s ease, transform .25s ease';
+        widget.style.opacity = '0';
+        widget.style.transform = 'translateY(8px)';
+        setTimeout(function(){ widget.style.display = 'none'; }, 250);
+        try { localStorage.setItem('wa_widget_hidden', '1'); } catch (e) {}
+    });
+})();
+</script>
 
 @include('user.partials.glass-bottom-nav')
 

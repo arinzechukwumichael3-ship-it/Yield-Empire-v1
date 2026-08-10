@@ -22,10 +22,10 @@
     width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
 }
-.dh-icon--bank   { background: rgba(59,130,246,0.12); color: #3B82F6; }
-.dh-icon--crypto { background: rgba(245,158,11,0.12); color: #F59E0B; }
-.dh-icon--wallet { background: rgba(37,211,102,0.12); color: #128C7E; }
-.dh-icon--chat   { background: rgba(139,92,246,0.12); color: #8B5CF6; }
+.dh-icon--bank   { background: var(--accent-soft); color: var(--accent); }
+.dh-icon--crypto,
+.dh-icon--wallet,
+.dh-icon--chat   { background: #2a2a2e; color: #C9C9CE; }
 .dh-badge {
     font-size: 10px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;
     padding: 4px 9px; border-radius: 999px;
@@ -50,8 +50,11 @@
 /* Light theme overrides */
 [data-theme="light"] .dh-card:hover { border-color: #CBD5E1; box-shadow: 0 6px 18px rgba(15,23,42,0.06); }
 [data-theme="light"] .dh-badge { background: #D1FAE5; color: #065F46; border-color: #6EE7B7; }
+[data-theme="light"] .dh-icon--crypto,
+[data-theme="light"] .dh-icon--wallet,
+[data-theme="light"] .dh-icon--chat { background: #E4E4E7; color: #52525B; }
 [data-theme="light"] .dh-cta--plain { background: #F1F5F9; color: #334155; border-color: #CBD5E1; }
-[data-theme="light"] .dh-cta--plain:hover { border-color: #3B82F6; color: #2563EB; }
+[data-theme="light"] .dh-cta--plain:hover { border-color: var(--accent); color: var(--accent); }
 
 @media (max-width: 640px) {
     .dh-grid { grid-template-columns: 1fr; }
