@@ -1151,7 +1151,7 @@ input:checked + .slider:before {
 }
 
 .notification-list-v2 li.unread {
-    border-left: 3px solid #3B82F6;
+    border-left: 3px solid #2563EB;
     background: rgba(var(--bakery-primary-rgb), 0.05);
 }
 
@@ -3748,15 +3748,15 @@ body:has(.enzo-header) {
 }
 
 .enzo-dropdown-item-danger {
-    color: #EF4444;
+    color: #DC2626;
 }
 
 .enzo-dropdown-item-danger i {
-    color: #EF4444;
+    color: #DC2626;
 }
 
 .enzo-dropdown-item-danger:hover {
-    color: #EF4444;
+    color: #DC2626;
     background: rgba(239, 68, 68, 0.1);
 }
 
@@ -3783,7 +3783,7 @@ body:has(.enzo-header) {
 
 .mark-all-read {
     font-size: 12px;
-    color: #3B82F6;
+    color: #2563EB;
     background: none;
     border: none;
     cursor: pointer;
@@ -3793,7 +3793,7 @@ body:has(.enzo-header) {
 }
 
 .mark-all-read:hover {
-    color: #60A5FA;
+    color: #3B82F6;
     text-decoration: underline;
 }
 

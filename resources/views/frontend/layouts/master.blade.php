@@ -39,9 +39,7 @@
     @endif
     <script>
         (function() {
-            var saved = localStorage.getItem('theme');
-            var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.setAttribute('data-theme', 'dark');
             document.documentElement.classList.add('js');
         })();
     </script>

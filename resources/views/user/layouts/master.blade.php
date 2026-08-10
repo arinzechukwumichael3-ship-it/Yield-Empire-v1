@@ -10,13 +10,10 @@
     <link rel="stylesheet" href="{{ asset("frontend/css/baking-theme.css") }}?v={{ filemtime(public_path('frontend/css/baking-theme.css')) }}">
     <link rel="stylesheet" href="{{ asset("frontend/css/enzo-theme.css") }}?v={{ filemtime(public_path('frontend/css/enzo-theme.css')) }}">
     <script>document.documentElement.classList.add('no-transitions');</script>
-    <!-- Theme Toggle Script (Blocking to prevent flicker) -->
+    <!-- Theme (dark-only brand palette) -->
     <script>
         (function() {
-            const savedTheme = localStorage.getItem("theme");
-            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            const theme = savedTheme || systemTheme;
-            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.setAttribute('data-theme', 'dark');
         })();
     </script>
     <!-- AOS Animation -->

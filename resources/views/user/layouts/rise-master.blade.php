@@ -13,8 +13,7 @@
     @include("partials.header-asset")
     <script>
         (function() {
-            var saved = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', saved);
+            document.documentElement.setAttribute('data-theme', 'dark');
         })();
     </script>
     <title>{{ (isset($page_title) ? __($page_title) : __("Dashboard")) }}</title>
