@@ -14,7 +14,7 @@
     $s_agent        = request()->header('User-Agent');
 @endphp
 <!DOCTYPE html>
-<html lang="{{ get_default_language_code() }}">
+<html lang="{{ get_default_language_code() }}" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
