@@ -45,7 +45,7 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     @include('partials.header-asset')
-    <link rel="stylesheet" href="{{ asset('frontend/css/enzo-theme.css') }}?v={{ filemtime(public_path('frontend/css/enzo-theme.css')) }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/enzo-theme.css') }}">
 
     @stack('css')
 

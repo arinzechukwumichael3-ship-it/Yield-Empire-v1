@@ -43,6 +43,7 @@ for k, v in {
   'APP_ENV': '"production"',
   'APP_DEBUG': '"false"',
   'APP_URL': '"https://yieldempire.org"',
+  'ASSET_URL': '"https://yieldempire.org"',
   'APP_MODE': '"live"',
   'DB_CONNECTION': '"pgsql"',
   'DB_HOST': '"aws-0-eu-west-1.pooler.supabase.com"',
