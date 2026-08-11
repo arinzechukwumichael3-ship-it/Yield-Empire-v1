@@ -560,14 +560,14 @@ $totalValue = $holdings->sum(function ($h) {
                 $y = round(120 + $r * sin($a), 1);
                 $pts .= ($i ? ' ' : '') . $x . ',' . $y;
             }
-            $radarGrid .= '<polygon points="' . $pts . '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>';
+            $radarGrid .= '<polygon points="' . $pts . '" fill="none" stroke="var(--border-strong, rgba(255,255,255,0.07))" stroke-width="1"/>';
         }
         $radarAxes = '';
         for ($i = 0; $i < 5; $i++) {
             $a = deg2rad(-90 + $i * 72);
             $x = round(120 + 90 * cos($a), 1);
             $y = round(120 + 90 * sin($a), 1);
-            $radarAxes .= '<line x1="120" y1="120" x2="' . $x . '" y2="' . $y . '" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>';
+            $radarAxes .= '<line x1="120" y1="120" x2="' . $x . '" y2="' . $y . '" stroke="var(--border-strong, rgba(255,255,255,0.07))" stroke-width="1"/>';
         }
         $radarLabels = ['Active', 'Yield', 'Plans', 'Value', 'Open'];
     @endphp

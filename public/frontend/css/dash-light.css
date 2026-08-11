@@ -503,6 +503,18 @@
 [data-theme="light"] .inv-card {
     background: #ffffff; border-color: #e6eaf2; box-shadow: var(--card-shadow);
 }
+/* Radar value was hardcoded white (invisible on the white card in light) */
+[data-theme="light"] .inv-radar-value { color: #152238; }
+/* Earn banner becomes a dark navy break (mirrors .earn-banner elsewhere) */
+[data-theme="light"] .inv-earn-banner {
+    background: linear-gradient(135deg, #0a1f5c, #2f5fd6);
+    border-color: transparent;
+    box-shadow: 0 10px 30px rgba(10,31,92,0.18);
+}
+[data-theme="light"] .inv-earn-btn {
+    background: #ffffff; color: #0a1f5c; border-color: #ffffff;
+}
+[data-theme="light"] .inv-earn-btn:active { background: rgba(255,255,255,0.85); }
 
 /* ── Empty states: card chrome consistent with Invest's pattern ── */
 [data-theme="light"] .wl-empty {
