@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ get_default_language_code() }}" data-theme="dark">
+<html lang="{{ get_default_language_code() }}" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -9,11 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset("frontend/css/baking-theme.css") }}">
     <link rel="stylesheet" href="{{ asset("frontend/css/enzo-theme.css") }}">
+    <link rel="stylesheet" href="{{ asset("frontend/css/dash-light.css") }}">
     <script>document.documentElement.classList.add('no-transitions');</script>
     <!-- Theme (dark-only brand palette) -->
     <script>
         (function() {
-            document.documentElement.setAttribute('data-theme', 'dark');
+            document.documentElement.setAttribute('data-theme', 'light');
         })();
     </script>
     <!-- AOS Animation -->
@@ -148,10 +149,10 @@
         const themeAttr = 'data-theme';
         const storageKey = "theme";
 
-        // Immediately set the theme on page load
+        // Immediately set the theme on page load (light is the default; an explicit
+        // user choice in localStorage.theme wins, system preference is ignored)
         const savedTheme = localStorage.getItem(storageKey);
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        const initialTheme = savedTheme || systemTheme;
+        const initialTheme = savedTheme || 'light';
         document.documentElement.setAttribute(themeAttr, initialTheme);
         if (toggleSwitch) {
             toggleSwitch.checked = (initialTheme === 'dark');
@@ -171,18 +172,6 @@
         if (toggleSwitch) {
             toggleSwitch.addEventListener('change', switchTheme, false);
         }
-
-        // Listen for system preference changes
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            // Only switch if the user hasn't made a manual selection
-            if (!localStorage.getItem(storageKey)) {
-                const newTheme = e.matches ? 'dark' : 'light';
-                document.documentElement.setAttribute(themeAttr, newTheme);
-                if (toggleSwitch) {
-                    toggleSwitch.checked = (newTheme === 'dark');
-                }
-            }
-        });
     })();
 </script>
 

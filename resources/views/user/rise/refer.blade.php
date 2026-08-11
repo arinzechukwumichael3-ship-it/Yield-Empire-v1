@@ -50,7 +50,7 @@ $referralLink = url('/register/' . $user->username);
             <input type="text" id="referLinkInput" value="{{ $referralLink }}" readonly
                    style="flex:1;padding:12px 14px;border:1px solid var(--border-color);border-radius:10px;font-size:13px;background:var(--input-bg);color:var(--text-primary);outline:none;">
             <button onclick="copyRefLink()" id="copyRefBtn"
-                    style="padding:12px 18px;background:var(--accent);color:var(--text-primary);border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">{{ __('Copy') }}</button>
+                    style="padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">{{ __('Copy') }}</button>
         </div>
         <div style="display:flex;gap:8px;margin-top:10px;">
             <button onclick="shareRefLink()" style="flex:1;padding:10px;border-radius:10px;background:var(--input-bg);color:var(--accent);font-size:13px;font-weight:600;border:1px solid var(--border-color);cursor:pointer;">{{ __('Share via') }} WhatsApp</button>

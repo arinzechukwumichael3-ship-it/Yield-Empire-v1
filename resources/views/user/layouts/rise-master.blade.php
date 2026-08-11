@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ get_default_language_code() }}" data-theme="dark">
+<html lang="{{ get_default_language_code() }}" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -9,11 +9,14 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/baking-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/rise-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/enzo-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/dash-light.css') }}">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     @include("partials.header-asset")
     <script>
         (function() {
-            document.documentElement.setAttribute('data-theme', 'dark');
+            var saved = null;
+            try { saved = localStorage.getItem('theme'); } catch (e) {}
+            document.documentElement.setAttribute('data-theme', saved || 'light');
         })();
     </script>
     <title>{{ (isset($page_title) ? __($page_title) : __("Dashboard")) }}</title>

@@ -1,0 +1,391 @@
+/* ============================================================
+   YIELDEMPIRE — DASHBOARD LIGHT / NAVY SYSTEM  (item 10)
+   ============================================================
+   Loaded AFTER baking-theme.css, rise-theme.css and enzo-theme.css
+   in BOTH dashboard master layouts. It:
+     1. Flips the dark-only :root tokens to the homepage navy/light
+        palette, so every var-driven component turns light.
+     2. Activates the existing [data-theme="light"] rules in the
+        three theme files.
+     3. Overrides the ~300 hardcoded dark colors in rise-theme.css
+        and the hardcoded dark dashboard pieces in enzo-theme.css.
+
+   Intentional dark navy breaks (kept on purpose, matches homepage):
+   virtual card face (.vc-card-*), promo banner (.rc-promo-card),
+   quote card (.rc-quote-card), earn banner (.earn-banner),
+   rate banner (.am-rate-banner), profile banner (.ps-banner).
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. DESIGN TOKENS — light/navy (mirrors public homepage)
+   ------------------------------------------------------------ */
+[data-theme="light"] {
+    --bg-primary: #f7f8fa;                 /* app background */
+    --bg-secondary: #eef1f6;               /* page alternate background */
+    --bg-card: #ffffff;                    /* card / surface */
+    --bg-elevated: #ffffff;                /* nested / popover surface */
+    --border-color: #e6eaf2;
+    --border-strong: #d8deeb;
+    --card-shadow: 0 2px 10px rgba(15,23,42,0.06), 0 0 0 1px rgba(15,23,42,0.03);
+    --shadow-strong: 0 18px 48px rgba(15,23,42,0.10);
+
+    --blue: #2f5fd6;                       /* links / mid-blue accents */
+    --cyan: #38BDF8;
+    --accent: #0a1f5c;                     /* primary navy (CTAs) */
+    --accent-soft: rgba(10,31,92,0.08);
+    --gradient: linear-gradient(135deg, #0a1f5c 0%, #2f5fd6 100%);
+
+    --text-primary: #152238;
+    --text-secondary: #5b6b8c;
+    --text-muted: #8b98b5;
+    --text-on-accent: #FFFFFF;
+
+    --input-bg: #ffffff;
+    --input-border: #d8deeb;
+    --placeholder: #9aa6bf;
+
+    --success: #16A34A;
+    --success-text: #15803D;
+    --success-bg: rgba(22,163,74,0.12);
+    --danger: #DC2626;
+    --danger-text: #DC2626;
+    --danger-bg: rgba(220,38,38,0.12);
+    --warning: #F59E0B;
+    --warning-text: #B45309;
+    --warning-bg: rgba(245,158,11,0.14);
+    --info: #2f5fd6;
+    --info-bg: rgba(47,95,214,0.12);
+
+    --gold: #D97706;
+    --gold-soft: rgba(217,119,6,0.14);
+    --profit: #16A34A;
+    --profit-bg: rgba(22,163,74,0.12);
+    --loss: #DC2626;
+    --loss-bg: rgba(220,38,38,0.12);
+
+    --overlay: rgba(15,23,42,0.45);
+    --scrollbar: #d8deeb;
+    --nav-bg: rgba(255,255,255,0.92);
+
+    /* Invest module semantic tokens (rise-theme dual block) */
+    --inv-blue: #0a1f5c;
+    --inv-success: #16A34A;
+    --inv-success-text: #15803D;
+    --inv-success-bg: rgba(22,163,74,0.12);
+    --inv-danger: #DC2626;
+    --inv-danger-bg: rgba(220,38,38,0.12);
+    --inv-warning: #B45309;
+    --inv-warning-bg: rgba(245,158,11,0.14);
+    --inv-info: #2f5fd6;
+    --inv-info-bg: rgba(47,95,214,0.12);
+    --inv-track: rgba(10,31,92,0.12);
+}
+
+/* ------------------------------------------------------------
+   2. GLOBAL SURFACES
+   ------------------------------------------------------------ */
+[data-theme="light"] body,
+[data-theme="light"] .rise-app,
+[data-theme="light"] .rise-body { background: var(--bg-primary); color: var(--text-primary); }
+
+/* Scrollbars */
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: var(--scrollbar); }
+
+/* Ghost secondary CTA (dashboard header) */
+[data-theme="light"] .yh-cta-ghost {
+    background: #ffffff; color: #152238;
+    border: 1px solid #d8deeb;
+}
+
+/* ------------------------------------------------------------
+   3. GLASS BOTTOM NAVIGATION
+   ------------------------------------------------------------ */
+[data-theme="light"] .glass-nav-inner {
+    background: rgba(255,255,255,0.90);
+    border: 1px solid rgba(10,31,92,0.08);
+    box-shadow: 0 8px 28px rgba(15,23,42,0.10);
+}
+[data-theme="light"] .glass-nav-item { color: #5b6b8c; }
+[data-theme="light"] .glass-nav-item.active {
+    color: #0a1f5c; background: rgba(10,31,92,0.08);
+}
+[data-theme="light"] .glass-nav-item.active .glass-nav-icon { stroke: #0a1f5c; }
+[data-theme="light"] .glass-nav-center {
+    background: #0a1f5c; color: #fff;
+    box-shadow: 0 4px 16px rgba(10,31,92,0.35);
+}
+[data-theme="light"] .glass-nav-center:active { background: #0a1f5c; box-shadow: 0 2px 8px rgba(10,31,92,0.25); }
+[data-theme="light"] .glass-nav-initial { background: #eef1f6; color: #152238; }
+[data-theme="light"] .glass-nav-item.active .glass-nav-initial { background: #0a1f5c; color: #fff; }
+
+/* ------------------------------------------------------------
+   4. HOME SCREEN  (.rh-*, .rc-*)
+   ------------------------------------------------------------ */
+[data-theme="light"] .rh-avatar { background: #eef1f6; border-color: #d8deeb; color: #152238; }
+[data-theme="light"] .rh-hi { color: var(--text-primary); }
+[data-theme="light"] .rh-sub { color: #5b6b8c; }
+[data-theme="light"] .rh-bell { background: #eef1f6; color: #152238; }
+[data-theme="light"] .rh-refer-btn {
+    border-color: rgba(10,31,92,0.25); color: #0a1f5c; background: rgba(10,31,92,0.06);
+}
+[data-theme="light"] .rc-currency-select { color: #5b6b8c; }
+[data-theme="light"] .rc-balance-digits { color: #152238; }
+[data-theme="light"] .rc-dot { background: #d8deeb; }
+[data-theme="light"] .rc-dot.active { background: #0a1f5c; }
+[data-theme="light"] .rc-action-btn { background: #eef1f6; color: #152238; }
+[data-theme="light"] .rc-action-btn:first-child { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .rc-action-btn:active { background: #d8deeb; }
+[data-theme="light"] .rc-get-started {
+    background: rgba(10,31,92,0.05); border-color: rgba(10,31,92,0.16);
+}
+[data-theme="light"] .rc-gs-title { color: #152238; }
+[data-theme="light"] .rc-gs-link { color: #2f5fd6; }
+[data-theme="light"] .rc-gs-progress-text { color: #5b6b8c; }
+[data-theme="light"] .rc-gs-count { color: #0a1f5c; }
+[data-theme="light"] .rc-gs-bar { background: #eef1f6; }
+[data-theme="light"] .rc-gs-bar-fill { background: #0a1f5c; }
+[data-theme="light"] .rc-gs-item { color: #152238; }
+[data-theme="light"] .rc-gs-icon.in-progress {
+    background: rgba(10,31,92,0.10); color: #0a1f5c; border-color: #0a1f5c;
+}
+[data-theme="light"] .rc-gs-icon.pending {
+    background: #eef1f6; color: #5b6b8c; border-color: #d8deeb;
+}
+[data-theme="light"] .rc-invest-card { background: #ffffff; border-color: #e6eaf2; box-shadow: var(--card-shadow); }
+[data-theme="light"] .rc-invest-card.new-invest { background: #f7f8fa; border-color: #b6c2dd; }
+[data-theme="light"] .rc-invest-plus { background: rgba(10,31,92,0.08); color: #0a1f5c; }
+[data-theme="light"] .rc-invest-name,
+[data-theme="light"] .rc-invest-value { color: #152238; }
+/* Promo banner stays a dark navy break */
+[data-theme="light"] .rc-promo-card { background: linear-gradient(120deg, #0d1b3e, #14275a); }
+[data-theme="light"] .rc-promo-title { color: #fff; }
+[data-theme="light"] .rc-promo-sub { color: rgba(255,255,255,0.72); }
+[data-theme="light"] .rc-promo-btn { border-color: rgba(255,255,255,0.65); color: #fff; }
+[data-theme="light"] .rc-contact-row { background: #ffffff; border-color: #e6eaf2; box-shadow: var(--card-shadow); }
+[data-theme="light"] .rc-contact-icon { background: rgba(10,31,92,0.08); color: #0a1f5c; }
+[data-theme="light"] .rc-contact-title { color: #152238; }
+[data-theme="light"] .rc-contact-sub { color: #5b6b8c; }
+/* Quote card stays a dark navy break */
+[data-theme="light"] .rc-quote-card { background: linear-gradient(135deg, #0a1f5c, #16325f); }
+[data-theme="light"] .rc-quote-mark { color: rgba(255,255,255,0.14); }
+[data-theme="light"] .rc-quote-text { color: #fff; }
+[data-theme="light"] .rc-quote-author { color: rgba(255,255,255,0.7); }
+[data-theme="light"] .rc-quote-share { color: #8fb3ff; }
+
+/* ------------------------------------------------------------
+   5. INVEST SCREEN  (.ri-*)
+   ------------------------------------------------------------ */
+[data-theme="light"] .ri-title { color: #152238; }
+[data-theme="light"] .ri-find-btn { background: #eef1f6; color: #5b6b8c; }
+[data-theme="light"] .ri-tabs { background: #eef1f6; }
+[data-theme="light"] .ri-tab { color: #5b6b8c; }
+[data-theme="light"] .ri-tab.active {
+    background: #ffffff; color: #152238; border-color: #d8deeb;
+}
+[data-theme="light"] .ri-section-label { color: #5b6b8c; }
+[data-theme="light"] .ri-count-badge { background: #eef1f6; color: #152238; }
+[data-theme="light"] .ri-plan-add-card {
+    background: #f7f8fa; border-color: #b6c2dd; color: #5b6b8c;
+}
+[data-theme="light"] .ri-plan-add-icon { background: rgba(10,31,92,0.08); color: #0a1f5c; }
+[data-theme="light"] .ri-gift-card { background: #ffffff; border-color: #e6eaf2; box-shadow: var(--card-shadow); }
+[data-theme="light"] .ri-gift-title { color: #152238; }
+[data-theme="light"] .ri-gift-sub { color: #5b6b8c; }
+[data-theme="light"] .ri-portfolio-summary { background: #ffffff; border-color: #e6eaf2; box-shadow: var(--card-shadow); }
+[data-theme="light"] .ri-portfolio-row { color: #5b6b8c; }
+[data-theme="light"] .ri-portfolio-row + .ri-portfolio-row { border-top-color: #e6eaf2; }
+[data-theme="light"] .ri-portfolio-value { color: #152238; }
+[data-theme="light"] .ri-comp-header { color: #5b6b8c; }
+[data-theme="light"] .ri-comp-sub,
+[data-theme="light"] .ri-comp-legend { color: #5b6b8c; }
+[data-theme="light"] .ri-asset-row { border-bottom-color: #e6eaf2; }
+[data-theme="light"] .ri-asset-name,
+[data-theme="light"] .ri-asset-value { color: #152238; }
+[data-theme="light"] .ri-asset-pct { color: #5b6b8c; }
+[data-theme="light"] .ri-create-cta { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .ri-empty-title,
+[data-theme="light"] .rw-empty-title,
+[data-theme="light"] .rf-empty-title { color: #152238; }
+[data-theme="light"] .ri-empty-sub,
+[data-theme="light"] .rw-empty-sub,
+[data-theme="light"] .rf-empty-sub { color: #5b6b8c; }
+
+/* ------------------------------------------------------------
+   6. ACCOUNT / PROFILE  (.ps-*, .sg-*)
+   ------------------------------------------------------------ */
+/* Profile banner becomes a navy gradient (dark break) */
+[data-theme="light"] .ps-banner { background: linear-gradient(135deg, #0a1f5c, #2f5fd6); }
+[data-theme="light"] .ps-avatar-wrap { border-color: #ffffff; background: linear-gradient(135deg, #0a1f5c, #2f5fd6); }
+[data-theme="light"] .ps-avatar-upload { background: #0a1f5c; border-color: #ffffff; }
+[data-theme="light"] .ps-btn-blue { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .ps-btn-blue:active { background: #13296e; }
+[data-theme="light"] .sg-item:active { background: #0a1f5c; border-color: #0a1f5c; }
+
+/* ------------------------------------------------------------
+   7. INVEST MODULE  (.ip-*, .ic-*, .io-*, .vc-*, .tl-*)
+   ------------------------------------------------------------ */
+[data-theme="light"] .ip-card { background: #ffffff; border-color: #e6eaf2; box-shadow: var(--card-shadow); }
+[data-theme="light"] .ip-badge { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .ip-name { color: #152238; }
+[data-theme="light"] .ip-rate { color: #0a1f5c; }
+[data-theme="light"] .ip-duration { color: #5b6b8c; }
+[data-theme="light"] .ip-invest-btn { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .ic-card { background: #ffffff; border-color: #e6eaf2; box-shadow: var(--card-shadow); }
+[data-theme="light"] .ic-title { color: #152238; }
+[data-theme="light"] .ic-label { color: #5b6b8c; }
+[data-theme="light"] .ic-input,
+[data-theme="light"] .ic-select {
+    background: #ffffff; border-color: #d8deeb; color: #152238;
+}
+[data-theme="light"] .ic-input:focus { border-color: #2f5fd6; }
+[data-theme="light"] .ic-input::placeholder { color: #9aa6bf; }
+[data-theme="light"] .ic-select option { background: #ffffff; color: #152238; }
+[data-theme="light"] .ic-btn { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .ic-result { background: rgba(10,31,92,0.05); border-color: rgba(10,31,92,0.16); }
+[data-theme="light"] .ic-result-row + .ic-result-row { border-top-color: rgba(10,31,92,0.10); }
+[data-theme="light"] .ic-result-label { color: #5b6b8c; }
+[data-theme="light"] .ic-result-value { color: #0a1f5c; }
+[data-theme="light"] .io-title { color: #152238; }
+[data-theme="light"] .io-dropdown { background: #ffffff; border-color: #d8deeb; color: #152238; }
+[data-theme="light"] .io-filter-btn { background: #0a1f5c; color: #fff; }
+/* Earn banner stays a dark navy break */
+[data-theme="light"] .earn-banner { background: linear-gradient(135deg, #0a1f5c, #2f5fd6); }
+[data-theme="light"] .earn-banner-title { color: #fff; }
+[data-theme="light"] .earn-banner-sub { color: rgba(255,255,255,0.75); }
+[data-theme="light"] .earn-banner-btn { background: #ffffff; color: #0a1f5c; }
+[data-theme="light"] .vc-header-title { color: #152238; }
+/* Virtual card face stays dark (physical card aesthetic) */
+[data-theme="light"] .vc-card-front,
+[data-theme="light"] .vc-card-back { background: var(--vc-card-grad, linear-gradient(135deg, #0B0B0F, #161622, #1A1A2E)); }
+[data-theme="light"] .vc-details-card { background: #ffffff; border-color: #e6eaf2; box-shadow: var(--card-shadow); }
+[data-theme="light"] .vc-details-title { color: #152238; }
+[data-theme="light"] .vc-detail-row + .vc-detail-row { border-top-color: #e6eaf2; }
+[data-theme="light"] .vc-detail-label { color: #5b6b8c; }
+[data-theme="light"] .vc-detail-value { color: #152238; }
+[data-theme="light"] .vc-copy-btn { color: #2f5fd6; }
+[data-theme="light"] .vc-action-btn { color: #0a1f5c; border-color: #0a1f5c; }
+[data-theme="light"] .vc-action-btn:active { background: rgba(10,31,92,0.08); }
+[data-theme="light"] .vc-action-btn:hover { background: rgba(10,31,92,0.10); box-shadow: 0 4px 14px rgba(10,31,92,0.20); }
+[data-theme="light"] .vc-details-card:hover { box-shadow: 0 10px 30px rgba(15,23,42,0.10); }
+[data-theme="light"] .tl-title { color: #152238; }
+[data-theme="light"] .tl-empty-btn { background: #0a1f5c; color: #fff; }
+
+/* ------------------------------------------------------------
+   8. CRYPTO / ADD-MONEY  (.crypto-*, .cp-*, .am-*, .wallet-*)
+   ------------------------------------------------------------ */
+[data-theme="light"] .crypto-card { background: #ffffff; border-color: #e6eaf2; }
+[data-theme="light"] .crypto-card.selected::before { background: #0a1f5c; }
+[data-theme="light"] .crypto-card span { color: #152238; }
+[data-theme="light"] .crypto-card small { color: #5b6b8c; }
+[data-theme="light"] .wallet-addr-input { background: #f7f8fa; }
+/* Rate banner stays a dark navy break */
+[data-theme="light"] .am-rate-banner { background: linear-gradient(135deg, #0a1f5c, #2f5fd6); }
+[data-theme="light"] .am-rate-label { color: rgba(255,255,255,0.8); }
+[data-theme="light"] .am-rate-value { color: #ffffff; }
+[data-theme="light"] .am-btn { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .am-btn:hover,
+[data-theme="light"] .am-btn:active { background: #13296e; }
+[data-theme="light"] .am-log-link { color: #2f5fd6; }
+[data-theme="light"] .am-preview-icon { background: rgba(10,31,92,0.08); color: #0a1f5c; }
+
+/* Crypto method cards (rise-theme already light; refine accent) */
+[data-theme="light"] .cp-method-card.selected { border-color: #2f5fd6; }
+[data-theme="light"] .cp-method-card.selected::after { background: #0a1f5c; }
+
+/* ------------------------------------------------------------
+   9. FEED SCREEN  (.rf-*)
+   ------------------------------------------------------------ */
+[data-theme="light"] .rf-header { background: #ffffff; border-bottom-color: #e6eaf2; }
+[data-theme="light"] .rf-header-left,
+[data-theme="light"] .rf-header-right { color: #152238; }
+[data-theme="light"] .rf-logo-icon { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .rf-filter-scroll { border-bottom-color: #e6eaf2; }
+[data-theme="light"] .rf-filter { color: #5b6b8c; }
+[data-theme="light"] .rf-filter.active { color: #0a1f5c; font-weight: 600; }
+[data-theme="light"] .rf-filter.active::after { background: #0a1f5c; }
+[data-theme="light"] .rf-filter:hover { color: #152238; }
+[data-theme="light"] .rf-articles { background: #ffffff; border-color: #e6eaf2; box-shadow: var(--card-shadow); }
+[data-theme="light"] .rf-article-item { background: #ffffff; border-bottom-color: #e6eaf2; }
+[data-theme="light"] .rf-article-item:active { background: #f1f4f9; }
+[data-theme="light"] .rf-article-thumb { background: #eef1f6; }
+[data-theme="light"] .rf-thumb-gradient svg,
+[data-theme="light"] .rf-detail-image svg { color: #8b98b5; }
+[data-theme="light"] .rf-article-title { color: #152238; }
+[data-theme="light"] .rf-article-excerpt { color: #5b6b8c; }
+[data-theme="light"] .rf-article-category { background: #eef1f6; color: #5b6b8c; }
+[data-theme="light"] .rf-article-date { color: #8b98b5; }
+[data-theme="light"] .rf-empty { background: #ffffff; border-color: #e6eaf2; }
+[data-theme="light"] .rf-detail-header { background: #ffffff; border-bottom-color: #e6eaf2; }
+[data-theme="light"] .rf-detail-back { color: #152238; }
+[data-theme="light"] .rf-detail-title { color: #152238; }
+[data-theme="light"] .rf-detail-category { background: #eef1f6; color: #5b6b8c; }
+[data-theme="light"] .rf-detail-date { color: #8b98b5; }
+[data-theme="light"] .rf-detail-body-text { color: #5b6b8c; }
+[data-theme="light"] .rf-detail-share { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .rf-detail-share:hover,
+[data-theme="light"] .rf-detail-share:active { background: #13296e; }
+
+/* ------------------------------------------------------------
+   10. ENZO DASHBOARD LAYER  (.dash-*, .yh-*)
+   ------------------------------------------------------------ */
+[data-theme="light"] .dash-balance-currency-tabs { background: #eef1f6; border-color: #d8deeb; }
+[data-theme="light"] .dash-currency-tab { color: #5b6b8c; }
+[data-theme="light"] .dash-currency-tab.active { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .dash-copy-btn,
+[data-theme="light"] .dash-eye-btn { background: #ffffff; border-color: #e6eaf2; color: #5b6b8c; }
+[data-theme="light"] .dash-action-icon { box-shadow: 0 2px 12px rgba(15,23,42,0.06); }
+[data-theme="light"] .dash-action-pill { background: transparent; }
+[data-theme="light"] .dash-action-pill:hover .dash-action-icon { border-color: rgba(10,31,92,0.5); }
+[data-theme="light"] .yh-avatar { background: linear-gradient(135deg, #0a1f5c, #2f5fd6); box-shadow: 0 4px 14px rgba(10,31,92,0.3); }
+[data-theme="light"] .yh-head-btn { background: #ffffff; border-color: #e6eaf2; color: #5b6b8c; }
+[data-theme="light"] .yh-head-btn:hover { color: #152238; }
+[data-theme="light"] .yh-head-badge { border-color: #ffffff; }
+[data-theme="light"] .dash-invest-badge { color: #5b6b8c; background: #eef1f6; }
+[data-theme="light"] .dash-invest-btn { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .dash-referral-banner-btn { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .yh-asset-ico,
+[data-theme="light"] .yh-asset-ico.eu,
+[data-theme="light"] .yh-asset-ico.gbp {
+    background: rgba(10,31,92,0.07); border-color: rgba(10,31,92,0.16); color: #2f5fd6;
+}
+[data-theme="light"] .dash-tx-icon { background: var(--accent-soft); }
+
+/* ------------------------------------------------------------
+   11. SHARED SECTION CLASSES (inline in user/sections/*)
+   ------------------------------------------------------------ */
+[data-theme="light"] .cd-coin-card { background: #ffffff; border-color: #e6eaf2; }
+[data-theme="light"] .cd-coin-badge { background: #eef1f6; color: #5b6b8c; }
+[data-theme="light"] .tl-header-count { background: #eef1f6; color: #5b6b8c; }
+[data-theme="light"] .kyc-data-row { border-bottom-color: #e6eaf2; }
+[data-theme="light"] .ft-search-input { background: #ffffff; border-color: #d8deeb; color: #152238; }
+[data-theme="light"] .ft-search-input::placeholder { color: #9aa6bf; }
+[data-theme="light"] .ft-add-btn { background: #0a1f5c; }
+
+/* ------------------------------------------------------------
+   12. WHATSAPP SUPPORT WIDGET (navy pill, mirrors homepage)
+   ------------------------------------------------------------ */
+[data-theme="light"] .whatsapp-widget .whatsapp-btn {
+    background: #0a1f5c;
+    border: 1px solid rgba(255,255,255,0.14);
+    color: #ffffff !important;
+    box-shadow: 0 12px 32px rgba(10,31,92,0.35);
+}
+[data-theme="light"] .whatsapp-widget .whatsapp-btn:hover { background: #13296e; }
+[data-theme="light"] .whatsapp-widget .whatsapp-icon {
+    background: rgba(255,255,255,0.12); color: #ffffff;
+}
+[data-theme="light"] .whatsapp-widget .whatsapp-icon i { color: #ffffff; }
+[data-theme="light"] .whatsapp-widget .whatsapp-text { color: rgba(255,255,255,0.85); }
+[data-theme="light"] .whatsapp-widget .online-dot { border-color: #0a1f5c; }
+[data-theme="light"] .wa-dismiss {
+    background: rgba(255,255,255,0.14);
+    border-color: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8);
+}
+[data-theme="light"] .wa-dismiss:hover { background: #2f5fd6; color: #fff; }
+
+/* ------------------------------------------------------------
+   13. TRANSITION GUARD
+   ------------------------------------------------------------ */
+[data-theme="light"] .no-transitions *,
+[data-theme="light"] .no-transitions { transition: none !important; }

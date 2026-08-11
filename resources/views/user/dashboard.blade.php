@@ -101,7 +101,7 @@
             <span>○ Access all features</span>
         </div>
         <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Minimum deposit: $10 in crypto</p>
-        <a href="{{ route("user.crypto.deposit.index") }}" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:var(--text-primary);font-size:14px;font-weight:600;border-radius:999px;text-decoration:none;">Deposit Now &rarr;</a>
+        <a href="{{ route("user.crypto.deposit.index") }}" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:linear-gradient(135deg,#0a1f5c,#2f5fd6);color:#fff;font-size:14px;font-weight:600;border-radius:999px;text-decoration:none;">Deposit Now &rarr;</a>
     </div>
     @endif
 
@@ -217,7 +217,7 @@
                     <div style="font-size:13px;color:var(--text-secondary);">Make a crypto deposit of ${{ number_format(get_virtual_card_fee(), 0) }}+ to activate virtual cards and enable withdrawals</div>
                 </div>
             </div>
-            <a href="{{ route("user.crypto.deposit.index") }}" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:var(--text-primary);font-size:14px;font-weight:600;border-radius:999px;text-decoration:none;white-space:nowrap;">Deposit Now &rarr;</a>
+            <a href="{{ route("user.crypto.deposit.index") }}" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#0a1f5c,#2f5fd6);color:#fff;font-size:14px;font-weight:600;border-radius:999px;text-decoration:none;white-space:nowrap;">Deposit Now &rarr;</a>
         </div>
     </div>
     @endif

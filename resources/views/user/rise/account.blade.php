@@ -179,12 +179,12 @@ $user = auth()->user();
 
     <!-- Navigation Links -->
     <div class="ps-card">
-        <a href="{{ setRoute('user.kyc.index') }}" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #1E293B;">
+        <a href="{{ setRoute('user.kyc.index') }}" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #E6EAF2;">
             <div class="ps-info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
             <span style="flex:1;font-size:14px;font-weight:500;">KYC Verification</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </a>
-        <a href="{{ setRoute('user.setup.pin.index') }}" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #1E293B;">
+        <a href="{{ setRoute('user.setup.pin.index') }}" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #E6EAF2;">
             <div class="ps-info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="12 1 12 5"/><path d="M17 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
             <span style="flex:1;font-size:14px;font-weight:500;">Change PIN</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
