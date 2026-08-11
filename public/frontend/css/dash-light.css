@@ -91,10 +91,14 @@
 /* Scrollbars */
 [data-theme="light"] ::-webkit-scrollbar-thumb { background: var(--scrollbar); }
 
-/* Ghost secondary CTA (dashboard header) */
+/* Ghost secondary CTA (dashboard header) — outlined navy */
 [data-theme="light"] .yh-cta-ghost {
-    background: #ffffff; color: #152238;
-    border: 1px solid #d8deeb;
+    background: transparent; color: #0a1f5c;
+    border: 1.5px solid #0a1f5c;
+}
+[data-theme="light"] .yh-cta-ghost:hover,
+[data-theme="light"] .yh-cta-ghost:active {
+    background: rgba(10,31,92,0.08); color: #0a1f5c;
 }
 
 /* ------------------------------------------------------------
@@ -389,3 +393,132 @@
    ------------------------------------------------------------ */
 [data-theme="light"] .no-transitions *,
 [data-theme="light"] .no-transitions { transition: none !important; }
+
+/* ------------------------------------------------------------
+   14. PHASE C — POLISH (spec: phone-mockup trust signals, serif
+       page titles, unified balance cards, outlined navy secondary
+       buttons, WhatsApp clearance, empty states, invest fixes)
+   ------------------------------------------------------------ */
+
+/* ── Display serif page titles (Playfair Display, loaded in rise-master) ── */
+[data-theme="light"] .am-header-title,
+[data-theme="light"] .io-title,
+[data-theme="light"] .feed-header-title,
+[data-theme="light"] .dash-section-title,
+[data-theme="light"] .wl-section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: #152238;
+}
+[data-theme="light"] .feed-header-sub { color: #5b6b8c; }
+
+/* ── LIVE BALANCE badge (mirrors .hp-phone-live in homepage hero) ── */
+.live-balance-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--success-bg);
+    color: var(--success-text);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.live-balance-badge::before {
+    content: "";
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #22C55E;
+    animation: hpPulse 1.6s ease-in-out infinite;
+}
+@keyframes hpPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.8); }
+}
+
+/* ── Payouts live pill (mirrors .hp-chip in homepage hero) ── */
+.payouts-live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+}
+[data-theme="light"] .payouts-live-pill {
+    background: #ffffff;
+    border-color: #e6eaf2;
+    color: #0a1f5c;
+    box-shadow: 0 10px 30px rgba(10,31,92,0.12);
+}
+
+/* ── Wallet balance card: unify with .dash-balance-card ── */
+[data-theme="light"] .wl-hero {
+    background: #ffffff;
+    border: 1px solid #e6eaf2;
+    box-shadow: var(--card-shadow);
+    color: #152238;
+    border-radius: 22px;
+}
+[data-theme="light"] .wl-curr-switch {
+    background: #eef1f6;
+    border: 1px solid #d8deeb;
+}
+[data-theme="light"] .wl-curr { color: #5b6b8c; }
+[data-theme="light"] .wl-curr.active { background: #0a1f5c; color: #fff; }
+[data-theme="light"] .wl-eye { background: #eef1f6; color: #152238; }
+[data-theme="light"] .wl-eye:hover { background: #d8deeb; }
+[data-theme="light"] .wl-balance { color: #152238; }
+[data-theme="light"] .wl-balance-label { color: #5b6b8c; }
+
+/* ── Outlined navy secondary actions (Send / Withdraw / Statement) ── */
+[data-theme="light"] .wl-action-icon.send,
+[data-theme="light"] .wl-action-icon.out,
+[data-theme="light"] .wl-action-icon.stmt {
+    background: transparent;
+    border: 1.5px solid #0a1f5c;
+    color: #0a1f5c;
+}
+[data-theme="light"] .wl-action:active .wl-action-icon.send,
+[data-theme="light"] .wl-action:active .wl-action-icon.out,
+[data-theme="light"] .wl-action:active .wl-action-icon.stmt {
+    background: rgba(10,31,92,0.08);
+}
+
+/* ── Invest screen fixes (bright-blue press states + hardcoded dark) ── */
+[data-theme="light"] .inv-split-bar { background: #eef1f6; }
+[data-theme="light"] .inv-plan-name { color: #152238; }
+[data-theme="light"] .inv-plan-btn:active,
+[data-theme="light"] .inv-cta:active,
+[data-theme="light"] .inv-modal-close:active { background: #13296e; }
+[data-theme="light"] .inv-modal-close { color: #5b6b8c; }
+[data-theme="light"] .inv-card {
+    background: #ffffff; border-color: #e6eaf2; box-shadow: var(--card-shadow);
+}
+
+/* ── Empty states: card chrome consistent with Invest's pattern ── */
+[data-theme="light"] .wl-empty {
+    background: #ffffff;
+    border: 1px solid #e6eaf2;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+}
+[data-theme="light"] .dash-tx-empty {
+    background: #ffffff;
+    border: 1px solid #e6eaf2;
+    border-radius: 16px;
+    padding: 40px 20px;
+    color: #5b6b8c;
+}
+
+/* ── WhatsApp widget: clear content on Refer / Add Money ── */
+[data-theme="light"] .whatsapp-widget { bottom: 150px !important; }
+[data-theme="light"] .rise-app { padding-bottom: 152px; }

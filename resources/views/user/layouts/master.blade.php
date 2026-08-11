@@ -147,7 +147,7 @@
         document.addEventListener('DOMContentLoaded', function(){ document.documentElement.classList.remove('no-transitions'); }, { once: true });
         const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
         const themeAttr = 'data-theme';
-        const storageKey = "theme";
+        const storageKey = "theme_v2";
 
         // Immediately set the theme on page load (light is the default; an explicit
         // user choice in localStorage.theme wins, system preference is ignored)

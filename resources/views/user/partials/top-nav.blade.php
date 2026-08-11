@@ -199,7 +199,7 @@
 
         // --- Theme Toggle Logic (Desktop) ---
         const themeToggle = document.getElementById('checkbox');
-        const themeStorageKey = 'theme';
+        const themeStorageKey = 'theme_v2';
 
         if (themeToggle) {
             const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -226,7 +226,7 @@
                 const newTheme = this.checked ? 'dark' : 'light';
                 document.documentElement.classList.add('no-transitions');
                 document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
+                localStorage.setItem('theme_v2', newTheme);
                 setTimeout(() => {
                     document.documentElement.classList.remove('no-transitions');
                 }, 300);

@@ -71,6 +71,7 @@
                 <i class="las la-eye"></i>
             </button>
         </div>
+        <div class="live-balance-badge" style="margin-top:10px;">{{ __('Live Balance') }}</div>
         <div class="mobile-balance-actions">
             <a href="{{ setRoute('user.add.money.index') }}" class="mobile-action-btn">
                 <i class="las la-plus"></i>

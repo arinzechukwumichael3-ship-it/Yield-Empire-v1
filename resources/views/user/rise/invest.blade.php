@@ -712,8 +712,8 @@ $totalValue = $holdings->sum(function ($h) {
             <div class="inv-donut" id="donutChart">
                 <svg viewBox="0 0 100 100">
                     <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:var(--accent);" data-pct="45"/>
-                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:#2a2a2e;transform:rotate(162deg);transform-origin:50% 50%;" data-pct="30"/>
-                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:#2a2a2e;transform:rotate(270deg);transform-origin:50% 50%;" data-pct="25"/>
+                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:var(--inv-track, #2a2a2e);transform:rotate(162deg);transform-origin:50% 50%;" data-pct="30"/>
+                    <circle class="inv-donut-circle" cx="50" cy="50" r="45" style="stroke:var(--inv-track, #2a2a2e);transform:rotate(270deg);transform-origin:50% 50%;" data-pct="25"/>
                 </svg>
                 <div class="inv-donut-center">
                     <span class="inv-donut-value">{{ $totalValue > 0 ? '$' . number_format($totalValue, 0) : '—' }}</span>
@@ -723,10 +723,10 @@ $totalValue = $holdings->sum(function ($h) {
             <div class="inv-legend">
                 @foreach($holdings->take(4) as $h)
                 <div class="inv-legend-item">
-                    <span class="inv-legend-dot" style="background:{{ $loop->index == 0 ? 'var(--accent)' : '#2a2a2e' }};"></span>
+                    <span class="inv-legend-dot" style="background:{{ $loop->index == 0 ? 'var(--accent)' : 'var(--inv-track, #2a2a2e)' }};"></span>
                     <span style="flex:1;">{{ $h->asset->name ?? $h->asset_type ?? 'Asset' }}</span>
                     <span style="font-weight:600;color:var(--text-primary);">{{ $h->allocation_percent ?? 0 }}%</span>
-                    <div class="inv-legend-bar"><div class="inv-legend-fill" style="background:{{ $loop->index == 0 ? 'var(--accent)' : '#2a2a2e' }};" data-target="{{ $h->allocation_percent ?? 0 }}"></div></div>
+                    <div class="inv-legend-bar"><div class="inv-legend-fill" style="background:{{ $loop->index == 0 ? 'var(--accent)' : 'var(--inv-track, #2a2a2e)' }};" data-target="{{ $h->allocation_percent ?? 0 }}"></div></div>
                 </div>
                 @endforeach
             </div>

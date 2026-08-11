@@ -99,6 +99,8 @@ if ($invested <= 0 && $portfolio && $portfolio->holdings) {
             <span class="yh-pnl-sub">vs total assets</span>
         </div>
 
+        <div class="live-balance-badge" style="margin-top:8px;">{{ __('Live Balance') }}</div>
+
         <!-- Primary + secondary actions -->
         <div class="yh-cta">
             <a href="{{ setRoute('user.add.money.index') }}" class="yh-cta-btn yh-cta-primary">
@@ -109,6 +111,11 @@ if ($invested <= 0 && $portfolio && $portfolio->holdings) {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 {{ __('Withdraw') }}
             </a>
+        </div>
+
+        <div class="payouts-live-pill" style="margin-top:14px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            {{ __('Payouts live') }}
         </div>
     </div>
 

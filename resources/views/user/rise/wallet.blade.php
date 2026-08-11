@@ -290,6 +290,7 @@
             <span class="wl-balance-cur" id="wlCur">{{ $wallets[0]['symbol'] }}</span><span class="wl-balance-int" id="wlInt">{{ $wallets[0]['int'] }}</span><span class="wl-balance-dec" id="wlDec">.{{ $wallets[0]['dec'] }}</span>
         </div>
         <div class="wl-balance-label">{{ __('Available Balance') }}</div>
+        <div class="live-balance-badge" style="margin-top:10px;">{{ __('Live Balance') }}</div>
     </div>
 
     <!-- Quick actions -->

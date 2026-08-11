@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('frontend/css/baking-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/rise-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/enzo-theme.css') }}">
@@ -15,7 +16,7 @@
     <script>
         (function() {
             var saved = null;
-            try { saved = localStorage.getItem('theme'); } catch (e) {}
+            try { saved = localStorage.getItem('theme_v2'); } catch (e) {}
             document.documentElement.setAttribute('data-theme', saved || 'light');
         })();
     </script>
