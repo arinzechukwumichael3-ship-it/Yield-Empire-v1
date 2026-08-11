@@ -11,10 +11,10 @@
                         </div>
                         <div class="enzo-card-chip">
                             <svg width="32" height="24" viewBox="0 0 40 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="1" y="1" width="38" height="28" rx="4" fill="#F59E0B" opacity="0.3"/>
-                                <rect x="4" y="4" width="10" height="8" rx="1.5" fill="#F59E0B" opacity="0.6"/>
-                                <rect x="4" y="16" width="10" height="8" rx="1.5" fill="#F59E0B" opacity="0.6"/>
-                                <rect x="18" y="4" width="18" height="20" rx="2" fill="#F59E0B" opacity="0.4"/>
+                                <rect x="1" y="1" width="38" height="28" rx="4" fill="#2f5fd6" opacity="0.3"/>
+                                <rect x="4" y="4" width="10" height="8" rx="1.5" fill="#2f5fd6" opacity="0.6"/>
+                                <rect x="4" y="16" width="10" height="8" rx="1.5" fill="#2f5fd6" opacity="0.6"/>
+                                <rect x="18" y="4" width="18" height="20" rx="2" fill="#2f5fd6" opacity="0.4"/>
                             </svg>
                         </div>
                         <div class="enzo-card-number">•••• •••• •••• 4242</div>
@@ -36,10 +36,10 @@
                         </div>
                         <div class="enzo-card-chip">
                             <svg width="32" height="24" viewBox="0 0 40 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="1" y="1" width="38" height="28" rx="4" fill="#F59E0B" opacity="0.3"/>
-                                <rect x="4" y="4" width="10" height="8" rx="1.5" fill="#F59E0B" opacity="0.6"/>
-                                <rect x="4" y="16" width="10" height="8" rx="1.5" fill="#F59E0B" opacity="0.6"/>
-                                <rect x="18" y="4" width="18" height="20" rx="2" fill="#F59E0B" opacity="0.4"/>
+                                <rect x="1" y="1" width="38" height="28" rx="4" fill="#2f5fd6" opacity="0.3"/>
+                                <rect x="4" y="4" width="10" height="8" rx="1.5" fill="#2f5fd6" opacity="0.6"/>
+                                <rect x="4" y="16" width="10" height="8" rx="1.5" fill="#2f5fd6" opacity="0.6"/>
+                                <rect x="18" y="4" width="18" height="20" rx="2" fill="#2f5fd6" opacity="0.4"/>
                             </svg>
                         </div>
                         <div class="enzo-card-number">•••• •••• •••• 4242</div>
@@ -63,27 +63,27 @@
 
                 <div class="enzo-showcase-features">
                     <div class="enzo-showcase-feature">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#2f5fd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
                         Create unlimited virtual cards instantly
                     </div>
                     <div class="enzo-showcase-feature">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#2f5fd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
                         Freeze or unfreeze in one tap
                     </div>
                     <div class="enzo-showcase-feature">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#2f5fd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
                         Set spending limits per card
                     </div>
                     <div class="enzo-showcase-feature">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#2f5fd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
                         Use worldwide &mdash; everywhere VISA accepted
                     </div>
                     <div class="enzo-showcase-feature">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#2f5fd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
                         Real-time transaction notifications
                     </div>
                     <div class="enzo-showcase-feature">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#2f5fd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6L8 14L4 10"/></svg>
                         Zero foreign transaction fees
                     </div>
                 </div>

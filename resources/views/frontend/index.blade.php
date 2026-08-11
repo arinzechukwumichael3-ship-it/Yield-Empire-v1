@@ -1,8 +1,11 @@
 @extends("frontend.layouts.master")
 
+@section('pageTheme', 'light')
+
 @push("css")
+<link rel="stylesheet" href="{{ asset('frontend/css/enzo-home.css') }}">
 <style>
-body { background: var(--bg-primary, #0A0E1A); font-family: "Inter", system-ui, sans-serif; }
+body { background: #f7f8fa; font-family: "Inter", system-ui, sans-serif; }
 .body-overlay { display: none !important; }
 </style>
 @endpush
@@ -10,6 +13,7 @@ body { background: var(--bg-primary, #0A0E1A); font-family: "Inter", system-ui, 
 @section("content")
 
     @include("frontend.sections.hero")
+    @include("frontend.sections.trust-bar")
     @include("frontend.sections.payment-rails")
     @include("frontend.sections.features-new")
     @include("frontend.sections.stats-section")

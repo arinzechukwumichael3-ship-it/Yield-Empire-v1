@@ -13,8 +13,13 @@
     $s_platform     = Agent::platform();
     $s_agent        = request()->header('User-Agent');
 @endphp
+@php
+    // Public homepage renders the navy/light theme; every other frontend
+    // page (auth, about, contact, ...) keeps the default dark theme.
+    $hp_theme = trim((string) \Illuminate\Support\Facades\View::getSection('pageTheme')) ?: 'dark';
+@endphp
 <!DOCTYPE html>
-<html lang="{{ get_default_language_code() }}" data-theme="dark">
+<html lang="{{ get_default_language_code() }}" data-theme="{{ $hp_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,7 +31,7 @@
     <meta name="application-name" content="YieldEmpire">
     <meta name="geo.region" content="US-NY">
     <meta name="geo.placename" content="New York">
-    <meta name="theme-color" content="#0A0E1A">
+    <meta name="theme-color" content="{{ $hp_theme === 'light' ? '#f7f8fa' : '#0A0E1A' }}">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ URL::current() }}">
     @php
@@ -39,7 +44,7 @@
     @endif
     <script>
         (function() {
-            document.documentElement.setAttribute('data-theme', 'dark');
+            document.documentElement.setAttribute('data-theme', '{{ $hp_theme }}');
             document.documentElement.classList.add('js');
         })();
     </script>
@@ -90,6 +95,9 @@
     </script>
 </head>
 <body>
+    @if(request()->routeIs('frontend.index'))
+        @include('frontend.partials.promo-topbar')
+    @endif
     @include('frontend.partials.body-overlay')
     @include('frontend.partials.scroll-to-top')
     @include('partials.global-nav')
@@ -118,8 +126,11 @@
     @include('partials.footer-asset')
     @include('frontend.partials.extensions.tawk-to')
 
-    <!-- WhatsApp Floating Widget -->
-    <div class="whatsapp-widget" data-aos="zoom-in" data-aos-delay="500" style="bottom: 30px">
+    <!-- WhatsApp Floating Widget (dismissible, compact) -->
+    <div class="whatsapp-widget" id="waWidget" data-aos="zoom-in" data-aos-delay="500">
+        <button type="button" class="wa-dismiss" id="waDismiss" aria-label="Hide chat widget" title="Hide">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
         <a href="https://wa.me/message/ZW7EJRXHGL3GG1" target="_blank" class="whatsapp-btn" rel="noopener noreferrer" aria-label="Contact Support on WhatsApp">
             <div class="whatsapp-icon">
                 <i class="lab la-whatsapp"></i>
@@ -130,6 +141,26 @@
             </div>
         </a>
     </div>
+    <script>
+    (function(){
+        var widget = document.getElementById('waWidget');
+        var dismiss = document.getElementById('waDismiss');
+        if (!widget || !dismiss) return;
+        try {
+            if (localStorage.getItem('wa_widget_hidden') === '1') {
+                widget.style.display = 'none';
+                return;
+            }
+        } catch (e) {}
+        dismiss.addEventListener('click', function(){
+            widget.style.transition = 'opacity .25s ease, transform .25s ease';
+            widget.style.opacity = '0';
+            widget.style.transform = 'translateY(8px)';
+            setTimeout(function(){ widget.style.display = 'none'; }, 250);
+            try { localStorage.setItem('wa_widget_hidden', '1'); } catch (e) {}
+        });
+    })();
+    </script>
 
     @stack('script')
     <script>

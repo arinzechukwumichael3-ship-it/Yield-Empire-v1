@@ -14,6 +14,10 @@
                     $max = $plan->max_amount !== null ? (float)$plan->max_amount : null;
                     $range = '$' . number_format($min, $min === floor($min) ? 0 : 2) . ($max ? ' – $' . number_format($max, $max === floor($max) ? 0 : 2) : '+');
                     $termMonths = $plan->duration_days % 30 === 0 ? $plan->duration_days / 30 : null;
+                    // Placeholder "original price" for the strikethrough. There is no
+                    // original-price field on investment_plans yet; this is a view-level
+                    // heuristic so the pricing card renders the $X / <s>$Y</s> pattern.
+                    $oldPrice = $min > 0 ? round($min * 2.5) : 0;
                 @endphp
                 <x-plan-card variant="home" :plan="$plan"
                     badge="{{ strtoupper(explode(' ', trim($plan->name))[0] ?? 'PLAN') }}"
@@ -22,6 +26,8 @@
                     :flag="$i === 1 ? 'MOST POPULAR' : null"
                     name="{{ $plan->name }}"
                     rate="{{ rtrim(rtrim(number_format((float)$plan->roi_percent, 2), '0'), '.') }}"
+                    :price="$min"
+                    :old-price="$oldPrice"
                     delay="{{ $i * 120 }}ms"
                     :features="[
                         'Range: ' . $range,

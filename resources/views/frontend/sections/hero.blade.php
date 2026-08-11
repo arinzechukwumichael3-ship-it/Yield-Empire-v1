@@ -1,4 +1,4 @@
-<!-- ====== HERO SECTION ====== -->
+<!-- ====== HERO SECTION — LIGHT / NAVY ====== -->
 <section class="enzo-hero" id="hero">
     <!-- Background effects wrapper (prevents content clipping) -->
     <div class="enzo-hero-bg-wrapper">
@@ -16,9 +16,8 @@
                 </div>
 
                 <h1 class="enzo-hero-title">
-                    <span class="enzo-hero-title-line">Grow your</span>
-                    <span class="enzo-hero-title-line">wealth with</span>
-                    <span class="enzo-hero-title-line"><span class="enzo-hero-title-grad">predictable returns</span></span>
+                    <span class="enzo-hero-title-line">Turn your trading skills</span>
+                    <span class="enzo-hero-title-line">into <span class="hp-title-accent">income</span></span>
                 </h1>
 
                 <p class="enzo-hero-sub">
@@ -26,7 +25,7 @@
                 </p>
 
                 <div class="enzo-hero-actions">
-                    <a href="{{ setRoute('user.register') }}" class="enzo-btn enzo-btn-primary enzo-btn-glow">
+                    <a href="{{ setRoute('user.register') }}" class="enzo-btn enzo-btn-primary">
                         Get Started
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9 4 13 8 9 12"/></svg>
                     </a>
@@ -37,44 +36,60 @@
             </div>
 
             <div class="enzo-hero-right">
-                <div class="virtual-card-wrapper">
-                    <div class="virtual-card" role="img" aria-label="YieldEmpire virtual card preview">
-                        <!-- Holographic shimmer overlay -->
-                        <div class="card-shimmer"></div>
-                        <!-- Card top row -->
-                        <div class="enzo-card-top">
-                            <span class="enzo-card-brand">YieldEmpire</span>
-                            <span class="enzo-card-visa">VISA</span>
-                        </div>
-                        <!-- Chip SVG -->
-                        <div class="enzo-card-chip">
-                            <svg width="40" height="30" viewBox="0 0 40 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="0.5" y="0.5" width="39" height="29" rx="4.5" fill="#F59E0B" fill-opacity="0.35"/>
-                                <rect x="3" y="3" width="12" height="9" rx="2" fill="#F59E0B" fill-opacity="0.7"/>
-                                <rect x="3" y="17" width="12" height="9" rx="2" fill="#F59E0B" fill-opacity="0.7"/>
-                                <rect x="18" y="3" width="18" height="23" rx="3" fill="#F59E0B" fill-opacity="0.45"/>
-                                <rect x="19" y="4" width="16" height="21" rx="2" fill="#F59E0B" fill-opacity="0.2"/>
-                            </svg>
-                        </div>
-                        <!-- Card number -->
-                        <div class="enzo-card-number">•••• •••• •••• 4242</div>
-                        <!-- Bottom row: holder + expiry -->
-                        <div class="enzo-card-bottom">
-                            <div class="enzo-card-holder">
-                                <span class="enzo-card-holder-label">CARD HOLDER</span>
-                                <span class="enzo-card-holder-name">JOHN DOE</span>
+                <div class="hp-phone-wrap" role="img" aria-label="YieldEmpire dashboard preview on a phone">
+                    <!-- Floating feature chips -->
+                    <span class="hp-chip hp-chip-1">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        Payouts live
+                    </span>
+                    <span class="hp-chip hp-chip-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2f5fd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        Instant
+                    </span>
+                    <span class="hp-chip hp-chip-3">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0a1f5c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                        Global
+                    </span>
+
+                    <!-- Phone mockup -->
+                    <div class="hp-phone">
+                        <div class="hp-phone-notch"></div>
+                        <div class="hp-phone-screen">
+                            <div class="hp-phone-hud">
+                                <span>9:41</span>
+                                <span class="hp-phone-live">Live balance</span>
                             </div>
-                            <div class="enzo-card-expiry">
-                                <span class="enzo-card-expiry-label">EXPIRES</span>
-                                <span class="enzo-card-expiry-date">12/28</span>
+                            <div class="hp-phone-balance">
+                                <div class="hp-phone-balance-label">Total balance</div>
+                                <div class="hp-phone-balance-value">$12,847.32 <small>&uarr; 8.4%</small></div>
+                            </div>
+                            <div class="hp-phone-chart">
+                                <svg viewBox="0 0 260 92" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto">
+                                    <defs>
+                                        <linearGradient id="hpChartFill" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0" stop-color="#2f6bff" stop-opacity="0.35"/>
+                                            <stop offset="1" stop-color="#2f6bff" stop-opacity="0"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M2 78 C 30 74, 45 60, 66 62 S 100 70, 122 58 S 160 40, 180 44 S 220 28, 258 16" stroke="#2f6bff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                    <path d="M2 78 C 30 74, 45 60, 66 62 S 100 70, 122 58 S 160 40, 180 44 S 220 28, 258 16 L 258 92 L 2 92 Z" fill="url(#hpChartFill)"/>
+                                    <circle cx="258" cy="16" r="4" fill="#2f6bff"/>
+                                    <circle cx="258" cy="16" r="7" stroke="#2f6bff" stroke-opacity="0.3"/>
+                                </svg>
+                            </div>
+                            <div class="hp-phone-rows">
+                                <div class="hp-phone-row">
+                                    <span>Investment yield</span>
+                                    <span class="hp-phone-row-up">+$842.10</span>
+                                </div>
+                                <div class="hp-phone-row">
+                                    <span>Active plans</span>
+                                    <span>3</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- Floating badges (anchored to card edges) -->
-                        <span class="card-badge card-badge-1">🔒 Secured</span>
-                        <span class="card-badge card-badge-2">⚡ Instant</span>
-                        <span class="card-badge card-badge-3">🌍 Global</span>
                     </div>
-                    <!-- Glow pulse beneath card -->
+                    <!-- Glow pulse beneath phone -->
                     <div class="card-glow"></div>
                 </div>
             </div>
@@ -82,23 +97,23 @@
 
         <div class="enzo-hero-stats">
             <div class="enzo-hero-stat">
-                <span class="enzo-hero-stat-num">24/7</span>
-                <span class="enzo-hero-stat-label">Support</span>
+                <span class="enzo-hero-stat-num">195+</span>
+                <span class="enzo-hero-stat-label">Countries</span>
             </div>
             <div class="enzo-hero-stat-divider"></div>
             <div class="enzo-hero-stat">
-                <span class="enzo-hero-stat-num">AES-256</span>
-                <span class="enzo-hero-stat-label">Encryption</span>
+                <span class="enzo-hero-stat-num">3M+</span>
+                <span class="enzo-hero-stat-label">Users</span>
             </div>
             <div class="enzo-hero-stat-divider"></div>
             <div class="enzo-hero-stat">
-                <span class="enzo-hero-stat-num">Real-Time</span>
-                <span class="enzo-hero-stat-label">Yield Tracking</span>
+                <span class="enzo-hero-stat-num">$291M+</span>
+                <span class="enzo-hero-stat-label">Paid out</span>
             </div>
             <div class="enzo-hero-stat-divider"></div>
             <div class="enzo-hero-stat">
-                <span class="enzo-hero-stat-num">Multi-Currency</span>
-                <span class="enzo-hero-stat-label">Wallets</span>
+                <span class="enzo-hero-stat-num">4.8/5</span>
+                <span class="enzo-hero-stat-label">Rated</span>
             </div>
         </div>
     </div>

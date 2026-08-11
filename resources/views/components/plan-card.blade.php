@@ -23,6 +23,8 @@
     'duration' => null,
     'features' => [],
     'featured' => false,
+    'price' => null,
+    'oldPrice' => null,
     'href' => null,
     'delay' => '0ms',
 ])
@@ -46,7 +48,12 @@
     $rateSuffix = $isPerTerm ? 'ROI' : '/yr';
     $rateHeld = $rateUnit === 'APY / yr' ? ($isPerTerm ? 'ROI' : $rateUnit) : $rateUnit;
     $cardHref = $href ?: route('user.invest.new');
-    $checkColor = $featured ? '#F5B84C' : '#3B82F6';
+    $checkColor = $featured ? '#0a1f5c' : '#2f5fd6';
+    $cardPrice = $price !== null ? (float)$price : (float)($plan->min_amount ?? 0);
+    $cardOldPrice = $oldPrice !== null ? (float)$oldPrice : (float)0;
+    $fmt = function ($n) {
+        return '$' . number_format($n, $n === floor($n) ? 0 : 2);
+    };
 @endphp
 
 @if($variant === 'compact')
@@ -70,6 +77,12 @@
             <span class="plans-card-symbol">$</span>
         </div>
         <h3 class="plans-card-name">{{ $cardName }}</h3>
+        <div class="plans-card-price-row">
+            <span class="plans-card-price">{{ $fmt($cardPrice) }}</span>
+            @if($cardOldPrice > 0)
+                <s class="plans-card-old-price">{{ $fmt($cardOldPrice) }}</s>
+            @endif
+        </div>
         <div class="plans-card-rate">{{ $cardRate }}% <span class="plans-card-rate-unit">{{ $rateHeld }}</span></div>
         @if(count($features))
             <ul class="plans-card-features">
