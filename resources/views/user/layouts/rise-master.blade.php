@@ -196,7 +196,7 @@
     @include('user.partials.push-notification')
 
 
-    <!-- WhatsApp Floating Widget (dismissible, compact) -->
+    <!-- WhatsApp Floating Widget (dismissible, compact, auto-shrink) -->
     <div class="whatsapp-widget" id="waWidget" data-aos="zoom-in" data-aos-delay="500">
         <button type="button" class="wa-dismiss" id="waDismiss" aria-label="Hide chat widget" title="Hide">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -234,7 +234,7 @@
     })();
     </script>
     <script>
-    // --- Dismissible WhatsApp support widget ---
+    // --- Dismissible WhatsApp support widget with auto-shrink ---
     (function(){
         var widget = document.getElementById('waWidget');
         var dismiss = document.getElementById('waDismiss');
@@ -252,6 +252,28 @@
             setTimeout(function(){ widget.style.display = 'none'; }, 250);
             try { localStorage.setItem('wa_widget_hidden', '1'); } catch (e) {}
         });
+
+        // Auto-shrink to icon-only when near bottom of page
+        var footer = document.querySelector('.bottom-nav');
+        var triggerShrink = false;
+        function checkShrink() {
+            if (!footer) return;
+            var footerRect = footer.getBoundingClientRect();
+            var widgetRect = widget.getBoundingClientRect();
+            // Shrink when widget overlaps bottom nav or is within 100px of it
+            if (widgetRect.bottom > footerRect.top - 100) {
+                if (!triggerShrink) {
+                    widget.classList.add('wa-mini');
+                    triggerShrink = true;
+                }
+            } else if (triggerShrink) {
+                widget.classList.remove('wa-mini');
+                triggerShrink = false;
+            }
+        }
+        window.addEventListener('scroll', checkShrink, { passive: true });
+        window.addEventListener('resize', checkShrink);
+        checkShrink(); // Initial check
     })();
     </script>
     <script>

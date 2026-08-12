@@ -2923,6 +2923,26 @@ html { scroll-behavior: smooth; }
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 }
+
+/* Desktop: convert horizontal scroll to responsive grid */
+@media (min-width: 1024px) {
+    .dash-invest-scroll {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        overflow-x: visible;
+        padding: 0;
+        scroll-snap-type: none;
+    }
+    .dash-invest-card {
+        min-width: 0;
+        flex-shrink: 1;
+    }
+}
+
+/* ==================================================================
+   INVEST PAGE — RADAR CHART
+   ================================================================== */
 .dash-invest-badge {
     display: inline-block;
     padding: 2px 8px;
@@ -3893,45 +3913,92 @@ html { scroll-padding-bottom: 140px; }
 /* ---------- WhatsApp support widget: compact, dismissible, above the nav ---------- */
 .whatsapp-widget {
     position: fixed;
-    right: 16px;
+    right: 24px;
     bottom: 132px;
     z-index: 95;
     display: flex;
     align-items: center;
     gap: 8px;
     filter: none;
+    transition: transform 0.2s ease, opacity 0.2s ease, bottom 0.2s ease;
 }
 .whatsapp-widget .whatsapp-btn {
-    background: #101014;
-    border: 1px solid var(--border-strong);
-    color: #F8FAFC !important;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary) !important;
     border-radius: 50px;
     padding: 10px 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: var(--shadow-strong);
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
-.whatsapp-widget .whatsapp-btn:hover { background: #19191F; transform: none; }
-.whatsapp-widget .whatsapp-icon { width: 28px; height: 28px; border-radius: 50%; background: #2a2a2e; display: flex; align-items: center; justify-content: center; position: relative; }
-.whatsapp-widget .whatsapp-icon i { font-size: 16px; color: #F8FAFC; line-height: 1; }
-.whatsapp-widget .whatsapp-text { font-size: 12px; font-weight: 600; color: #D4D4D8; }
+.whatsapp-widget .whatsapp-btn:hover { 
+    background: var(--bg-elevated); 
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
+}
+.whatsapp-widget .whatsapp-icon { 
+    width: 28px; height: 28px; border-radius: 50%; 
+    background: var(--accent); 
+    display: flex; align-items: center; justify-content: center; position: relative; 
+}
+.whatsapp-widget .whatsapp-icon i { font-size: 16px; color: #fff; line-height: 1; }
+.whatsapp-widget .whatsapp-text { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
 .whatsapp-widget .online-dot {
     position: absolute; top: -1px; right: -1px; width: 8px; height: 8px; border-radius: 50%;
-    background: var(--success); border: 2px solid #101014;
+    background: var(--success); border: 2px solid var(--bg-primary);
 }
 .wa-dismiss {
     width: 22px; height: 22px; border-radius: 50%;
-    background: #2a2a2e; border: 1px solid var(--border-strong); color: #A1A1AA;
+    background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-muted);
     font-size: 12px; line-height: 1; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.wa-dismiss:hover { background: var(--accent); color: #fff; }
+.wa-dismiss:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* Auto-shrink to icon-only when near bottom of page */
+.whatsapp-widget.wa-mini .whatsapp-text { display: none !important; }
+.whatsapp-widget.wa-mini .whatsapp-btn { padding: 10px 12px; }
+.whatsapp-widget.wa-mini { right: 24px; }
+
+/* Light mode overrides */
+[data-theme="light"] .whatsapp-widget {
+    right: 24px;
+    bottom: 150px;
+}
+[data-theme="light"] .whatsapp-widget .whatsapp-btn {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    color: var(--text-primary) !important;
+    box-shadow: var(--card-shadow);
+}
+[data-theme="light"] .whatsapp-widget .whatsapp-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent) !important;
+}
+[data-theme="light"] .whatsapp-widget .whatsapp-icon { background: var(--accent); }
+[data-theme="light"] .whatsapp-widget .whatsapp-icon i { color: #fff; }
+[data-theme="light"] .whatsapp-widget .whatsapp-text { color: var(--text-secondary); }
+[data-theme="light"] .whatsapp-widget .online-dot { border-color: var(--bg-primary); }
+[data-theme="light"] .wa-dismiss { background: var(--bg-card); border-color: var(--border-color); color: var(--text-muted); }
+[data-theme="light"] .wa-dismiss:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
 @media (max-width: 480px) {
-    .whatsapp-widget { bottom: 126px !important; right: 12px !important; }
+    .whatsapp-widget { bottom: 126px !important; right: 16px !important; }
     .whatsapp-widget .whatsapp-btn { padding: 9px 12px; }
     .whatsapp-widget .whatsapp-text { display: none; }
+    [data-theme="light"] .whatsapp-widget { bottom: 140px !important; right: 16px !important; }
+}
+
+/* Safe margin from bottom when footer/cookie banner present */
+@media (max-width: 767px) {
+    .whatsapp-widget { bottom: calc(132px + env(safe-area-inset-bottom, 0px)); }
+    [data-theme="light"] .whatsapp-widget { bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* ---------- Dashboard page rhythm ---------- */
@@ -4203,6 +4270,70 @@ html { scroll-padding-bottom: 140px; }
 [data-theme="light"] .dash-card-preview-number { color: #0F172A; }
 [data-theme="light"] .dash-card-preview-label { color: #475569; }
 [data-theme="light"] .dash-referral-banner-btn { background: var(--accent); color: #fff; }
+
+/* Card preview empty state & CTA */
+.dash-card-preview-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    text-align: center;
+    color: var(--text-muted);
+}
+.dash-card-preview-empty .dash-card-preview-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+.dash-card-preview-empty-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 0 0 16px;
+}
+.dash-card-preview-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    background: var(--gradient);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(10,31,92,0.25);
+    transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
+}
+.dash-card-preview-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(10,31,92,0.35);
+    filter: brightness(1.05);
+    color: #fff;
+    text-decoration: none;
+}
+[data-theme="light"] .dash-card-preview-empty {
+    color: var(--text-muted);
+}
+[data-theme="light"] .dash-card-preview-empty .dash-card-preview-icon {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+[data-theme="light"] .dash-card-preview-empty-text {
+    color: var(--text-secondary);
+}
+[data-theme="light"] .dash-card-preview-cta {
+    background: var(--gradient);
+    box-shadow: 0 4px 14px rgba(10,31,92,0.25);
+}
+
 /* ==================================================================
    INVESTMENT PLANS  (landing section)
    Uses the same dark tokens as the dashboard (.dash-* layer).

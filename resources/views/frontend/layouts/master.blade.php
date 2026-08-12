@@ -127,7 +127,7 @@
     @include('partials.footer-asset')
     @include('frontend.partials.extensions.tawk-to')
 
-    <!-- WhatsApp Floating Widget (dismissible, compact) -->
+    <!-- WhatsApp Floating Widget (dismissible, compact, auto-shrink) -->
     <div class="whatsapp-widget" id="waWidget" data-aos="zoom-in" data-aos-delay="500">
         <button type="button" class="wa-dismiss" id="waDismiss" aria-label="Hide chat widget" title="Hide">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -160,6 +160,30 @@
             setTimeout(function(){ widget.style.display = 'none'; }, 250);
             try { localStorage.setItem('wa_widget_hidden', '1'); } catch (e) {}
         });
+
+        // Auto-shrink to icon-only when near bottom of page
+        var footer = document.getElementById('footer');
+        var cookieBanner = document.querySelector('.cookie-main-wrapper');
+        var triggerShrink = false;
+        function checkShrink() {
+            if (!footer) return;
+            var footerRect = footer.getBoundingClientRect();
+            var viewportHeight = window.innerHeight;
+            var widgetRect = widget.getBoundingClientRect();
+            // Shrink when widget overlaps footer or is within 100px of it
+            if (widgetRect.bottom > footerRect.top - 100) {
+                if (!triggerShrink) {
+                    widget.classList.add('wa-mini');
+                    triggerShrink = true;
+                }
+            } else if (triggerShrink) {
+                widget.classList.remove('wa-mini');
+                triggerShrink = false;
+            }
+        }
+        window.addEventListener('scroll', checkShrink, { passive: true });
+        window.addEventListener('resize', checkShrink);
+        checkShrink(); // Initial check
     })();
     </script>
 

@@ -11,6 +11,7 @@ use App\Models\InvestmentAsset;
 use App\Models\InvestmentPlan;
 use App\Models\UserInvestment;
 use App\Models\Frontend\AnnouncementCategory;
+use App\Models\StrowalletVirtualCard;
 use App\Models\Admin\Currency;
 use App\Models\Admin\SiteSections;
 use App\Models\Frontend\Announcement as FrontendAnnouncement;
@@ -91,9 +92,15 @@ class RiseController extends Controller
         $banner = $sections->where('key', 'banner-section')->first();
         $testimonials = $sections->where('key', 'client-feedback-section')->first();
 
+        // Get user's virtual card (default or first active)
+        $virtualCard = StrowalletVirtualCard::auth()
+            ->where('is_default', true)
+            ->orWhere('is_active', true)
+            ->first();
+
         return view('user.rise.home', compact(
             'page_title', 'user', 'wallet', 'usd_wallet', 'gbp_wallet', 'eur_wallet',
-            'transactions', 'todayTransactions', 'investment_plans', 'portfolio', 'investedAmount', 'banner', 'testimonials'
+            'transactions', 'todayTransactions', 'investment_plans', 'portfolio', 'investedAmount', 'banner', 'testimonials', 'virtualCard'
         ));
     }
 

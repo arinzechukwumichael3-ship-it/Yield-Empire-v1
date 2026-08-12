@@ -178,18 +178,28 @@ if ($invested <= 0 && $portfolio && $portfolio->holdings) {
             <div class="dash-card-preview-chip">
                 <svg width="32" height="24" viewBox="0 0 40 30" fill="none"><rect x="0.5" y="0.5" width="39" height="29" rx="4.5" fill="#2f6bff" fill-opacity="0.35"/><rect x="3" y="3" width="12" height="9" rx="2" fill="#2f6bff" fill-opacity="0.7"/><rect x="3" y="17" width="12" height="9" rx="2" fill="#2f6bff" fill-opacity="0.7"/><rect x="18" y="3" width="18" height="23" rx="3" fill="#2f6bff" fill-opacity="0.45"/></svg>
             </div>
-            <div class="dash-card-preview-number">**** **** **** 4242</div>
-            <div class="dash-card-preview-bottom">
-                <div class="dash-card-preview-holder">
-                    <span class="dash-card-preview-label">CARD HOLDER</span>
-                    <span class="dash-card-preview-name">{{ strtoupper($user->firstname ?? 'USER') }} {{ strtoupper($user->lastname ?? '') }}</span>
+            @if($virtualCard)
+                <div class="dash-card-preview-number">{{ strtoupper($virtualCard->card_brand ?? 'VISA') }} &bull;&bull;&bull;&bull; {{ $virtualCard->last4 ?? '****' }}</div>
+                <div class="dash-card-preview-bottom">
+                    <div class="dash-card-preview-holder">
+                        <span class="dash-card-preview-label">CARD HOLDER</span>
+                        <span class="dash-card-preview-name">{{ strtoupper($virtualCard->name_on_card ?? $user->firstname ?? 'USER') }}</span>
+                    </div>
+                    <div class="dash-card-preview-expiry">
+                        <span class="dash-card-preview-label">EXPIRES</span>
+                        <span class="dash-card-preview-date">{{ $virtualCard->expiry ?? '12/28' }}</span>
+                    </div>
                 </div>
-                <div class="dash-card-preview-expiry">
-                    <span class="dash-card-preview-label">EXPIRES</span>
-                    <span class="dash-card-preview-date">12/28</span>
+            @else
+                <div class="dash-card-preview-empty">
+                    <div class="dash-card-preview-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    </div>
+                    <p class="dash-card-preview-empty-text">No card issued yet</p>
+                    <a href="{{ route('user.strowallet.virtual.card.index') }}" class="dash-card-preview-cta">Get Your Free Card</a>
                 </div>
-            </div>
-            <a href="{{ setRoute('user.strowallet.virtual.card.index') }}" class="dash-card-preview-link" aria-label="Manage card">
+            @endif
+            <a href="{{ route('user.strowallet.virtual.card.index') }}" class="dash-card-preview-link" aria-label="Manage card">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
             </a>
         </div>
