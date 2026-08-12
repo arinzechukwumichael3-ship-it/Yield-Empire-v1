@@ -15,8 +15,8 @@
 @endphp
 @php
     // Public homepage renders the navy/light theme; every other frontend
-    // page (auth, about, contact, ...) keeps the default dark theme.
-    $hp_theme = trim((string) \Illuminate\Support\Facades\View::getSection('pageTheme')) ?: 'dark';
+    // page (auth, about, contact, ...) now defaults to light theme.
+    $hp_theme = trim((string) \Illuminate\Support\Facades\View::getSection('pageTheme')) ?: 'light';
 @endphp
 <!DOCTYPE html>
 <html lang="{{ get_default_language_code() }}" data-theme="{{ $hp_theme }}">
@@ -51,6 +51,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     @include('partials.header-asset')
     <link rel="stylesheet" href="{{ asset('frontend/css/enzo-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/frontend-light.css') }}">
 
     @stack('css')
 

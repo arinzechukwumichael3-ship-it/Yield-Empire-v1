@@ -1,13 +1,13 @@
 <!-- ====== INVESTMENT PLANS / PRODUCTS ====== -->
 <section class="enzo-section enzo-section-dark" id="plans">
     <div class="enzo-container">
-        <div class="enzo-section-header">
+        <div class="enzo-section-header animate-on-scroll">
             <span class="enzo-badge">INVESTMENT PLANS</span>
             <h2 class="enzo-section-title">Plans Built for <span class="enzo-text-grad">Steady Growth</span></h2>
             <p class="enzo-section-sub">Choose the plan that fits your goals. Clear terms, no hidden fees, and payouts you can track in real time.</p>
         </div>
 
-        <div class="plans-grid">
+        <div class="plans-grid animate-on-scroll" style="transition-delay: 150ms;">
             @forelse($plans ?? collect([]) as $i => $plan)
                 @php
                     $min = (float)$plan->min_amount;
@@ -16,7 +16,7 @@
                     $termMonths = $plan->duration_days % 30 === 0 ? $plan->duration_days / 30 : null;
                     // Placeholder "original price" for the strikethrough. There is no
                     // original-price field on investment_plans yet; this is a view-level
-                    // heuristic so the pricing card renders the $X / <s>$Y</s> pattern.
+                    // heuristic so the pricing card renders the $X / $Y writes pattern.
                     $oldPrice = $min > 0 ? round($min * 2.5) : 0;
                 @endphp
                 <x-plan-card variant="home" :plan="$plan"
@@ -36,13 +36,13 @@
                     ]"
                     href="{{ setRoute('user.invest.new') }}" />
             @empty
-                <div class="plans-empty">
+                <div class="plans-empty animate-on-scroll">
                     <span class="plans-empty-title">Plans are being finalized</span>
                     <span class="plans-empty-sub">New offerings will appear here shortly.</span>
                 </div>
             @endforelse
         </div>
 
-        <p class="plans-disclaimer">Rates and terms shown reflect the current live plans. Yield is paid on maturity and updated in real time.</p>
+        <p class="plans-disclaimer animate-on-scroll" style="transition-delay: 300ms;">Rates and terms shown reflect the current live plans. Yield is paid on maturity and updated in real time.</p>
     </div>
 </section>

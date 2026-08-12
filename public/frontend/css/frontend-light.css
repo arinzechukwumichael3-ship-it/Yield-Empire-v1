@@ -1,0 +1,728 @@
+/* ============================================================
+   YIELDEMPIRE — FRONTEND LIGHT / NAVY SYSTEM
+   ============================================================
+   Loaded AFTER enzo-theme.css in frontend/layouts/master.blade.php
+   Mirrors the dashboard pattern from dash-light.css:
+     1. Defines [data-theme="light"] root tokens (off-white, navy, Inter)
+     2. Activates existing [data-theme="light"] rules in enzo-theme.css
+     3. Overrides hardcoded dark colors in style.css (legacy templates)
+     4. Keeps intentional dark navy breaks (none on frontend pages)
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. DESIGN TOKENS — light/navy (mirrors public homepage)
+   ------------------------------------------------------------ */
+[data-theme="light"] {
+    /* Core surfaces */
+    --bg-primary: #f7f8fa;                 /* app background */
+    --bg-secondary: #eef1f6;               /* page alternate background */
+    --bg-card: #ffffff;                    /* card / surface */
+    --bg-elevated: #ffffff;                /* nested / popover surface */
+    --border-color: #e6eaf2;
+    --border-strong: #d8deeb;
+    --card-shadow: 0 2px 10px rgba(15,23,42,0.06), 0 0 0 1px rgba(15,23,42,0.03);
+    --shadow-strong: 0 18px 48px rgba(15,23,42,0.10);
+
+    /* Brand accents */
+    --blue: #2f5fd6;                       /* links / mid-blue accents */
+    --cyan: #38BDF8;
+    --accent: #0a1f5c;                     /* primary navy (CTAs) */
+    --accent-soft: rgba(10,31,92,0.08);
+    --gradient: linear-gradient(135deg, #0a1f5c 0%, #2f5fd6 100%);
+
+    /* Text */
+    --text-primary: #152238;
+    --text-secondary: #5b6b8c;
+    --text-muted: #8b98b5;
+    --text-on-accent: #FFFFFF;
+
+    /* Form inputs */
+    --input-bg: #ffffff;
+    --input-border: #d8deeb;
+    --placeholder: #9aa6bf;
+
+    /* Status */
+    --success: #16A34A;
+    --success-text: #15803D;
+    --success-bg: rgba(22,163,74,0.12);
+    --danger: #DC2626;
+    --danger-text: #DC2626;
+    --danger-bg: rgba(220,38,38,0.12);
+    --warning: #F59E0B;
+    --warning-text: #B45309;
+    --warning-bg: rgba(245,158,11,0.14);
+    --info: #2f5fd6;
+    --info-bg: rgba(47,95,214,0.12);
+
+    /* Legacy style.css token (drives .btn--base, .text--base, select2, etc.) */
+    --primary-color: #0a1f5c;
+
+    /* Misc */
+    --overlay: rgba(15,23,42,0.45);
+    --scrollbar: #d8deeb;
+    --nav-bg: rgba(255,255,255,0.92);
+    --font-sans: "Inter", system-ui, sans-serif;
+}
+
+/* Base body — overrides style.css Lora serif + dark defaults */
+[data-theme="light"] body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+}
+
+/* Headings — style.css uses Lora + var(--text-primary) which is dark in light mode */
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-weight: 700;
+}
+
+/* Links */
+[data-theme="light"] a {
+    color: var(--accent);
+}
+[data-theme="light"] a:hover {
+    color: var(--blue);
+}
+
+/* ------------------------------------------------------------
+   2. LEGACY BUTTON — .btn--base (style.css:1399)
+   ------------------------------------------------------------ */
+[data-theme="light"] .btn--base {
+    background: var(--gradient);
+    border-radius: 999px;
+    color: #ffffff;
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 6px 18px rgba(10,31,92,0.25);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+[data-theme="light"] .btn--base:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(10,31,92,0.35);
+    filter: brightness(1.05);
+    color: #ffffff;
+}
+[data-theme="light"] .btn--base:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(10,31,92,0.25);
+}
+[data-theme="light"] .btn--base:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(10,31,92,0.25);
+}
+
+/* Ghost/secondary variant (if used) */
+[data-theme="light"] .btn--base.active {
+    background: transparent;
+    color: var(--accent);
+    box-shadow: none;
+    border: 1.5px solid var(--accent);
+}
+[data-theme="light"] .btn--base.active:hover {
+    background: var(--accent);
+    color: #ffffff;
+}
+
+/* ------------------------------------------------------------
+   3. LEGACY FORM INPUT — .form--control (style.css:1751)
+   ------------------------------------------------------------ */
+[data-theme="light"] .form--control {
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 15px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+[data-theme="light"] .form--control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+}
+[data-theme="light"] .form--control::placeholder {
+    color: var(--placeholder);
+}
+[data-theme="light"] .form--control:disabled {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+/* style.css .form-control (used in some places) */
+[data-theme="light"] .form-control {
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-primary);
+    border-radius: 8px;
+    height: 50px;
+}
+[data-theme="light"] .form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+[data-theme="light"] .form-control::placeholder {
+    color: var(--placeholder);
+}
+
+/* ------------------------------------------------------------
+   4. LEGACY AUTH CARDS — .account-form-area, .verification-otp-area,
+      .forgot-password-area, .new-password-area (style.css)
+   ------------------------------------------------------------ */
+[data-theme="light"] .login-section .account-form-area,
+[data-theme="light"] .verification-otp .verification-otp-area,
+[data-theme="light"] .forgot-password .forgot-password-area,
+[data-theme="light"] .new-password .new-password-area,
+[data-theme="light"] .account-wrapper {
+    background-color: var(--bg-card);
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 40px;
+}
+@media only screen and (max-width: 575px) {
+    [data-theme="light"] .login-section .account-form-area,
+    [data-theme="light"] .verification-otp .verification-otp-area,
+    [data-theme="light"] .forgot-password .forgot-password-area,
+    [data-theme="light"] .new-password .new-password-area,
+    [data-theme="light"] .account-wrapper {
+        padding: 24px;
+        border-radius: 12px;
+    }
+}
+
+/* Login section spacing (style.css:3131) */
+[data-theme="light"] .login-section .user-login-area {
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+@media only screen and (max-width: 991px) {
+    [data-theme="light"] .login-section .user-login-area {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+}
+
+/* bg-overlay on login/register (style.css:2197) — light version */
+[data-theme="light"] .bg-overlay:after {
+    background-color: var(--bg-primary);
+    opacity: 0.8;
+}
+
+/* ------------------------------------------------------------
+   5. LEGACY FORM ELEMENTS
+   ------------------------------------------------------------ */
+
+/* Labels */
+[data-theme="light"] label {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Account item links (style.css:3015) */
+[data-theme="light"] .account-item label {
+    color: var(--text-secondary);
+}
+[data-theme="light"] .account-item label a {
+    color: var(--accent);
+    font-weight: 600;
+}
+[data-theme="light"] .account-item label a:hover {
+    color: var(--blue);
+}
+
+/* Forgot item */
+[data-theme="light"] .forgot-item a {
+    color: var(--accent);
+}
+
+/* Custom checkbox (style.css:1668) */
+[data-theme="light"] .custom-check-group label::before {
+    background: var(--bg-card);
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+}
+[data-theme="light"] .custom-check-group input:checked + label::before {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+[data-theme="light"] .custom-check-group input:checked + label::after {
+    border-color: #ffffff;
+}
+
+/* Show/hide password toggle (style.css:3038) */
+[data-theme="light"] .show_hide_password .show-pass {
+    color: var(--text-muted);
+}
+[data-theme="light"] .show_hide_password .show-pass:hover {
+    color: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   6. SELECT2 / NICE-SELECT OVERRIDES (style.css:1903+)
+   ------------------------------------------------------------ */
+[data-theme="light"] .select2-container--default .select2-selection--single {
+    background-color: var(--input-bg) !important;
+    border: 1px solid var(--input-border) !important;
+    border-radius: 8px !important;
+    height: 50px !important;
+}
+[data-theme="light"] .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: var(--text-primary) !important;
+    line-height: 48px;
+}
+[data-theme="light"] .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 48px;
+}
+[data-theme="light"] .select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: var(--text-muted) transparent transparent transparent;
+}
+[data-theme="light"] .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent var(--text-muted) transparent;
+}
+[data-theme="light"] .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: var(--accent);
+    color: #ffffff;
+}
+[data-theme="light"] .select2-container--default .select2-results__option--selected {
+    background-color: var(--accent-soft);
+    color: var(--accent);
+}
+[data-theme="light"] .select2-container--default .select2-results > .select2-results__options {
+    background-color: var(--bg-card) !important;
+}
+[data-theme="light"] .select2-container--default .select2-search--dropdown .select2-search__field {
+    background-color: var(--bg-card);
+    border: 1px solid var(--input-border);
+}
+[data-theme="light"] .select2-dropdown {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-strong);
+}
+
+/* Nice-select */
+[data-theme="light"] .nice-select {
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    height: 50px;
+    line-height: 48px;
+    color: var(--text-primary);
+}
+[data-theme="light"] .nice-select::after {
+    border-bottom: 2px solid var(--text-muted);
+    border-right: 2px solid var(--text-muted);
+}
+[data-theme="light"] .nice-select .list {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-strong);
+}
+[data-theme="light"] .nice-select .option:hover,
+[data-theme="light"] .nice-select .option.focus,
+[data-theme="light"] .nice-select .option.selected.focus {
+    background-color: var(--accent-soft);
+    color: var(--accent);
+}
+[data-theme="light"] .nice-select .option.selected {
+    color: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   7. OTP INPUTS (style.css:2120)
+   ------------------------------------------------------------ */
+[data-theme="light"] .otp,
+[data-theme="light"] .otp-input,
+[data-theme="light"] .reg-otp-box {
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-primary);
+    border-radius: 8px;
+}
+[data-theme="light"] .otp:focus,
+[data-theme="light"] .otp-input:focus,
+[data-theme="light"] .reg-otp-box:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+[data-theme="light"] .otp.required {
+    border-color: var(--danger);
+}
+
+/* ------------------------------------------------------------
+   8. TEXT UTILITIES (style.css:612)
+   ------------------------------------------------------------ */
+[data-theme="light"] .text--base {
+    color: var(--accent) !important;
+}
+[data-theme="light"] .text--dark {
+    color: var(--text-primary);
+}
+[data-theme="light"] .text--warning {
+    color: var(--warning);
+}
+[data-theme="light"] .text--info {
+    color: var(--info);
+}
+[data-theme="light"] .text--danger {
+    color: var(--danger);
+}
+[data-theme="light"] .text--success {
+    color: var(--success);
+}
+[data-theme="light"] .text--muted {
+    color: var(--text-muted);
+}
+
+/* ------------------------------------------------------------
+   9. SECTION BACKGROUNDS (style.css:648)
+   ------------------------------------------------------------ */
+[data-theme="light"] .section--bg {
+    background-color: var(--bg-secondary) !important;
+}
+[data-theme="light"] .bg--gray {
+    background-color: var(--bg-secondary);
+}
+
+/* ------------------------------------------------------------
+   10. SERVICE / CONTACT / ABOUT / FAQ / BLOG CARDS
+   ------------------------------------------------------------ */
+
+/* Service section (style.css:4013) */
+[data-theme="light"] .service-section .service-item {
+    background-color: var(--bg-card);
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+}
+[data-theme="light"] .service-section .service-item .icon {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+[data-theme="light"] .service-section .service-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-strong);
+    border-color: var(--accent);
+}
+
+/* Contact section (style.css:4041) */
+[data-theme="light"] .contact-item-list li {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+    border-radius: 16px;
+}
+[data-theme="light"] .contact-item-list li .contact-item-content {
+    border-left-color: var(--accent);
+}
+[data-theme="light"] .contact-form-area {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+}
+
+/* About section */
+[data-theme="light"] .about-section .about-img img {
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+}
+
+/* FAQ section (style.css:3892) */
+[data-theme="light"] .faq-wrapper .faq-item {
+    background-color: var(--bg-card);
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+[data-theme="light"] .faq-wrapper .faq-item .faq-title {
+    color: var(--text-primary);
+}
+[data-theme="light"] .faq-wrapper .faq-item .faq-title .title {
+    color: var(--text-primary);
+}
+[data-theme="light"] .faq-wrapper .faq-item .faq-content {
+    border-top-color: var(--border-color);
+    color: var(--text-secondary);
+}
+[data-theme="light"] .faq-wrapper .faq-item .right-icon {
+    background-color: var(--accent-soft);
+}
+[data-theme="light"] .faq-wrapper .faq-item .right-icon::before,
+[data-theme="light"] .faq-wrapper .faq-item .right-icon::after {
+    background: var(--bg-card);
+}
+[data-theme="light"] .faq-wrapper .faq-item .right-icon::before,
+[data-theme="light"] .faq-wrapper .faq-item .right-icon::after {
+    background: var(--accent);
+}
+
+/* Blog section (style.css:4772) */
+[data-theme="light"] .blog-section .blog-item,
+[data-theme="light"] .blog-details-section .blog-item {
+    background-color: var(--bg-card);
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+}
+[data-theme="light"] .blog-section .blog-item .blog-content a .title {
+    color: var(--text-primary);
+}
+[data-theme="light"] .blog-section .blog-item .blog-content a .title:hover {
+    color: var(--accent);
+}
+[data-theme="light"] .blog-section .blog-item .blog-footer {
+    border-top: 1px solid var(--border-color);
+}
+[data-theme="light"] .blog-section .blog-item .blog-date .text--base {
+    color: var(--accent);
+}
+
+/* Widget boxes (sidebar) */
+[data-theme="light"] .widget-box {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+}
+[data-theme="light"] .widget-title {
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+}
+[data-theme="light"] .category-list a {
+    color: var(--text-secondary);
+}
+[data-theme="light"] .category-list a:hover {
+    color: var(--accent);
+}
+[data-theme="light"] .popular-item-content .title a {
+    color: var(--text-primary);
+}
+[data-theme="light"] .popular-item-content .title a:hover {
+    color: var(--accent);
+}
+[data-theme="light"] .popular-item-content .date {
+    color: var(--text-muted);
+}
+
+/* ------------------------------------------------------------
+   11. ENZO FOOTER (already has [data-theme="light"] rules in enzo-theme.css,
+        but ensure style.css footer-section doesn't conflict)
+   ------------------------------------------------------------ */
+[data-theme="light"] .footer-section {
+    background-color: var(--bg-primary);
+}
+[data-theme="light"] .footer-section .footer-text img {
+    filter: none;
+}
+[data-theme="light"] .footer-section .footer-social-icon i {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+[data-theme="light"] .footer-section .footer-social-icon i:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+}
+[data-theme="light"] .footer-section .footer-links a {
+    color: var(--text-secondary);
+}
+[data-theme="light"] .footer-section .footer-links a:hover {
+    color: var(--accent);
+}
+[data-theme="light"] .footer-section .footer-title {
+    color: var(--text-primary);
+}
+[data-theme="light"] .footer-section .footer-contact p {
+    color: var(--text-secondary);
+}
+[data-theme="light"] .footer-section .footer-copyright {
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+}
+
+/* ------------------------------------------------------------
+   12. PROMO TOPBAR (frontend/partials/promo-topbar.blade.php)
+   ------------------------------------------------------------ */
+[data-theme="light"] .hp-topbar {
+    background: var(--accent-soft);
+    border-bottom: 1px solid rgba(10,31,92,0.15);
+    color: var(--accent);
+}
+[data-theme="light"] .hp-topbar-cta {
+    background: var(--accent);
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-weight: 600;
+}
+[data-theme="light"] .hp-topbar-cta:hover {
+    background: var(--blue);
+    color: #ffffff;
+}
+[data-theme="light"] .hp-topbar-close {
+    color: var(--text-muted);
+}
+[data-theme="light"] .hp-topbar-close:hover {
+    color: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   13. GLOBAL NAV (partials/global-nav.blade.php)
+      enzo-theme.css already has [data-theme="light"] rules,
+      but ensure style.css overrides don't conflict
+   ------------------------------------------------------------ */
+[data-theme="light"] .global-nav {
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+[data-theme="light"] .global-nav.scrolled {
+    box-shadow: var(--card-shadow);
+}
+[data-theme="light"] .global-nav-link {
+    color: var(--text-secondary);
+}
+[data-theme="light"] .global-nav-link:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+[data-theme="light"] .global-nav-link.active {
+    color: var(--accent);
+}
+[data-theme="light"] .global-btn-ghost {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: transparent;
+}
+[data-theme="light"] .global-btn-ghost:hover {
+    background: var(--accent-soft);
+}
+[data-theme="light"] .global-btn-primary {
+    background: var(--gradient);
+    color: #ffffff;
+}
+[data-theme="light"] .global-btn-primary:hover {
+    filter: brightness(1.05);
+}
+
+/* ------------------------------------------------------------
+   14. COOKIE BANNER
+   ------------------------------------------------------------ */
+[data-theme="light"] .cookie-main-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-strong);
+}
+[data-theme="light"] .cookie-content p {
+    color: var(--text-primary);
+}
+[data-theme="light"] .cookie-content a {
+    color: var(--accent);
+}
+[data-theme="light"] .cookie-btn {
+    background: var(--accent);
+    color: #ffffff;
+}
+[data-theme="light"] .cookie-btn:hover {
+    background: var(--blue);
+}
+[data-theme="light"] .cookie-btn-cross {
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    background: transparent;
+}
+[data-theme="light"] .cookie-btn-cross:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* ------------------------------------------------------------
+   15. WHATSAPP WIDGET (frontend/layouts/master.blade.php)
+   ------------------------------------------------------------ */
+[data-theme="light"] .whatsapp-widget {
+    bottom: 150px !important;
+}
+[data-theme="light"] .whatsapp-btn {
+    background: var(--accent);
+    box-shadow: var(--shadow-strong);
+}
+[data-theme="light"] .whatsapp-btn:hover {
+    background: var(--blue);
+}
+[data-theme="light"] .wa-dismiss {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+[data-theme="light"] .wa-dismiss:hover {
+    background: var(--bg-secondary);
+    color: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   16. SCROLLBAR
+   ------------------------------------------------------------ */
+[data-theme="light"] html::-webkit-scrollbar {
+    background: var(--bg-secondary);
+}
+[data-theme="light"] html::-webkit-scrollbar-thumb {
+    background: var(--scrollbar);
+    border-radius: 10px;
+}
+[data-theme="light"] html::-webkit-scrollbar-thumb:hover {
+    background: var(--border-strong);
+}
+
+/* ------------------------------------------------------------
+   17. CONTAINER ALIGNMENT — ensure .container behaves like .enzo-container
+   ------------------------------------------------------------ */
+[data-theme="light"] .container {
+    max-width: 1200px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* ------------------------------------------------------------
+   18. ANIMATIONS — ensure animate-on-scroll works in light mode
+       (enzo-theme.css already handles this via .js .animate-on-scroll)
+   ------------------------------------------------------------ */
+[data-theme="light"] .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+[data-theme="light"] .animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+[data-theme="light"] .scroll-fade {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+[data-theme="light"] .scroll-fade.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger delays */
+[data-theme="light"] .stagger-1 { transition-delay: 100ms; }
+[data-theme="light"] .stagger-2 { transition-delay: 200ms; }
+[data-theme="light"] .stagger-3 { transition-delay: 300ms; }
+[data-theme="light"] .stagger-4 { transition-delay: 400ms; }
+[data-theme="light"] .stagger-5 { transition-delay: 500ms; }
+[data-theme="light"] .stagger-6 { transition-delay: 600ms; }

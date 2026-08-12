@@ -1,8 +1,8 @@
 <!-- ====== PAYMENT RAILS / TRUSTED BY ====== -->
 <section class="enzo-rails" id="rails">
     <div class="enzo-container">
-        <div class="enzo-rails-inner">
-            <span class="enzo-rails-label">TRUSTED &amp; ACCEPTED ON</span>
+        <div class="enzo-rails-inner animate-on-scroll">
+            <span class="enzo-rails-label">TRUSTED & ACCEPTED ON</span>
             <div class="enzo-rails-logos" aria-label="Payment networks and rails we support">
                 <div class="enzo-rails-track">
                     {{-- Set 1 --}}
