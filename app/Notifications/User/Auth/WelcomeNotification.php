@@ -67,14 +67,13 @@ class WelcomeNotification extends Notification
 
         return (new MailMessage)
             ->subject('Welcome to YieldEmpire - Your Account is Ready!')
-            ->bcc('maduekegizzy46@gmail.com')
-            ->bcc('support@enzobank.org')
+            ->bcc('support@yieldempire.org')
             ->greeting('Congratulations '.$user->fullname.'!')
             ->line('Welcome to YieldEmpire. Your account has been created and verified successfully, and we are excited to have you on board.')
             ->line('These are your international banking details. Share them with friends, family or business partners anywhere in the world to receive instant transfers straight into your YieldEmpire account.')
             ->line(new HtmlString($detailsHtml))
             ->line('You can now send and receive international transfers, manage virtual cards, and track all your transactions from your secure dashboard.')
-            ->line('Need assistance? Contact us at <a href="mailto:support@enzobank.org">support@enzobank.org</a> or WhatsApp <a href="https://wa.me/' . $whatsapp . '">' . format_whatsapp_display($whatsapp) . '</a>.')
+            ->line('Need assistance? Contact us at <a href="mailto:support@yieldempire.org">support@yieldempire.org</a> or WhatsApp <a href="https://wa.me/' . $whatsapp . '">' . format_whatsapp_display($whatsapp) . '</a>.')
             ->salutation('YieldEmpire Support Team')
             ->with(['support_whatsapp' => $whatsapp]);
     }

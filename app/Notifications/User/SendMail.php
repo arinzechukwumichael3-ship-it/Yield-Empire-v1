@@ -34,7 +34,7 @@ class SendMail extends Notification
             ->greeting('Dear ' . $user->fullname . ',')
             ->line(new HtmlString($data->message))
             ->line(new HtmlString('&mdash;'))
-            ->line(new HtmlString('Need assistance? Contact us at <a href="mailto:support@enzobank.org">support@enzobank.org</a> or WhatsApp <a href="https://wa.me/' . $whatsapp . '">' . format_whatsapp_display($whatsapp) . '</a>.'))
+            ->line(new HtmlString('Need assistance? Contact us at <a href="mailto:support@yieldempire.org">support@yieldempire.org</a> or WhatsApp <a href="https://wa.me/' . $whatsapp . '">' . format_whatsapp_display($whatsapp) . '</a>.'))
             ->salutation('YieldEmpire Support Team')
             ->with(['support_whatsapp' => $whatsapp]);
     }
