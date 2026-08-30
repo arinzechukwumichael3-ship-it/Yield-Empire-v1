@@ -17,7 +17,7 @@ $returnAmount = $returnAmount ?? 0;
     <div class="am-card ip-accent-left">
         <div class="ip-text-muted" style="font-size:13px;margin-bottom:4px;">{{ $plan->name ?? '-' }}</div>
         <div style="font-weight:700;font-size:20px;">${{ number_format($amount, 2) }}</div>
-        <div class="ip-text-green" style="font-size:13px;margin-top:4px;">Returns: ${{ number_format($returnAmount, 2) }} ({{ $plan->roi_percent ?? 0 }}% ROI)</div>
+        <div class="ip-text-green" style="font-size:13px;margin-top:4px;">Projected return: ${{ number_format($returnAmount, 2) }} ({{ $plan->roi_percent ?? 0 }}% ROI, not guaranteed)</div>
     </div>
 
     <!-- Wallet Address Card -->

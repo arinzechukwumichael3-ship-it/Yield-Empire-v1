@@ -4,8 +4,8 @@
     $slug      = Illuminate\Support\Str::slug(App\Constants\SiteSectionConst::BANNER_SECTION);
     $banner    = App\Models\Admin\SiteSections::getData($slug)->first();
 
-    $heading     = $banner->value->language->$app_local->heading ?? $banner->value->language->$default->heading ?? 'Banking Reimagined for the Digital Age';
-    $sub_heading = $banner->value->language->$app_local->sub_heading ?? $banner->value->language->$default->sub_heading ?? 'Experience secure, seamless banking with competitive rates, instant transfers, and world-class customer support — all in one place.';
+    $heading     = $banner->value->language->$app_local->heading ?? $banner->value->language->$default->heading ?? 'Finance Reimagined for the Digital Age';
+    $sub_heading = $banner->value->language->$app_local->sub_heading ?? $banner->value->language->$default->sub_heading ?? 'Experience secure, seamless money management with transparent terms, instant transfers, and world-class customer support — all in one place.';
     $btn_name    = $banner->value->language->$app_local->button_name ?? $banner->value->language->$default->button_name ?? 'Get Started';
 
     // Split heading at last word for cyan accent
@@ -23,7 +23,7 @@
             <!-- Trust Badge -->
             <div class="enzo-trust-badge" data-aos="fade-down">
                 <span class="badge-dot"></span>
-                {{ __('SECURE DIGITAL BANKING & INVESTMENTS') }}
+                {{ __('SECURE FINANCIAL TECHNOLOGY & INVESTMENTS') }}
             </div>
 
             <!-- Headline -->

@@ -277,7 +277,7 @@ class RiseController extends Controller
             } catch (Exception $e) {
                 \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
             }
-            return back()->with(['error' => ['Own bank (YieldEmpire to YieldEmpire) transfer has been temporarily blocked. Please contact support on WhatsApp for activation.']]);
+            return back()->with(['error' => ['Own bank (YieldEmpire to YieldEmpire) transfer is temporarily unavailable. Please contact our support team through the Help Center for assistance.']]);
         }
 
         $user = $this->user;

@@ -43,6 +43,6 @@
             @endforelse
         </div>
 
-        <p class="plans-disclaimer animate-on-scroll" style="transition-delay: 300ms;">Rates and terms shown reflect the current live plans. Yield is paid on maturity and updated in real time.</p>
+        <p class="plans-disclaimer animate-on-scroll" style="transition-delay: 300ms;">Rates and terms shown reflect the current live plans. Projected yield is paid on maturity and is not guaranteed &mdash; all investments carry risk, including possible loss of principal. See our <a href="{{ setRoute('frontend.useful.links','terms-of-service') }}">Terms of Service</a>.</p>
     </div>
 </section>

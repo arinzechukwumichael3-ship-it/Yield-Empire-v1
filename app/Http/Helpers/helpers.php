@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\ValidationException;
 use Intervention\Image\Facades\Image;
 
@@ -2068,27 +2069,28 @@ function get_virtual_card_fee($user = null)
 
 /**
  * Whether a user must own an active virtual card before international
- * transfers / withdrawals. Required unless card_required is explicitly
- * false (a missing/NULL flag is treated as required).
+ * transfers / withdrawals. Virtual cards are an OPTIONAL product. They are
+ * required ONLY when an admin has explicitly opted this user in via
+ * card_required === true. The default (NULL / false) means no card is needed.
  */
 function user_requires_virtual_card($user = null)
 {
     if (! $user) {
         $user = auth()->user();
     }
-    return $user && $user->card_required !== false;
+    return (bool) ($user && $user->card_required === true);
 }
 
 /**
  * The block message shown to the user when the virtual card is required
- * but not yet active, naming the exact card purchase fee.
+ * (only when an admin explicitly opted this user in) but not yet active.
  */
 function virtual_card_block_message($fee = null)
 {
     if ($fee === null) {
         $fee = get_virtual_card_fee();
     }
-    return 'Your transaction has been temporarily blocked. To continue, you must pay the virtual card purchase fee of $'
+    return 'A virtual card is required for this action on your account. You can get one from the Virtual Card page for $'
         . number_format((float) $fee, 2) . ' USD.';
 }
 
@@ -2239,4 +2241,26 @@ function support_whatsapp_widget_link($message = null, $user = null)
     }
 
     return 'https://wa.me/message/ZW7EJRXHGL3GG1';
+}
+
+/**
+ * Build a signed, time-limited unsubscribe URL for a given email address.
+ * Shared by the deliverability listener, the OTP mailables and the bulk
+ * broadcast notification so the visible footer link always matches the
+ * List-Unsubscribe header set in AddDeliverabilityHeaders.
+ */
+function email_unsubscribe_url($email)
+{
+    if (empty($email) || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return null;
+    }
+
+    $user = \App\Models\User::where('email', $email)->first();
+    $id   = $user?->id ?? $email;
+
+    return URL::temporarySignedRoute(
+        'email.unsubscribe',
+        now()->addDays(60),
+        ['email' => $email, 'id' => $id]
+    );
 }

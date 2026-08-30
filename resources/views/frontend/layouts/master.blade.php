@@ -25,12 +25,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="{{ $basic_settings->site_name ?? 'YieldEmpire' }} - {{ $basic_settings->site_title ?? 'Secure Digital Banking & Investment Platform' }}">
-    <meta name="keywords" content="YieldEmpire, Digital Banking, Online Banking, Virtual Cards, Investment Platform, US Financial Services">
+    <meta name="description" content="{{ $basic_settings->site_name ?? 'YieldEmpire' }} - {{ $basic_settings->site_title ?? 'Secure Financial Technology & Investment Platform' }}">
+    <meta name="keywords" content="YieldEmpire, Financial Technology, Virtual Cards, Investment Platform, Global Payments">
     <meta name="author" content="YieldEmpire"/>
     <meta name="application-name" content="YieldEmpire">
-    <meta name="geo.region" content="US-NY">
-    <meta name="geo.placename" content="New York">
     <meta name="theme-color" content="{{ $hp_theme === 'light' ? '#f7f8fa' : '#0A0E1A' }}">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ URL::current() }}">
@@ -64,7 +62,7 @@
         "alternateName": "YieldEmpire Financial Services",
         "url": "{{ config('app.url') }}",
         "logo": "{{ asset('backend/images/web-settings/image-assets/yieldempire-logo.png') }}",
-        "description": "YieldEmpire is a financial technology platform for secure digital banking and investments.",
+        "description": "YieldEmpire is a financial technology platform for secure investing and global payments.",
         "contactPoint": {
             "@type": "ContactPoint",
             "telephone": "+44-7464-483316",
@@ -79,7 +77,7 @@
         "@type": "WebSite",
         "name": "YieldEmpire",
         "url": "{{ config('app.url') }}",
-        "description": "Secure digital banking platform offering virtual cards, global payments, and smart investments."
+        "description": "Financial technology platform offering virtual cards, global payments, and investment tools."
     }
     </script>
     <script type="application/ld+json">

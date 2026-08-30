@@ -52,7 +52,7 @@
                 <div class="enzo-feature-icon">
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0a1f5c" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
                 </div>
-                <h3 class="enzo-feature-title">Mobile Banking</h3>
+                <h3 class="enzo-feature-title">Mobile Access</h3>
                 <p class="enzo-feature-desc">A fast, intuitive mobile experience. Full account control at your fingertips.</p>
             </div>
         </div>

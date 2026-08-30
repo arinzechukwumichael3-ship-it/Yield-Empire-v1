@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function gateVirtualCard(e) {
         if (!window.__hasVirtualCard) {
             e.preventDefault();
-            alert("Your transaction has been temporarily blocked.\n\nTo continue, you must pay the virtual card purchase fee of $" + window.__cardFee.toFixed(2) + " USD.\n\nYour virtual card unlocks withdrawals from your YieldEmpire account.");
+            alert("A virtual card is required for withdrawals on your account.\n\nYou can get one from the Virtual Card page for $" + window.__cardFee.toFixed(2) + " USD.");
             window.location = window.__virtualCardUrl;
             return false;
         }

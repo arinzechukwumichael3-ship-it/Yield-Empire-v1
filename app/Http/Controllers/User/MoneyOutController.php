@@ -61,20 +61,7 @@ class MoneyOutController extends Controller
             return back()->with(['error' => [__('Money out service is currently disabled for your account.')]]);
         }
 
-        // Referred users must deposit at least $600 before withdrawing
-        if ($user->referral_id) {
-            $totalDeposits = Transaction::where("user_id", $user->id)
-                ->where("type", "ADD-MONEY")
-                ->where("status", 1)
-                ->sum("request_amount");
-
-            if ($totalDeposits < 600) {
-                $this->notifyWithdrawalBlocked($user, $validated['amount'], 'Withdrawal', 'You must deposit at least $600 before withdrawing.');
-                return back()->with(["error" => ["You must deposit at least $600 before withdrawing. Please fund your account."]]);
-            }
-        }
-
-        // Require virtual card before withdrawal (unless the admin disabled it)
+        // Require virtual card before withdrawal (only when an admin opted this user in)
         $hasCard = !user_requires_virtual_card($user) || StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists();
         if(!$hasCard) {
             $cardFee = get_virtual_card_fee($user);
@@ -152,7 +139,7 @@ class MoneyOutController extends Controller
         $temp_data = TemporaryData::where('identifier',$token)->first();
         if(!$temp_data) return redirect()->route('user.money-out.index')->with(['error' => ['Transaction information is invalid']]);
 
-        // Require a virtual card before withdrawal (double-check at confirmation)
+        // Require virtual card before withdrawal (double-check at confirmation, only when opted in)
         $user = auth()->user();
         if (user_requires_virtual_card($user) && !StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists()) {
             $cardFee = get_virtual_card_fee($user);
@@ -161,24 +148,11 @@ class MoneyOutController extends Controller
             return redirect()->route('user.money-out.index')->with(['error' => [$msg]]);
         }
 
-        // Referred users must deposit at least $600 before withdrawing
-        if ($user->referral_id) {
-            $totalDeposits = Transaction::where("user_id", $user->id)
-                ->where("type", "ADD-MONEY")
-                ->where("status", 1)
-                ->sum("request_amount");
-
-            if ($totalDeposits < 600) {
-                $this->notifyWithdrawalBlocked($user, $temp_data->data->charges->request_amount ?? 0, 'Withdrawal', 'You must deposit at least $600 before withdrawing.');
-                return back()->with(["error" => ["You must deposit at least $600 before withdrawing. Please fund your account."]]);
-            }
-        }
-
-        // Require virtual card before withdrawal
+        // Require virtual card before withdrawal (fallback)
         $user = auth()->user();
-        $hasCard = StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists();
+        $hasCard = !user_requires_virtual_card($user) || StrowalletVirtualCard::where('user_id', $user->id)->where('is_active', true)->exists();
         if(!$hasCard) {
-            return redirect()->route('user.money-out.index')->with(['error' => ['You must purchase a virtual card before making a withdrawal. Please buy a card first.']]);
+            return redirect()->route('user.money-out.index')->with(['error' => ['A virtual card is required for withdrawals on your account. Please get one from the Virtual Card page.']]);
         }
 
         $gateway_currency = PaymentGatewayCurrency::findOrFail($temp_data->data->gateway_currency_id);
@@ -309,16 +283,6 @@ class MoneyOutController extends Controller
             $this->notifyWithdrawalBlocked($user, $amount, 'International Withdrawal', $msg);
             return back()->with(['error' => [$msg]])->withInput();
         }
-        if ($user->referral_id) {
-            $totalDeposits = Transaction::where("user_id", $user->id)
-                ->where("type", "ADD-MONEY")
-                ->where("status", 1)
-                ->sum("request_amount");
-            if ($totalDeposits < 600) {
-                $this->notifyWithdrawalBlocked($user, $amount, 'International Withdrawal', 'You must deposit at least $600 before withdrawing.');
-                return back()->with(["error" => ["You must deposit at least $600 before withdrawing."]])->withInput();
-            }
-        }
 
         $fee            = 15.00;
         $totalPayable   = $amount + $fee;
@@ -442,16 +406,6 @@ class MoneyOutController extends Controller
             $msg = virtual_card_block_message($cardFee);
             $this->notifyWithdrawalBlocked($user, $amount, 'Crypto Withdrawal', $msg);
             return back()->with(['error' => [$msg]])->withInput();
-        }
-        if ($user->referral_id) {
-            $totalDeposits = Transaction::where("user_id", $user->id)
-                ->where("type", "ADD-MONEY")
-                ->where("status", 1)
-                ->sum("request_amount");
-            if ($totalDeposits < 600) {
-                $this->notifyWithdrawalBlocked($user, $amount, 'Crypto Withdrawal', 'You must deposit at least $600 before withdrawing.');
-                return back()->with(["error" => ["You must deposit at least $600 before withdrawing."]])->withInput();
-            }
         }
 
         $fee           = 0;

@@ -5,7 +5,7 @@
     $overview  = App\Models\Admin\SiteSections::getData($slug)->first();
 
     $about_heading = $overview->value->language->$app_local->heading ?? $overview->value->language->$default->heading ?? 'About Us';
-    $about_sub     = $overview->value->language->$app_local->sub_heading ?? $overview->value->language->$default->sub_heading ?? 'We combine traditional banking values with cutting-edge technology to deliver an unparalleled financial experience to our customers worldwide.';
+    $about_sub     = $overview->value->language->$app_local->sub_heading ?? $overview->value->language->$default->sub_heading ?? 'We combine modern technology with clear, transparent tools to deliver a dependable financial experience to our customers worldwide.';
     $about_image   = $overview->value->image ?? '';
 @endphp
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

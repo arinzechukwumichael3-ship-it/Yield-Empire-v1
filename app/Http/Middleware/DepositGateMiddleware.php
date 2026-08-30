@@ -36,18 +36,6 @@ class DepositGateMiddleware
             if (!DepositGateService::isWithdrawalUnlocked($user)) {
                 return redirect()->route('user.money-out.locked');
             }
-
-            // Referral deposit requirement: referred users must deposit $600 before withdrawing
-            if ($user->referral_id) {
-                $totalDeposits = Transaction::where('user_id', $user->id)
-                    ->where('type', 'ADD-MONEY')
-                    ->where('status', 1)
-                    ->sum('request_amount');
-
-                if ($totalDeposits < self::REFERRAL_MIN_DEPOSIT) {
-                    return redirect()->route('user.money-out.locked');
-                }
-            }
         }
 
         return $next($request);

@@ -12,7 +12,7 @@
             <div class="enzo-hero-left">
                 <div class="enzo-hero-badge">
                     <span class="enzo-hero-badge-dot"></span>
-                    SECURE DIGITAL BANKING &amp; INVESTMENTS
+                    SECURE FINANCIAL TECHNOLOGY &amp; INVESTMENTS
                 </div>
 
                 <h1 class="enzo-hero-title">
@@ -97,23 +97,23 @@
 
         <div class="enzo-hero-stats">
             <div class="enzo-hero-stat">
-                <span class="enzo-hero-stat-num">195+</span>
-                <span class="enzo-hero-stat-label">Countries</span>
+                <span class="enzo-hero-stat-num">256-bit</span>
+                <span class="enzo-hero-stat-label">AES Encryption</span>
             </div>
             <div class="enzo-hero-stat-divider"></div>
             <div class="enzo-hero-stat">
-                <span class="enzo-hero-stat-num">3M+</span>
-                <span class="enzo-hero-stat-label">Users</span>
+                <span class="enzo-hero-stat-num">24/7</span>
+                <span class="enzo-hero-stat-label">Support</span>
             </div>
             <div class="enzo-hero-stat-divider"></div>
             <div class="enzo-hero-stat">
-                <span class="enzo-hero-stat-num">$291M+</span>
-                <span class="enzo-hero-stat-label">Paid out</span>
+                <span class="enzo-hero-stat-num">2FA</span>
+                <span class="enzo-hero-stat-label">Protected Login</span>
             </div>
             <div class="enzo-hero-stat-divider"></div>
             <div class="enzo-hero-stat">
-                <span class="enzo-hero-stat-num">4.8/5</span>
-                <span class="enzo-hero-stat-label">Rated</span>
+                <span class="enzo-hero-stat-num">Real-Time</span>
+                <span class="enzo-hero-stat-label">Yield Tracking</span>
             </div>
         </div>
     </div>

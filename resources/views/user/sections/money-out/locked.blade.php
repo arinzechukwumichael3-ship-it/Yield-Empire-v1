@@ -60,12 +60,11 @@
         <h2>Withdrawal <span>Locked</span></h2>
         <p class="mo-locked-sub">
             @if($user->crypto_status)
-                For your security and to meet anti-money-laundering compliance, withdrawals are
-                enabled only after you fund your account with a personal crypto deposit.
+                For your security and to meet standard anti-money-laundering and identity-verification checks, withdrawals may be reviewed before processing. You can withdraw once your account verification is complete.
             @else
                 Crypto deposits are currently disabled for your account, so the crypto-deposit
-                requirement does not apply. Withdrawals are available once any other account
-                checks are complete.
+                requirement does not apply. Withdrawals are available once your account
+                verification checks are complete.
             @endif
         </p>
 

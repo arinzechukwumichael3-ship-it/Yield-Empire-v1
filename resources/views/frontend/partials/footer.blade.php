@@ -16,7 +16,7 @@
                 <a href="{{ setRoute("frontend.index") }}" class="enzo-footer-logo">
                     <img src="{{ asset('backend/images/web-settings/image-assets/yieldempire-logo.png') }}" alt="YieldEmpire" class="enzo-footer-logo-img">
                 </a>
-                <p class="enzo-footer-desc">The future of digital banking. Secure, fast, and accessible from anywhere in the world.</p>
+                <p class="enzo-footer-desc">The future of financial technology. Secure, fast, and accessible from anywhere in the world.</p>
                 <div class="enzo-footer-social">
                     <a href="#" class="enzo-footer-social-link" aria-label="Twitter/X">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -81,7 +81,7 @@
         </div>
 
         <div class="enzo-footer-regulatory">
-            <p><strong>Risk Disclosure:</strong> YieldEmpire is a financial technology platform. Your funds are protected with 256-bit AES encryption, multi-factor authentication, and 24/7 fraud monitoring. Investments carry risk, including possible loss of principal. Returns are not guaranteed. Please read our Terms of Service and Privacy Policy before using the platform.</p>
+            <p><strong>Risk Disclosure &amp; Regulatory Status:</strong> YieldEmpire is a financial technology platform, not a licensed bank. Deposits are not insured by the FDIC, FCA, or any government agency. Investments carry risk, including possible loss of principal; returns are not guaranteed. Your account is protected by 256-bit AES encryption, multi-factor authentication, and 24/7 fraud monitoring. Please read our <a href="{{ setRoute('frontend.useful.links','terms-of-service') }}">Terms of Service</a> and <a href="{{ setRoute('frontend.useful.links','privacy-policy') }}">Privacy Policy</a> before using the platform.</p>
         </div>
 
         <div class="enzo-footer-bottom">

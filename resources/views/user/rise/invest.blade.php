@@ -601,7 +601,7 @@ $totalValue = $holdings->sum(function ($h) {
         <div class="inv-earn-left">
             <span class="inv-earn-icon">💰</span>
             <div class="inv-earn-text">
-                <span class="inv-earn-title">Earn up to 23% annually</span>
+                <span class="inv-earn-title">Invest and track your yield</span>
                 <span class="inv-earn-sub">Start investing with as little as $10</span>
             </div>
         </div>
@@ -782,11 +782,11 @@ $totalValue = $holdings->sum(function ($h) {
             </div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);margin-bottom:6px;">
                 <span>Expected returns</span>
-                <span style="color:var(--success);font-weight:600;">5% – 23% annually</span>
+                <span style="color:var(--success);font-weight:600;">Varies by plan</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);margin-bottom:6px;">
                 <span>Payout frequency</span>
-                <span style="color:#fff;font-weight:600;">Daily</span>
+                <span style="color:#fff;font-weight:600;">Per plan terms</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);">
                 <span>Risk levels</span>

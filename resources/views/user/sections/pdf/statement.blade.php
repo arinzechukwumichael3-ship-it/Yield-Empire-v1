@@ -418,7 +418,7 @@
                 <div class="sign-line-wrap">
                     <div class="sign-line"></div>
                     <div class="sign-name">{{ $basic_settings->site_name }} Operations</div>
-                    <div class="sign-title">{{ __('Digital Banking Services') }}</div>
+                    <div class="sign-title">{{ __('Financial Technology Services') }}</div>
                     <div class="sign-dept">{{ __('Compliance & Operations') }}</div>
                     <div class="sign-date">{{ __('Date') }}: {{ dateFormat('d M Y', now()) }}</div>
                 </div>

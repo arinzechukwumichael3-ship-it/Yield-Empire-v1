@@ -71,7 +71,7 @@ class FundTransferController extends Controller
             }catch(Exception $e){
                 \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
             }
-            return Response::error([__('Own bank (YieldEmpire to YieldEmpire) transfer has been temporarily blocked. Please contact support on WhatsApp for activation.')],[],403);
+            return Response::error([__('Own bank (YieldEmpire to YieldEmpire) transfer is temporarily unavailable. Please contact our support team through the Help Center for assistance.')],[],403);
         }
 
         $data['beneficiary'] = $beneficiary->info;
@@ -184,7 +184,7 @@ class FundTransferController extends Controller
             $temp_data->delete();
             return [
                 'status'    => false,
-                'message'   => __('Own bank (YieldEmpire to YieldEmpire) transfer has been temporarily blocked. Please contact support on WhatsApp for activation.')
+                'message'   => __('Own bank (YieldEmpire to YieldEmpire) transfer is temporarily unavailable. Please contact our support team through the Help Center for assistance.')
             ];
         }
 
@@ -303,7 +303,7 @@ class FundTransferController extends Controller
                 \Log::error("Failed to send own bank transfer blocked notification to user_id: ".auth()->user()->id." - ".$e->getMessage());
             }
             $temp_data->delete();
-            return Response::error([__('Own bank (YieldEmpire to YieldEmpire) transfer has been temporarily blocked. Please contact support on WhatsApp for activation.')],[],403);
+            return Response::error([__('Own bank (YieldEmpire to YieldEmpire) transfer is temporarily unavailable. Please contact our support team through the Help Center for assistance.')],[],403);
         }
 
         $sender_wallet = UserWallet::active()->where('user_id', Auth::id())->first();

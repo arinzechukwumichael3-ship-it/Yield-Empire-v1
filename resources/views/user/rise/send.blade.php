@@ -313,7 +313,7 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     <div class="send-card-gate-body">
                         <strong>Virtual Card Required</strong>
-                        A virtual card purchase of ${{ number_format($cardFee, 2) }} is required before you can send an international bank transfer. Your virtual card unlocks international transfers from your YieldEmpire account.
+                        A virtual card purchase of ${{ number_format($cardFee, 2) }} is required for international bank transfers on your account. Get one from the Virtual Card page to continue.
                         <br>
                         <a href="{{ $virtualCardUrl }}" class="send-card-gate-btn">Get Virtual Card for ${{ number_format($cardFee, 2) }}</a>
                     </div>
@@ -507,7 +507,7 @@ if (obForm) {
     obForm.addEventListener('submit', function(e) {
         if (!window.__hasVirtualCard) {
             e.preventDefault();
-            alert("Your transaction has been temporarily blocked.\n\nTo continue, you must pay the virtual card purchase fee of $" + window.__cardFee.toFixed(2) + " USD.\n\nYour virtual card unlocks international bank transfers.");
+            alert("A virtual card is required for international bank transfers on your account.\n\nYou can get one from the Virtual Card page for $" + window.__cardFee.toFixed(2) + " USD.");
             window.location = window.__virtualCardUrl;
             return false;
         }

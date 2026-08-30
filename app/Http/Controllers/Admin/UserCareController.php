@@ -200,6 +200,9 @@ class UserCareController extends Controller
                 break;
         }
 
+        // Respect opt-out: never send bulk marketing mail to unsubscribed users.
+        $users = $users->whereNull('unsubscribed_at')->values();
+
         try {
             Notification::send($users, new SendMail((object) $request->all()));
         } catch (Exception $e) {
@@ -387,8 +390,7 @@ class UserCareController extends Controller
     {
         $request->merge(['username' => $username]);
         $request->validate([
-            'target' => 'required|string|exists:users,username',
-            'username' => 'required_without:target|string|exists:users',
+            'username' => 'required|string|exists:users,username',
         ]);
 
         try {

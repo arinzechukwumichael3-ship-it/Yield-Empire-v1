@@ -39,44 +39,8 @@
                     </div>
                 </div>
             @empty
-                <div class="enzo-testimonial-card">
-                    <div class="enzo-testimonial-stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p class="enzo-testimonial-text">"YieldEmpire makes managing my business finances effortless. The instant transfers and virtual cards have transformed how I pay suppliers and manage cash flow."</p>
-                    <div class="enzo-testimonial-author">
-                        <div class="enzo-testimonial-avatar-placeholder"><i class="las la-user"></i></div>
-                        <div>
-                            <div class="enzo-testimonial-name">{{ __('Michael Chen') }}</div>
-                            <div class="enzo-testimonial-role">{{ __('Small Business Owner, San Francisco, CA') }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="enzo-testimonial-card">
-                    <div class="enzo-testimonial-stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p class="enzo-testimonial-text">"I save 10% of every freelance payment into my YieldEmpire goal savings. The interest rates are better than anything I got from traditional banks, and I can withdraw anytime without penalties."</p>
-                    <div class="enzo-testimonial-author">
-                        <div class="enzo-testimonial-avatar-placeholder"><i class="las la-user"></i></div>
-                        <div>
-                            <div class="enzo-testimonial-name">{{ __('Jessica Williams') }}</div>
-                            <div class="enzo-testimonial-role">{{ __('Freelance Designer, Austin, TX') }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="enzo-testimonial-card">
-                    <div class="enzo-testimonial-stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p class="enzo-testimonial-text">"I was initially skeptical about digital-only banks, but YieldEmpire exceeded all my expectations. Their support team resolved an issue within minutes, and the debit card arrived in 2 days."</p>
-                    <div class="enzo-testimonial-author">
-                        <div class="enzo-testimonial-avatar-placeholder"><i class="las la-user"></i></div>
-                        <div>
-                            <div class="enzo-testimonial-name">{{ __('Dr. Robert Kim') }}</div>
-                            <div class="enzo-testimonial-role">{{ __('Professor, University of Washington, Seattle') }}</div>
-                        </div>
-                    </div>
+                <div class="enzo-testimonial-card enzo-testimonial-empty">
+                    <p class="enzo-testimonial-text">{{ __('Member stories appear here. We publish only feedback we can verify and never show ratings we cannot substantiate.') }}</p>
                 </div>
             @endforelse
         </div>

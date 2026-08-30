@@ -7,7 +7,7 @@
       <td style="color:#ffffff;font-weight:800;font-size:24px;letter-spacing:.5px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;">Yield<span style="color:#15aabf;">Empire</span></td>
     </tr>
   </table>
-  <div style="margin-top:4px;font-size:13px;color:rgba(255,255,255,0.65);font-family:Arial,Helvetica,sans-serif;letter-spacing:1px;">SECURE DIGITAL BANKING & INVESTMENTS</div>
+  <div style="margin-top:4px;font-size:13px;color:rgba(255,255,255,0.65);font-family:Arial,Helvetica,sans-serif;letter-spacing:1px;">SECURE FINANCIAL TECHNOLOGY & INVESTMENTS</div>
 </div>
 </x-slot:header>
 
@@ -28,7 +28,7 @@
 <table align="center" width="600" cellpadding="0" cellspacing="0" role="presentation" style="width:600px; max-width:600px;">
   <tr>
     <td align="center" style="padding:22px 10px 8px;">
-      <p style="margin:0 0 8px; font-size:13px; color:#64748b; font-weight:600;">YieldEmpire &middot; Secure Digital Banking & Investments</p>
+      <p style="margin:0 0 8px; font-size:13px; color:#64748b; font-weight:600;">YieldEmpire &middot; Secure Financial Technology & Investments</p>
       <p style="margin:0 0 10px; font-size:12px; color:#94a3b8;">
         <strong style="color:#64748b;">Need help?</strong><br>
         Email: <a href="mailto:support@yieldempire.org" style="color:#3b5bdb; text-decoration:underline;">support@yieldempire.org</a> &nbsp;·&nbsp; WhatsApp: <a href="https://wa.me/447464483316" style="color:#3b5bdb; text-decoration:underline;">+44 7464 483316</a>
