@@ -378,7 +378,7 @@ $spendingLimit = $firstCard->card_amount ?? '$5,000.00';
                     </div>
                     <div class="vc-card-back-inner">
                         <div></div>
-                        <div class="vc-card-footer-text">This card is issued by YieldEmpire pursuant to a license from VISA. For customer service contact support@enzobank.org</div>
+                        <div class="vc-card-footer-text">This is a prepaid virtual card provided by YieldEmpire. For customer service contact {{ $basic_settings->site_email ?? 'support@yieldempire.org' }}</div>
                     </div>
                 </div>
             </div>

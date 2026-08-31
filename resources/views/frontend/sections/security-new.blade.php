@@ -10,7 +10,7 @@
                     <span class="enzo-security-badge"><span class="enzo-security-badge-dot"></span> Transparent Terms</span>
                 </div>
                 <span class="enzo-badge">SECURITY</span>
-                <h2 class="enzo-section-title" style="text-align:left">Bank-Grade Security <span class="enzo-text-grad">You Can Trust</span></h2>
+                <h2 class="enzo-section-title" style="text-align:left">Security <span class="enzo-text-grad">You Can Trust</span></h2>
                 <p class="enzo-security-text">Your security is our top priority. We employ multiple layers of protection to keep your money and data safe at all times.</p>
 
                 <div class="enzo-security-items">
@@ -78,7 +78,7 @@
                             <span class="enzo-sec-badge"><span class="enzo-sec-badge-dot"></span> 2FA ENABLED</span>
                         </div>
 
-                        <div class="enzo-sec-sub">Bank-grade encryption, verified in real time</div>
+                        <div class="enzo-sec-sub">256-bit AES encryption, verified in real time</div>
                     </div>
                 </div>
             </div>

@@ -81,15 +81,15 @@
         </div>
 
         <div class="enzo-footer-regulatory">
-            <p><strong>Risk Disclosure &amp; Regulatory Status:</strong> YieldEmpire is a financial technology platform, not a licensed bank. Deposits are not insured by the FDIC, FCA, or any government agency. Investments carry risk, including possible loss of principal; returns are not guaranteed. Your account is protected by 256-bit AES encryption, multi-factor authentication, and 24/7 fraud monitoring. Please read our <a href="{{ setRoute('frontend.useful.links','terms-of-service') }}">Terms of Service</a> and <a href="{{ setRoute('frontend.useful.links','privacy-policy') }}">Privacy Policy</a> before using the platform.</p>
+            <p><strong>Risk Disclosure &amp; Regulatory Status:</strong> YieldEmpire is a financial technology platform operated by the team behind {{ $basic_settings->site_name ?? 'YieldEmpire' }} at yieldempire.org. We are <strong>not a licensed bank</strong> and not a deposit-taking institution; we do not hold or custody customer funds as a bank would. Deposits are not insured by the FDIC, FCA, or any government agency. Investments carry risk, including possible loss of principal; returns are not guaranteed. Our security uses 256-bit AES encryption, multi-factor authentication, and 24/7 fraud monitoring. YieldEmpire is independent and unrelated to any government grant program (including YEIDEP) or unrelated real-estate or other businesses that share a similar name. Please read our <a href="{{ setRoute('frontend.useful.links','terms-of-service') }}">Terms of Service</a> and <a href="{{ setRoute('frontend.about') }}">About Us</a> for full operator and legal details.</p>
         </div>
 
         <div class="enzo-footer-bottom">
             <span class="enzo-footer-copy">&copy; {{ date("Y") }} YieldEmpire. All rights reserved.</span>
             <div class="enzo-footer-legal">
-                <a href="#">Privacy</a>
-                <a href="#">Terms</a>
-                <a href="#">Cookies</a>
+                <a href="{{ setRoute('frontend.useful.links','privacy-policy') }}">Privacy</a>
+                <a href="{{ setRoute('frontend.useful.links','terms-of-service') }}">Terms</a>
+                <a href="{{ setRoute('frontend.useful.links','cookie-policy') }}">Cookies</a>
             </div>
         </div>
     </div>
