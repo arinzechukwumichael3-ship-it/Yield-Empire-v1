@@ -8,41 +8,34 @@ use Closure;
 
 class PostgresConnection extends BasePostgresConnection
 {
-    private const REAL_BOOLEAN = [
-        "qualifies_for_unlock", "is_active", "is_read",
-        "add_money_status", "card_required", "card_unlocked",
-        "crypto_status", "fund_transfer_status", "has_qualifying_deposit",
-        "money_out_status", "own_bank_transfer_blocked",
-        "virtual_card_status", "withdrawal_unlocked",
-    ];
+    /**
+     * Cache of column types: ["table.column" => "boolean"|"smallint"|"other"]
+     */
+    private static array $colTypeCache = [];
 
-    private const SMALLINT = [
-        "status", "email_verified", "sms_verified", "kyc_verified",
-        "two_factor_verified", "two_factor_status", "pin_status",
-        "is_default",
-    ];
-
-    private static ?array $columnTypes = null;
-
-    private static function columnTypes(): array
+    /**
+     * Extract the first table name from a SQL query.
+     */
+    private function extractTableName(string $sql): ?string
     {
-        if (self::$columnTypes !== null) return self::$columnTypes;
-        $types = [];
-        foreach (self::REAL_BOOLEAN as $c) $types[$c] = "real_boolean";
-        foreach (self::SMALLINT as $c) $types[$c] = "smallint";
-        self::$columnTypes = $types;
-        return $types;
+        if (preg_match('/FROM\s+"([^"]+)"/i', $sql, $m)) {
+            return $m[1];
+        }
+        if (preg_match('/FROM\s+(\w+)/i', $sql, $m)) {
+            return $m[1];
+        }
+        return null;
     }
 
-    private function extractWhereColumnNames(string $sql): array
+    /**
+     * Extract column names from WHERE clause in order.
+     */
+    private function extractWhereColumns(string $sql): array
     {
         $cols = [];
-        // Merge ALL patterns — don't gate later patterns on earlier ones.
         foreach ([
-            '/WHERE\s+"([^"]+)"\s*=\s*\?/i',
-            '/WHERE\s+(\w+)\s*=\s*\?/i',
-            '/(?:AND|OR)\s+"([^"]+)"\s*=\s*\?/i',
-            '/(?:AND|OR)\s+(\w+)\s*=\s*\?/i',
+            '/(?:WHERE|AND|OR)\s+"([^"]+)"\s*=\s*\?/i',
+            '/(?:WHERE|AND|OR)\s+(\w+)\s*=\s*\?/i',
         ] as $pattern) {
             if (preg_match_all($pattern, $sql, $m)) {
                 $cols = array_merge($cols, $m[1]);
@@ -51,25 +44,75 @@ class PostgresConnection extends BasePostgresConnection
         return array_values(array_unique($cols));
     }
 
+    /**
+     * Look up the type of a column from information_schema (cached).
+     */
+    private function getColumnType(string $table, string $column): ?string
+    {
+        $key = "$table.$column";
+        if (isset(self::$colTypeCache[$key])) {
+            return self::$colTypeCache[$key];
+        }
+
+        try {
+            $sql = "SELECT data_type, udt_name FROM information_schema.columns 
+                    WHERE table_schema = 'public' AND table_name = ? AND column_name = ?";
+            $stmt = $this->getPdo()->prepare($sql);
+            $stmt->execute([$table, $column]);
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+            if (!$row) {
+                self::$colTypeCache[$key] = null;
+                return null;
+            }
+            $type = $row['data_type'] === 'USER-DEFINED' ? $row['udt_name'] : $row['data_type'];
+            self::$colTypeCache[$key] = $type;
+            return $type;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
     public function run($query, $bindings, Closure $callback)
     {
-        $columnTypes = self::columnTypes();
-        $whereCols = $this->extractWhereColumnNames($query);
+        $table = $this->extractTableName($query);
+        $whereCols = $this->extractWhereColumns($query);
+
         foreach ($bindings as $i => $v) {
-            $col = isset($whereCols[$i]) ? $whereCols[$i] : null;
-            if ($col === null || !isset($columnTypes[$col])) {
+            if (!is_bool($v) && $v !== 1 && $v !== 0) {
+                continue;
+            }
+
+            $col = $whereCols[$i] ?? null;
+            if ($col === null || $table === null) {
+                // No context — convert booleans to 'true'/'false' strings
                 if (is_bool($v)) {
-                    $bindings[$i] = $v ? "true" : "false";
+                    $bindings[$i] = $v ? 'true' : 'false';
                 }
                 continue;
             }
-            $type = $columnTypes[$col];
+
+            $type = $this->getColumnType($table, $col);
+            if ($type === null) {
+                if (is_bool($v)) {
+                    $bindings[$i] = $v ? 'true' : 'false';
+                }
+                continue;
+            }
+
+            $isBooleanCol = in_array($type, ['boolean', 'bool'], true);
+            $isSmallintCol = in_array($type, ['smallint', 'integer', 'bigint'], true);
+
             if (is_bool($v)) {
-                $bindings[$i] = $type === "smallint" ? ($v ? 1 : 0) : ($v ? "true" : "false");
-            } elseif (($v === 1 || $v === 0) && $type === "real_boolean") {
-                $bindings[$i] = $v ? "true" : "false";
+                if ($isSmallintCol) {
+                    $bindings[$i] = $v ? 1 : 0;
+                } else {
+                    $bindings[$i] = $v ? 'true' : 'false';
+                }
+            } elseif (($v === 1 || $v === 0) && $isBooleanCol) {
+                $bindings[$i] = $v ? 'true' : 'false';
             }
         }
+
         return parent::run($query, $bindings, $callback);
     }
 }
