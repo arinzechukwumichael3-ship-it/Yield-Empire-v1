@@ -4,38 +4,58 @@ namespace App\Database;
 
 use Illuminate\Database\PostgresConnection as BasePostgresConnection;
 use Illuminate\Database\Query\Grammars\Grammar;
+use Closure;
 
 class PostgresConnection extends BasePostgresConnection
 {
-    /**
-     * Prepare the query bindings for execution.
-     *
-     * Laravel 9's default PostgresConnection converts PHP booleans to integer
-     * 1/0 in the bindings (see test output: binding = 1). PostgreSQL then
-     * rejects "boolean = integer" with:
-     *   operator does not exist: boolean = integer
-     *
-     * Fix: override prepareBindings to pass boolean values as PostgreSQL
-     * boolean literals ('true'/'false') as strings. PostgreSQL interprets
-     * these as the native boolean type and the comparison succeeds.
-     *
-     * This app's "boolean" columns (status, email_verified, etc.) are stored
-     * as smallint; those are queried with integer values (1/0) directly,
-     * never via PHP booleans, so they are unaffected by this override.
-     */
-    public function prepareBindings(array $bindings): array
-    {
-        $grammar = $this->getQueryGrammar();
+    private const REAL_BOOLEAN = [
+        "qualifies_for_unlock", "is_active", "is_read",
+        "add_money_status", "card_required", "card_unlocked",
+        "crypto_status", "fund_transfer_status", "has_qualifying_deposit",
+        "money_out_status", "own_bank_transfer_blocked",
+        "virtual_card_status", "withdrawal_unlocked",
+    ];
 
-        foreach ($bindings as $key => $value) {
-            if ($value instanceof \DateTimeInterface) {
-                $bindings[$key] = $value->format($grammar->getDateFormat());
-            } elseif (is_bool($value)) {
-                // PostgreSQL native boolean literal.
-                $bindings[$key] = $value ? 'true' : 'false';
+    private const SMALLINT = [
+        "status", "email_verified", "sms_verified", "kyc_verified",
+        "two_factor_verified", "two_factor_status", "pin_status",
+    ];
+
+    private static ?array $columnTypes = null;
+
+    private static function columnTypes(): array
+    {
+        if (self::$columnTypes !== null) return self::$columnTypes;
+        $types = [];
+        foreach (self::REAL_BOOLEAN as $c) $types[$c] = "real_boolean";
+        foreach (self::SMALLINT as $c) $types[$c] = "smallint";
+        self::$columnTypes = $types;
+        return $types;
+    }
+
+    private function extractWhereColumnNames(string $sql): array
+    {
+        $cols = [];
+        if (preg_match_all("/WHERE\s+\"([^\"]+)\"\s*=\s*\?/i", $sql, $m)) $cols = $m[1];
+        if (empty($cols) && preg_match_all("/WHERE\s+(\w+)\s*=\s*\?/i", $sql, $m)) $cols = $m[1];
+        if (empty($cols) && preg_match_all("/(?:AND|OR)\s+\"([^\"]+)\"\s*=\s*\?/i", $sql, $m)) $cols = $m[1];
+        if (empty($cols) && preg_match_all("/(?:AND|OR)\s+(\w+)\s*=\s*\?/i", $sql, $m)) $cols = $m[1];
+        return $cols;
+    }
+
+    public function run($query, $bindings, Closure $callback)
+    {
+        $columnTypes = self::columnTypes();
+        $whereCols = $this->extractWhereColumnNames($query);
+        foreach ($bindings as $i => $v) {
+            if (!is_bool($v)) continue;
+            $col = isset($whereCols[$i]) ? $whereCols[$i] : null;
+            if ($col !== null && isset($columnTypes[$col])) {
+                $bindings[$i] = $columnTypes[$col] === "smallint" ? ($v ? 1 : 0) : ($v ? "true" : "false");
+            } else {
+                $bindings[$i] = $v ? "true" : "false";
             }
         }
-
-        return $bindings;
+        return parent::run($query, $bindings, $callback);
     }
 }
