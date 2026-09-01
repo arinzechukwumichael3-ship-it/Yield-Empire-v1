@@ -227,7 +227,7 @@ class UserController extends Controller
                 $pass_r->save();
                 $lastId = DB::getPdo()->lastInsertId();
                 $pwdCode = DB::table('user_password_resets')->where('email', '=', $data['email'])->where('id', $lastId)->pluck('password_reset_code')->first();
-                Mail::to($data['email'])->send(new UserForgotPasswordCode($userCheck->username, $pwdCode));
+                Mail::to($data['email'])->send(new UserForgotPasswordCode($userCheck->username, $pwdCode, $data['email']));
                 return redirect('user/enter/pwd/reset/code')->with(['success' => ['Please check email inbox/spam']]);
             } else {
                 return redirect()->route('user.login')->with(['error' => ['Email not found']]);

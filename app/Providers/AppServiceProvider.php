@@ -54,5 +54,13 @@ class AppServiceProvider extends ServiceProvider
         // Cloudflare caches static files for its default 4h Edge TTL when the origin
         // sends no Cache-Control, which made frontend asset edits appear stale.
         // The custom UrlGenerator is registered in register() (see above).
+
+        // Share $basic_settings globally so every view (including partials like
+        // header-asset.blade.php) can reference $basic_settings->site_name etc.
+        // Without this, partials included from layouts without a controller context
+        // throw "Undefined variable $basic_settings".
+        \Illuminate\Support\Facades\View::composer('*', function ($view) {
+            $view->with('basic_settings', \App\Providers\Admin\BasicSettingsProvider::get());
+        });
     }
 }

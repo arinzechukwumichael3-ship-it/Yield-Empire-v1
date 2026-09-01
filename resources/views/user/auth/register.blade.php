@@ -34,7 +34,7 @@
                         @endif
                         <div class="account-select-item">
                             <label>{{ __("Account Type") }} <span>*</span></label>
-                            <select class="select2-basic select-area py-0 w-100 account-type">
+                            <select class="form-control form--control select2-basic account-type">
                                 <option selected disabled>{{ __("Select One") }}</option>
                                 <option value="{{ global_const()::PERSONAL_ACCOUNT }}">{{ __("Personal Account") }}</option>
                                 <option value="{{ global_const()::BUSINESS_ACCOUNT }}">{{ __("Business Account") }}</option>

@@ -78,7 +78,7 @@ class PaymentGateway extends Model
     public function scopeActive($query)
     {
         return $query->where(function ($q) {
-            $q->where("status", \DB::raw('true'));
+            $q->where("status", );
         });
     }
 

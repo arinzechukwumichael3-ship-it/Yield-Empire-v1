@@ -23,6 +23,16 @@ class UserConfirmMail extends Mailable
 
     public function build()
     {
-        return $this->view('mail-templates.user._user_mail_confirm')->with(['name' =>  $this->first_name, 'email' => $this->email]);
+        $unsubscribeUrl = email_unsubscribe_url($this->email);
+
+        return $this->from('otp@yieldempire.org', 'YieldEmpire')
+            ->replyTo('support@yieldempire.org', 'YieldEmpire Support')
+            ->view('mail-templates.user._user_mail_confirm')
+            ->text('mail-templates.user._user_mail_confirm_text')
+            ->with([
+                'name' =>  $this->first_name,
+                'email' => $this->email,
+                'unsubscribe_url' => $unsubscribeUrl,
+            ]);
     }
 }

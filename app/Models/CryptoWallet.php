@@ -29,6 +29,9 @@ class CryptoWallet extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'color' => 'string',
+        'user_id' => 'integer',
+        'purpose' => 'string',
+        'logo' => 'string',
     ];
 
     protected $appends = [

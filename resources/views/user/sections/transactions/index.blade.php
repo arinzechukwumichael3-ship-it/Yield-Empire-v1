@@ -416,7 +416,7 @@ $currentUserId = auth()->id();
                         <span class="tl-detail-value">{{ $tx->created_at ? $tx->created_at->format("M d, Y  h:i A") : "" }}</span>
                     </div>
                     <div class="tl-detail-item" style="grid-column: 1 / -1; text-align: right; margin-top: 8px;">
-                        <a href="{{ route('user.pdf.download', $tx->trx_id) }}" class="am-btn" style="width:auto;padding:10px 20px;border-radius:100px;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
+                        <a href="{{ route('user.transactions.pdf.download', $tx->trx_id) }}" class="am-btn" style="width:auto;padding:10px 20px;border-radius:100px;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                             {{ __('Download Receipt') }}
                         </a>

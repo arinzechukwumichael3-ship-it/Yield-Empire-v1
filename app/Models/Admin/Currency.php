@@ -83,41 +83,33 @@ class Currency extends Model
 
 
     public function scopeDefault() {
-        return $this->where('default', '=', \DB::raw('true'))->first() ?? false;
+        return $this->where('default', 1)->first() ?? false;
     }
-
 
     public function isDefault() {
-        if($this->default == true) return true;
-        return false;
-    }
-
-    public function scopeSearch($query,$text) {
-        $query->where(function($q) use ($text) {
-            $q->where("country","like","%".$text."%");
-        })->orWhere("name","like","%".$text."%")->orWhere("code","like","%".$text."%");
+        return $this->default == 1;
     }
 
     public function scopeActive($query) {
-        return $query->where("status",\DB::raw('true'));
+        return $query->where("status", 1);
     }
 
     public function scopeSender($query) {
-        return $query->where("sender",\DB::raw('true'));
+        return $query->where("sender", 1);
     }
 
     public function scopeReceiver($query) {
-        return $query->where("receiver",true);
+        return $query->where("receiver", 1);
     }
 
     public function scopeRoleBoth($query) {
-        return $query->where("sender",\DB::raw('true'))->where('receiver',\DB::raw('true'));
+        return $query->where("sender", 1)->where('receiver', 1);
     }
 
     public function scopeRoleHasOne($query) {
         return $query->where(function($q) {
-            $q->where('sender',\DB::raw('true'));
-        })->orWhere('receiver',\DB::raw('true'));
+            $q->where('sender', 1);
+        })->orWhere('receiver', 1);
     }
 
     public function getCurrencyCodeAttribute() {

@@ -58,6 +58,7 @@ class User extends Authenticatable
         'image' => 'string',
         'status' => 'boolean',
         'email_verified_at' => 'datetime',
+        'unsubscribed_at' => 'datetime',
         'strowallet_customer' => 'object',
         'address' => 'object',
         'email_verified' => 'boolean',
@@ -68,6 +69,8 @@ class User extends Authenticatable
         'two_factor_verified' => 'boolean',
         'two_factor_status' => 'boolean',
         'card_required' => 'boolean',
+        'card_unlocked' => 'boolean',
+        'has_qualifying_deposit' => 'boolean',
         'virtual_card_status' => 'boolean',
         'crypto_status' => 'boolean',
         'add_money_status' => 'boolean',
@@ -75,6 +78,14 @@ class User extends Authenticatable
         'money_out_status' => 'boolean',
         'own_bank_transfer_blocked' => 'boolean',
         'vc_fee_override' => 'float',
+        'support_whatsapp' => 'string',
+        'qualifying_deposit_amount' => 'decimal:2',
+        'qualifying_deposit_date' => 'datetime',
+        'withdrawal_unlocked' => 'boolean',
+        'virtual_card_limit' => 'decimal:8',
+        'crypto_limit' => 'decimal:8',
+        'country' => 'string',
+        'currency' => 'string',
         'remember_token' => 'string',
         'deleted_at' => 'datetime',
         'created_at' => 'datetime',
@@ -103,12 +114,12 @@ class User extends Authenticatable
 
     public function scopeActive($query)
     {
-        return $query->where('status', \DB::raw('true'));
+        return $query->where('status', );
     }
 
     public function scopeBanned($query)
     {
-        return $query->where('status', \DB::raw('false'));
+        return $query->where('status', 0);
     }
 
     public function kyc()

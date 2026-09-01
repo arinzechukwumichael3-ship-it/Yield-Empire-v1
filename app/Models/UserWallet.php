@@ -27,7 +27,7 @@ class UserWallet extends Model
     }
 
     public function scopeActive($query) {
-        return $query->where("status",\DB::raw('true'));
+        return $query->where("status", 1);
     }
 
     public function user() {
@@ -40,7 +40,7 @@ class UserWallet extends Model
 
     public function scopeSender($query) {
         return $query->whereHas('currency',function($q) {
-            $q->where("sender",\DB::raw('true'));
+            $q->where("sender", 1);
         });
     }
 

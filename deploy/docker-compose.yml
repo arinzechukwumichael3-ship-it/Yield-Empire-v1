@@ -7,6 +7,15 @@ services:
     container_name: yieldempire-app
     restart: unless-stopped
     working_dir: /var/www/html
+    environment:
+      # Override the (empty) DB_* vars baked into the image so the app
+      # can actually connect to Supabase. These mirror .env.
+      DB_CONNECTION: "pgsql"
+      DB_HOST: "aws-0-eu-west-1.pooler.supabase.com"
+      DB_PORT: "6543"
+      DB_DATABASE: "postgres"
+      DB_USERNAME: "postgres.wwuiijrkrmlbspglxrel"
+      DB_PASSWORD: "Madueke468$"
     volumes:
       - ../:/var/www/html
       - /var/www/html/vendor

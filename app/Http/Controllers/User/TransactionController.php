@@ -111,4 +111,18 @@ class TransactionController extends Controller
         $pdf_download_name =  $basic_settings->site_name.'-'.'salary-disbursement.pdf';
         return $pdf->download($pdf_download_name.".pdf");
     }
+
+    /**
+     * Download transaction receipt PDF
+     * @param $trx_id
+     */
+    public function pdfDownload($trx_id){
+        $transaction = Transaction::where('trx_id',$trx_id)->first();
+
+        if(!$transaction) return back()->with(['error'=> ['Invalid Request!']]);
+
+        $pdf = Pdf::loadView('user.sections.pdf.transaction-receipt', compact('transaction'))->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf_download_name =  $transaction->trx_id . '-receipt';
+        return $pdf->download($pdf_download_name.".pdf");
+    }
 }

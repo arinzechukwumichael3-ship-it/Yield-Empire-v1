@@ -150,7 +150,7 @@ class AnnouncementController extends Controller
 
     public function announcementCreate() {
         $page_title = "Create New Announcement";
-        $categories = AnnouncementCategory::orderByDesc("id")->where("status",\DB::raw('true'))->get();
+        $categories = AnnouncementCategory::orderByDesc("id")->where("status", 1)->get();
         $languages = Language::get();
 
         return view('admin.sections.setup-sections.announcement.create',compact("page_title","categories","languages"));
@@ -256,7 +256,7 @@ class AnnouncementController extends Controller
         if(!$announcement) return back()->with(['error' => ['Announcement does\'t exists!']]);
         $page_title = "Announcement Edit";
         $languages = Language::get();
-        $categories = AnnouncementCategory::where("status",\DB::raw('true'))->orderByDesc("id")->get();
+        $categories = AnnouncementCategory::where("status", 1)->orderByDesc("id")->get();
         return view('admin.sections.setup-sections.announcement.edit',compact("page_title","announcement","languages","categories"));
     }
 

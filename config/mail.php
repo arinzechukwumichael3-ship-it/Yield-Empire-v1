@@ -103,8 +103,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => 'YieldEmpire',
+        'address' => env('MAIL_FROM_ADDRESS', 'no-reply@yieldempire.org'),
+        'name' => env('MAIL_FROM_NAME', 'YieldEmpire'),
     ],
 
     /*

@@ -48,36 +48,32 @@ class CustomServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        try{
-            $view_share = [];
-            $view_share['basic_settings']               = BasicSettings::first() ?? BasicSettingsProvider::fallbackSettings();
-            $view_share['default_currency']             = Currency::default() ?? new \stdClass();
-            $view_share['default_currency_code']        = Currency::default()->code ?? 'USD';
-            $view_share['default_currency_symbol']      = Currency::default()->symbol ?? '$';
-            $view_share['default_currency_rate']        = Currency::default()->rate ?? 1;
-            $view_share['__languages']                  = Language::get();
-            $view_share['all_user_count']               = User::count();
-            $view_share['email_verified_user_count']    = User::where('email_verified', '=', \DB::raw('true'))->count();
-            $view_share['kyc_verified_user_count']      = User::whereRaw('kyc_verified::int = ?', [GlobalConst::VERIFIED])->count();
-            $view_share['__extensions']                 = Extension::get();
-            $view_share['pending_ticket_count']         = UserSupportTicket::pending()->get()->count();
-            $view_share['__website_sections']           = SiteSections::get();
-            $view_share['__app_settings']               = AppSettings::first();
-            $view_share['__website_useful_link']        = UsefulLink::where("status",\DB::raw('true'))->get();
-            $view_share['__website_privacy_policy']     = UsefulLink::where("status",\DB::raw('true'))->where('type',GlobalConst::USEFUL_LINK_PRIVACY_POLICY)->first();
-            $view_share['__setup_pages']                = SetupPage::where('status',\DB::raw('true'))->get();
-            $view_share['system_maintenance']           = SystemMaintenance::first();
-            $this->app["view"]->share($view_share);
+        $view_share = [];
+        $view_share['basic_settings']               = BasicSettings::first() ?? BasicSettingsProvider::fallbackSettings();
+        $view_share['default_currency']             = Currency::default() ?? new \stdClass();
+        $view_share['default_currency_code']        = ($default = Currency::default()) ? $default->code : 'USD';
+        $view_share['default_currency_symbol']      = ($default = Currency::default()) ? $default->symbol : '$';
+        $view_share['default_currency_rate']        = ($default = Currency::default()) ? $default->rate : 1;
+        $view_share['__languages']                  = Language::get();
+        $view_share['all_user_count']               = User::count();
+        $view_share['email_verified_user_count']    = User::where('email_verified', 1)->count();
+        $view_share['kyc_verified_user_count']      = User::whereRaw('kyc_verified::int = ?', [GlobalConst::VERIFIED])->count();
+        $view_share['__extensions']                 = Extension::get() ?? collect();
+        $view_share['pending_ticket_count']         = UserSupportTicket::pending()->get()->count();
+        $view_share['__website_sections']           = SiteSections::get();
+        $view_share['__app_settings']               = AppSettings::first();
+        $view_share['__website_useful_link']        = UsefulLink::where("status", 1)->get();
+        $view_share['__website_privacy_policy']     = UsefulLink::where("status", 1)->where('type',GlobalConst::USEFUL_LINK_PRIVACY_POLICY)->first();
+        $view_share['__setup_pages']                = SetupPage::where("status", 1)->get();
+        $view_share['system_maintenance']           = SystemMaintenance::first();
+        $this->app["view"]->share($view_share);
 
-            $this->app->bind(BasicSettingsProvider::class, function () use ($view_share) {
-                return new BasicSettingsProvider($view_share['basic_settings']);
-            });
-            $this->app->bind(CurrencyProvider::class, function () use ($view_share) {
-                return new CurrencyProvider($view_share['default_currency']);
-            });
-        }catch(Exception $e) {
-            // handle error
-        }
+        $this->app->bind(BasicSettingsProvider::class, function () use ($view_share) {
+            return new BasicSettingsProvider($view_share['basic_settings']);
+        });
+        $this->app->bind(CurrencyProvider::class, function () use ($view_share) {
+            return new CurrencyProvider($view_share['default_currency']);
+        });
     }
 
     public function startingPoint() {

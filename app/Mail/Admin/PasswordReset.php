@@ -43,6 +43,7 @@ class PasswordReset extends Mailable
     {
         return new Content(
             view: 'admin.mails.password-reset',
+            text: 'mail-templates.admin.auth.password-reset_text',
         );
     }
 

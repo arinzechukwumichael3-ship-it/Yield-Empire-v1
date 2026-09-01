@@ -283,6 +283,16 @@
                     'icon'      => "menu-icon las la-chart-line",
                 ])
                 @include('admin.components.side-nav.link',[
+                    'route'     => 'admin.investment.plans.index',
+                    'title'     => __("Investment Plans"),
+                    'icon'      => "menu-icon las la-piggy-bank",
+                ])
+                @include('admin.components.side-nav.link',[
+                    'route'     => 'admin.user.investments.index',
+                    'title'     => __("User Investments"),
+                    'icon'      => "menu-icon las la-user-chart",
+                ])
+                @include('admin.components.side-nav.link',[
                     'route'     => 'admin.holidays.index',
                     'title'     => __("Holidays"),
                     'icon'      => "menu-icon las la-calendar-check",

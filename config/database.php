@@ -97,10 +97,11 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'options' => extension_loaded('pdo_pgsql') ? array_filter([
-                PDO::ATTR_EMULATE_PREPARES => true,
-                PDO::PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT => true,
-            ]) : [],
+            'options' => extension_loaded('pdo_pgsql')
+                ? (defined('PDO::PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT')
+                    ? [PDO::ATTR_EMULATE_PREPARES => true, PDO::PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT => true]
+                    : [PDO::ATTR_EMULATE_PREPARES => true])
+                : [],
         ],
 
         'sqlsrv' => [

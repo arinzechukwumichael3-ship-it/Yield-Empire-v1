@@ -20,11 +20,11 @@ class SystemMaintenance extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('status', \DB::raw('true'));
+        return $query->where('status', );
     }
 
     public function scopeBanned($query)
     {
-        return $query->where('status', \DB::raw('false'));
+        return $query->where('status', 0);
     }
 }

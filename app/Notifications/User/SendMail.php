@@ -28,6 +28,7 @@ class SendMail extends Notification
         $user = $notifiable;
         $data = $this->data;
         $whatsapp = support_whatsapp_number($notifiable);
+        $unsubscribeUrl = email_unsubscribe_url($user->email);
 
         return (new MailMessage)
             ->subject($data->subject)
@@ -36,7 +37,10 @@ class SendMail extends Notification
             ->line(new HtmlString('&mdash;'))
             ->line(new HtmlString('Need assistance? Contact us at <a href="mailto:support@yieldempire.org">support@yieldempire.org</a> or WhatsApp <a href="https://wa.me/' . $whatsapp . '">' . format_whatsapp_display($whatsapp) . '</a>.'))
             ->salutation('YieldEmpire Support Team')
-            ->with(['support_whatsapp' => $whatsapp]);
+            ->with([
+                'support_whatsapp' => $whatsapp,
+                'unsubscribe_url' => $unsubscribeUrl,
+            ]);
     }
 
     public function toArray($notifiable)

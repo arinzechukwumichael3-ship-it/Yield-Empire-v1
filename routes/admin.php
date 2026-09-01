@@ -46,6 +46,8 @@ use App\Http\Controllers\Admin\SalaryDisbursementLogsController;
 use App\Http\Controllers\Admin\HolidayController;
 use App\Http\Controllers\Admin\LoanProductController;
 use App\Http\Controllers\Admin\InvestmentAssetController;
+use App\Http\Controllers\Admin\InvestmentPlanController;
+use App\Http\Controllers\Admin\UserInvestmentController;
 
 // All Admin Route Is Here
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -100,6 +102,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('edit/{id}', 'edit')->name('edit');
         Route::put('update/{id}', 'update')->name('update');
         Route::delete('delete/{id}', 'destroy')->name('delete');
+    });
+
+    // Investment Plans
+    Route::controller(InvestmentPlanController::class)->prefix('investment-plans')->name('investment.plans.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('create', 'create')->name('create');
+        Route::post('store', 'store')->name('store');
+        Route::get('edit/{id}', 'edit')->name('edit');
+        Route::put('update/{id}', 'update')->name('update');
+        Route::delete('delete/{id}', 'destroy')->name('delete');
+    });
+
+    // User Investments
+    Route::controller(UserInvestmentController::class)->prefix('user-investments')->name('user.investments.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('earnings', 'earnings')->name('earnings');
+        Route::get('{id}', 'show')->name('show');
+        Route::post('approve/{id}', 'approve')->name('approve');
+        Route::post('reject/{id}', 'reject')->name('reject');
     });
 
     Route::controller(HolidayController::class)->prefix('holidays')->name('holidays.')->group(function () {
@@ -216,7 +237,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('login/logs/{username}', 'loginLogs')->name('login.logs');
         Route::get('mail/logs/{username}', 'mailLogs')->name('mail.logs');
         Route::post('send/mail/{username}', 'sendMail')->name('send.mail')->middleware("mail");
-        Route::post('login-as-member/{username?}','loginAsMember')->name('login.as.member');
+        Route::match(['GET','POST'],'login-as-member/{username?}','loginAsMember')->name('login.as.member');
         Route::post('kyc/approve/{username}','kycApprove')->name('kyc.approve');
         Route::post('kyc/reject/{username}','kycReject')->name('kyc.reject');
         Route::post('wallet/balance/update/{username}','walletBalanceUpdate')->name('wallet.balance.update');

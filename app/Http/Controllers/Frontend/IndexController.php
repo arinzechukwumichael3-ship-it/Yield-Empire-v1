@@ -54,7 +54,7 @@ class IndexController extends Controller
      */
     public function webJournals(BasicSettingsProvider $basic_settings){
         $page_title      = "Web Journals";
-        $journals        = Announcement::with(['category'])->where('status',\DB::raw('true'))->latest()->paginate(10);
+        $journals        = Announcement::with(['category'])->where("status", 1)->latest()->paginate(10);
 
         return view('frontend.pages.journal',compact(
             'page_title',
@@ -70,8 +70,8 @@ class IndexController extends Controller
         $page_title             = "Journal Details";
         $journal                = Announcement::where('slug',$slug)->first();
         if(!$journal) return back()->with(['error' => ['Something went wrong! Please try again.']]);
-        $category               = AnnouncementCategory::withCount('announcements')->where('status',\DB::raw('true'))->get();
-        $recent_posts           = Announcement::where('status',\DB::raw('true'))->where('slug','!=',$slug)->get();
+        $category               = AnnouncementCategory::withCount('announcements')->where("status", 1)->get();
+        $recent_posts           = Announcement::where("status", 1)->where('slug','!=',$slug)->get();
 
         return view('frontend.pages.journal-details',compact(
             'page_title',

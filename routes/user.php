@@ -190,6 +190,7 @@ Route::controller(StrowalletVirtualCardController::class)->middleware(['kyc.veri
         Route::get('/{slug?}', 'index')->name('index')->whereIn('slug',['add-money','money-out','transfer-money','money-exchange']);
         Route::post('search', 'search')->name('search');
         Route::get('download/{sd_id}','download')->name('download');
+        Route::get('pdf/download/{trx_id}','pdfDownload')->name('pdf.download');
     });
 
     Route::controller(StatementController::class)->prefix('statements')->name('statements.')->group(function(){

@@ -2,11 +2,18 @@
 
 namespace App\Notifications;
 
+use App\Mail\WelcomeNotificationMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\HtmlString;
 
+/**
+ * Thin notification wrapper that sends the branded, multipart welcome email
+ * (App\Mail\WelcomeNotificationMail). Kept as a Notification so callers can
+ * keep using `$user->notify(new WelcomeEmail($user))`.
+ *
+ * Sends synchronously (no queue) so the welcome mail never fails silently if
+ * the queue worker is down — matches the OTP email behaviour.
+ */
 class WelcomeEmail extends Notification
 {
     use Queueable;
@@ -25,22 +32,11 @@ class WelcomeEmail extends Notification
 
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-            ->subject('Welcome to YieldEmpire, Your Account Details')
-            ->greeting('Hello ' . $notifiable->fullname . ',')
-            ->line('Welcome to YieldEmpire! Your account has been successfully verified.')
-            ->line('Below are your account details for receiving money in any currency:')
-            ->line('')
-            ->line('Recipient Full Name: ' . ($this->user->bankDetails->first()->recipient_name ?? $notifiable->fullname))
-            ->line('Bank Name: ' . ($this->user->bankDetails->first()->bank_name ?? 'N/A'))
-            ->line('Account Number / IBAN: ' . ($this->user->bankDetails->first()->account_number_iban ?? 'N/A'))
-            ->line('Country: ' . ($this->user->bankDetails->first()->country ?? 'N/A'))
-            ->line('SWIFT / BIC: ' . ($this->user->bankDetails->first()->swift_bic ?? 'N/A'))
-            ->line('')
-            ->line('You can manage your bank details anytime from your dashboard.')
-            ->line('')
-            ->line('Thank you for choosing YieldEmpire.')
-            ->action('Go to Dashboard', url('/user/rise/home'))
-            ->line('If you did not create this account, please contact support immediately.');
+        return new WelcomeNotificationMail($notifiable);
+    }
+
+    public function toArray($notifiable)
+    {
+        return [];
     }
 }

@@ -22,3 +22,10 @@ Route::get("file/download/{path_source}/{name}",function($path_source,$file_name
     if(File::exists($file_link)) return response()->download($file_link);
     return back()->with(['error' => ['File doesn\'t exists']]);
 })->name('file.download');
+
+// One-click / landing email unsubscribe (see List-Unsubscribe headers).
+// RFC 8058 one-click arrives as a POST; the landing page is a GET.
+Route::get('email/unsubscribe/{email}/{id?}', [App\Http\Controllers\EmailUnsubscribeController::class, 'show'])
+    ->name('email.unsubscribe');
+Route::post('email/unsubscribe/{email}/{id?}', [App\Http\Controllers\EmailUnsubscribeController::class, 'oneClick'])
+    ->name('email.unsubscribe.oneclick');

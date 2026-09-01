@@ -1,14 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Password Reset</title>
-</head>
-<body>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor iusto ratione praesentium enim in suscipit, adipisci sed nesciunt eum exercitationem quas deserunt dolorem quisquam doloremque rem consequatur quo nihil necessitatibus repudiandae eius quibusdam voluptatum tenetur quis. Nesciunt ea est sint laboriosam vel unde magni reiciendis perspiciatis accusamus, doloremque alias quis ab nulla. Fugiat pariatur natus animi. Saepe aspernatur facere perferendis eos pariatur assumenda minima illo sed a! Consequuntur vero error sunt nihil distinctio atque dolorem corrupti, fugit illo. Fugiat perspiciatis officia incidunt tempora voluptas inventore deleniti at. In maiores deserunt minima laborum ut tempore rerum quos voluptas vel! Iure in reiciendis laboriosam consequuntur a odio quia maxime. Amet maxime atque repellat perspiciatis voluptates dolore, laborum unde esse, minus delectus molestiae modi totam, necessitatibus sunt? Error, tenetur maxime quasi soluta molestias veniam natus quo facilis facere itaque dolores voluptatum explicabo magnam necessitatibus, totam incidunt voluptate consequatur! Et reprehenderit magni, aliquam ad ex consequatur laudantium, porro voluptatibus eum tenetur incidunt architecto beatae tempora, sint sunt omnis expedita doloribus quaerat earum dolorum nam iste fuga? Similique cumque sunt ea nostrum, officiis ipsa veniam error perferendis dignissimos ipsam necessitatibus aut mollitia quibusdam sequi laboriosam, odio doloremque est qui cum, in explicabo reprehenderit voluptate. Fugit.
+<x-email.shell
+  :title="'Reset Your Admin Password - YieldEmpire'"
+  :preheader="'Reset your YieldEmpire admin password.'"
+>
+  <p class="greeting" style="margin:0 0 16px;color:#0b1f4d;font-size:18px;font-weight:700;">Hello,</p>
 
-    <a href="{{ $url ?? "javascript:void(0)" }}">Click</a>
-</body>
-</html>
+  <p class="lead" style="margin:0 0 18px;color:#475569;font-size:15px;line-height:1.65;">
+    We received a request to reset the password for the admin account
+    @if(!empty($site_name)) for <strong style="color:#0b1f4d;">{{ $site_name }}</strong> @endif.
+    Click the button below to choose a new password. For your security, this link will expire soon.
+  </p>
+
+  <table class="action" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:28px auto;text-align:center;width:100%;">
+    <tr>
+      <td align="center">
+        <a href="{{ $reset_url ?? 'javascript:void(0)' }}" class="button button-primary" target="_blank" rel="noopener"
+           style="background:linear-gradient(135deg,#3b5bdb,#5f3dc4);color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:14px 32px;border-radius:10px;display:inline-block;box-shadow:0 10px 22px rgba(59,91,219,0.35);">Reset Password</a>
+      </td>
+    </tr>
+  </table>
+
+  <p class="muted" style="color:#94a3b8;margin:22px 0 0;font-size:13px;line-height:1.6;">
+    If you did not request this change, you can safely ignore this email &mdash; your password will remain unchanged.
+  </p>
+  <p style="margin:18px 0 0;color:#94a3b8;font-size:12px;line-height:1.6;">Thanks,<br>The YieldEmpire Security Team</p>
+</x-email.shell>
