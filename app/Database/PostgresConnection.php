@@ -19,6 +19,7 @@ class PostgresConnection extends BasePostgresConnection
     private const SMALLINT = [
         "status", "email_verified", "sms_verified", "kyc_verified",
         "two_factor_verified", "two_factor_status", "pin_status",
+        "is_default",
     ];
 
     private static ?array $columnTypes = null;
@@ -55,11 +56,17 @@ class PostgresConnection extends BasePostgresConnection
         $columnTypes = self::columnTypes();
         $whereCols = $this->extractWhereColumnNames($query);
         foreach ($bindings as $i => $v) {
-            if (!is_bool($v)) continue;
             $col = isset($whereCols[$i]) ? $whereCols[$i] : null;
-            if ($col !== null && isset($columnTypes[$col])) {
-                $bindings[$i] = $columnTypes[$col] === "smallint" ? ($v ? 1 : 0) : ($v ? "true" : "false");
-            } else {
+            if ($col === null || !isset($columnTypes[$col])) {
+                if (is_bool($v)) {
+                    $bindings[$i] = $v ? "true" : "false";
+                }
+                continue;
+            }
+            $type = $columnTypes[$col];
+            if (is_bool($v)) {
+                $bindings[$i] = $type === "smallint" ? ($v ? 1 : 0) : ($v ? "true" : "false");
+            } elseif (($v === 1 || $v === 0) && $type === "real_boolean") {
                 $bindings[$i] = $v ? "true" : "false";
             }
         }
