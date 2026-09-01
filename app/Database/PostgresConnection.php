@@ -36,11 +36,18 @@ class PostgresConnection extends BasePostgresConnection
     private function extractWhereColumnNames(string $sql): array
     {
         $cols = [];
-        if (preg_match_all("/WHERE\s+\"([^\"]+)\"\s*=\s*\?/i", $sql, $m)) $cols = $m[1];
-        if (empty($cols) && preg_match_all("/WHERE\s+(\w+)\s*=\s*\?/i", $sql, $m)) $cols = $m[1];
-        if (empty($cols) && preg_match_all("/(?:AND|OR)\s+\"([^\"]+)\"\s*=\s*\?/i", $sql, $m)) $cols = $m[1];
-        if (empty($cols) && preg_match_all("/(?:AND|OR)\s+(\w+)\s*=\s*\?/i", $sql, $m)) $cols = $m[1];
-        return $cols;
+        // Merge ALL patterns — don't gate later patterns on earlier ones.
+        foreach ([
+            '/WHERE\s+"([^"]+)"\s*=\s*\?/i',
+            '/WHERE\s+(\w+)\s*=\s*\?/i',
+            '/(?:AND|OR)\s+"([^"]+)"\s*=\s*\?/i',
+            '/(?:AND|OR)\s+(\w+)\s*=\s*\?/i',
+        ] as $pattern) {
+            if (preg_match_all($pattern, $sql, $m)) {
+                $cols = array_merge($cols, $m[1]);
+            }
+        }
+        return array_values(array_unique($cols));
     }
 
     public function run($query, $bindings, Closure $callback)
