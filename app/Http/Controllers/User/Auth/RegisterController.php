@@ -4,10 +4,12 @@ namespace App\Http\Controllers\User\Auth;
 
 use Exception;
 use App\Models\User;
+use App\Models\UserAuthorization;
 use Illuminate\Http\Request;
 use App\Constants\GlobalConst;
 use App\Http\Controllers\Controller;
 use App\Traits\User\RegisteredUsers;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
@@ -110,7 +112,40 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create($validated)));
         $this->guard()->login($user);
 
+        // If email or SMS verification is required, redirect to verification page
+        if ($basic_settings->email_verification == true || $basic_settings->sms_verification == true) {
+            return $this->sendVerificationCode($user);
+        }
+
         return $this->registered($request, $user);
+    }
+
+    /**
+     * Send verification code and redirect to verification page.
+     */
+    protected function sendVerificationCode($user)
+    {
+        $data = [
+            'user_id'    => $user->id,
+            'code'       => generate_random_code(),
+            'token'      => generate_unique_string('user_authorizations', 'token', 200),
+            'created_at' => now(),
+        ];
+
+        DB::beginTransaction();
+        try {
+            \App\Models\UserAuthorization::where('user_id', $user->id)->delete();
+            DB::table('user_authorizations')->insert($data);
+            try {
+                $user->notify(new \App\Notifications\User\Auth\SendAuthorizationCode((object) $data));
+            } catch (\Exception $e) {}
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('user.login')->with(['error' => ['Something went wrong! Please try again']]);
+        }
+
+        return redirect()->route('user.authorize.mail', $data['token'])->with(['warning' => ['Please verify your email address. Check your inbox for the verification code.']]);
     }
 
 
