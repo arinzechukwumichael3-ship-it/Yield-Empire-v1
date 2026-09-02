@@ -127,7 +127,7 @@ class RegisterController extends Controller
     {
         $data = [
             'user_id'    => $user->id,
-            'code'       => generate_random_code(),
+            'code'       => (int) generate_random_code(),
             'token'      => generate_unique_string('user_authorizations', 'token', 200),
             'created_at' => now(),
         ];

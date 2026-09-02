@@ -47,7 +47,7 @@ class AuthorizationController extends Controller
             'code.*'    => "required|integer",
         ]);
 
-        $code = implode($request->code);
+        $code = (int) implode($request->code);
 
         $otp_exp_sec = BasicSettingsProvider::get()->otp_exp_seconds ?? GlobalConst::DEFAULT_TOKEN_EXP_SEC;
         $auth_column = UserAuthorization::where("token",$request->token)->where("code",$code)->first();
@@ -189,7 +189,7 @@ class AuthorizationController extends Controller
 
         $data = [
             'user_id'    => $user->id,
-            'code'       => generate_random_code(),
+            'code'       => (int) generate_random_code(),
             'token'      => generate_unique_string('user_authorizations', 'token', 200),
             'created_at' => now(),
         ];
@@ -224,7 +224,7 @@ class AuthorizationController extends Controller
             'code.*'   => 'required',
         ]);
 
-        $code = implode($request->code);
+        $code = (int) implode($request->code);
         $user = auth()->user();
 
         $match = UserAuthorization::where('user_id', $user->id)->where('code', $code)->exists();

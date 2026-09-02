@@ -56,8 +56,9 @@
   .reg-otp-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:18px}
   .reg-otp-inputs input{
     width:52px;height:60px;text-align:center;font-size:24px;font-weight:700;
-    border:2px solid #dfe4f0;border-radius:14px;color:#0b1f4d !important;background:#f7f9ff;-webkit-text-fill-color:#0b1f4d !important;
+    border:2px solid #dfe4f0;border-radius:14px;color:#0b1f4d !important;background:#ffffff;-webkit-text-fill-color:#0b1f4d !important;
     transition:border-color .2s, box-shadow .2s, transform .15s; outline:none;
+    caret-color:#3b5bdb;
   }
   .reg-otp-inputs input:focus{
     border-color:#3b5bdb;
@@ -95,6 +96,23 @@
   }
   @keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
 
+  /* Error message styling */
+  .reg-otp-error{
+    display:none;
+    background:#fef2f2;
+    border:1px solid #fecaca;
+    border-radius:10px;
+    padding:12px 16px;
+    margin-bottom:16px;
+    text-align:center;
+  }
+  .reg-otp-error p{
+    margin:0;
+    color:#dc2626;
+    font-size:13px;
+    font-weight:500;
+  }
+
   @media (max-width:480px){
     .reg-otp-inputs input{width:44px;height:54px;font-size:20px}
     .reg-otp-card{padding:32px 20px 26px}
@@ -113,17 +131,22 @@
         <h2>{{ __('Verify your email') }}</h2>
         <p class="reg-otp-sub">{{ __('We sent a 6-digit code to') }} <b>{{ Auth::user()->email ?? '' }}</b></p>
 
+        <!-- Error display -->
+        <div class="reg-otp-error" id="otpError">
+            <p>{{ session('error.0') ?? __('Invalid verification code. Please try again.') }}</p>
+        </div>
+
         <div class="reg-otp-check" id="otpCheck"><span class="ring"><i class="las la-check"></i></span></div>
 
         <form class="reg-otp-form" id="otpForm" method="POST" action="{{ route('user.authorize.mail.verify', $token) }}">
             @csrf
             <div class="reg-otp-inputs" id="otpInputs">
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
-                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required style="color:#0b1f4d !important;-webkit-text-fill-color:#0b1f4d !important;">
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required pattern="[0-9]" inputmode="numeric">
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required pattern="[0-9]" inputmode="numeric">
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required pattern="[0-9]" inputmode="numeric">
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required pattern="[0-9]" inputmode="numeric">
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required pattern="[0-9]" inputmode="numeric">
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" required pattern="[0-9]" inputmode="numeric">
             </div>
 
             <div class="reg-otp-timer" id="timerWrap">{{ __('Resend code in') }} <span id="time">--</span></div>
@@ -144,8 +167,14 @@
   (function(){
     var boxes = Array.prototype.slice.call(document.querySelectorAll('.reg-otp-box'));
     var form  = document.getElementById('otpForm');
+    var errorDiv = document.getElementById('otpError');
     if(!boxes.length || !form) return;
     boxes[0].focus();
+
+    // Show error if session has error
+    @if(session('error'))
+      errorDiv.style.display = 'block';
+    @endif
 
     function onlyDigits(el){
       el.value = el.value.replace(/\D/g,'').slice(0,1);
@@ -156,6 +185,8 @@
       box.addEventListener('input', function(){
         onlyDigits(box);
         if(box.value && i < boxes.length - 1) boxes[i + 1].focus();
+        // Hide error when user starts typing
+        errorDiv.style.display = 'none';
       });
       box.addEventListener('keydown', function(e){
         if(e.key === 'Backspace' && !box.value && i > 0){ boxes[i - 1].focus(); }
@@ -171,7 +202,16 @@
       });
     });
 
-    form.addEventListener('submit', function(){
+    form.addEventListener('submit', function(e){
+      // Validate all boxes filled
+      var allFilled = true;
+      boxes.forEach(function(box){ if(!box.value) allFilled = false; });
+      if(!allFilled) {
+        e.preventDefault();
+        errorDiv.innerHTML = '<p>Please enter all 6 digits of the verification code.</p>';
+        errorDiv.style.display = 'block';
+        return false;
+      }
       document.getElementById('otpSubmit').classList.add('loading');
     });
 
