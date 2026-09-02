@@ -14,7 +14,7 @@ class PostgresConnection extends BasePostgresConnection
     private static array $colTypeCache = [];
 
     /**
-     * Extract the first table name from a SQL query.
+     * Extract the first table name from a SQL query (FROM or INSERT INTO).
      */
     private function extractTableName(string $sql): ?string
     {
@@ -24,11 +24,17 @@ class PostgresConnection extends BasePostgresConnection
         if (preg_match('/FROM\s+(\w+)/i', $sql, $m)) {
             return $m[1];
         }
+        if (preg_match('/INSERT\s+INTO\s+"([^"]+)"/i', $sql, $m)) {
+            return $m[1];
+        }
+        if (preg_match('/INSERT\s+INTO\s+(\w+)/i', $sql, $m)) {
+            return $m[1];
+        }
         return null;
     }
 
     /**
-     * Extract column names from WHERE clause in order.
+     * Extract column names from WHERE/AND/OR clauses in order.
      */
     private function extractWhereColumns(string $sql): array
     {
@@ -42,6 +48,23 @@ class PostgresConnection extends BasePostgresConnection
             }
         }
         return array_values(array_unique($cols));
+    }
+
+    /**
+     * Extract column names from INSERT INTO clause.
+     * e.g. insert into "users" ("col1", "col2", "col3") values (?, ?, ?)
+     */
+    private function extractInsertColumns(string $sql): array
+    {
+        if (preg_match('/INSERT\s+INTO\s+"[^"]+"\s*\(([^)]+)\)/i', $sql, $m)) {
+            $cols = array_map('trim', explode(',', $m[1]));
+            return array_map(fn($c) => trim($c, '" '), $cols);
+        }
+        if (preg_match('/INSERT\s+INTO\s+\w+\s*\(([^)]+)\)/i', $sql, $m)) {
+            $cols = array_map('trim', explode(',', $m[1]));
+            return array_map(fn($c) => trim($c, '" '), $cols);
+        }
+        return [];
     }
 
     /**
@@ -76,13 +99,15 @@ class PostgresConnection extends BasePostgresConnection
     {
         $table = $this->extractTableName($query);
         $whereCols = $this->extractWhereColumns($query);
+        $insertCols = $this->extractInsertColumns($query);
 
         foreach ($bindings as $i => $v) {
             if (!is_bool($v) && $v !== 1 && $v !== 0) {
                 continue;
             }
 
-            $col = $whereCols[$i] ?? null;
+            // Try INSERT columns first, then WHERE columns
+            $col = $insertCols[$i] ?? $whereCols[$i] ?? null;
             if ($col === null || $table === null) {
                 // No context — convert booleans to 'true'/'false' strings
                 if (is_bool($v)) {
