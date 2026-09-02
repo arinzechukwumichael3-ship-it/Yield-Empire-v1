@@ -53,13 +53,11 @@ class AuthorizationController extends Controller
         $auth_column = UserAuthorization::where("token",$request->token)->where("code",$code)->first();
 
         if(!$auth_column) {
-            $this->authLogout($request);
-            return redirect()->route('user.login')->with(['error' => ['Invalid verification code. Please try again.']]);
+            return redirect()->route('user.authorize.mail', $token)->with(['error' => ['Invalid verification code. Please try again.']]);
         }
 
         if($auth_column->created_at->addSeconds($otp_exp_sec) < now()) {
-            $this->authLogout($request);
-            return redirect()->route('user.login')->with(['error' => ['Session expired. Please try again']]);
+            return redirect()->route('user.authorize.mail', $token)->with(['error' => ['Code expired. Please request a new one.']]);
         }
 
         try{
@@ -77,8 +75,7 @@ class AuthorizationController extends Controller
                 } catch (Exception $e) {}
             }
         }catch(Exception $e) {
-            $this->authLogout($request);
-            return redirect()->route('user.login')->with(['error' => ['Something went wrong! Please try again']]);
+            return redirect()->route('user.authorize.mail', $token)->with(['error' => ['Something went wrong! Please try again']]);
         }
 
         return redirect()->intended(route("user.dashboard"))->with(['success' => ['Account successfully verified']]);
