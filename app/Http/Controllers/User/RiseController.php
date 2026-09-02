@@ -46,7 +46,7 @@ class RiseController extends Controller
     private function ensureWalletsExist()
     {
         if (!$this->user) return;
-        $codes = ['GBP', 'EUR'];
+        $codes = ['USD', 'GBP', 'EUR'];
         foreach ($codes as $code) {
             $currency = \App\Models\Admin\Currency::where('code', $code)->first();
             if (!$currency) continue;

@@ -451,9 +451,9 @@
                                     @php
                                         $hasWallet = $user->wallets->contains('currency_id', $currency->id);
                                     @endphp
-                                    @if(!$hasWallet)
-                                        <option value="{{ $currency->id }}">{{ $currency->code }} - {{ $currency->name }}</option>
-                                    @endif
+                                    <option value="{{ $currency->id }}" {{ $hasWallet ? 'disabled' : '' }}>
+                                        {{ $currency->code }} - {{ $currency->name }} {{ $hasWallet ? '(' . __("Already exists") . ')' : '' }}
+                                    </option>
                                 @endforeach
                             </select>
                             <small class="text-muted">{{ __("Only currencies without existing wallets are shown.") }}</small>
