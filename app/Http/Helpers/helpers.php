@@ -1925,21 +1925,13 @@ function activeTemplate()
 
 if (! function_exists('mail_otp_box')) {
     /**
-     * Build a styled, email-safe OTP code box (individual digit cells).
+     * Build a styled, email-safe OTP code box.
      */
     function mail_otp_box($code, $label = 'Your verification code')
     {
-        $code = (string) $code;
-        $chars = preg_split('//u', $code, -1, PREG_SPLIT_NO_EMPTY);
-        $cells = '';
-        foreach ($chars as $ch) {
-            $cells .= '<td class="otp-cell" style="width:42px;height:54px;background:#ffffff;border:1px solid #dbe3ff;border-radius:10px;color:#0b1f4d;font-size:26px;font-weight:800;text-align:center;vertical-align:middle;box-shadow:0 4px 10px rgba(59,91,219,0.10);">'.e($ch).'</td>';
-        }
-        $html = '<div style="margin:26px 0;text-align:center;font-family:Arial,Helvetica,sans-serif;">'
-            .'<p style="margin:0 0 14px;font-size:13px;letter-spacing:.5px;text-transform:uppercase;color:#64748b;font-weight:700;">'.e($label).'</p>'
-            .'<div style="display:inline-block;padding:18px 20px;background:#f1f5ff;border:1px dashed #b9c6ff;border-radius:14px;">'
-            .'<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;border-collapse:separate;border-spacing:8px;"><tr>'.$cells.'</tr></table>'
-            .'</div></div>';
+        $html = '<div class="otp-container" style="text-align:center;margin:28px 0;">'
+              . '<div class="otp-box" style="display:inline-block;background:#0f172a;color:#ffffff;font-size:28px;font-weight:700;letter-spacing:8px;padding:18px 32px;border-radius:10px;font-family:\'SF Mono\',Consolas,Menlo,monospace;">' . e($code) . '</div>'
+              . '</div>';
 
         return new \Illuminate\Support\HtmlString($html);
     }
