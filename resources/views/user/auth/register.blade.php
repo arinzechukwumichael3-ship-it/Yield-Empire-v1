@@ -35,12 +35,11 @@
                         <div class="account-select-item">
                             <label>{{ __("Account Type") }} <span>*</span></label>
                             <select class="form-control form--control select2-basic account-type">
-                                <option selected disabled>{{ __("Select One") }}</option>
-                                <option value="{{ global_const()::PERSONAL_ACCOUNT }}">{{ __("Personal Account") }}</option>
+                                <option value="{{ global_const()::PERSONAL_ACCOUNT }}" selected>{{ __("Personal Account") }}</option>
                                 <option value="{{ global_const()::BUSINESS_ACCOUNT }}">{{ __("Business Account") }}</option>
                             </select>
                         </div>
-                        <div class="personal-account ptb-30 select-account" data-select-target="{{ global_const()::PERSONAL_ACCOUNT }}" style="display: none;">
+                        <div class="personal-account ptb-30 select-account" data-select-target="{{ global_const()::PERSONAL_ACCOUNT }}">
                             <form action="{{ setRoute('user.register.submit') }}" class="account-form" method="POST">
                                 @csrf
                                 @if(isset($referrer) && $referrer)

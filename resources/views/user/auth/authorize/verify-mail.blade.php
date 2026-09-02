@@ -171,12 +171,12 @@
         <form class="reg-otp-form" id="otpForm" method="POST" action="{{ route('user.authorize.mail.verify', $token) }}">
             @csrf
             <div class="reg-otp-inputs" id="otpInputs">
-                <input class="reg-otp-box" name="code[]" type="tel" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
-                <input class="reg-otp-box" name="code[]" type="tel" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
-                <input class="reg-otp-box" name="code[]" type="tel" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
-                <input class="reg-otp-box" name="code[]" type="tel" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
-                <input class="reg-otp-box" name="code[]" type="tel" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
-                <input class="reg-otp-box" name="code[]" type="tel" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
+                <input class="reg-otp-box" name="code[]" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1" required>
             </div>
 
             <div class="reg-otp-timer" id="timerWrap">{{ __('Resend code in') }} <span id="time">--</span></div>

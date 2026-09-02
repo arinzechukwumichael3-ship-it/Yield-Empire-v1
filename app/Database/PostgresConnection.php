@@ -30,6 +30,12 @@ class PostgresConnection extends BasePostgresConnection
         if (preg_match('/INSERT\s+INTO\s+(\w+)/i', $sql, $m)) {
             return $m[1];
         }
+        if (preg_match('/UPDATE\s+"([^"]+)"/i', $sql, $m)) {
+            return $m[1];
+        }
+        if (preg_match('/UPDATE\s+(\w+)/i', $sql, $m)) {
+            return $m[1];
+        }
         return null;
     }
 
@@ -48,6 +54,28 @@ class PostgresConnection extends BasePostgresConnection
             }
         }
         return array_values(array_unique($cols));
+    }
+
+    /**
+     * Extract column names from UPDATE SET clause.
+     * e.g. update "users" set "email_verified" = ?, "updated_at" = ? where "id" = ?
+     */
+    private function extractUpdateColumns(string $sql): array
+    {
+        if (preg_match('/UPDATE\s+["`]?(\w+)`?]\s+SET\s+(.+?)\s+WHERE/i', $sql, $m)) {
+            $setClause = $m[2];
+            $cols = [];
+            foreach ([
+                '/["`]([^"`]+)["`]\s*=\s*\?/i',
+                '/(\w+)\s*=\s*\?/i',
+            ] as $pattern) {
+                if (preg_match_all($pattern, $setClause, $matches)) {
+                    $cols = array_merge($cols, $matches[1]);
+                }
+            }
+            return $cols;
+        }
+        return [];
     }
 
     /**
@@ -100,15 +128,18 @@ class PostgresConnection extends BasePostgresConnection
         $table = $this->extractTableName($query);
         $whereCols = $this->extractWhereColumns($query);
         $insertCols = $this->extractInsertColumns($query);
+        $updateCols = $this->extractUpdateColumns($query);
 
         foreach ($bindings as $i => $v) {
             if (!is_bool($v) && $v !== 1 && $v !== 0) {
                 continue;
             }
 
-            // For batch INSERTs, bindings are flattened — wrap column index
+            // Determine which column this binding maps to
             $col = null;
-            if (count($insertCols) > 0) {
+            if (count($updateCols) > 0) {
+                $col = $updateCols[$i] ?? null;
+            } elseif (count($insertCols) > 0) {
                 $col = $insertCols[$i % count($insertCols)] ?? null;
             } elseif (count($whereCols) > 0) {
                 $col = $whereCols[$i % count($whereCols)] ?? null;
