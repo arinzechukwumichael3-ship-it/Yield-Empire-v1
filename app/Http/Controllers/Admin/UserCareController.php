@@ -656,6 +656,54 @@ class UserCareController extends Controller
     }
 
     /**
+     * Method for creating a new wallet for a user
+     */
+    public function walletStore(Request $request, $username)
+    {
+        $validator = Validator::make($request->all(), [
+            'currency_id' => 'required|integer|exists:currencies,id',
+            'balance' => 'nullable|numeric|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $validated = $validator->validate();
+
+        $user = User::where('username', $username)->first();
+        if (!$user) {
+            return back()->with(['error' => ['User not found!']]);
+        }
+
+        // Check if user already has a wallet for this currency
+        $existingWallet = UserWallet::where('user_id', $user->id)
+            ->where('currency_id', $validated['currency_id'])
+            ->first();
+
+        if ($existingWallet) {
+            return back()->with(['error' => ['User already has a wallet for this currency!']]);
+        }
+
+        DB::beginTransaction();
+        try {
+            UserWallet::create([
+                'user_id' => $user->id,
+                'currency_id' => $validated['currency_id'],
+                'balance' => $validated['balance'] ?? 0,
+                'status' => true,
+            ]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with(['error' => ['Something went wrong! ' . $e->getMessage()]]);
+        }
+
+        return back()->with(['success' => ['Wallet created successfully!']]);
+    }
+
+    /**
      * Method for update user wallet balance
      */
     public function walletBalanceUpdate(Request $request, $username)

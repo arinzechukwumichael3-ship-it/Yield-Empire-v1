@@ -241,6 +241,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('kyc/approve/{username}','kycApprove')->name('kyc.approve');
         Route::post('kyc/reject/{username}','kycReject')->name('kyc.reject');
         Route::post('wallet/balance/update/{username}','walletBalanceUpdate')->name('wallet.balance.update');
+        Route::post('wallet/store/{username}','walletStore')->name('wallet.store');
         Route::get('crypto-addresses/{username}', 'userCryptoAddresses')->name('crypto.addresses');
         Route::post('crypto-addresses/{username}/store', 'userCryptoAddressesStore')->name('crypto.addresses.store');
         Route::put('crypto-addresses/{username}/update', 'userCryptoAddressesUpdate')->name('crypto.addresses.update');

@@ -121,6 +121,9 @@
                     <div class="col-xl-4 col-lg-4 form-group">
                         <div class="user-action-btn-area">
                             <div class="user-action-btn">
+                                <button type="button" class="bg--success one wallet-add-btn" data-bs-toggle="modal" data-bs-target="#addWalletModal"><i class="las la-plus-circle me-1"></i>{{ __("Add Wallet") }}</button>
+                            </div>
+                            <div class="user-action-btn">
                                 <button type="button" class="bg--danger one wallet-balance-update-btn" data-bs-toggle="modal" data-bs-target="#addModal"><i class="las la-wallet me-1"></i>{{ __("Add/Subtract Balance") }}</button>
                             </div>
                             <div class="user-action-btn">
@@ -428,6 +431,46 @@
 
     {{-- Send Email Modal --}}
     @include('admin.components.modals.send-mail-user',compact("user"))
+
+    {{-- Add Wallet Modal --}}
+    <div id="addWalletModal" class="modal fade" tabindex="-1" aria-labelledby="addWalletModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addWalletModalLabel">{{ __("Add Wallet") }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('admin.users.wallet.store', $user->username) }}">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="currency_id" class="form-label">{{ __("Currency") }} <span class="text-danger">*</span></label>
+                            <select name="currency_id" id="currency_id" class="form-select" required>
+                                <option value="">{{ __("Select Currency") }}</option>
+                                @foreach(App\Models\Admin\Currency::active()->get() as $currency)
+                                    @php
+                                        $hasWallet = $user->wallets->contains('currency_id', $currency->id);
+                                    @endphp
+                                    @if(!$hasWallet)
+                                        <option value="{{ $currency->id }}">{{ $currency->code }} - {{ $currency->name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <small class="text-muted">{{ __("Only currencies without existing wallets are shown.") }}</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="initial_balance" class="form-label">{{ __("Initial Balance") }}</label>
+                            <input type="number" name="balance" id="initial_balance" class="form-control" value="0" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Cancel") }}</button>
+                        <button type="submit" class="btn btn--base">{{ __("Create Wallet") }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div id="wallet-balance-update-modal" class="mfp-hide large">
         <div class="modal-data">
