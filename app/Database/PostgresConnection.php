@@ -106,8 +106,13 @@ class PostgresConnection extends BasePostgresConnection
                 continue;
             }
 
-            // Try INSERT columns first, then WHERE columns
-            $col = $insertCols[$i] ?? $whereCols[$i] ?? null;
+            // For batch INSERTs, bindings are flattened — wrap column index
+            $col = null;
+            if (count($insertCols) > 0) {
+                $col = $insertCols[$i % count($insertCols)] ?? null;
+            } elseif (count($whereCols) > 0) {
+                $col = $whereCols[$i % count($whereCols)] ?? null;
+            }
             if ($col === null || $table === null) {
                 // No context — convert booleans to 'true'/'false' strings
                 if (is_bool($v)) {
