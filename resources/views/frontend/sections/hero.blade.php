@@ -1,11 +1,14 @@
 <!-- ====== HERO SECTION — Professional Video Background ====== -->
 <section class="enzo-hero" id="hero">
-    <!-- Video Background -->
+    <!-- YouTube Video Background -->
     <div class="enzo-hero-video-bg">
-        <video autoplay muted loop playsinline preload="auto" poster="{{ asset('frontend/images/hero-bg.jpg') }}">
-            <source src="{{ asset('frontend/videos/hero-bg.webm') }}" type="video/webm">
-            <source src="{{ asset('frontend/videos/hero-final.mp4') }}" type="video/mp4">
-        </video>
+        <iframe 
+            src="https://www.youtube.com/embed/HvVqN4dK0zo?autoplay=1&mute=1&loop=1&playlist=HvVqN4dK0zo&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            class="hero-youtube-iframe"
+        ></iframe>
         <div class="enzo-hero-video-overlay"></div>
     </div>
 
@@ -39,10 +42,14 @@
 
             <div class="enzo-hero-right">
                 <div class="hp-video-card">
-                    <video autoplay muted loop playsinline preload="auto" poster="{{ asset('frontend/images/hero-bg.jpg') }}" class="hp-video-card-media">
-                        <source src="{{ asset('frontend/videos/hero-bg.webm') }}" type="video/webm">
-                        <source src="{{ asset('frontend/videos/hero-final.mp4') }}" type="video/mp4">
-                    </video>
+                    <iframe 
+                        src="https://www.youtube.com/embed/HvVqN4dK0zo?autoplay=1&mute=1&loop=1&playlist=HvVqN4dK0zo&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        class="hero-youtube-iframe"
+                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+                    ></iframe>
                     <div class="hp-video-card-overlay"></div>
                     <div class="hp-video-card-content">
                         <div class="hp-video-stat">
@@ -86,20 +93,4 @@
     </div>
 </section>
 
-<script>
-(function(){
-    var videos = document.querySelectorAll('.enzo-hero-video-bg video, .hp-video-card-media');
-    videos.forEach(function(v){
-        v.muted = true;
-        v.playsInline = true;
-        v.autoplay = true;
-        v.loop = true;
-        v.removeAttribute('controls');
-        var playPromise = v.play();
-        if (playPromise && playPromise.catch) {
-            playPromise.catch(function(){});
-        }
-        v.addEventListener('ended', function(){ v.currentTime = 0; v.play(); });
-    });
-})();
-</script>
+
