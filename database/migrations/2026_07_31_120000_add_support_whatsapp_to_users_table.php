@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Per-user WhatsApp support number (digits only, e.g. "447464483316").
+     * Per-user WhatsApp support number (digits only, e.g. "12549527923").
      * When set, deposit-help links on the site open a chat with this number
      * instead of the general default. Empty/null falls back to the general
      * number (SUPPORT_WHATSAPP env) so existing users are unaffected.

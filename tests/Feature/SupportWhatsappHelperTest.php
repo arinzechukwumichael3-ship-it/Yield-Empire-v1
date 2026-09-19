@@ -13,20 +13,20 @@ class SupportWhatsappHelperTest extends TestCase
 {
     public function test_support_whatsapp_number_is_digits_only()
     {
-        $this->assertSame('447464483316', support_whatsapp_number());
+        $this->assertSame('12549527923', support_whatsapp_number());
         $this->assertMatchesRegularExpression('/^[0-9]+$/', support_whatsapp_number());
     }
 
     public function test_support_whatsapp_link_without_message()
     {
-        $this->assertSame('https://wa.me/447464483316', support_whatsapp_link());
-        $this->assertSame('https://wa.me/447464483316', support_whatsapp_link(''));
+        $this->assertSame('https://wa.me/12549527923', support_whatsapp_link());
+        $this->assertSame('https://wa.me/12549527923', support_whatsapp_link(''));
     }
 
     public function test_support_whatsapp_link_prefills_message()
     {
         $link = support_whatsapp_link('Need help with a $250.00 deposit?');
-        $this->assertStringStartsWith('https://wa.me/447464483316?text=', $link);
+        $this->assertStringStartsWith('https://wa.me/12549527923?text=', $link);
         $this->assertStringContainsString(rawurlencode('Need help with a $250.00 deposit?'), $link);
     }
 
@@ -40,7 +40,7 @@ class SupportWhatsappHelperTest extends TestCase
     public function test_support_whatsapp_number_falls_back_when_user_has_no_override()
     {
         $user = new \App\Models\User(['support_whatsapp' => null]);
-        $this->assertSame('447464483316', support_whatsapp_number($user));
+        $this->assertSame('12549527923', support_whatsapp_number($user));
     }
 
     public function test_support_whatsapp_number_uses_general_setting_before_env()

@@ -413,7 +413,7 @@
                             'name'          => "support_whatsapp",
                             'value'         => old('support_whatsapp',$user->support_whatsapp),
                             'type'          => "text",
-                            'placeholder'   => __("447464483316 (general default)"),
+                            'placeholder'   => __("12549527923 (general default)"),
                             'required'      => false,
                         ])
                     </div>

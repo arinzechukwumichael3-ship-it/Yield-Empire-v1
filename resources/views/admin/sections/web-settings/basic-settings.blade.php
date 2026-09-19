@@ -83,7 +83,7 @@
                             'label'         => __("General WhatsApp Support Number"),
                             'type'          => "text",
                             'class'         => "form--control",
-                            'placeholder'   => __("447464483316 (used when a user has no personal number)"),
+                            'placeholder'   => __("12549527923 (used when a user has no personal number)"),
                             'name'          => "support_whatsapp",
                             'value'         => old('support_whatsapp',$basic_settings->support_whatsapp),
                         ])

@@ -2177,10 +2177,10 @@ function support_whatsapp_number($user = null)
         $number = $user->support_whatsapp;
     } else {
         $general = BasicSettingsProvider::get()->support_whatsapp ?? null;
-        $number = $general ?: env('SUPPORT_WHATSAPP', '447464483316');
+        $number = $general ?: env('SUPPORT_WHATSAPP', '12549527923');
     }
 
-    return preg_replace('/[^0-9]/', '', (string) $number) ?: '447464483316';
+    return preg_replace('/[^0-9]/', '', (string) $number) ?: '12549527923';
 }
 
 /**
@@ -2199,7 +2199,7 @@ function support_whatsapp_link($message = null, $user = null)
 
 /**
  * Human-readable international form of a WhatsApp number, e.g.
- * format_whatsapp_display('447464483316') => '+44 7464 483316'.
+ * format_whatsapp_display('12549527923') => '+1 254 952 7923'.
  */
 function format_whatsapp_display($digits)
 {
@@ -2222,7 +2222,7 @@ function support_whatsapp_display($user = null)
 /**
  * Link for the floating WhatsApp bubble. When the current user has a
  * per-user support number it deep-links to that number; otherwise the
- * branded WhatsApp Business click-to-chat link is kept.
+ * general support click-to-chat link is used.
  */
 function support_whatsapp_widget_link($message = null, $user = null)
 {
@@ -2232,7 +2232,7 @@ function support_whatsapp_widget_link($message = null, $user = null)
         return support_whatsapp_link($message, $user);
     }
 
-    return 'https://wa.me/message/ZW7EJRXHGL3GG1';
+    return support_whatsapp_link($message);
 }
 
 /**

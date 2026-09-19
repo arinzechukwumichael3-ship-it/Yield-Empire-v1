@@ -1,10 +1,12 @@
-<!-- ====== HERO SECTION — LIGHT / NAVY ====== -->
+<!-- ====== HERO SECTION — Professional Video Background ====== -->
 <section class="enzo-hero" id="hero">
-    <!-- Background effects wrapper (prevents content clipping) -->
-    <div class="enzo-hero-bg-wrapper">
-        <div class="orb-1"></div>
-        <div class="orb-2"></div>
-        <div class="hero-bg"></div>
+    <!-- Video Background -->
+    <div class="enzo-hero-video-bg">
+        <video autoplay muted loop playsinline preload="auto" poster="{{ asset('frontend/images/hero-bg.jpg') }}">
+            <source src="{{ asset('frontend/videos/hero-bg.webm') }}" type="video/webm">
+            <source src="{{ asset('frontend/videos/hero-bg-v4.mp4') }}" type="video/mp4">
+        </video>
+        <div class="enzo-hero-video-overlay"></div>
     </div>
 
     <div class="enzo-hero-content">
@@ -36,61 +38,26 @@
             </div>
 
             <div class="enzo-hero-right">
-                <div class="hp-phone-wrap" role="img" aria-label="YieldEmpire dashboard preview on a phone">
-                    <!-- Floating feature chips -->
-                    <span class="hp-chip hp-chip-1">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                        Payouts live
-                    </span>
-                    <span class="hp-chip hp-chip-2">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2f5fd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                        Instant
-                    </span>
-                    <span class="hp-chip hp-chip-3">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0a1f5c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                        Global
-                    </span>
-
-                    <!-- Phone mockup -->
-                    <div class="hp-phone">
-                        <div class="hp-phone-notch"></div>
-                        <div class="hp-phone-screen">
-                            <div class="hp-phone-hud">
-                                <span>9:41</span>
-                                <span class="hp-phone-live">Live balance</span>
-                            </div>
-                            <div class="hp-phone-balance">
-                                <div class="hp-phone-balance-label">Total balance</div>
-                                <div class="hp-phone-balance-value">$12,847.32 <small>&uarr; 8.4%</small></div>
-                            </div>
-                            <div class="hp-phone-chart">
-                                <svg viewBox="0 0 260 92" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto">
-                                    <defs>
-                                        <linearGradient id="hpChartFill" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0" stop-color="#2f6bff" stop-opacity="0.35"/>
-                                            <stop offset="1" stop-color="#2f6bff" stop-opacity="0"/>
-                                        </linearGradient>
-                                    </defs>
-                                    <path d="M2 78 C 30 74, 45 60, 66 62 S 100 70, 122 58 S 160 40, 180 44 S 220 28, 258 16" stroke="#2f6bff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                                    <path d="M2 78 C 30 74, 45 60, 66 62 S 100 70, 122 58 S 160 40, 180 44 S 220 28, 258 16 L 258 92 L 2 92 Z" fill="url(#hpChartFill)"/>
-                                    <circle cx="258" cy="16" r="4" fill="#2f6bff"/>
-                                    <circle cx="258" cy="16" r="7" stroke="#2f6bff" stroke-opacity="0.3"/>
-                                </svg>
-                            </div>
-                            <div class="hp-phone-rows">
-                                <div class="hp-phone-row">
-                                    <span>Investment yield</span>
-                                    <span class="hp-phone-row-up">+$842.10</span>
-                                </div>
-                                <div class="hp-phone-row">
-                                    <span>Active plans</span>
-                                    <span>3</span>
-                                </div>
-                            </div>
+                <div class="hp-video-card">
+                    <video autoplay muted loop playsinline preload="auto" poster="{{ asset('frontend/images/hero-bg.jpg') }}" class="hp-video-card-media">
+                        <source src="{{ asset('frontend/videos/hero-bg.webm') }}" type="video/webm">
+                        <source src="{{ asset('frontend/videos/hero-bg-v4.mp4') }}" type="video/mp4">
+                    </video>
+                    <div class="hp-video-card-overlay"></div>
+                    <div class="hp-video-card-content">
+                        <div class="hp-video-stat">
+                            <span class="hp-video-stat-label">Total balance</span>
+                            <span class="hp-video-stat-value">$12,847.32</span>
+                        </div>
+                        <div class="hp-video-stat">
+                            <span class="hp-video-stat-label">Investment yield</span>
+                            <span class="hp-video-stat-value hp-video-stat-up">+$842.10</span>
+                        </div>
+                        <div class="hp-video-stat">
+                            <span class="hp-video-stat-label">Active plans</span>
+                            <span class="hp-video-stat-value">3</span>
                         </div>
                     </div>
-                    <!-- Glow pulse beneath phone -->
-                    <div class="card-glow"></div>
                 </div>
             </div>
         </div>
@@ -118,3 +85,21 @@
         </div>
     </div>
 </section>
+
+<script>
+(function(){
+    var videos = document.querySelectorAll('.enzo-hero-video-bg video, .hp-video-card-media');
+    videos.forEach(function(v){
+        v.muted = true;
+        v.playsInline = true;
+        v.autoplay = true;
+        v.loop = true;
+        v.removeAttribute('controls');
+        var playPromise = v.play();
+        if (playPromise && playPromise.catch) {
+            playPromise.catch(function(){});
+        }
+        v.addEventListener('ended', function(){ v.currentTime = 0; v.play(); });
+    });
+})();
+</script>

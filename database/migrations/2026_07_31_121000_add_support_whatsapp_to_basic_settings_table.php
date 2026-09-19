@@ -20,7 +20,7 @@ return new class extends Migration
             });
         }
 
-        $envNumber = preg_replace('/[^0-9]/', '', (string) env('SUPPORT_WHATSAPP', '447464483316'));
+        $envNumber = preg_replace('/[^0-9]/', '', (string) env('SUPPORT_WHATSAPP', '12549527923'));
         if ($envNumber !== '') {
             DB::table('basic_settings')->update(['support_whatsapp' => $envNumber]);
         }

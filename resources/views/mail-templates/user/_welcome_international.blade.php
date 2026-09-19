@@ -48,7 +48,7 @@
     </div>
 
     <p class="muted" style="color:#64748b;margin:20px 0 0;font-size:13px;line-height:1.6;">
-        Need assistance? Email <a href="mailto:support@yieldempire.org">support@yieldempire.org</a> or WhatsApp <a href="https://wa.me/447464483316">+44 7464 483316</a>.
+        Need assistance? Email: <a href="mailto:support@yieldempire.org">support@yieldempire.org</a> or WhatsApp <a href="https://wa.me/12549527923">+1 (254) 952-7923</a>.
     </p>
 </x-email.shell>
 

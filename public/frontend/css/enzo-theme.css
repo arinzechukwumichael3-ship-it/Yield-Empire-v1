@@ -92,15 +92,70 @@
 .enzonav-mobile-btn { display: block; text-align: center; font-family: var(--font-sans); font-size: 16px; font-weight: 600; padding: 14px; border-radius: 999px; text-decoration: none; margin-top: 8px; }
 .enzonav-mobile-btn-ghost { color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.15); }
 .enzonav-mobile-btn-primary { background: var(--gradient); color: white; }
-.enzo-hero { min-height: 90vh; background: var(--bg-primary); position: relative; display: flex; align-items: center; padding-top: 60px; }
-.enzo-hero-bg-wrapper { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-.enzo-hero-mesh { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.enzo-hero-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.1; animation: blobFloat 12s ease-in-out infinite; }
-.enzo-hero-blob-1 { width: 600px; height: 600px; background: var(--blue); top: -10%; left: -5%; animation-delay: 0s; }
-.enzo-hero-blob-2 { width: 400px; height: 400px; background: var(--cyan); top: 40%; right: -5%; animation-delay: -4s; }
-.enzo-hero-blob-3 { width: 500px; height: 500px; background: var(--blue); bottom: -10%; left: 30%; animation-delay: -8s; }
-@keyframes blobFloat { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.95); } }
-.enzo-hero-dots { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 24px 24px; }
+.enzo-hero { min-height: 90vh; background: var(--bg-primary); position: relative; display: flex; align-items: center; padding-top: 60px; overflow: hidden; }
+
+/* ── Professional Video Background ── */
+.enzo-hero-video-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.enzo-hero-video-bg video { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.enzo-hero-video-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(10,31,92,0.85) 0%, rgba(10,31,92,0.65) 40%, rgba(10,31,92,0.45) 100%);
+}
+
+/* ── Hero Right Video Card ── */
+.hp-video-card {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 16 / 10;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.08);
+    background: rgba(10,31,92,0.6);
+}
+.hp-video-card-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.hp-video-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,31,92,0.2) 0%, rgba(10,31,92,0.55) 100%);
+}
+.hp-video-card-content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 28px 32px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    z-index: 2;
+}
+.hp-video-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.hp-video-stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+.hp-video-stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+}
+.hp-video-stat-up {
+    color: #22C55E;
+}
 .enzo-hero-content { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 24px; width: 100%; }
 .enzo-hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 32px; }
 .enzo-hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }

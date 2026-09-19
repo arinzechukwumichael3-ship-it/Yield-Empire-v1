@@ -65,7 +65,7 @@
         "description": "YieldEmpire is a financial technology platform for secure investing and global payments.",
         "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+44-7464-483316",
+            "telephone": "+1-254-952-7923",
             "contactType": "customer service",
             "availableLanguage": ["English"]
         }
@@ -88,7 +88,7 @@
         "image": "{{ asset('backend/images/web-settings/image-assets/yieldempire-logo.png') }}",
         "@id": "{{ config('app.url') }}",
         "url": "{{ config('app.url') }}",
-        "telephone": "+44-7464-483316",
+        "telephone": "+1-254-952-7923",
         "priceRange": "$$"
     }
     </script>
@@ -130,7 +130,7 @@
         <button type="button" class="wa-dismiss" id="waDismiss" aria-label="Hide chat widget" title="Hide">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
-        <a href="https://wa.me/message/ZW7EJRXHGL3GG1" target="_blank" class="whatsapp-btn" rel="noopener noreferrer" aria-label="Contact Support on WhatsApp">
+        <a href="https://wa.me/12549527923" target="_blank" class="whatsapp-btn" rel="noopener noreferrer" aria-label="Contact Support on WhatsApp">
             <div class="whatsapp-icon">
                 <i class="lab la-whatsapp"></i>
                 <span class="online-dot"></span>

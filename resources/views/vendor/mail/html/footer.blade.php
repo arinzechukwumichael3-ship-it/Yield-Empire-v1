@@ -6,7 +6,7 @@
         <p class="footer-brand" style="margin:0 0 8px;font-size:13px;color:#64748b;font-weight:600;">YieldEmpire &middot; Secure Financial Technology &amp; Investments</p>
         <p style="margin:0 0 10px;font-size:12px;color:#94a3b8;line-height:1.6;">
           <strong style="color:#64748b;">Need help?</strong><br>
-          Email: <a href="mailto:support@yieldempire.org" style="color:#3b5bdb;text-decoration:underline;">support@yieldempire.org</a> &nbsp;·&nbsp; WhatsApp: <a href="https://wa.me/447464483316" style="color:#3b5bdb;text-decoration:underline;">+44 7464 483316</a>
+          Email: <a href="mailto:support@yieldempire.org" style="color:#3b5bdb;text-decoration:underline;">support@yieldempire.org</a> &nbsp;·&nbsp; WhatsApp: <a href="https://wa.me/12549527923" style="color:#3b5bdb;text-decoration:underline;">+1 (254) 952-7923</a>
         </p>
         <p style="margin:0;font-size:11px;color:#aab2c2;line-height:1.6;">
           &copy; {{ date('Y') }} YieldEmpire. All rights reserved.<br>
