@@ -113,6 +113,11 @@
                     <img src="{{ auth()->user()->userImage }}" alt="{{ auth()->user()->username }}">
                 </a>
             @else
+                <!-- Theme Toggle -->
+                <button class="global-theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark mode">
+                    <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
                 <!-- Auth Buttons (Public) -->
                 <a href="{{ route('user.login') }}" class="global-btn global-btn-ghost d-none d-sm-inline-flex">{{ __('Sign In') }}</a>
                 <a href="{{ route('user.register') }}" class="global-btn global-btn-primary d-none d-sm-inline-flex">{{ __('Get Started') }}</a>
@@ -299,6 +304,23 @@ if (logoutForm) {
     logoutForm.addEventListener('submit', function() {
         showLoader('Signing out');
     });
+}
+
+// --- Theme Toggle ---
+var themeToggle = document.getElementById('themeToggle');
+if (themeToggle) {
+    themeToggle.addEventListener('click', function() {
+        var html = document.documentElement;
+        var current = html.getAttribute('data-theme');
+        var next = current === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch(e) {}
+    });
+    // Restore saved preference
+    try {
+        var saved = localStorage.getItem('theme');
+        if (saved) document.documentElement.setAttribute('data-theme', saved);
+    } catch(e) {}
 }
 </script>
 @endpush

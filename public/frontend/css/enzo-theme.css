@@ -1004,22 +1004,22 @@ html { scroll-behavior: smooth; }
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: rgba(10, 14, 30, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    box-shadow: 0 2px 16px rgba(0,0,0,0.28);
+    background: rgba(10, 14, 30, 0.6);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.1);
     height: 64px;
     display: flex;
     align-items: center;
     transition: background-color 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .global-nav.scrolled {
-    background: rgba(10, 14, 30, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    box-shadow: 0 2px 16px rgba(0,0,0,0.28);
+    background: rgba(10, 14, 30, 0.85);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
 }
 .global-nav-inner {
     width: 100%;
@@ -1070,10 +1070,58 @@ html { scroll-behavior: smooth; }
 /* Right Section */
 .global-nav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .global-theme-toggle {
-    background: none; border: none; color: var(--text-primary); padding: 8px; cursor: pointer;
-    border-radius: 8px; display: flex; align-items: center; transition: background 0.15s ease;
+    position: relative;
+    width: 52px;
+    height: 28px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    padding: 0;
 }
-.global-theme-toggle:hover { background: rgba(255,255,255,0.08); }
+.global-theme-toggle:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.25);
+}
+.global-theme-toggle .theme-icon-sun,
+.global-theme-toggle .theme-icon-moon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    color: var(--text-primary);
+}
+[data-theme="dark"] .global-theme-toggle .theme-icon-moon {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+[data-theme="light"] .global-theme-toggle .theme-icon-sun {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+[data-theme="light"] .global-theme-toggle .theme-icon-moon {
+    opacity: 0;
+}
+[data-theme="dark"] .global-theme-toggle .theme-icon-sun {
+    opacity: 0;
+}
+[data-theme="light"] .global-theme-toggle {
+    background: rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.15);
+}
+[data-theme="light"] .global-theme-toggle:hover {
+    background: rgba(0,0,0,0.12);
+    border-color: rgba(0,0,0,0.2);
+}
 .global-greeting { font-size: 14px; color: var(--text-secondary); white-space: nowrap; font-weight: 500; }
 .global-promo-pill {
     padding: 6px 14px; font-size: 12px; font-weight: 600; color: #fff; text-decoration: none;
@@ -1205,17 +1253,18 @@ html { scroll-behavior: smooth; }
 
 /* Light mode overrides */
 [data-theme="light"] .global-nav {
-    background: rgba(248, 250, 252, 0.90);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(0,0,0,0.06);
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.06);
 }
 [data-theme="light"] .global-nav.scrolled {
-    background: rgba(255, 255, 255, 0.97);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 1px 20px rgba(0,0,0,0.06);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.1);
 }
 [data-theme="light"] .global-nav-link.active { color: #2563EB; }
 [data-theme="light"] .global-nav-link.active::after { background: #2563EB; }
