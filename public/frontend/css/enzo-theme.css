@@ -94,111 +94,67 @@
 .enzonav-mobile-btn-primary { background: var(--gradient); color: white; }
 .enzo-hero { min-height: 90vh; background: var(--bg-primary); position: relative; display: flex; align-items: center; padding-top: 60px; overflow: hidden; }
 
-/* ── Hero Background Image ── */
-.enzo-hero-bg-wrapper { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-.enzo-hero-bg-image {
+/* ── Professional Video Background ── */
+.enzo-hero-video-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.enzo-hero-video-bg video { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.enzo-hero-video-overlay {
     position: absolute; inset: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    animation: heroBgZoom 20s ease-in-out infinite alternate;
-}
-@keyframes heroBgZoom {
-    from { transform: scale(1); }
-    to { transform: scale(1.08); }
-}
-.enzo-hero-bg-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(10,31,92,0.88) 0%, rgba(10,31,92,0.7) 40%, rgba(10,31,92,0.5) 100%);
+    background: linear-gradient(135deg, rgba(10,31,92,0.85) 0%, rgba(10,31,92,0.65) 40%, rgba(10,31,92,0.45) 100%);
 }
 
-/* ── Hero Right Card Stack ── */
-.hp-card-stack {
+/* ── Hero Right Video Card ── */
+.hp-video-card {
     position: relative;
     width: 100%;
-    max-width: 420px;
+    max-width: 480px;
+    aspect-ratio: 16 / 10;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.08);
+    background: rgba(10,31,92,0.6);
+}
+.hp-video-card-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.hp-video-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,31,92,0.2) 0%, rgba(10,31,92,0.55) 100%);
+}
+.hp-video-card-content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 28px 32px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    z-index: 2;
+}
+.hp-video-stat {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 4px;
 }
-.hp-stat-card {
-    background: rgba(255,255,255,0.06);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
-    padding: 20px 24px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-}
-.hp-stat-card-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-.hp-stat-live-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: #22C55E;
-    animation: livePulse 1.8s ease-in-out infinite;
-}
-@keyframes livePulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
-    50% { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
-}
-.hp-stat-label {
-    font-size: 12px;
+.hp-video-stat-label {
+    font-size: 11px;
+    font-weight: 500;
     color: rgba(255,255,255,0.6);
     text-transform: uppercase;
     letter-spacing: 0.8px;
 }
-.hp-stat-balance {
-    font-size: 32px;
-    font-weight: 800;
-    color: #ffffff;
-    letter-spacing: -0.5px;
-}
-.hp-stat-change {
-    font-size: 14px;
-    color: #22C55E;
-    font-weight: 600;
-    margin-top: 4px;
-}
-.hp-stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0;
-    font-size: 14px;
-    color: rgba(255,255,255,0.8);
-}
-.hp-stat-row + .hp-stat-row {
-    border-top: 1px solid rgba(255,255,255,0.06);
-}
-.hp-stat-up {
-    color: #22C55E;
+.hp-video-stat-value {
+    font-size: 22px;
     font-weight: 700;
-    font-size: 16px;
+    color: #ffffff;
+    letter-spacing: -0.3px;
 }
-
-/* ── Feature Chips ── */
-.hp-features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 4px;
-}
-.hp-feat-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.7);
-    backdrop-filter: blur(8px);
+.hp-video-stat-up {
+    color: #22C55E;
 }
 .enzo-hero-content { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 24px; width: 100%; }
 .enzo-hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 32px; }

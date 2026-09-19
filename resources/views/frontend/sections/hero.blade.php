@@ -1,9 +1,12 @@
-<!-- ====== HERO SECTION — Professional ====== -->
+<!-- ====== HERO SECTION — Professional Video Background ====== -->
 <section class="enzo-hero" id="hero">
-    <!-- Animated background image (CSS-powered, no video dependency) -->
-    <div class="enzo-hero-bg-wrapper">
-        <div class="enzo-hero-bg-image" style="background-image: url('{{ asset('frontend/images/hero-poster.jpg') }}')"></div>
-        <div class="enzo-hero-bg-overlay"></div>
+    <!-- Video Background -->
+    <div class="enzo-hero-video-bg">
+        <video autoplay muted loop playsinline preload="auto" poster="{{ asset('frontend/images/hero-bg.jpg') }}">
+            <source src="{{ asset('frontend/videos/hero-bg.webm') }}" type="video/webm">
+            <source src="{{ asset('frontend/videos/hero-bg-v4.mp4') }}" type="video/mp4">
+        </video>
+        <div class="enzo-hero-video-overlay"></div>
     </div>
 
     <div class="enzo-hero-content">
@@ -35,41 +38,25 @@
             </div>
 
             <div class="enzo-hero-right">
-                <div class="hp-card-stack">
-                    <!-- Card 1: Balance -->
-                    <div class="hp-stat-card hp-stat-card-1">
-                        <div class="hp-stat-card-header">
-                            <span class="hp-stat-live-dot"></span>
-                            <span class="hp-stat-label">Live balance</span>
+                <div class="hp-video-card">
+                    <video autoplay muted loop playsinline preload="auto" poster="{{ asset('frontend/images/hero-bg.jpg') }}" class="hp-video-card-media">
+                        <source src="{{ asset('frontend/videos/hero-bg.webm') }}" type="video/webm">
+                        <source src="{{ asset('frontend/videos/hero-bg-v4.mp4') }}" type="video/mp4">
+                    </video>
+                    <div class="hp-video-card-overlay"></div>
+                    <div class="hp-video-card-content">
+                        <div class="hp-video-stat">
+                            <span class="hp-video-stat-label">Total balance</span>
+                            <span class="hp-video-stat-value">$12,847.32</span>
                         </div>
-                        <div class="hp-stat-balance">$12,847.32</div>
-                        <div class="hp-stat-change">↑ 8.4%</div>
-                    </div>
-                    <!-- Card 2: Yield -->
-                    <div class="hp-stat-card hp-stat-card-2">
-                        <div class="hp-stat-row">
-                            <span>Investment yield</span>
-                            <span class="hp-stat-up">+$842.10</span>
+                        <div class="hp-video-stat">
+                            <span class="hp-video-stat-label">Investment yield</span>
+                            <span class="hp-video-stat-value hp-video-stat-up">+$842.10</span>
                         </div>
-                        <div class="hp-stat-row">
-                            <span>Active plans</span>
-                            <span>3</span>
+                        <div class="hp-video-stat">
+                            <span class="hp-video-stat-label">Active plans</span>
+                            <span class="hp-video-stat-value">3</span>
                         </div>
-                    </div>
-                    <!-- Feature chips -->
-                    <div class="hp-features">
-                        <span class="hp-feat-chip">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            Payouts live
-                        </span>
-                        <span class="hp-feat-chip">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                            Instant
-                        </span>
-                        <span class="hp-feat-chip">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                            Global
-                        </span>
                     </div>
                 </div>
             </div>
@@ -98,3 +85,21 @@
         </div>
     </div>
 </section>
+
+<script>
+(function(){
+    var videos = document.querySelectorAll('.enzo-hero-video-bg video, .hp-video-card-media');
+    videos.forEach(function(v){
+        v.muted = true;
+        v.playsInline = true;
+        v.autoplay = true;
+        v.loop = true;
+        v.removeAttribute('controls');
+        var playPromise = v.play();
+        if (playPromise && playPromise.catch) {
+            playPromise.catch(function(){});
+        }
+        v.addEventListener('ended', function(){ v.currentTime = 0; v.play(); });
+    });
+})();
+</script>
