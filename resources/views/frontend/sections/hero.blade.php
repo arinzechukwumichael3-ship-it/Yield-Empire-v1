@@ -4,7 +4,7 @@
     <div class="enzo-hero-video-bg">
         <video autoplay muted loop playsinline preload="auto" poster="{{ asset('frontend/images/hero-bg.jpg') }}">
             <source src="{{ asset('frontend/videos/hero-bg.webm') }}" type="video/webm">
-            <source src="{{ asset('frontend/videos/hero-bg-v4.mp4') }}" type="video/mp4">
+            <source src="{{ asset('frontend/videos/hero-final.mp4') }}" type="video/mp4">
         </video>
         <div class="enzo-hero-video-overlay"></div>
     </div>
@@ -41,7 +41,7 @@
                 <div class="hp-video-card">
                     <video autoplay muted loop playsinline preload="auto" poster="{{ asset('frontend/images/hero-bg.jpg') }}" class="hp-video-card-media">
                         <source src="{{ asset('frontend/videos/hero-bg.webm') }}" type="video/webm">
-                        <source src="{{ asset('frontend/videos/hero-bg-v4.mp4') }}" type="video/mp4">
+                        <source src="{{ asset('frontend/videos/hero-final.mp4') }}" type="video/mp4">
                     </video>
                     <div class="hp-video-card-overlay"></div>
                     <div class="hp-video-card-content">
