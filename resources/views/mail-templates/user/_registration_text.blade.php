@@ -2,13 +2,12 @@ Hi {{ $name }},
 
 Thank you for choosing YieldEmpire for your financial technology needs. Your account has been created and is almost ready to use.
 
-Your email verification code is: {{ $code }}
+Please confirm your email address by entering the code below in your browser:
 
-This code expires in 15 minutes. If you did not create this account, please contact our support team immediately.
+{{ $code }}
+
+This code expires in 15 minutes. If you did not create this account, you can safely ignore this email.
 
 ---
-Need help? Email: support@yieldempire.org · WhatsApp: +1 (254) 952-7923
+Need help? Visit https://yieldempire.org or contact support@yieldempire.org
 © {{ date('Y') }} YieldEmpire. All rights reserved.
-@if(!empty($unsubscribe_url))
-Prefer not to receive these emails? Unsubscribe: {{ $unsubscribe_url }}
-@endif

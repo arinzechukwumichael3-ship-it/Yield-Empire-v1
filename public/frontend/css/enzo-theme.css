@@ -608,6 +608,27 @@ html { scroll-behavior: smooth; }
     gap: 60px;
     align-items: center;
 }
+@media (max-width: 768px) {
+    .enzo-hero-split {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+    .enzo-hero-right {
+        order: -1;
+    }
+    .enzo-hero-left {
+        text-align: center;
+    }
+    /* Prevent horizontal overflow on mobile */
+    html, body {
+        overflow-x: hidden;
+    }
+    .enzo-hero-title-line { font-size: 32px; }
+    .enzo-hero-actions { flex-direction: column; gap: 12px; }
+    .enzo-hero-actions .enzo-btn { width: 100%; }
+    .enzo-features-grid { grid-template-columns: 1fr; }
+    .enzo-footer-grid { grid-template-columns: 1fr; }
+}
 .enzo-hero-split > * { min-width: 0; }
 .enzo-hero-left { min-width: 0; }
 .enzo-hero-left { z-index: 2; text-align: center; display: flex; flex-direction: column; align-items: center; }

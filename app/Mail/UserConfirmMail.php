@@ -25,8 +25,9 @@ class UserConfirmMail extends Mailable
     {
         $unsubscribeUrl = email_unsubscribe_url($this->email);
 
-        return $this->from('otp@yieldempire.org', 'YieldEmpire')
+        return $this->from('support@yieldempire.org', 'YieldEmpire')
             ->replyTo('support@yieldempire.org', 'YieldEmpire Support')
+            ->subject('Confirm Your YieldEmpire Account')
             ->view('mail-templates.user._user_mail_confirm')
             ->text('mail-templates.user._user_mail_confirm_text')
             ->with([

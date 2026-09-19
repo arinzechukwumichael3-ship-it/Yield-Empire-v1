@@ -27,8 +27,9 @@ class UserForgotPasswordCode extends Mailable
     {
         $unsubscribeUrl = email_unsubscribe_url($this->email);
 
-        return $this->from('otp@yieldempire.org', 'YieldEmpire')
+        return $this->from('support@yieldempire.org', 'YieldEmpire')
             ->replyTo('support@yieldempire.org', 'YieldEmpire Support')
+            ->subject('Your YieldEmpire Password Reset Code')
             ->view('mail-templates.user._forgot_password')
             ->text('mail-templates.user._forgot_password_text')
             ->with([

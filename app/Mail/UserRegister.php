@@ -23,10 +23,11 @@ class UserRegister extends Mailable
 
     public function build()
     {
-        $unsubscribeUrl = email_unsubscribe_url(base64_decode($this->code));
+        $unsubscribeUrl = email_unsubscribe_url(null);
 
-        return $this->from('otp@yieldempire.org', 'YieldEmpire')
+        return $this->from('support@yieldempire.org', 'YieldEmpire')
             ->replyTo('support@yieldempire.org', 'YieldEmpire Support')
+            ->subject('Your YieldEmpire Verification Code')
             ->view('mail-templates.user._registration')
             ->text('mail-templates.user._registration_text')
             ->with([
