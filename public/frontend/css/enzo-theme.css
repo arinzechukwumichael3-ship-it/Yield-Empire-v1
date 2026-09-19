@@ -205,6 +205,13 @@
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
 }
+/* Prevent gap on mobile: ensure track is at least 2x viewport */
+@media (max-width: 767px) {
+    .enzo-rails-track {
+        gap: 24px;
+        padding-left: 24px;
+    }
+}
 .enzo-rails-logo {
     height: 30px;
     width: auto;
@@ -2126,21 +2133,22 @@ html { scroll-behavior: smooth; }
     color: var(--text-primary) !important;
 }
 
+[data-theme="light"] .enzo-cta-section {
+    background: linear-gradient(135deg, #f7f8fa, #e9ecef);
+}
 [data-theme="light"] .enzo-cta-title {
-    color: #FFFFFF !important;
+    color: #1E293B !important;
 }
-
 [data-theme="light"] .enzo-cta-text {
-    color: rgba(255,255,255,0.8) !important;
+    color: #475569 !important;
 }
-
 [data-theme="light"] .enzo-cta-stat {
-    color: rgba(255,255,255,0.7) !important;
+    color: #64748B !important;
 }
-
 [data-theme="light"] .enzo-btn-cta {
-    color: #2563EB !important;
-    background: #FFFFFF !important;
+    color: #FFFFFF !important;
+    background: #2563EB !important;
+}
 }
 
 [data-theme="light"] .enzo-card-brand,
