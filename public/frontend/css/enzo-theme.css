@@ -1004,22 +1004,22 @@ html { scroll-behavior: smooth; }
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: rgba(10, 14, 30, 0.6);
+    background: rgba(10, 14, 30, 0.35);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.05);
     height: 64px;
     display: flex;
     align-items: center;
     transition: background-color 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .global-nav.scrolled {
-    background: rgba(10, 14, 30, 0.85);
+    background: rgba(10, 14, 30, 0.65);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.15);
 }
 .global-nav-inner {
     width: 100%;
@@ -1253,18 +1253,18 @@ html { scroll-behavior: smooth; }
 
 /* Light mode overrides */
 [data-theme="light"] .global-nav {
-    background: rgba(255, 255, 255, 0.65);
+    background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.03);
 }
 [data-theme="light"] .global-nav.scrolled {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.06);
 }
 [data-theme="light"] .global-nav-link.active { color: #2563EB; }
 [data-theme="light"] .global-nav-link.active::after { background: #2563EB; }
