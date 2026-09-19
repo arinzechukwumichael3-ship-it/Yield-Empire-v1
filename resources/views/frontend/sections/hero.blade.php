@@ -1,18 +1,12 @@
 <!-- ====== HERO SECTION — Professional Video Background ====== -->
 <section class="enzo-hero" id="hero">
-    <!-- YouTube Video Background -->
+    <!-- Video Background -->
     <div class="enzo-hero-video-bg">
-        <iframe 
-            src="https://www.youtube.com/embed/HvVqN4dK0zo?autoplay=1&mute=1&loop=1&playlist=HvVqN4dK0zo&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            class="hero-youtube-iframe"
-            loading="lazy"
-        ></iframe>
+        <video autoplay muted loop playsinline preload="auto" poster="{{ asset('frontend/images/hero-bg.jpg') }}">
+            <source src="{{ asset('frontend/videos/hero-bg.webm') }}" type="video/webm">
+            <source src="{{ asset('frontend/videos/hero-final.mp4') }}" type="video/mp4">
+        </video>
         <div class="enzo-hero-video-overlay"></div>
-        <!-- Poster overlay to hide YouTube branding before load -->
-        <div class="hero-video-poster" style="background-image: url('{{ asset('frontend/images/hero-bg.jpg') }}')"></div>
     </div>
 
     <div class="enzo-hero-content">
@@ -45,14 +39,10 @@
 
             <div class="enzo-hero-right">
                 <div class="hp-video-card">
-                    <iframe 
-                        src="https://www.youtube.com/embed/HvVqN4dK0zo?autoplay=1&mute=1&loop=1&playlist=HvVqN4dK0zo&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                        class="hero-youtube-iframe"
-                        style="position:absolute;inset:0;width:100%;height:100%;"
-                    ></iframe>
+                    <video autoplay muted loop playsinline preload="auto" poster="{{ asset('frontend/images/hero-bg.jpg') }}" class="hp-video-card-media">
+                        <source src="{{ asset('frontend/videos/hero-bg.webm') }}" type="video/webm">
+                        <source src="{{ asset('frontend/videos/hero-final.mp4') }}" type="video/mp4">
+                    </video>
                     <div class="hp-video-card-overlay"></div>
                     <div class="hp-video-card-content">
                         <div class="hp-video-stat">
@@ -98,22 +88,17 @@
 
 <script>
 (function(){
-    var iframes = document.querySelectorAll('.hero-youtube-iframe');
-    var poster = document.querySelector('.hero-video-poster');
-    var loaded = 0;
-    iframes.forEach(function(frame){
-        frame.addEventListener('load', function(){
-            loaded++;
-            if (loaded >= 1) {
-                frame.classList.add('loaded');
-                if (poster) poster.classList.add('hidden');
-            }
-        });
-        // Fallback: hide poster after 3s even if load event missed
-        setTimeout(function(){
-            frame.classList.add('loaded');
-            if (poster) poster.classList.add('hidden');
-        }, 3000);
+    var videos = document.querySelectorAll('.enzo-hero-video-bg video, .hp-video-card-media');
+    videos.forEach(function(v){
+        v.muted = true;
+        v.playsInline = true;
+        v.autoplay = true;
+        v.loop = true;
+        var playPromise = v.play();
+        if (playPromise && playPromise.catch) {
+            playPromise.catch(function(){});
+        }
+        v.addEventListener('ended', function(){ v.currentTime = 0; v.play(); });
     });
 })();
 </script>
