@@ -7,15 +7,15 @@
 @endphp
 
 <x-email.shell
-    :title="'Verify Your YieldEmpire Account'"
-    :preheader="'Your verification code is: ' . $code"
+    :title="'Verify your YieldEmpire account'"
+    :preheader="'Use code ' . $code . ' to verify your account'"
 >
     <div style="text-align:center;margin-bottom:24px;">
         <div style="display:inline-block;width:56px;height:56px;background:#0f172a;border-radius:12px;line-height:56px;text-align:center;font-size:24px;color:#ffffff;font-weight:700;">Y</div>
     </div>
 
     <h1 style="text-align:center;margin:0 0 8px;font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-0.3px;">Verify Your Email</h1>
-    <p style="text-align:center;margin:0 0 24px;color:#64748b;font-size:14px;">Enter this code to confirm your account</p>
+    <p style="text-align:center;margin:0 0 24px;color:#64748b;font-size:14px;">Enter the code below to confirm your account</p>
 
     <div class="otp-container">
         <div class="otp-box">{{ $code }}</div>
