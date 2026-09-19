@@ -46,7 +46,7 @@
             <div class="enzo-hero-right">
                 <div class="hp-video-card">
                     <iframe 
-                        src="https://www.youtube.com/embed/HvVqN4dK0zo?autoplay=1&mute=1&loop=1&playlist=HvVqN4dK0zo&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+                        src="https://www.youtube.com/embed/HvVqN4dK0zo?autoplay=1&mute=1&loop=1&playlist=HvVqN4dK0zo&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3"
                         frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen
