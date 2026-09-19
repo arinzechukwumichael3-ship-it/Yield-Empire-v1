@@ -8,8 +8,11 @@
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
             class="hero-youtube-iframe"
+            loading="lazy"
         ></iframe>
         <div class="enzo-hero-video-overlay"></div>
+        <!-- Poster overlay to hide YouTube branding before load -->
+        <div class="hero-video-poster" style="background-image: url('{{ asset('frontend/images/hero-bg.jpg') }}')"></div>
     </div>
 
     <div class="enzo-hero-content">
@@ -48,7 +51,7 @@
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen
                         class="hero-youtube-iframe"
-                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+                        style="position:absolute;inset:0;width:100%;height:100%;"
                     ></iframe>
                     <div class="hp-video-card-overlay"></div>
                     <div class="hp-video-card-content">
@@ -93,4 +96,24 @@
     </div>
 </section>
 
-
+<script>
+(function(){
+    var iframes = document.querySelectorAll('.hero-youtube-iframe');
+    var poster = document.querySelector('.hero-video-poster');
+    var loaded = 0;
+    iframes.forEach(function(frame){
+        frame.addEventListener('load', function(){
+            loaded++;
+            if (loaded >= 1) {
+                frame.classList.add('loaded');
+                if (poster) poster.classList.add('hidden');
+            }
+        });
+        // Fallback: hide poster after 3s even if load event missed
+        setTimeout(function(){
+            frame.classList.add('loaded');
+            if (poster) poster.classList.add('hidden');
+        }, 3000);
+    });
+})();
+</script>

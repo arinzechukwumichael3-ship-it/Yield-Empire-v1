@@ -101,6 +101,7 @@
     z-index: 0;
     pointer-events: none;
     overflow: hidden;
+    background: #0a1f5c;
 }
 .hero-youtube-iframe {
     position: absolute;
@@ -112,6 +113,11 @@
     min-width: 177.78vh;
     min-height: 56.25vw;
     border: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+.hero-youtube-iframe.loaded {
+    opacity: 1;
 }
 @supports (object-fit: cover) {
     .hero-youtube-iframe {
@@ -122,8 +128,23 @@
         object-fit: cover;
     }
 }
+.hero-video-poster {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+    transition: opacity 0.8s ease;
+}
+.hero-video-poster.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
 .enzo-hero-video-overlay {
-    position: absolute; inset: 0;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
     background: linear-gradient(135deg, rgba(10,31,92,0.88) 0%, rgba(10,31,92,0.72) 40%, rgba(10,31,92,0.5) 100%);
 }
 
