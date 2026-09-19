@@ -16,7 +16,7 @@
 @php
     // Public homepage renders the navy/light theme; every other frontend
     // page (auth, about, contact, ...) now defaults to light theme.
-    $hp_theme = trim((string) \Illuminate\Support\Facades\View::getSection('pageTheme')) ?: 'light';
+    $hp_theme = trim((string) \Illuminate\Support\Facades\View::getSection('pageTheme')) ?: 'dark';
 @endphp
 <!DOCTYPE html>
 <html lang="{{ get_default_language_code() }}" data-theme="{{ $hp_theme }}">
